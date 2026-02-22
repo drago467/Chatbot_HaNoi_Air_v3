@@ -1,0 +1,116 @@
+2026-02-22 11:22:53 | INFO | __main__ | Initializing database schema (pg_trgm, dim_ward, indexes)...
+2026-02-22 11:22:54 | INFO | __main__ | Database init completed.
+2026-02-22 11:23:00 | INFO | __main__ | Initializing database schema (pg_trgm, dim_ward, indexes)...
+2026-02-22 11:23:00 | INFO | __main__ | Database init completed.
+2026-02-22 11:23:07 | INFO | __main__ | Fetching ward list from HanoiAir...
+2026-02-22 11:23:13 | INFO | __main__ | Found 126 wards.
+2026-02-22 11:23:13 | INFO | __main__ | Fetching bounding boxes and calculating centroids...
+2026-02-22 11:24:37 | INFO | __main__ | Merging with data/location.csv...
+2026-02-22 11:24:37 | INFO | __main__ | Saved processed data to data/processed/dim_ward.csv
+2026-02-22 11:24:37 | INFO | __main__ | Importing into Postgres dim_ward table...
+2026-02-22 11:24:37 | INFO | __main__ | Import successful.
+2026-02-22 11:27:39 | INFO | __main__ | Initializing database schema (pg_trgm, dim_ward, indexes)...
+2026-02-22 11:27:39 | INFO | __main__ | Database init completed.
+2026-02-22 11:28:13 | INFO | __main__ | Fetching ward list from HanoiAir...
+2026-02-22 11:28:13 | INFO | __main__ | Found 126 wards.
+2026-02-22 11:28:13 | INFO | __main__ | Fetching bounding boxes and calculating centroids...
+2026-02-22 11:29:39 | INFO | __main__ | Merging with data/location.csv...
+2026-02-22 11:29:39 | INFO | __main__ | Saved processed data to data/processed/dim_ward.csv
+2026-02-22 11:29:39 | INFO | __main__ | Importing into Postgres dim_ward table...
+2026-02-22 11:29:39 | INFO | __main__ | Import successful.
+2026-02-22 11:31:52 | INFO | __main__ | Total wards in dim_ward: 126
+2026-02-22 11:31:52 | INFO | __main__ | Wards missing bbox: 0
+2026-02-22 11:31:52 | INFO | __main__ | Wards missing centroid coords: 0
+2026-02-22 11:31:52 | INFO | __main__ | Wards missing district info (from location.csv): 0
+2026-02-22 11:31:52 | INFO | __main__ | Testing fuzzy search for ward_name_norm ~ 'dich vong'
+2026-02-22 11:31:52 | WARNING | __main__ | No fuzzy search results. Check pg_trgm extension / indexes.
+2026-02-22 11:32:01 | INFO | __main__ | Total wards in dim_ward: 126
+2026-02-22 11:32:01 | INFO | __main__ | Wards missing bbox: 0
+2026-02-22 11:32:01 | INFO | __main__ | Wards missing centroid coords: 0
+2026-02-22 11:32:01 | INFO | __main__ | Wards missing district info (from location.csv): 0
+2026-02-22 11:32:01 | INFO | __main__ | Testing fuzzy search for ward_name_norm ~ 'dich vong'
+2026-02-22 11:32:01 | WARNING | __main__ | No fuzzy search results. Check pg_trgm extension / indexes.
+2026-02-22 11:44:37 | INFO | __main__ | Total wards in dim_ward: 126
+2026-02-22 11:44:37 | INFO | __main__ | Wards missing bbox: 0
+2026-02-22 11:44:37 | INFO | __main__ | Wards missing centroid coords: 0
+2026-02-22 11:44:37 | INFO | __main__ | Wards missing district info (from location.csv): 0
+2026-02-22 11:44:37 | INFO | __main__ | Testing fuzzy search (Top-K similarity) for ward_name_norm ~ 'dich vong'
+2026-02-22 11:44:37 | INFO | __main__ |   - ID_03313 | Phường Phú Diễn (Quận Bắc Từ Liêm) | score=0.2105
+2026-02-22 11:44:37 | INFO | __main__ |   - ID_01584 | Phường Giảng Võ (Quận Ba Đình) | score=0.1905
+2026-02-22 11:44:37 | INFO | __main__ |   - ID_02661 | Xã Hồng Vân (Huyện Thường Tín) | score=0.1579
+2026-02-22 11:44:37 | INFO | __main__ |   - ID_01780 | Xã Chương Dương (Huyện Thường Tín) | score=0.1500
+2026-02-22 11:44:37 | INFO | __main__ |   - ID_01939 | Xã Dương Hòa (Huyện Hoài Đức) | score=0.1500
+2026-02-22 11:46:49 | INFO | __main__ | Total wards in dim_ward: 126
+2026-02-22 11:46:49 | INFO | __main__ | Wards missing bbox: 0
+2026-02-22 11:46:49 | INFO | __main__ | Wards missing centroid coords: 0
+2026-02-22 11:46:49 | INFO | __main__ | Wards missing district info (from location.csv): 0
+2026-02-22 11:46:49 | INFO | __main__ | Testing fuzzy search (Top-K similarity) for ward_name_norm ~ 'dich vong'
+2026-02-22 11:46:49 | INFO | __main__ |   - ID_03313 | Phường Phú Diễn (Quận Bắc Từ Liêm) | score=0.2105
+2026-02-22 11:46:49 | INFO | __main__ |   - ID_01584 | Phường Giảng Võ (Quận Ba Đình) | score=0.1905
+2026-02-22 11:46:49 | INFO | __main__ |   - ID_02661 | Xã Hồng Vân (Huyện Thường Tín) | score=0.1579
+2026-02-22 11:46:49 | INFO | __main__ |   - ID_01780 | Xã Chương Dương (Huyện Thường Tín) | score=0.1500
+2026-02-22 11:46:49 | INFO | __main__ |   - ID_01939 | Xã Dương Hòa (Huyện Hoài Đức) | score=0.1500
+2026-02-22 11:57:41 | INFO | __main__ | Fetching ward list from HanoiAir...
+2026-02-22 11:57:42 | INFO | __main__ | Found 126 wards.
+2026-02-22 11:57:42 | INFO | __main__ | Fetching bounding boxes and calculating centroids...
+2026-02-22 11:59:08 | INFO | __main__ | Merging with data/location.csv...
+2026-02-22 11:59:08 | INFO | __main__ | Saved processed data to data/processed/dim_ward.csv
+2026-02-22 11:59:08 | INFO | __main__ | Importing into Postgres dim_ward table...
+2026-02-22 11:59:08 | INFO | __main__ | Import successful.
+2026-02-22 12:06:27 | INFO | __main__ | Initializing database schema (pg_trgm, dim_ward, indexes)...
+2026-02-22 12:06:36 | INFO | __main__ | Initializing database schema (pg_trgm, dim_ward, indexes)...
+2026-02-22 12:08:40 | INFO | __main__ | Initializing database schema (pg_trgm, dim_ward, indexes)...
+2026-02-22 12:08:40 | INFO | __main__ | Ensuring base tables exist...
+2026-02-22 12:08:40 | INFO | __main__ | Applying migration for new columns (ward_prefix_norm, ward_name_core_norm)...
+2026-02-22 12:08:40 | INFO | __main__ | Ensuring trigram indexes...
+2026-02-22 12:08:40 | INFO | __main__ | Database init/migration completed.
+2026-02-22 12:09:14 | INFO | __main__ | Fetching ward list from HanoiAir...
+2026-02-22 12:09:15 | INFO | __main__ | Found 126 wards.
+2026-02-22 12:09:15 | INFO | __main__ | Fetching bounding boxes and calculating centroids...
+2026-02-22 12:10:39 | INFO | __main__ | Merging with data/location.csv...
+2026-02-22 12:10:39 | INFO | __main__ | Saved processed data to data/processed/dim_ward.csv
+2026-02-22 12:10:39 | INFO | __main__ | Importing into Postgres dim_ward table...
+2026-02-22 12:10:39 | INFO | __main__ | Import successful.
+2026-02-22 12:11:25 | INFO | __main__ | Total wards in dim_ward: 126
+2026-02-22 12:11:25 | INFO | __main__ | Wards missing bbox: 0
+2026-02-22 12:11:25 | INFO | __main__ | Wards missing centroid coords: 0
+2026-02-22 12:11:25 | INFO | __main__ | Wards missing district info (from location.csv): 0
+2026-02-22 12:11:25 | INFO | __main__ | Testing fuzzy search (Top-K similarity) for ward_name_norm ~ 'dich vong'
+2026-02-22 12:11:25 | INFO | __main__ |   - ID_03313 | Phường Phú Diễn (Quận Bắc Từ Liêm) | score=0.2105
+2026-02-22 12:11:25 | INFO | __main__ |   - ID_00868 | Phường Khương Đình (NaN) | score=0.1905
+2026-02-22 12:11:25 | INFO | __main__ |   - ID_03161 | Phường Định Công (NaN) | score=0.1905
+2026-02-22 12:11:25 | INFO | __main__ |   - ID_03125 | Phường Ba Đình (NaN) | score=0.1905
+2026-02-22 12:11:25 | INFO | __main__ |   - ID_01584 | Phường Giảng Võ (Quận Ba Đình) | score=0.1905
+2026-02-22 12:14:03 | INFO | __main__ | Total wards in DB: 126
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'dich vong' (using ward_name_core_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2500] Phường Định Công (NaN) | ID: ID_03161
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2222] Phường Khương Đình (NaN) | ID: ID_00868
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2143] Phường Đống Đa (NaN) | ID: ID_02065
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'Dịch Vọng' (using ward_name_core_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [0.1333] Phường Đống Đa (NaN) | ID: ID_02065
+2026-02-22 12:14:03 | INFO | __main__ |   [0.1250] Phường Hà Đông (NaN) | ID: ID_01837
+2026-02-22 12:14:03 | INFO | __main__ |   [0.1176] Phường Giảng Võ (Quận Ba Đình) | ID: ID_01584
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'phuong dich vong' (using ward_name_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [0.4737] Phường Phú Diễn (Quận Bắc Từ Liêm) | ID: ID_03313
+2026-02-22 12:14:03 | INFO | __main__ |   [0.4286] Phường Định Công (NaN) | ID: ID_03161
+2026-02-22 12:14:03 | INFO | __main__ |   [0.4286] Phường Ba Đình (NaN) | ID: ID_03125
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'Phường Dịch Vọng' (using ward_name_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [0.1667] Xã Phù Đổng (NaN) | ID: ID_02069
+2026-02-22 12:14:03 | INFO | __main__ |   [0.1667] Phường Đống Đa (NaN) | ID: ID_02065
+2026-02-22 12:14:03 | INFO | __main__ |   [0.1600] Phường Bồ Đề (NaN) | ID: ID_00245
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'bat trang' (using ward_name_core_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [1.0000] Xã Bát Tràng (Huyện Gia Lâm) | ID: ID_03116
+2026-02-22 12:14:03 | INFO | __main__ |   [0.4000] Xã Bất Bạt (Huyện Ba Vì) | ID: ID_00945
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2857] Xã Hạ Bằng (Huyện Thạch Thất) | ID: ID_02288
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'xa bat trang' (using ward_name_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [1.0000] Xã Bát Tràng (Huyện Gia Lâm) | ID: ID_03116
+2026-02-22 12:14:03 | INFO | __main__ |   [0.5385] Xã Bất Bạt (Huyện Ba Vì) | ID: ID_00945
+2026-02-22 12:14:03 | INFO | __main__ |   [0.4118] Xã Hạ Bằng (Huyện Thạch Thất) | ID: ID_02288
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'van mieu' (using ward_name_core_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [0.4091] Phường Văn Miếu - Quốc Tử Giám (Quận Đống Đa) | ID: ID_00393
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2857] Xã Hồng Vân (Huyện Thường Tín) | ID: ID_02661
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2857] Xã Vân Đình (NaN) | ID: ID_02968
+2026-02-22 12:14:03 | INFO | __main__ | --- Query: 'cau giay' (using ward_name_core_norm) ---
+2026-02-22 12:14:03 | INFO | __main__ |   [1.0000] Phường Cầu Giấy (Quận Cầu Giấy) | ID: ID_01889
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2143] Xã Gia Lâm (Huyện Gia Lâm) | ID: ID_01444
+2026-02-22 12:14:03 | INFO | __main__ |   [0.2000] Phường Giảng Võ (Quận Ba Đình) | ID: ID_01584
