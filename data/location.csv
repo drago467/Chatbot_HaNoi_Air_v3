@@ -1,29 +1,29 @@
-﻿ward_name_vi,ward_name_norm,district_name_vi,district_name_norm
+ward_name_vi,ward_name_norm,district_name_vi,district_name_norm
 Phường Bạch Mai,phuong bach mai,Quận Hai Bà Trưng,quan hai ba trung
-Phường Ba Đình,phuong ba đinh,Quận Ba Đình,quan ba dinh
-Phường Bồ Đề,phuong bo đe,Quận Long Biên,quan long bien
+Phường Ba Đình,phuong ba dinh,Quận Ba Đình,quan ba dinh
+Phường Bồ Đề,phuong bo de,Quận Long Biên,quan long bien
 Phường Cầu Giấy,phuong cau giay,Quận Cầu Giấy,quan cau giay
 Phường Chương Mỹ,phuong chuong my,Huyện Chương Mỹ,huyen chuong my
 Phường Cửa Nam,phuong cua nam,Quận Hoàn Kiếm,quan hoan kiem
-Phường Đại Mỗ,phuong đai mo,Quận Nam Từ Liêm,quan nam tu liem
-Phường Định Công,phuong đinh cong,Quận Hoàng Mai,quan hoang mai
-Phường Đống Đa,phuong đong đa,Quận Đống Đa,quan dong da
-Phường Đông Ngạc,phuong đong ngac,Quận Bắc Từ Liêm,quan bac tu liem
+Phường Đại Mỗ,phuong dai mo,Quận Nam Từ Liêm,quan nam tu liem
+Phường Định Công,phuong dinh cong,Quận Hoàng Mai,quan hoang mai
+Phường Đống Đa,phuong dong da,Quận Đống Đa,quan dong da
+Phường Đông Ngạc,phuong dong ngac,Quận Bắc Từ Liêm,quan bac tu liem
 Phường Dương Nội,phuong duong noi,Quận Hà Đông,quan ha dong
 Phường Giảng Võ,phuong giang vo,Quận Ba Đình,quan ba dinh
-Phường Hà Đông,phuong ha đong,Quận Hà Đông,quan ha dong
+Phường Hà Đông,phuong ha dong,Quận Hà Đông,quan ha dong
 Phường Hai Bà Trưng,phuong hai ba trung,Quận Hai Bà Trưng,quan hai ba trung
 Phường Hoàng Liệt,phuong hoang liet,Quận Hoàng Mai,quan hoang mai
 Phường Hoàng Mai,phuong hoang mai,Quận Hoàng Mai,quan hoang mai
 Phường Hoàn Kiếm,phuong hoan kiem,Quận Hoàn Kiếm,quan hoan kiem
 Phường Hồng Hà,phuong hong ha,,
-Phường Khương Đình,phuong khuong đinh,Quận Thanh Xuân,quan thanh xuan
+Phường Khương Đình,phuong khuong dinh,Quận Thanh Xuân,quan thanh xuan
 Phường Kiến Hưng,phuong kien hung,Quận Hà Đông,quan ha dong
 Phường Kim Liên,phuong kim lien,Quận Đống Đa,quan dong da
 Phường Láng,phuong lang,Quận Đống Đa,quan dong da
 Phường Lĩnh Nam,phuong linh nam,Quận Hoàng Mai,quan hoang mai
 Phường Long Biên,phuong long bien,Quận Long Biên,quan long bien
-Phường Nghĩa Đô,phuong nghia đo,Quận Cầu Giấy,quan cau giay
+Phường Nghĩa Đô,phuong nghia do,Quận Cầu Giấy,quan cau giay
 Phường Ngọc Hà,phuong ngoc ha,Quận Ba Đình,quan ba dinh
 Phường Ô Chợ Dừa,phuong o cho dua,Quận Đống Đa,quan dong da
 Phường Phúc Lợi,phuong phuc loi,Quận Long Biên,quan long bien
@@ -45,7 +45,7 @@ Phường Văn Miếu - Quốc Tử Giám,phuong van mieu - quoc tu giam,Quận 
 Phường Việt Hưng,phuong viet hung,Quận Long Biên,quan long bien
 Phường Vĩnh Hưng,phuong vinh hung,Quận Hoàng Mai,quan hoang mai
 Phường Vĩnh Tuy,phuong vinh tuy,Quận Hai Bà Trưng,quan hai ba trung
-Phường Xuân Đỉnh,phuong xuan đinh,Quận Bắc Từ Liêm,quan bac tu liem
+Phường Xuân Đỉnh,phuong xuan dinh,Quận Bắc Từ Liêm,quan bac tu liem
 Phường Xuân Phương,phuong xuan phuong,Quận Nam Từ Liêm,quan nam tu liem
 Phường Yên Hòa,phuong yen hoa,Quận Cầu Giấy,quan cau giay
 Phường Yên Nghĩa,phuong yen nghia,Quận Hà Đông,quan ha dong
@@ -57,32 +57,32 @@ Xã Ba Vì,xa ba vi,Huyện Ba Vì,huyen ba vi
 Xã Bình Minh,xa binh minh,Huyện Thanh Oai,huyen thanh oai
 Xã Chương Dương,xa chuong duong,Huyện Thường Tín,huyen thuong tin
 Xã Chuyên Mỹ,xa chuyen my,Huyện Phú Xuyên,huyen phu xuyen
-Xã Cổ Đô,xa co đo,Huyện Ba Vì,huyen ba vi
-Xã Đại Thanh,xa đai thanh,Huyện Thanh Trì,huyen thanh tri
-Xã Đại Xuyên,xa đai xuyen,Huyện Phú Xuyên,huyen phu xuyen
+Xã Cổ Đô,xa co do,Huyện Ba Vì,huyen ba vi
+Xã Đại Thanh,xa dai thanh,Huyện Thanh Trì,huyen thanh tri
+Xã Đại Xuyên,xa dai xuyen,Huyện Phú Xuyên,huyen phu xuyen
 Xã Dân Hòa,xa dan hoa,Huyện Thanh Oai,huyen thanh oai
-Xã Đan Phượng,xa đan phuong,Huyện Đan Phượng,huyen dan phuong
-Xã Đa Phúc,xa đa phuc,Huyện Sóc Sơn,huyen soc son
-Xã Đoài Phương,xa đoai phuong,Thị xã Sơn Tây,thi xa son tay
-Xã Đông Anh,xa đong anh,Huyện Đông Anh,huyen dong anh
+Xã Đan Phượng,xa dan phuong,Huyện Đan Phượng,huyen dan phuong
+Xã Đa Phúc,xa da phuc,Huyện Sóc Sơn,huyen soc son
+Xã Đoài Phương,xa doai phuong,Thị xã Sơn Tây,thi xa son tay
+Xã Đông Anh,xa dong anh,Huyện Đông Anh,huyen dong anh
 Xã Dương Hòa,xa duong hoa,Huyện Hoài Đức,huyen hoai duc
 Xã Gia Lâm,xa gia lam,Huyện Gia Lâm,huyen gia lam
 Xã Hạ Bằng,xa ha bang,Huyện Thạch Thất,huyen thach that
 Xã Hát Môn,xa hat mon,Huyện Phúc Thọ,huyen phuc tho
-Xã Hoài Đức,xa hoai đuc,Huyện Hoài Đức,huyen hoai duc
+Xã Hoài Đức,xa hoai duc,Huyện Hoài Đức,huyen hoai duc
 Xã Hòa Lạc,xa hoa lac,Huyện Thạch Thất,huyen thach that
 Xã Hòa Phú,xa hoa phu,Huyện Chương Mỹ,huyen chuong my
 Xã Hòa Xá,xa hoa xa,Huyện Ứng Hòa,huyen ung hoa
 Xã Hồng Sơn,xa hong son,Huyện Mỹ Đức,huyen my duc
 Xã Hồng Vân,xa hong van,Huyện Thường Tín,huyen thuong tin
-Xã Hưng Đạo,xa hung đao,Huyện Quốc Oai,huyen quoc oai
+Xã Hưng Đạo,xa hung dao,Huyện Quốc Oai,huyen quoc oai
 Xã Hương Sơn,xa huong son,Huyện Mỹ Đức,huyen my duc
 Xã Kiều Phú,xa kieu phu,Huyện Quốc Oai,huyen quoc oai
 Xã Kim Anh,xa kim anh,Huyện Sóc Sơn,huyen soc son
 Xã Liên Minh,xa lien minh,Huyện Đan Phượng,huyen dan phuong
 Xã Mê Linh,xa me linh,Huyện Mê Linh,huyen me linh
 Xã Minh Châu,xa minh chau,Huyện Ba Vì,huyen ba vi
-Xã Mỹ Đức,xa my đuc,Huyện Mỹ Đức,huyen my duc
+Xã Mỹ Đức,xa my duc,Huyện Mỹ Đức,huyen my duc
 Xã Nam Phù,xa nam phu,Huyện Thanh Trì,huyen thanh tri
 Xã Ngọc Hồi,xa ngoc hoi,Huyện Thanh Trì,huyen thanh tri
 Xã Nội Bài,xa noi bai,Huyện Sóc Sơn,huyen soc son
@@ -92,7 +92,7 @@ Xã Phúc Lộc,xa phuc loc,Huyện Phúc Thọ,huyen phuc tho
 Xã Phúc Sơn,xa phuc son,Huyện Mỹ Đức,huyen my duc
 Xã Phúc Thịnh,xa phuc thinh,Huyện Đông Anh,huyen dong anh
 Xã Phúc Thọ,xa phuc tho,Huyện Phúc Thọ,huyen phuc tho
-Xã Phù Đổng,xa phu đong,Huyện Gia Lâm,huyen gia lam
+Xã Phù Đổng,xa phu dong,Huyện Gia Lâm,huyen gia lam
 Xã Phú Nghĩa,xa phu nghia,Huyện Chương Mỹ,huyen chuong my
 Xã Phượng Dực,xa phuong duc,Huyện Phú Xuyên,huyen phu xuyen
 Xã Phú Xuyên,xa phu xuyen,Huyện Phú Xuyên,huyen phu xuyen
@@ -101,7 +101,7 @@ Xã Quang Minh,xa quang minh,Huyện Mê Linh,huyen me linh
 Xã Quảng Oai,xa quang oai,Huyện Ba Vì,huyen ba vi
 Xã Quốc Oai,xa quoc oai,Huyện Quốc Oai,huyen quoc oai
 Xã Sóc Sơn,xa soc son,Huyện Sóc Sơn,huyen soc son
-Xã Sơn Đồng,xa son đong,Huyện Hoài Đức,huyen hoai duc
+Xã Sơn Đồng,xa son dong,Huyện Hoài Đức,huyen hoai duc
 Xã Suối Hai,xa suoi hai,Huyện Ba Vì,huyen ba vi
 Xã Tam Hưng,xa tam hung,Huyện Thanh Oai,huyen thanh oai
 Xã Tây Phương,xa tay phuong,Huyện Thạch Thất,huyen thach that
@@ -118,7 +118,7 @@ Xã Trần Phú,xa tran phu,Huyện Chương Mỹ,huyen chuong my
 Xã Trung Giã,xa trung gia,Huyện Sóc Sơn,huyen soc son
 Xã Ứng Hòa,xa ung hoa,Huyện Ứng Hòa,huyen ung hoa
 Xã Ứng Thiên,xa ung thien,Huyện Ứng Hòa,huyen ung hoa
-Xã Vân Đình,xa van đinh,Huyện Ứng Hòa,huyen ung hoa
+Xã Vân Đình,xa van dinh,Huyện Ứng Hòa,huyen ung hoa
 Xã Vật Lại,xa vat lai,Huyện Ba Vì,huyen ba vi
 Xã Vĩnh Thanh,xa vinh thanh,Huyện Đông Anh,huyen dong anh
 Xã Xuân Mai,xa xuan mai,Huyện Chương Mỹ,huyen chuong my
