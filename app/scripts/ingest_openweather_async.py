@@ -253,11 +253,26 @@ class OpenWeatherAsyncIngestor:
             
             if data.get("daily"):
                 for d in data["daily"]:
+                    w_info = d["weather"][0] if d.get("weather") else {}
+                    feels_like = d.get("feels_like", {})
                     weather_daily_records.append((
                         ward["ward_id"], datetime.fromtimestamp(d["dt"], tz=timezone.utc).date(),
-                        d["temp"].get("min"), d["temp"].get("max"), d.get("humidity"),
-                        d.get("wind_speed"), d.get("pop"), d.get("rain"), d.get("uvi"),
-                        d.get("summary"), 'forecast', 'openweather', 'forecast'
+                        # Temperature
+                        d["temp"].get("min"), d["temp"].get("max"), d["temp"].get("day"),  # temp_min, temp_max, temp_avg (=day)
+                        d["temp"].get("morn"), d["temp"].get("day"), d["temp"].get("eve"), d["temp"].get("night"),  # temp_morn, temp_day, temp_eve, temp_night
+                        # Feels like
+                        feels_like.get("morn"), feels_like.get("day"), feels_like.get("eve"), feels_like.get("night"),
+                        # Other weather
+                        d.get("humidity"), d.get("pressure"), d.get("dew_point"),
+                        d.get("wind_speed"), d.get("wind_deg"), d.get("wind_gust"),
+                        d.get("clouds"), d.get("pop"), d.get("rain"), d.get("uvi"),
+                        # Weather condition
+                        w_info.get("main"), w_info.get("description"), d.get("summary"),
+                        # Sun times
+                        datetime.fromtimestamp(d["sunrise"], tz=timezone.utc) if d.get("sunrise") else None,
+                        datetime.fromtimestamp(d["sunset"], tz=timezone.utc) if d.get("sunset") else None,
+                        # Metadata
+                        'forecast', 'openweather', 'forecast'
                     ))
 
         self._bulk_upsert_air(air_records, priority='forecast')
@@ -272,14 +287,27 @@ class OpenWeatherAsyncIngestor:
                 with conn.cursor() as cur:
                     query = """
                         INSERT INTO fact_weather_daily (
-                            ward_id, date, temp_min, temp_max, humidity, wind_speed, pop, rain_total,
-                            uvi, summary, data_kind, source, source_job
+                            ward_id, date,
+                            temp_min, temp_max, temp_avg, temp_morn, temp_day, temp_eve, temp_night,
+                            feels_like_morn, feels_like_day, feels_like_eve, feels_like_night,
+                            humidity, pressure, dew_point,
+                            wind_speed, wind_deg, wind_gust, clouds, pop, rain_total, uvi,
+                            weather_main, weather_description, summary,
+                            sunrise, sunset,
+                            data_kind, source, source_job
                         ) VALUES %s
                         ON CONFLICT (ward_id, date) DO UPDATE SET
                             temp_min = EXCLUDED.temp_min, temp_max = EXCLUDED.temp_max,
-                            humidity = EXCLUDED.humidity, wind_speed = EXCLUDED.wind_speed,
-                            pop = EXCLUDED.pop, rain_total = EXCLUDED.rain_total,
-                            uvi = EXCLUDED.uvi, summary = EXCLUDED.summary,
+                            temp_avg = EXCLUDED.temp_avg, temp_morn = EXCLUDED.temp_morn,
+                            temp_day = EXCLUDED.temp_day, temp_eve = EXCLUDED.temp_eve, temp_night = EXCLUDED.temp_night,
+                            feels_like_morn = EXCLUDED.feels_like_morn, feels_like_day = EXCLUDED.feels_like_day,
+                            feels_like_eve = EXCLUDED.feels_like_eve, feels_like_night = EXCLUDED.feels_like_night,
+                            humidity = EXCLUDED.humidity, pressure = EXCLUDED.pressure, dew_point = EXCLUDED.dew_point,
+                            wind_speed = EXCLUDED.wind_speed, wind_deg = EXCLUDED.wind_deg,
+                            wind_gust = EXCLUDED.wind_gust, clouds = EXCLUDED.clouds,
+                            pop = EXCLUDED.pop, rain_total = EXCLUDED.rain_total, uvi = EXCLUDED.uvi,
+                            weather_main = EXCLUDED.weather_main, weather_description = EXCLUDED.weather_description,
+                            summary = EXCLUDED.summary, sunrise = EXCLUDED.sunrise, sunset = EXCLUDED.sunset,
                             data_kind = EXCLUDED.data_kind, source = EXCLUDED.source,
                             source_job = EXCLUDED.source_job, ingested_at = NOW()
                     """

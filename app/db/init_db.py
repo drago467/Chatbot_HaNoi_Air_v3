@@ -97,14 +97,38 @@ def init_db() -> None:
                     CREATE TABLE IF NOT EXISTS fact_weather_daily (
                         ward_id TEXT REFERENCES dim_ward(ward_id),
                         date DATE NOT NULL,
+                        -- Temperature
                         temp_min DOUBLE PRECISION,
                         temp_max DOUBLE PRECISION,
+                        temp_avg DOUBLE PRECISION,
+                        temp_morn DOUBLE PRECISION,
+                        temp_day DOUBLE PRECISION,
+                        temp_eve DOUBLE PRECISION,
+                        temp_night DOUBLE PRECISION,
+                        -- Feels like
+                        feels_like_morn DOUBLE PRECISION,
+                        feels_like_day DOUBLE PRECISION,
+                        feels_like_eve DOUBLE PRECISION,
+                        feels_like_night DOUBLE PRECISION,
+                        -- Other weather
                         humidity INT,
+                        pressure INT,
+                        dew_point DOUBLE PRECISION,
                         wind_speed DOUBLE PRECISION,
+                        wind_deg INT,
+                        wind_gust DOUBLE PRECISION,
+                        clouds INT,
                         pop DOUBLE PRECISION,
                         rain_total DOUBLE PRECISION,
                         uvi DOUBLE PRECISION,
+                        -- Weather condition
+                        weather_main TEXT,
+                        weather_description TEXT,
                         summary TEXT,
+                        -- Sun times
+                        sunrise TIMESTAMPTZ,
+                        sunset TIMESTAMPTZ,
+                        -- Metadata
                         data_kind TEXT,
                         source TEXT,
                         source_job TEXT,
@@ -152,6 +176,33 @@ def init_db() -> None:
                 
                 # Add aqi_vn to air pollution
                 cur.execute("ALTER TABLE fact_air_pollution_hourly ADD COLUMN IF NOT EXISTS aqi_vn INT;")
+                
+                # Add missing columns to fact_weather_daily (2026-02-28)
+                daily_columns = [
+                    ("temp_avg", "DOUBLE PRECISION"),
+                    ("temp_morn", "DOUBLE PRECISION"),
+                    ("temp_day", "DOUBLE PRECISION"),
+                    ("temp_eve", "DOUBLE PRECISION"),
+                    ("temp_night", "DOUBLE PRECISION"),
+                    ("feels_like_morn", "DOUBLE PRECISION"),
+                    ("feels_like_day", "DOUBLE PRECISION"),
+                    ("feels_like_eve", "DOUBLE PRECISION"),
+                    ("feels_like_night", "DOUBLE PRECISION"),
+                    ("pressure", "INT"),
+                    ("dew_point", "DOUBLE PRECISION"),
+                    ("wind_deg", "INT"),
+                    ("wind_gust", "DOUBLE PRECISION"),
+                    ("clouds", "INT"),
+                    ("weather_main", "TEXT"),
+                    ("weather_description", "TEXT"),
+                    ("sunrise", "TIMESTAMPTZ"),
+                    ("sunset", "TIMESTAMPTZ"),
+                ]
+                for col_name, col_type in daily_columns:
+                    try:
+                        cur.execute(f"ALTER TABLE fact_weather_daily ADD COLUMN IF NOT EXISTS {col_name} {col_type};")
+                    except Exception as e:
+                        logger.warning(f"Could not add column {col_name}: {e}")
                 
                 # Add source/source_job to all fact tables
                 tables = [
