@@ -28,5 +28,9 @@ docs/
 # Markdown
 *.md
 
+# Environment variables
+.env
+env_example.txt
+
 # Text
 *.txt
