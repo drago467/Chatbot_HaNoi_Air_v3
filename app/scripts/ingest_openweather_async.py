@@ -279,13 +279,19 @@ class OpenWeatherAsyncIngestor:
         self._bulk_upsert_weather_hourly(weather_hourly_records, priority='forecast')
         self._bulk_upsert_weather_daily(weather_daily_records)
 
-    def _bulk_upsert_weather_daily(self, records: List[tuple]):
+    def _bulk_upsert_weather_daily(self, records: List[tuple], priority='forecast'):
         if not records: return
+        
+        # Determine condition based on priority
+        condition = ""
+        if priority == 'forecast':
+            condition = "AND fact_weather_daily.data_kind NOT IN ('history')"
+        
         conn = get_db_connection()
         try:
             with conn:
                 with conn.cursor() as cur:
-                    query = """
+                    query = f"""
                         INSERT INTO fact_weather_daily (
                             ward_id, date,
                             temp_min, temp_max, temp_avg, temp_morn, temp_day, temp_eve, temp_night,
@@ -310,18 +316,28 @@ class OpenWeatherAsyncIngestor:
                             summary = EXCLUDED.summary, sunrise = EXCLUDED.sunrise, sunset = EXCLUDED.sunset,
                             data_kind = EXCLUDED.data_kind, source = EXCLUDED.source,
                             source_job = EXCLUDED.source_job, ingested_at = NOW()
+                        WHERE TRUE {condition}
                     """
                     execute_values(cur, query, records)
-            logger.info(f"Bulk upserted {len(records)} weather daily records")
+            logger.info(f"Bulk upserted {len(records)} weather daily records (priority={priority})")
         finally:
             conn.close()
 
-    async def run_history_backfill(self, days: int = 14):
-        """Job 3: Backfill Air Pollution history (One-time).
+    async def run_history_backfill(self, days: int = 14, do_weather: bool = True, do_air: bool = True):
+        """Job 3: Backfill Weather + Air Pollution history (One-time).
 
-        OpenWeather Air Pollution History API has no hard per-request day limit,
-        but very large ranges may time out. We chunk by 5-day windows to be safe.
-        Each chunk is mapped back to its ward via a parallel `task_meta` list.
+        Args:
+            days: Number of days to backfill (default 14)
+            do_weather: Whether to ingest weather history (default True)
+            do_air: Whether to ingest air pollution history (default True)
+
+        Two data sources:
+        1. Weather: /onecall/timemachine (1 call per day per ward)
+        2. Air Pollution: /air_pollution/history (chunked by 5-day windows)
+
+        Weather history is needed for chatbot to answer questions about past weather:
+        - "Hôm qua thời tiết thế nào?"
+        - "Tuần trước có mưa không?"
         """
         wards = self._get_ward_list()
         logger.info(f"Starting History Backfill for {len(wards)} wards, last {days} days...")
@@ -371,8 +387,178 @@ class OpenWeatherAsyncIngestor:
                     comp.get("nh3"), 'history', 'openweather', 'history_backfill'
                 ))
 
-        logger.info(f"History backfill: parsed {len(air_records)} air records from {len(results)} API responses")
-        self._bulk_upsert_air(air_records, priority='history')
+        if do_air and air_records:
+            logger.info(f"History backfill: parsed {len(air_records)} air records")
+            self._bulk_upsert_air(air_records, priority='history')
+
+        # Fetch weather history if enabled
+        if do_weather:
+            await self._fetch_weather_history(wards, days)
+
+    async def _fetch_weather_history(self, wards: List[Dict], days: int = 14):
+        """Fetch weather history using /onecall/timemachine API.
+        
+        Note: Timemachine returns 1 record per call (for a specific hour).
+        For efficiency, we fetch once per day (at noon) as proxy for daily weather.
+        """
+        import math
+        
+        logger.info(f"Starting Weather History Backfill for {len(wards)} wards, last {days} days...")
+        
+        end_dt = datetime.now(timezone.utc)
+        start_dt = end_dt - timedelta(days=days)
+        
+        weather_records = []
+        
+        async with aiohttp.ClientSession() as session:
+            # Fetch at noon each day as proxy for daily weather
+            for w in wards:
+                current = start_dt
+                attempts = 0
+                max_attempts = days
+                
+                while current < end_dt and attempts < max_attempts:
+                    # Use noon of each day as the timestamp (middle of day)
+                    noon = current.replace(hour=12, minute=0, second=0, microsecond=0)
+                    params = {
+                        "lat": w["lat"],
+                        "lon": w["lon"],
+                        "dt": int(noon.timestamp()),
+                        "units": "metric"
+                    }
+                    
+                    try:
+                        data = await self.fetch_json(
+                            session, 
+                            f"{self.onecall_url}/timemachine", 
+                            params, 
+                            "timemachine"
+                        )
+                        
+                        if data and data.get("data"):
+                            item = data["data"][0]
+                            w_info = item.get("weather", [{}])[0] if item.get("weather") else {}
+                            
+                            weather_records.append((
+                                w["ward_id"],
+                                datetime.fromtimestamp(item["dt"], tz=timezone.utc),
+                                item.get("temp"),
+                                item.get("feels_like"),
+                                item.get("pressure"),
+                                item.get("humidity"),
+                                item.get("dew_point"),
+                                item.get("clouds"),
+                                item.get("wind_speed"),
+                                item.get("wind_deg"),
+                                item.get("wind_gust"),
+                                item.get("visibility"),
+                                item.get("uvi"),
+                                item.get("pop"),
+                                item.get("rain", {}).get("1h") if item.get("rain") else None,
+                                w_info.get("main"),
+                                w_info.get("description"),
+                                'history',  # data_kind = history
+                                'openweather',
+                                'weather_history_backfill'
+                            ))
+                    except Exception as e:
+                        logger.warning(f"Error fetching weather history for {w['ward_id']} at {noon}: {e}")
+                    
+                    current += timedelta(days=1)
+                    attempts += 1
+        
+        logger.info(f"Weather History Backfill: collected {len(weather_records)} records")
+        
+        if weather_records:
+            # Use bulk upsert with history priority
+            self._bulk_upsert_weather_hourly(weather_records, priority='history')
+        else:
+            logger.warning("No weather history records to insert")
+
+        # Aggregate history to daily after fetching hourly history
+        self._aggregate_history_to_daily()
+
+    def _aggregate_history_to_daily(self):
+        """Aggregate hourly history data into daily summary.
+        
+        This runs after weather history is ingested into fact_weather_hourly.
+        It aggregates all history records into daily summaries and inserts
+        into fact_weather_daily with data_kind='history'.
+        
+        This is needed because:
+        - OpenWeather timemachine API only returns hourly data
+        - We need daily aggregates for compare_with_yesterday() and historical queries
+        """
+        logger.info("Starting aggregation of hourly history to daily...")
+        
+        conn = get_db_connection()
+        try:
+            with conn:
+                with conn.cursor() as cur:
+                    # Aggregate query: group hourly history by date
+                    # Note: We use ts_utc at noon as proxy for daily temp
+                    agg_sql = """
+                        INSERT INTO fact_weather_daily (
+                            ward_id, date,
+                            temp_min, temp_max, temp_avg,
+                            humidity, pressure, dew_point,
+                            wind_speed, wind_deg,
+                            clouds, pop, rain_total, uvi,
+                            weather_main, weather_description,
+                            data_kind, source, source_job
+                        )
+                        SELECT 
+                            ward_id,
+                            ts_utc::date as date,
+                            MIN(temp) as temp_min,
+                            MAX(temp) as temp_max,
+                            AVG(temp) as temp_avg,
+                            AVG(humidity)::int as humidity,
+                            AVG(pressure)::int as pressure,
+                            AVG(dew_point) as dew_point,
+                            AVG(wind_speed) as wind_speed,
+                            (array_agg(wind_deg ORDER BY wind_speed DESC))[1] as wind_deg,
+                            AVG(clouds)::int as clouds,
+                            MAX(pop) as pop,
+                            SUM(COALESCE(rain_1h, 0)) as rain_total,
+                            MAX(uvi) as uvi,
+                            (array_agg(weather_main ORDER BY ts_utc DESC))[1] as weather_main,
+                            (array_agg(weather_description ORDER BY ts_utc DESC))[1] as weather_description,
+                            'history',
+                            'openweather',
+                            'history_aggregation'
+                        FROM fact_weather_hourly
+                        WHERE data_kind = 'history'
+                          AND ts_utc > NOW() - INTERVAL '30 days'
+                        GROUP BY ward_id, ts_utc::date
+                        ON CONFLICT (ward_id, date) DO UPDATE SET
+                            temp_min = EXCLUDED.temp_min,
+                            temp_max = EXCLUDED.temp_max,
+                            temp_avg = EXCLUDED.temp_avg,
+                            humidity = EXCLUDED.humidity,
+                            pressure = EXCLUDED.pressure,
+                            dew_point = EXCLUDED.dew_point,
+                            wind_speed = EXCLUDED.wind_speed,
+                            wind_deg = EXCLUDED.wind_deg,
+                            clouds = EXCLUDED.clouds,
+                            pop = EXCLUDED.pop,
+                            rain_total = EXCLUDED.rain_total,
+                            uvi = EXCLUDED.uvi,
+                            weather_main = EXCLUDED.weather_main,
+                            weather_description = EXCLUDED.weather_description,
+                            data_kind = EXCLUDED.data_kind,
+                            source = EXCLUDED.source,
+                            source_job = 'history_aggregation'
+                    """
+                    cur.execute(agg_sql)
+                    affected = cur.rowcount
+                    conn.commit()
+                    logger.info(f"Aggregated {affected} daily history records")
+        except Exception as e:
+            logger.error(f"Error aggregating history to daily: {e}")
+            conn.rollback()
+        finally:
+            conn.close()
 
     async def run_smoke_test(self):
         """Mode: smoke_test. Test key 4 (One Call 3.0) with 1 ward to verify activation."""
@@ -404,16 +590,41 @@ class OpenWeatherAsyncIngestor:
 
 if __name__ == "__main__":
     import sys
-    mode = sys.argv[1] if len(sys.argv) > 1 else "nowcast"
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="OpenWeather Ingestion Script")
+    parser.add_argument("mode", nargs="?", default="nowcast", help="Mode: nowcast, forecast, history, smoke_test")
+    parser.add_argument("--days", type=int, default=14, help="Number of days for history backfill")
+    parser.add_argument("--weather", action="store_true", default=False, help="Only ingest weather history")
+    parser.add_argument("--air", action="store_true", default=False, help="Only ingest air pollution history")
+    
+    args = parser.parse_args()
+    mode = args.mode
+    
     ingestor = OpenWeatherAsyncIngestor()
+    
     if mode == "nowcast":
         asyncio.run(ingestor.run_nowcast())
     elif mode == "forecast":
         asyncio.run(ingestor.run_forecast())
     elif mode in ("history", "history_backfill"):
-        days = int(sys.argv[2]) if len(sys.argv) > 2 else 14
-        asyncio.run(ingestor.run_history_backfill(days=days))
+        # Determine what to ingest
+        do_weather = args.weather or (not args.air)  # Default: both or weather if specified
+        do_air = args.air or (not args.weather)       # Default: both or air if specified
+        
+        print(f"History Backfill Options:")
+        print(f"  - Weather: {'YES' if do_weather else 'NO'}")
+        print(f"  - Air Pollution: {'YES' if do_air else 'NO'}")
+        print(f"  - Days: {args.days}")
+        
+        asyncio.run(ingestor.run_history_backfill(
+            days=args.days, 
+            do_weather=do_weather,
+            do_air=do_air
+        ))
     elif mode == "smoke_test":
         asyncio.run(ingestor.run_smoke_test())
     else:
-        print(f"Unknown mode: {mode}. Available: nowcast, forecast, history [days], smoke_test")
+        print(f"Unknown mode: {mode}")
+        print(f"Available modes: nowcast, forecast, history, smoke_test")
+        print(f"History options: --weather (only weather), --air (only air pollution)")
