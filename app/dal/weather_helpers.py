@@ -193,22 +193,206 @@ def weather_main_to_vietnamese(weather_main: str) -> str:
         weather_main: Weather main condition from API
         
     Returns:
-        Vietnamese description
+        Vietnamese description with Hanoi context
     """
     translations = {
-        "Clear": "Troi quang",
-        "Clouds": "Troi co may",
+        # 8xx - May (Clouds)
+        "Clear": "Troi quang, khong may",
+        "Clouds": "Troi may",
+        "Few clouds": "It may, troi trong",
+        "Scattered clouds": "May rai rac",
+        "Broken clouds": "Nhieu may",
+        "Overcast": "Troi u am, day may",
+        
+        # 2xx - Gio (Thunderstorm) - Mua dong mua he
+        "Thunderstorm": "Co giong kem mua",
+        
+        # 3xx - Mua phun (Drizzle) - Mua mua xuan
+        "Drizzle": "Mua phun nhe",
+        
+        # 5xx - Mua (Rain) 
         "Rain": "Co mua",
-        "Drizzle": "Mua phun",
-        "Thunderstorm": "Co giong",
-        "Mist": "Co suong mu",
-        "Fog": "Suong mu day",
-        "Haze": "Co mu",
-        "Smoke": "Co khoi",
+        "Light rain": "Mua nho",
+        "Moderate rain": "Mua vua",
+        "Heavy intensity rain": "Mua to",
+        "Very heavy rain": "Mua rat to",
+        "Extreme rain": "Mua cuc lon",
+        "Freezing rain": "Mua dong bang (vung nui cao)",
+        
+        # 7xx - Khi quyen (Atmosphere)
+        "Mist": "Suong mu nhe (tam nhin 1-2km)",
+        "Fog": "Suong mu day (tam nhin < 1km)",
+        "Haze": "Co mu (tam nhin giam do bui/am)",
+        "Smoke": "Co khoi (co the do dot ram)",
         "Dust": "Co bui",
         "Sand": "Co cat",
-        "Ash": "Tro",
+        "Ash": "Co tro",
         "Squall": "Gio giat",
         "Tornado": "Thien tai",
+        
+        # Snow (hiem vung nui cao)
+        "Snow": "Tuyet (vung nui cao)",
+        "Light snow": "Tuyet nhe",
+        "Heavy snow": "Tuyet to",
+        "Sleet": "Mua dong (vung nui cao)",
+        
+        # Additional
+        "Sky is clear": "Troi quang",
     }
     return translations.get(weather_main, weather_main)
+
+
+def compute_heat_index(temp_c: Optional[float], humidity: Optional[int]) -> Optional[dict]:
+    """Compute Heat Index using NWS Rothfusz formula.
+    
+    Only applies when temp > 27°C (80°F).
+    Based on National Weather Service formula.
+    
+    Args:
+        temp_c: Temperature in Celsius
+        humidity: Relative humidity in %
+        
+    Returns:
+        Dict with heat_index (°C) and level, or None if not applicable
+    """
+    if temp_c is None or humidity is None or temp_c < 27:
+        return None
+    
+    # Convert to Fahrenheit for NWS formula
+    T = temp_c * 9/5 + 32
+    RH = humidity
+    
+    # Rothfusz regression equation
+    HI = (-42.379 + 2.04901523*T + 10.14333127*RH 
+          - 0.22475541*T*RH - 0.00683783*T**2 
+          - 0.05481717*RH**2 + 0.00122874*T**2*RH 
+          + 0.00085282*T*RH**2 - 0.00000199*T**2*RH**2)
+    
+    # Convert back to Celsius
+    hi_c = (HI - 32) * 5/9
+    
+    # Determine warning level
+    if hi_c >= 52:
+        level = "Cuc nguy hiem"
+        description = "Say nan/soc nhiet gan nhu chắc chắn. Tránh ra ngoài."
+    elif hi_c >= 40:
+        level = "Nguy hiem"
+        description = "Say nan rất có thể xảy ra. Hạn chế hoạt động ngoài trời."
+    elif hi_c >= 33:
+        level = "Canh bao cao"
+        description = "Có thể say nắng, chuột rút. Uống nhiều nước."
+    elif hi_c >= 27:
+        level = "Than trong"
+        description = "Mệt mỏi có thể xảy ra khi hoạt động kéo dài."
+    else:
+        level = "An toan"
+        description = "Hoạt động ngoài trời bình thường."
+    
+    return {
+        "heat_index": round(hi_c, 1),
+        "level": level,
+        "description": description
+    }
+
+
+def compute_wind_chill(temp_c: Optional[float], wind_speed_ms: Optional[float]) -> Optional[dict]:
+    """Compute Wind Chill using NWS formula.
+    
+    Only applies when temp <= 10°C (50°F) and wind > 1.3 m/s (4.6 km/h).
+    Based on National Weather Service formula.
+    
+    Args:
+        temp_c: Temperature in Celsius
+        wind_speed_ms: Wind speed in m/s
+        
+    Returns:
+        Dict with wind_chill (°C) and level, or None if not applicable
+    """
+    if temp_c is None or wind_speed_ms is None:
+        return None
+    
+    if temp_c > 10 or wind_speed_ms <= 1.3:
+        return None
+    
+    # Convert to km/h for NWS formula
+    V = wind_speed_ms * 3.6
+    
+    # NWS Wind Chill formula
+    WC = 13.12 + 0.6215*temp_c - 11.37*V**0.16 + 0.3965*temp_c*V**0.16
+    
+    # Determine warning level
+    if WC <= -20:
+        level = "Cuc nguy hiem"
+        description = "Nguy hiểm cho sức khỏe. Ở trong nhà."
+    elif WC <= -10:
+        level = "Nguy hiem"
+        description = "Nguy cơ hạ thân nhiệt. Hạn chế ra ngoài."
+    elif WC <= 0:
+        level = "Rat lanh"
+        description = "Cơ thể mất nhiệt nhanh. Mặc đủ ấm."
+    else:
+        level = "Lanh"
+        description = "Có thể lạnh. Mặc áo ấm."
+    
+    return {
+        "wind_chill": round(WC, 1),
+        "level": level,
+        "description": description
+    }
+
+def compute_heat_index(temp_c, humidity):
+    """Compute Heat Index using NWS Rothfusz formula.
+    
+    Only applies when temp > 27C.
+    """
+    if temp_c is None or humidity is None or temp_c < 27:
+        return None
+    
+    T = temp_c * 9/5 + 32
+    RH = humidity
+    
+    HI = (-42.379 + 2.04901523*T + 10.14333127*RH 
+          - 0.22475541*T*RH - 0.00683783*T**2 
+          - 0.05481717*RH**2 + 0.00122874*T**2*RH 
+          + 0.00085282*T*RH**2 - 0.00000199*T**2*RH**2)
+    
+    hi_c = (HI - 32) * 5/9
+    
+    if hi_c >= 52:
+        level = "Cuc nguy hiem"
+    elif hi_c >= 40:
+        level = "Nguy hiem"
+    elif hi_c >= 33:
+        level = "Canh bao cao"
+    elif hi_c >= 27:
+        level = "Than trong"
+    else:
+        level = "An toan"
+    
+    return {"heat_index": round(hi_c, 1), "level": level}
+
+
+def compute_wind_chill(temp_c, wind_ms):
+    """Compute Wind Chill using NWS formula.
+    
+    Only applies when temp <= 10C and wind > 1.3 m/s.
+    """
+    if temp_c is None or wind_ms is None:
+        return None
+    
+    if temp_c > 10 or wind_ms <= 1.3:
+        return None
+    
+    V = wind_ms * 3.6
+    WC = 13.12 + 0.6215*temp_c - 11.37*V**0.16 + 0.3965*temp_c*V**0.16
+    
+    if WC <= -20:
+        level = "Cuc nguy hiem"
+    elif WC <= -10:
+        level = "Nguy hiem"
+    elif WC <= 0:
+        level = "Rat lanh"
+    else:
+        level = "Lanh"
+    
+    return {"wind_chill": round(WC, 1), "level": level}

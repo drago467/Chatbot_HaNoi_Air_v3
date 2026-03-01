@@ -115,7 +115,7 @@ ACTIVITY_TEMPLATES = {
     "bike": {
         "name": "Di xe dap",
         "good_conditions": "Nhiet do 18-28°C, gio nhe (<5 m/s)",
-        "bad_Conditions": "Gio manh, mua, troi tuot"
+        "bad_conditions": "Gio manh, mua, troi tuot"
     },
     "chup_anh": {
         "name": "Chup anh ngoai troi",
