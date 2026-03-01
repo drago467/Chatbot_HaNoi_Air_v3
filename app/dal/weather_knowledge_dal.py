@@ -276,4 +276,8 @@ def get_weather_summary_text(weather_data: Dict[str, Any]) -> str:
     
     # Wind
     if wind_speed and wind_deg:
-   
+        from app.dal.weather_helpers import wind_deg_to_vietnamese
+        wind_dir = wind_deg_to_vietnamese(wind_deg)
+        parts.append(f"gio {wind_dir} {wind_speed} m/s")
+    
+    return ", ".join(parts) if parts else "Khong co du lieu"

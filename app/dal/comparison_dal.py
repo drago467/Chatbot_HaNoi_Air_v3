@@ -75,7 +75,7 @@ def compare_with_yesterday(ward_id: str) -> Dict[str, Any]:
                rain_total, weather_main, data_kind
         FROM fact_weather_daily
         WHERE ward_id = %s
-          AND data_kind = "history"
+          AND data_kind = 'history'
         ORDER BY date DESC
         LIMIT 2
     """, (ward_id,))
