@@ -1,0 +1,49 @@
+query,expected_tool,expected_location
+"Bây giờ thời tiết Cầu Giấy thế nào?",get_current_weather,Cầu Giấy
+"Thời tiết hôm nay Hà Nội như thế nào?",get_current_weather,Hà Nội
+"Chiều nay có mưa không?",get_hourly_forecast,current
+"3 giờ nữa trời như thế nào?",get_hourly_forecast,current
+"Ngày mai thời tiết thế nào?",get_daily_summary,current
+"Tuần này thời tiết thế nào?",get_weather_period,current
+"Cầu Giấy và Hoàn Kiếm nơi nào mát hơn?",compare_weather,"Cầu Giấy,Hoàn Kiếm"
+"So sánh thời tiết Đống Đa và Thanh Xuân",compare_weather,"Đống Đa,Thanh Xuân"
+"Hôm qua thời tiết thế nào?",get_weather_history,current
+"Tuần trước thời tiết như thế nào?",get_weather_history,current
+"Có cảnh báo thời tiết gì không?",get_weather_alerts,current
+"Hà Nội có hiện tượng thời tiết đặc biệt nào không?",detect_phenomena,current
+"Thời tiết hôm nay nóng hơn bình thường không?",get_seasonal_comparison,current
+"Hôm nay nóng hay lạnh hơn mọi ngày?",compare_with_yesterday,current
+"Đi chơi hôm nay được không?",get_activity_advice,current
+"Có nên ra ngoài hôm nay không?",get_activity_advice,current
+"Nhiệt độ Cầu Giấy bây giờ",get_current_weather,Cầu Giấy
+"Trời hôm nay có mây không?",get_current_weather,current
+"Độ ẩm Hà Nội",get_current_weather,Hà Nội
+"Có gió không?",get_current_weather,current
+"Ngày kia mưa không?",get_daily_summary,current
+"Dự báo 3 ngày tới",get_weather_period,current
+"Thời tiết sáng mai",get_daily_summary,current
+"Chiều nay nóng không?",get_hourly_forecast,current
+"Tuần sau thời tiết thế nào?",get_weather_period,current
+"Thời tiết Hoàn Kiếm",get_current_weather,Hoàn Kiếm
+"So sánh Ba Đình và Tây Hồ",compare_weather,"Ba Đình,Tây Hồ"
+"Hôm nay và hôm qua khác nhau như thế nào?",compare_with_yesterday,current
+"Thời tiết 2 ngày trước",get_weather_history,current
+"Tuần trước có mưa không?",get_weather_history,current
+"Hiện tại thời tiết an toàn cho runner không?",get_activity_advice,current
+"Có nên mang theo ô không?",get_weather_alerts,current
+"Thời tiết cuối tuần",get_weather_period,current
+"Ngày mai nhiệt độ bao nhiêu?",get_daily_summary,current
+"Có nên giặt quần áo hôm nay không?",get_activity_advice,current
+"Thời tiết quận Cầu Giấy",get_current_weather,Cầu Giấy
+"Trời mưa không?",get_current_weather,current
+"Buổi sáng thời tiết thế nào?",get_hourly_forecast,current
+"Buổi tối có lạnh không?",get_hourly_forecast,current
+"UV hôm nay bao nhiêu?",get_current_weather,current
+"Điều kiện thời tiết hôm nay",get_current_weather,current
+"Có hiện tượng nồm ẩm không?",detect_phenomena,current
+"Có nóng hơn mọi ngày không?",compare_with_yesterday,current
+"Thời tiết 2 ngày tới",get_weather_period,current
+"Dự báo tuần này",get_weather_period,current
+"Hà Nội hôm nay",get_current_weather,Hà Nội
+"Thời tiết phường Cầu Giấy",get_current_weather,Cầu Giấy
+"Ngày mai trời quang không?",get_daily_summary,current

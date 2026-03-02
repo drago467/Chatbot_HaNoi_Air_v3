@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: hanoiair_postgres
+    environment:
+      POSTGRES_DB: chatbothanoiair
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hanoiair2024}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./data:/app/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d chatbothanoiair"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  streamlit:
+    build: .
+    container_name: hanoiair_streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-hanoiair2024}@postgres:5432/chatbothanoiair
+      API_BASE: ${API_BASE}
+      API_KEY: ${API_KEY}
+      MODEL: ${MODEL:-gpt-4o-2024-11-20}
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./app:/app/app
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    name: hanoiair_network
