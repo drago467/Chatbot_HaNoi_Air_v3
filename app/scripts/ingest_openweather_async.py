@@ -593,38 +593,45 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="OpenWeather Ingestion Script")
-    parser.add_argument("mode", nargs="?", default="nowcast", help="Mode: nowcast, forecast, history, smoke_test")
-    parser.add_argument("--days", type=int, default=14, help="Number of days for history backfill")
-    parser.add_argument("--weather", action="store_true", default=False, help="Only ingest weather history")
-    parser.add_argument("--air", action="store_true", default=False, help="Only ingest air pollution history")
+    parser.add_argument("--weather-only", action="store_true", help="Only ingest weather (no air pollution)")
+    parser.add_argument("--air-only", action="store_true", help="Only ingest air pollution (no weather)")
+    parser.add_argument("--days", type=int, default=14, help="Number of days for history backfill (default: 14)")
+    parser.add_argument("--history-only", action="store_true", help="Only ingest history data")
+    parser.add_argument("--current-only", action="store_true", help="Only ingest current data")
+    parser.add_argument("--forecast-only", action="store_true", help="Only ingest forecast data")
     
     args = parser.parse_args()
-    mode = args.mode
+    
+    # Determine what to ingest
+    do_weather = not args.air_only
+    do_air = not args.weather_only
+    
+    if do_air and do_weather:
+        print("Mode: Weather + Air Pollution")
+    elif do_weather:
+        print("Mode: Weather Only")
+    elif do_air:
+        print("Mode: Air Pollution Only")
+    
+    print(f"History days: {args.days}")
+    print(f"History: {not (args.current_only or args.forecast_only)}")
+    print(f"Current: {not (args.history_only or args.forecast_only)}")
+    print(f"Forecast: {not (args.history_only or args.current_only)}")
+    print()
     
     ingestor = OpenWeatherAsyncIngestor()
     
-    if mode == "nowcast":
-        asyncio.run(ingestor.run_nowcast())
-    elif mode == "forecast":
-        asyncio.run(ingestor.run_forecast())
-    elif mode in ("history", "history_backfill"):
-        # Determine what to ingest
-        do_weather = args.weather or (not args.air)  # Default: both or weather if specified
-        do_air = args.air or (not args.weather)       # Default: both or air if specified
-        
-        print(f"History Backfill Options:")
-        print(f"  - Weather: {'YES' if do_weather else 'NO'}")
-        print(f"  - Air Pollution: {'YES' if do_air else 'NO'}")
-        print(f"  - Days: {args.days}")
-        
+    # Run in order: history -> current -> forecast
+    if not args.current_only and not args.forecast_only:
+        # History
+        print("=== STEP 1: HISTORY BACKFILL ===")
         asyncio.run(ingestor.run_history_backfill(
-            days=args.days, 
+            days=args.days,
             do_weather=do_weather,
             do_air=do_air
         ))
-    elif mode == "smoke_test":
-        asyncio.run(ingestor.run_smoke_test())
-    else:
-        print(f"Unknown mode: {mode}")
-        print(f"Available modes: nowcast, forecast, history, smoke_test")
-        print(f"History options: --weather (only weather), --air (only air pollution)")
+    
+    if not args.history_only and not args.forecast_only:
+        # Current
+        print("\n=== STEP 2: CURRENT DATA ===")
+        asyncio.run(ingestor.run_nowcast())

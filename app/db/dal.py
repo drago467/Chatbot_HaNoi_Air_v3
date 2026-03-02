@@ -4,21 +4,12 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from typing import List, Dict, Any, Optional
+from dotenv import load_dotenv
 
+# Import from connection.py to avoid duplication
+from app.db.connection import get_db_connection
 
-def get_db_connection():
-    """Get a connection to the Postgres database using environment variables."""
-    postgres_url = os.getenv("POSTGRES_URL")
-    if postgres_url:
-        return psycopg2.connect(postgres_url)
-    
-    return psycopg2.connect(
-        user=os.getenv("POSTGRES_USER"),
-        password=os.getenv("POSTGRES_PASSWORD"),
-        host=os.getenv("POSTGRES_HOST"),
-        port=os.getenv("POSTGRES_PORT"),
-        database=os.getenv("POSTGRES_DB")
-    )
+load_dotenv()
 
 
 def query(sql: str, params: tuple = None) -> List[Dict[str, Any]]:

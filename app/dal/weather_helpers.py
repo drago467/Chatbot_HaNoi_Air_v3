@@ -86,13 +86,13 @@ def wind_beaufort_vietnamese(beaufort: int) -> str:
         2: "Gio nhe",
         3: "Gio diu",
         4: "Gio vua",
-        5: "Gio tuong doi lon",
-        6: "Gio manh",
-        7: "Gio manh",
+        5: "Gio manh",
+        6: "Gio rat manh",
+        7: "Gio viet manh",
         8: "Gio bao",
         9: "Gio bao manh",
-        10: "Gio bao",
-        11: "Gio bao violent",
+        10: "Gio bao rat manh",
+        11: "Gio bao du doi",
         12: "Bao"
     }
     return descriptions.get(beaufort, "Khong xac dinh")
@@ -339,60 +339,3 @@ def compute_wind_chill(temp_c: Optional[float], wind_speed_ms: Optional[float]) 
         "level": level,
         "description": description
     }
-
-def compute_heat_index(temp_c, humidity):
-    """Compute Heat Index using NWS Rothfusz formula.
-    
-    Only applies when temp > 27C.
-    """
-    if temp_c is None or humidity is None or temp_c < 27:
-        return None
-    
-    T = temp_c * 9/5 + 32
-    RH = humidity
-    
-    HI = (-42.379 + 2.04901523*T + 10.14333127*RH 
-          - 0.22475541*T*RH - 0.00683783*T**2 
-          - 0.05481717*RH**2 + 0.00122874*T**2*RH 
-          + 0.00085282*T*RH**2 - 0.00000199*T**2*RH**2)
-    
-    hi_c = (HI - 32) * 5/9
-    
-    if hi_c >= 52:
-        level = "Cuc nguy hiem"
-    elif hi_c >= 40:
-        level = "Nguy hiem"
-    elif hi_c >= 33:
-        level = "Canh bao cao"
-    elif hi_c >= 27:
-        level = "Than trong"
-    else:
-        level = "An toan"
-    
-    return {"heat_index": round(hi_c, 1), "level": level}
-
-
-def compute_wind_chill(temp_c, wind_ms):
-    """Compute Wind Chill using NWS formula.
-    
-    Only applies when temp <= 10C and wind > 1.3 m/s.
-    """
-    if temp_c is None or wind_ms is None:
-        return None
-    
-    if temp_c > 10 or wind_ms <= 1.3:
-        return None
-    
-    V = wind_ms * 3.6
-    WC = 13.12 + 0.6215*temp_c - 11.37*V**0.16 + 0.3965*temp_c*V**0.16
-    
-    if WC <= -20:
-        level = "Cuc nguy hiem"
-    elif WC <= -10:
-        level = "Nguy hiem"
-    elif WC <= 0:
-        level = "Rat lanh"
-    else:
-        level = "Lanh"
-    
-    return {"wind_chill": round(WC, 1), "level": level}

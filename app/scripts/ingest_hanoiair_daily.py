@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import asyncio
 import sys
+from app.dal.timezone_utils import now_ict
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -95,7 +96,7 @@ async def run_district_avg(target_date: date | None = None):
     Calls the API twice (component_id=aqi and component_id=pm25) to get
     both AQI and PM2.5 values, then merges into fact_hanoiair_daily.
     """
-    target_date = target_date or date.today()
+    target_date = target_date or now_ict().date()
     date_str = target_date.strftime("%Y-%m-%d")
     logger.info(f"[district_avg] Starting for date={date_str}")
 
@@ -209,7 +210,7 @@ def _upsert_hanoiair_daily(records: List[Tuple], is_actual: bool = False):
 
 async def run_ranking(target_date: date | None = None):
     """Fetch ward-level ranking by AQI/PM2.5 from rankingprovince."""
-    target_date = target_date or date.today()
+    target_date = target_date or now_ict().date()
     prev_date = target_date - timedelta(days=1)
     date_str = target_date.strftime("%Y-%m-%d")
     prev_str = prev_date.strftime("%Y-%m-%d")
@@ -285,7 +286,7 @@ async def run_forecast(target_date: date | None = None, predays: int = 14, nextd
     For each of 126 wards, fetches a time series of (predays + 1 + nextdays) daily values.
     Dates <= target_date are marked as actual; dates > target_date as forecast.
     """
-    target_date = target_date or date.today()
+    target_date = target_date or now_ict().date()
     date_str = target_date.strftime("%Y-%m-%d")
     ward_ids = _get_ward_ids()
     logger.info(
@@ -358,7 +359,7 @@ async def run_forecast(target_date: date | None = None, predays: int = 14, nextd
 
 async def run_all(target_date: date | None = None):
     """Run all 3 HanoiAir jobs sequentially."""
-    target_date = target_date or date.today()
+    target_date = target_date or now_ict().date()
     logger.info(f"[all] Running all HanoiAir jobs for date={target_date}")
     await run_district_avg(target_date)
     await run_ranking(target_date)

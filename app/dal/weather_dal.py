@@ -1,6 +1,7 @@
 """Weather DAL - Core weather queries for LLM Agent."""
 
 from typing import List, Dict, Any, Optional
+from app.dal.timezone_utils import format_ict, to_ict
 from app.db.dal import query, query_one
 from app.dal.weather_helpers import (
     wind_deg_to_vietnamese,
@@ -70,6 +71,7 @@ def get_current_weather(ward_id: str) -> Dict[str, Any]:
     result["dew_point_status"] = get_dew_point_status(result.get("dew_point"))
     result["pressure_status"] = get_pressure_status(result.get("pressure"))
     result["feels_like_status"] = get_feels_like_status(result.get("temp"), result.get("feels_like"))
+    result["time_ict"] = format_ict(result.get("ts_utc"))
     
     return result
 
@@ -97,10 +99,11 @@ def get_hourly_forecast(ward_id: str, hours: int = 48) -> List[Dict[str, Any]]:
         LIMIT %s
     """, (ward_id, hours))
     
-    # Add Vietnamese wind direction
+    # Add Vietnamese wind direction and ICT time
     for r in results:
         r["wind_direction_vi"] = wind_deg_to_vietnamese(r.get("wind_deg"))
         r["wind_beaufort"] = wind_speed_to_beaufort(r.get("wind_speed"))
+        r["time_ict"] = format_ict(r.get("ts_utc"))
     
     return results
 
@@ -127,6 +130,13 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
         ORDER BY date
         LIMIT %s
     """, (ward_id, days))
+    
+    # Add ICT times
+    for r in results:
+        if r.get('sunrise'):
+            r['sunrise_ict'] = format_ict(r['sunrise'])
+        if r.get('sunset'):
+            r['sunset_ict'] = format_ict(r['sunset'])
     
     return results
 

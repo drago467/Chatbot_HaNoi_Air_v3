@@ -1,3 +1,4 @@
+from app.dal.timezone_utils import format_ict
 """Weather Alerts DAL - Get weather alerts for a ward or all wards."""
 
 from typing import List, Dict, Any, Optional
@@ -55,7 +56,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
     # Generate alerts from results
     alerts = []
     for r in results:
-        alert = {"ward_id": r.get("ward_id"), "ts_utc": str(r.get("ts_utc"))}
+        alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
         
         # Wind gust alert
         if r.get("wind_gust") and r["wind_gust"] > 20:
@@ -66,7 +67,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         
         # Cold alert
         if r.get("temp") and r["temp"] < KTTV_THRESHOLDS["RET_HAI"]:
-            alert = {"ward_id": r.get("ward_id"), "ts_utc": str(r.get("ts_utc"))}
+            alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "cold"
             alert["severity"] = "warning"
             alert["message"] = f"Ret hai {r['temp']:.1f}°C - Can mac am"
@@ -74,7 +75,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         
         # Heat alert
         if r.get("temp") and r["temp"] > KTTV_THRESHOLDS["NANG_NONG_DB"]:
-            alert = {"ward_id": r.get("ward_id"), "ts_utc": str(r.get("ts_utc"))}
+            alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "heat"
             alert["severity"] = "warning"
             alert["message"] = f"Nang nong nguy hiem {r['temp']:.1f}°C - Han che ra ngoai"
@@ -82,7 +83,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         
         # Thunderstorm alert
         if r.get("weather_main") == "Thunderstorm":
-            alert = {"ward_id": r.get("ward_id"), "ts_utc": str(r.get("ts_utc"))}
+            alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "thunderstorm"
             alert["severity"] = "warning"
             alert["message"] = f"Co giong - Tranh ra ngoai"

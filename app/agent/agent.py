@@ -45,84 +45,112 @@ SYSTEM_PROMPT = """Ban la chatbot thoi tiet chuyen ve Ha Noi - chuyen gia ve khi
 2. Neu nhiet do bat thuong -> So sanh voi trung binh mua
 3. Neu co nguy hiem -> Canh bao ro rang
 4. Tuy theo nhom doi tuong -> Dua ra khuyen nghi phu hop
-
-## Vi du
-User: "Cau Giay hom nay the nao?"
-Bot: "Cau Giay hien 28C, troi nang. 
-Luu y: Nhiet do cao hon trung binh thang 3 6C - day la ngay am bat thuong.
-Neu ban di chay bo, nen tap buoi sang som (truoc 7h) de tranh nang nong."
-
-User: "Co canh bao gi khong?"
-Bot: "Hien khong co canh bao nguy hiem. Tuy nhien, chieu nay co kha nang mua 40%, nen mang theo o neu di ra ngoai."
 """
 
+# Cache agent instance
+_agent = None
+
+def get_agent():
+    global _agent
+    if _agent is None:
+        _agent = create_weather_agent()
+    return _agent
 
 def create_weather_agent():
-    """Create weather agent with LangGraph."""
-    
-    # Model - use proxy API
     API_BASE = os.getenv("API_BASE")
-    API_KEY = os.getenv("OPENAI_API_KEY")
+    API_KEY = os.getenv("API_KEY")
+    MODEL_NAME = os.getenv("MODEL", "gpt-4o-2024-11-20")
     
     if not API_BASE or not API_KEY:
-        raise ValueError("API_BASE and OPENAI_API_KEY must be set in .env")
+        raise ValueError("API_BASE and API_KEY must be set in .env")
     
-    model = ChatOpenAI(
-        model="gpt-4o-mini",
-        temperature=0,
-        base_url=API_BASE,
-        api_key=API_KEY
-    )
+    model = ChatOpenAI(model=MODEL_NAME, temperature=0, base_url=API_BASE, api_key=API_KEY)
     
-    # Checkpointer - use Postgres for persistence
     DATABASE_URL = os.getenv("DATABASE_URL")
-    
     if not DATABASE_URL:
         raise ValueError("DATABASE_URL must be set in .env")
     
     checkpointer = PostgresSaver.from_conn_string(DATABASE_URL)
+    checkpointer.setup()
     
-    # Create agent
-    agent = create_react_agent(
-        model=model,
-        tools=TOOLS,
-        prompt=SYSTEM_PROMPT,
-        checkpointer=checkpointer,
-    )
-    
+    agent = create_react_agent(model=model, tools=TOOLS, prompt=SYSTEM_PROMPT, checkpointer=checkpointer)
     return agent
 
-
 def run_agent(message: str, thread_id: str = "default") -> dict:
-    """Run agent with a message.
-    
-    Args:
-        message: User message
-        thread_id: Thread ID for conversation persistence
-        
-    Returns:
-        Agent response
-    """
-    agent = create_weather_agent()
-    
+    """Run agent synchronously (blocking)."""
+    agent = get_agent()
     config = {"configurable": {"thread_id": thread_id}}
-    
-    result = agent.invoke(
-        {"messages": [{"role": "user", "content": message}]},
-        config
-    )
-    
+    result = agent.invoke({"messages": [{"role": "user", "content": message}]}, config)
     return result
 
 
-# For testing
+def stream_agent(message: str, thread_id: str = "default"):
+    """Stream agent response token by token.
+    
+    Yields chunks of the response for real-time display.
+    
+    Args:
+        message: User message
+        thread_id: Conversation thread ID
+        
+    Yields:
+        Text chunks from the agent's response
+    """
+    agent = get_agent()
+    config = {"configurable": {"thread_id": thread_id}}
+    
+    # Stream with "messages" mode to get token-by-token updates
+    for event in agent.stream(
+        {"messages": [{"role": "user", "content": message}]},
+        config,
+        stream_mode="messages"
+    ):
+        # event is a tuple of (message_chunk, metadata)
+        if event and len(event) >= 1:
+            msg_chunk = event[0]
+            # Only yield content from the assistant messages
+            if hasattr(msg_chunk, "content") and msg_chunk.content:
+                yield msg_chunk.content
+
+
+def stream_agent_with_updates(message: str, thread_id: str = "default"):
+    """Stream agent response with both messages and tool updates.
+    
+    Yields dict with 'type' and 'content' keys:
+    - type='message': text chunk from LLM
+    - type='tool': tool call start/update/end
+    
+    Args:
+        message: User message
+        thread_id: Conversation thread ID
+        
+    Yields:
+        Dict with type and content
+    """
+    agent = get_agent()
+    config = {"configurable": {"thread_id": thread_id}}
+    
+    # Stream with both messages and updates
+    for event in agent.stream(
+        {"messages": [{"role": "user", "content": message}]},
+        config,
+        stream_mode=["messages", "updates"]
+    ):
+        # Handle different event formats
+        if isinstance(event, tuple):
+            msg_chunk, metadata = event
+            
+            # Message chunk
+            if hasattr(msg_chunk, "content") and msg_chunk.content:
+                # Check if this is from the agent node
+                if metadata.get("langgraph_node") == "agent":
+                    yield {"type": "message", "content": msg_chunk.content}
+            
+            # Tool updates
+            if metadata.get("langgraph_node") == "tools":
+                yield {"type": "tool", "content": msg_chunk}
+        elif isinstance(event, dict):
+            yield event
+
 if __name__ == "__main__":
-    print("Testing agent...")
-    
-    # Test tool imports
-    from app.agent.tools import TOOLS
-    print(f"Loaded {len(TOOLS)} tools:")
-    for t in TOOLS:
-        print(f"  - {t.name}")
-    
-    print("\nAgent ready!")
+    print("Agent module ready!")

@@ -6,6 +6,7 @@ import os
 from typing import List, Dict, Any, Optional
 from app.core.logging_config import get_logger, setup_logging
 from app.db.connection import get_db_connection
+from app.core.normalize import normalize_name
 from psycopg2.extras import execute_values
 
 setup_logging()
@@ -13,32 +14,6 @@ logger = get_logger(__name__)
 
 BASE_URL = "https://geoi.com.vn"
 
-def normalize_name(name: str) -> str:
-    """Normalize Vietnamese location name for reliable search.
-
-    Goals:
-    - lowercase
-    - remove Vietnamese diacritics
-    - normalize whitespace
-    - map 'đ/Đ' -> 'd'
-
-    Examples:
-    - "Phường Đống Đa" -> "phuong dong da"
-    - "Xã Dương Hòa"   -> "xa duong hoa"
-    """
-    if not name:
-        return ""
-
-    s = name.strip().lower()
-    s = s.replace("đ", "d")
-
-    # Remove combining marks
-    s = unicodedata.normalize("NFD", s)
-    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
-
-    # Collapse whitespace
-    s = " ".join(s.split())
-    return s
 
 def fetch_ward_list() -> List[Dict[str, Any]]:
     """Fetch all wards from HanoiAir administrative API."""

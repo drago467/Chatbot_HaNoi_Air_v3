@@ -1,5 +1,6 @@
 """Weather Knowledge DAL - Detect Hanoi-specific weather phenomena."""
 
+from app.dal.timezone_utils import now_ict
 from typing import Dict, Any, List
 from app.config.thresholds import KTTV_THRESHOLDS
 
@@ -20,7 +21,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     phenomena = []
     
     # Get current month (from data or now)
-    month = weather_data.get("month", datetime.now().month)
+    month = weather_data.get("month", now_ict().month)
     
     humidity = weather_data.get("humidity", 0)
     dew_point = weather_data.get("dew_point", 0)
@@ -40,14 +41,14 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     if month in [2, 3, 4]:
         if humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"] and dew_point_diff <= 2:
             phenomena.append({
-                "type": "nong_am",
+                "type": "nom_am",
                 "name": "Nom am",
                 "description": f"Nom am muc do cao! Do am {humidity}%, nhiet {temp}C, diem suong {dew_point}C - San nha lay mot, quan ao kho beo",
                 "severity": "high"
             })
         elif humidity >= 85 and dew_point_diff <= 3:
             phenomena.append({
-                "type": "nong_am",
+                "type": "nom_am",
                 "name": "Nom am",
                 "description": f"Do am cao muc do vua ({humidity}%) - Cam giac am uot",
                 "severity": "medium"
@@ -192,17 +193,19 @@ def get_seasonal_average(month: int) -> Dict[str, Any]:
     return seasonal_data.get(month, {"temp_avg": 25, "humidity": 75, "rain_days": 10})
 
 
-def compare_with_seasonal(weather_data: Dict[str, Any]) -> Dict[str, Any]:
+def compare_with_seasonal(weather_data: Dict[str, Any], month: int = None) -> Dict[str, Any]:
     """Compare current weather with seasonal average.
     
     Args:
         weather_data: Current weather data
+        month: Month (1-12). If not provided, uses current month.
         
     Returns:
         Dictionary with comparison results
     """
     from datetime import datetime
-    month = datetime.now().month
+    if month is None:
+        month = now_ict().month
     seasonal = get_seasonal_average(month)
     
     comparisons = []

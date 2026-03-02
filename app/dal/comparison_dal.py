@@ -70,13 +70,15 @@ def compare_with_yesterday(ward_id: str) -> Dict[str, Any]:
     Returns:
         Dictionary with comparison data
     """
+    # Query 2 most recent days (both history and forecast)
+    # Prioritize history if available for the same date
     results = query("""
         SELECT date, temp_avg, temp_min, temp_max, humidity, 
                rain_total, weather_main, data_kind
         FROM fact_weather_daily
         WHERE ward_id = %s
-          AND data_kind = 'history'
-        ORDER BY date DESC
+        ORDER BY date DESC, 
+                 CASE WHEN data_kind = 'history' THEN 0 ELSE 1 END
         LIMIT 2
     """, (ward_id,))
     
@@ -86,7 +88,7 @@ def compare_with_yesterday(ward_id: str) -> Dict[str, Any]:
             "message": "Can co du lieu it nhat 2 ngay"
         }
     
-    today, yesterday = results[1], results[0]  # Older first
+    today, yesterday = results[0], results[1]  # results[0] is newest (ORDER BY DESC)
     
     # Calculate changes
     temp_diff = (today.get("temp_avg") or 0) - (yesterday.get("temp_avg") or 0)
