@@ -1,5 +1,6 @@
 """LangGraph Agent Tools for Weather Chatbot."""
 
+import functools
 from typing import Optional
 from pydantic import BaseModel, Field
 from app.dal.timezone_utils import now_ict
@@ -39,6 +40,11 @@ def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
         return {"error": resolved["status"], "message": resolved.get("message", "")}
 
     weather = dal_get_current_weather(resolved["ward_id"])
+    
+    # Guard: if weather has error, return early
+    if "error" in weather:
+        return weather
+    
     weather = enrich_weather_response(weather)
     weather["resolved_location"] = resolved["data"]
     return weather
@@ -63,6 +69,11 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
         return {"error": resolved["status"]}
 
     data = dal_get_hourly_forecast(resolved["ward_id"], hours)
+    
+    # Guard: if data has error, return early
+    if isinstance(data, dict) and "error" in data:
+        return data
+    
     return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"]}
 
 
@@ -85,6 +96,11 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
         return {"error": resolved["status"]}
 
     data = dal_get_daily_forecast(resolved["ward_id"], days)
+    
+    # Guard: if data has error, return early
+    if isinstance(data, dict) and "error" in data:
+        return data
+    
     return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"]}
 
 
@@ -107,6 +123,11 @@ def get_weather_history(ward_id: str = None, location_hint: str = None, date: st
         return {"error": resolved["status"]}
 
     history = dal_get_weather_history(resolved["ward_id"], date)
+    
+    # Guard: if history has error, return early
+    if "error" in history:
+        return history
+    
     history["resolved_location"] = resolved["data"]
     return history
 
@@ -291,7 +312,7 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
     # Temp range + bien do nhiet
     temp_min = row.get("temp_min")
     temp_max = row.get("temp_max")
-    temp_range = temp_max - temp_min if temp_min and temp_max else 0
+    temp_range = temp_max - temp_min if temp_min is not None and temp_max is not None else 0
     bien_do_nhiet = f"Bien do nhiet {temp_range:.0f}C" if temp_range > 0 else ""
     if temp_range > 10:
         bien_do_nhiet += " - Sang lanh, trua nong, nen mac ao khoac"
@@ -403,9 +424,9 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
 
     # Aggregation
     temps = [r["temp_avg"] for r in rows if r.get("temp_avg")]
-    temp_min = min(temps) if temps else None
-    temp_max = max(temps) if temps else None
-    temp_avg = sum(temps) / len(temps) if temps else None
+    temp_min = min(temps) if temps and all(t is not None for t in temps) else None
+    temp_max = max(temps) if temps and all(t is not None for t in temps) else None
+    temp_avg = sum(temps) / len(temps) if temps and all(t is not None for t in temps) else None
     
     rainy_days = sum(1 for r in rows if (r.get("pop") or 0) > 0.5 or (r.get("rain_total") or 0) > 0)
     total_rain = sum(r.get("rain_total") or 0 for r in rows)
@@ -476,6 +497,8 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
 
 
 # Export all tools
+
+
 TOOLS = [
     resolve_location,
     get_current_weather,

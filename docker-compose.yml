@@ -11,9 +11,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      - ./data:/app/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d chatbothanoiair"]
       interval: 10s
@@ -42,7 +41,3 @@ services:
 
 volumes:
   postgres_data:
-
-networks:
-  default:
-    name: hanoiair_network

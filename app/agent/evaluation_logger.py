@@ -6,6 +6,7 @@ Logs conversations and tool calls for evaluation purposes.
 import csv
 import os
 from datetime import datetime
+from app.dal.timezone_utils import now_ict
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 
@@ -59,7 +60,7 @@ class EvaluationLogger:
         with open(self.conversations_file, 'a', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
             writer.writerow([
-                datetime.now().isoformat(),
+                now_ict().isoformat(),
                 session_id,
                 turn_number,
                 user_query,
@@ -85,7 +86,7 @@ class EvaluationLogger:
         with open(self.tool_calls_file, 'a', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
             writer.writerow([
-                datetime.now().isoformat(),
+                now_ict().isoformat(),
                 session_id,
                 turn_number,
                 tool_name,
@@ -164,9 +165,13 @@ class EvaluationLogger:
 _logger: Optional[EvaluationLogger] = None
 
 
-def get_evaluation_logger() -> EvaluationLogger:
-    """Get global evaluation logger instance."""
+def get_evaluation_logger(log_dir: str = "data/evaluation") -> EvaluationLogger:
+    """Get global evaluation logger instance.
+    
+    Args:
+        log_dir: Directory to store evaluation logs. Defaults to data/evaluation.
+    """
     global _logger
     if _logger is None:
-        _logger = EvaluationLogger()
+        _logger = EvaluationLogger(log_dir=log_dir)
     return _logger
