@@ -96,7 +96,7 @@ class EvaluationLogger:
         session_id: str,
         turn_number: int,
         tool_name: str,
-        tool_input: Dict[str, Any],
+        tool_input: Any,
         tool_output: Any,
         success: bool = True,
         execution_time_ms: float = 0

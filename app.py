@@ -8,6 +8,10 @@ import time
 import uuid
 from datetime import datetime
 
+# Setup logging
+from app.core.logging_config import setup_logging
+setup_logging()
+
 # Page config
 st.set_page_config(
     page_title="Chatbot Thời Tiết Hà Nội",
@@ -124,8 +128,13 @@ with st.sidebar:
     
     st.subheader("Chon dia diem")
     
+    # Get districts first (outside try to avoid st.stop being caught)
+    district_names = get_districts()
+    if not district_names:
+        st.warning("Chưa có dữ liệu quận/huyện")
+        st.stop()
+    
     try:
-        district_names = get_districts()
         selected_district = st.selectbox("Quan/Huyen", district_names, index=0)
         
         ward_names = get_wards_by_district(selected_district)

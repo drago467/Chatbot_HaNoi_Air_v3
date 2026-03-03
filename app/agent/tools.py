@@ -1,6 +1,5 @@
 """LangGraph Agent Tools for Weather Chatbot."""
 
-import functools
 from typing import Optional
 from pydantic import BaseModel, Field
 from app.dal.timezone_utils import now_ict
@@ -318,8 +317,8 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
         bien_do_nhiet += " - Sang lanh, trua nong, nen mac ao khoac"
 
     # Feels like gap
-    feels_like_day = row.get("feels_like_day") or 0
-    temp_day = row.get("temp_day") or 0
+    feels_like_day = row.get("feels_like_day")
+    temp_day = row.get("temp_day")
     feels_like_gap = feels_like_day - temp_day
 
     # Rain assessment
@@ -361,7 +360,7 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
             pass
 
     # Wind direction
-    wind_dir = wind_deg_to_vietnamese(row.get("wind_deg")) if row.get("wind_deg") else None
+    wind_dir = wind_deg_to_vietnamese(row.get("wind_deg")) if row.get("wind_deg") is not None else None
 
     # Seasonal comparison
     seasonal = compare_with_seasonal({"temp": row.get("temp_avg"), "humidity": row.get("humidity")})
@@ -434,9 +433,9 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
 
     # Aggregation
     temps = [r["temp_avg"] for r in rows if r.get("temp_avg") is not None]
-    temp_min = min(temps) if temps and all(t is not None for t in temps) else None
-    temp_max = max(temps) if temps and all(t is not None for t in temps) else None
-    temp_avg = sum(temps) / len(temps) if temps and all(t is not None for t in temps) else None
+    temp_min = min(temps) if temps else None
+    temp_max = max(temps) if temps else None
+    temp_avg = sum(temps) / len(temps) if temps else None
     
     rainy_days = sum(1 for r in rows if (r.get("pop") or 0) > 0.5 or (r.get("rain_total") or 0) > 0)
     total_rain = sum(r.get("rain_total") or 0 for r in rows)
@@ -457,9 +456,27 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     # Best/worst day scoring
     def score_day(r):
         score = 0
-        score += 50 if r.get("rain_total") is None or r["rain_total"] < 5 else -20
-        score += 30 if (r.get("uvi") or 0) < 6 else -10
-        score += 20 if 20 <= (r.get("temp_avg") or 30) <= 30 else -10
+        # Don't reward missing data - only give points for actual low rain
+        rain = r.get("rain_total")
+        if rain is not None and rain < 5:
+            score += 50
+        elif rain is not None:
+            score -= 20
+        
+        # UV scoring
+        uvi = r.get("uvi")
+        if uvi is not None and uvi < 6:
+            score += 30
+        elif uvi is not None:
+            score -= 10
+        
+        # Temperature scoring
+        temp = r.get("temp_avg")
+        if temp is not None and 20 <= temp <= 30:
+            score += 20
+        elif temp is not None:
+            score -= 10
+        
         return score
 
     scored = [(r, score_day(r)) for r in rows]
@@ -483,7 +500,7 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     # Seasonal comparison
     month = now_ict().month
     seasonal = get_seasonal_average(month)
-    seasonal_diff = temp_avg - seasonal["temp_avg"] if temp_avg else 0
+    seasonal_diff = temp_avg - seasonal.get("temp_avg", temp_avg) if temp_avg else 0
     seasonal_comp = f"Nong hon {seasonal_diff:.1f}C" if seasonal_diff > 2 else f"Lanh hon {abs(seasonal_diff):.1f}C" if seasonal_diff < -2 else "Binh thuong"
 
     return {

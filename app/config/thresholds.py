@@ -87,4 +87,12 @@ WEATHER_DESCRIPTIONS = {
     "Thunderstorm": "Có giông",
     "Mist": "Có sương mù",
     "Fog": "Sương mù dày",
+    "Snow": "Có tuyết",
+    "Haze": "Có sương mù",
+    "Dust": "Có bụi",
+    "Smoke": "Có khói",
+    "Sand": "Có cát",
+    "Ash": "Có tro",
+    "Squall": "Gió giật",
+    "Tornado": "Xoáy lốc",
 }

@@ -56,7 +56,9 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     w2["ward_name"] = name2
     
     # Calculate differences
-    temp_diff = (w1.get("temp") or 0) - (w2.get("temp") or 0)
+    if w1.get("temp") is None or w2.get("temp") is None:
+        return {"error": "missing_data", "message": "Thiếu dữ liệu nhiệt độ cho một hoặc cả hai địa điểm"}
+    temp_diff = w1.get("temp", 0) - w2.get("temp", 0)
     humidity_diff = (w1.get("humidity") or 0) - (w2.get("humidity") or 0)
     
     # Generate comparison text with location names
@@ -93,7 +95,7 @@ def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
     # Query 2 most recent days (both history and forecast)
     # Prioritize history if available for the same date
     results = query("""
-        SELECT date, temp_avg, temp_min, temp_max, humidity, 
+        SELECT DISTINCT ON (date) date, temp_avg, temp_min, temp_max, humidity, 
                rain_total, weather_main, data_kind
         FROM fact_weather_daily
         WHERE ward_id = %s
@@ -122,7 +124,9 @@ def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
     day_label = f"{days_diff} ngay truoc" if days_diff > 1 else "hom qua"
     
     # Calculate changes
-    temp_diff = (today.get("temp_avg") or 0) - (previous.get("temp_avg") or 0)
+    if today.get("temp_avg") is None or previous.get("temp_avg") is None:
+        return {"error": "missing_data", "message": "Thiếu dữ liệu nhiệt độ cho một hoặc cả hai ngày"}
+    temp_diff = today.get("temp_avg", 0) - previous.get("temp_avg", 0)
     rain_diff = (today.get("rain_total") or 0) - (previous.get("rain_total") or 0)
     
     changes = []

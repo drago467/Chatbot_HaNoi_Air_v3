@@ -83,21 +83,23 @@ def enrich_weather_response(weather_data: Dict[str, Any]) -> Dict[str, Any]:
         return weather_data
     
     # 1. Heat Index (only when temp > 27°C)
-    if weather_data.get("temp") and weather_data.get("humidity"):
+    temp = weather_data.get("temp")
+    humidity = weather_data.get("humidity")
+    if temp is not None and humidity is not None:
         heat_idx = compute_heat_index(
             weather_data["temp"],
             weather_data["humidity"]
         )
-        if heat_idx:
+        if heat_idx is not None:
             weather_data["heat_index"] = heat_idx
     
     # 2. Wind Chill (only when temp <= 10°C and wind > 1.3 m/s)
-    if weather_data.get("temp") and weather_data.get("wind_speed"):
+    if weather_data.get("temp") is not None and weather_data.get("wind_speed") is not None:
         wind_chill = compute_wind_chill(
             weather_data["temp"],
             weather_data["wind_speed"]
         )
-        if wind_chill:
+        if wind_chill is not None:
             weather_data["wind_chill"] = wind_chill
     
     # 3. Seasonal comparison
@@ -105,15 +107,17 @@ def enrich_weather_response(weather_data: Dict[str, Any]) -> Dict[str, Any]:
         seasonal = compare_with_seasonal(weather_data)
         weather_data["seasonal_comparison"] = seasonal.get("comparisons", [])
         weather_data["month_name"] = seasonal.get("month_name")
-    except Exception:
-        pass
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(f"Could not compute heat index: {e}")
     
     # 4. Phenomena detection
     try:
         phenomena = detect_hanoi_weather_phenomena(weather_data)
         if phenomena.get("phenomena"):
             weather_data["phenomena"] = phenomena["phenomena"]
-    except Exception:
-        pass
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(f"Could not compute heat index: {e}")
     
     return weather_data

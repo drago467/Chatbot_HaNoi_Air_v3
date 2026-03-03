@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import time
+import threading
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set
 
@@ -64,6 +65,7 @@ class OpenWeatherKeyManager:
         )
         
         self._rr_index = 0
+        self._lock = threading.Lock()
         logger.info(f"Loaded {len(self._states)} API keys into unified pool")
 
     def _reset_minute_window_if_needed(self, st: _KeyState, now: float) -> None:
@@ -101,19 +103,20 @@ class OpenWeatherKeyManager:
         Raises:
             RuntimeError: If no keys are available
         """
-        now = time.time()
-        n = len(self._states)
-        best_wait_s: Optional[float] = None
+        with self._lock:
+            now = time.time()
+            n = len(self._states)
+            best_wait_s: Optional[float] = None
 
-        for i in range(n):
-            idx = (self._rr_index + i) % n
-            st = self._states[idx]
+            for i in range(n):
+                idx = (self._rr_index + i) % n
+                st = self._states[idx]
 
-            if self._is_available(st, now, service):
-                # Found an available key
-                self._rr_index = (idx + 1) % n
-                st.minute_count += 1
-                return st.key
+                if self._is_available(st, now, service):
+                    # Found an available key
+                    self._rr_index = (idx + 1) % n
+                    st.minute_count += 1
+                    return st.key
 
             # Track minimal wait time among unavailable keys
             wait_s = max(0.0, st.cooldown_until - now)

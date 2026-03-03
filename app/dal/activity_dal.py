@@ -57,9 +57,9 @@ def get_activity_advice(activity: str, ward_id: str) -> Dict[str, Any]:
     
     # Humidity checks (only if humidity is available)
     if humidity is not None:
-            if humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"]:
-                issues.append(f"Độ ẩm rất cao ({humidity}%)")
-                recommendations.append("Mang quần áo thay đổng, tránh hoạt động mạnh")
+        if humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"]:
+            issues.append(f"Độ ẩm rất cao ({humidity}%)")
+            recommendations.append("Mang quần áo thay đổi, tránh hoạt động mạnh")
     
     # Hanoi-specific phenomena
     phenomena = detect_hanoi_weather_phenomena(weather)

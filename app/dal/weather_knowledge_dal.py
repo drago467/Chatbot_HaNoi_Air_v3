@@ -1,3 +1,4 @@
+from app.dal.weather_helpers import wind_deg_to_vietnamese
 """Weather Knowledge DAL - Detect Hanoi-specific weather phenomena."""
 
 from app.dal.timezone_utils import now_ict
@@ -23,9 +24,9 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     # Get current month (from data or now)
     month = weather_data.get("month", now_ict().month)
     
-    humidity = weather_data.get("humidity", 0)
-    dew_point = weather_data.get("dew_point", 0)
-    temp = weather_data.get("temp", 0)
+    humidity = weather_data.get("humidity")
+    dew_point = weather_data.get("dew_point")
+    temp = weather_data.get("temp")
     wind_deg = weather_data.get("wind_deg")
     wind_speed = weather_data.get("wind_speed", 0)
     weather_main = weather_data.get("weather_main", "")
@@ -39,14 +40,14 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     # 1. Nom Am (Spring Dampness) - ONLY Thang 2-4
     # True nom am: high humidity + dew_point very close to temp (chenh <= 2C)
     if month in [2, 3, 4]:
-        if humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"] and dew_point_diff <= 2:
+        if humidity is not None and humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"] and dew_point_diff <= 2:
             phenomena.append({
                 "type": "nom_am",
                 "name": "Nom am",
                 "description": f"Nom am muc do cao! Do am {humidity}%, nhiet {temp}C, diem suong {dew_point}C - San nha lay mot, quan ao kho beo",
                 "severity": "high"
             })
-        elif humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY_MEDIUM"] and dew_point_diff <= KTTV_THRESHOLDS["NOM_AM_DEW_DIFF_MEDIUM"]:
+        elif humidity is not None and humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY_MEDIUM"] and dew_point_diff <= KTTV_THRESHOLDS["NOM_AM_DEW_DIFF_MEDIUM"]:
             phenomena.append({
                 "type": "nom_am",
                 "name": "Nom am",
@@ -86,7 +87,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     # 4. Ret dam (Cold Spell) - KTTV: Tavg <= 15C + clouds >= 70%
     # For current weather: check temp + clouds (proxy for cloudy day)
     if month in [11, 12, 1, 2, 3]:
-        if temp < KTTV_THRESHOLDS["RET_DAM"] and clouds >= 70:
+        if temp is not None and temp < KTTV_THRESHOLDS["RET_DAM"] and clouds >= 70:
             severity = "high" if temp < KTTV_THRESHOLDS["RET_HAI"] else "medium"
             phenomena.append({
                 "type": "ret_dam",
@@ -94,7 +95,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
                 "description": f"Ret dam! Nhiet do duoi {KTTV_THRESHOLDS['RET_DAM']}C, troi am u - Can mac am, han che ra ngoai",
                 "severity": severity
             })
-        elif temp < KTTV_THRESHOLDS["RET_DAM"]:
+        elif temp is not None and temp < KTTV_THRESHOLDS["RET_DAM"]:
             phenomena.append({
                 "type": "ret_nhe",
                 "name": "Ret",
@@ -104,7 +105,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     
     # 5. Ret nang Ban - Thang 3, ret dot ngot sau khi da am
     if month == 3:
-        if temp < 18 and humidity > 80:
+        if temp is not None and temp < 18 and humidity is not None and humidity > 80:
             phenomena.append({
                 "type": "ret_nang_ban",
                 "name": "Ret nang Ban",
@@ -114,11 +115,11 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     
     # 6. Nang nong (Heat Wave) - Thang 5-9
     if month in [5, 6, 7, 8, 9]:
-        if temp >= KTTV_THRESHOLDS["NANG_NONG_DB"]:
+        if temp is not None and temp >= KTTV_THRESHOLDS["NANG_NONG_DB"]:
             severity = "high"
         elif temp >= KTTV_THRESHOLDS["NANG_NONG_GAY_GAT"]:
             severity = "medium"
-        elif temp >= KTTV_THRESHOLDS["NANG_NONG"]:
+        elif temp is not None and temp >= KTTV_THRESHOLDS["NANG_NONG"]:
             severity = "low"
         else:
             severity = None
@@ -210,7 +211,7 @@ def compare_with_seasonal(weather_data: Dict[str, Any], month: int = None) -> Di
     
     comparisons = []
     
-    if weather_data.get("temp"):
+    if weather_data.get("temp") is not None:
         diff = weather_data["temp"] - seasonal["temp_avg"]
         if diff > 3:
             comparisons.append(f"Nong hon binh thuong {diff:.1f}°C")
@@ -219,7 +220,7 @@ def compare_with_seasonal(weather_data: Dict[str, Any], month: int = None) -> Di
         else:
             comparisons.append("Nhiet do binh thuong theo mua")
     
-    if weather_data.get("humidity"):
+    if weather_data.get("humidity") is not None:
         hum_diff = weather_data["humidity"] - seasonal["humidity"]
         if hum_diff > 10:
             comparisons.append("Do am cao hon binh thuong")
@@ -263,7 +264,7 @@ def get_weather_summary_text(weather_data: Dict[str, Any]) -> str:
     parts = []
     
     # Temperature
-    if temp:
+    if temp is not None:
         if temp < 15:
             parts.append(f"nhiet do {temp}°C, lanh")
         elif temp < 25:
@@ -280,14 +281,13 @@ def get_weather_summary_text(weather_data: Dict[str, Any]) -> str:
         parts.append(desc)
     
     # Humidity
-    if humidity:
+    if humidity is not None:
         from app.config.thresholds import KTTV_THRESHOLDS
         if humidity >= KTTV_THRESHOLDS.get("NOM_AM_HUMIDITY_MEDIUM", 85):
             parts.append(f"độ ẩm cao {humidity}%")
     
     # Wind
-    if wind_speed and wind_deg:
-        from app.dal.weather_helpers import wind_deg_to_vietnamese
+    if wind_speed is not None and wind_deg is not None:
         wind_dir = wind_deg_to_vietnamese(wind_deg)
         parts.append(f"gio {wind_dir} {wind_speed} m/s")
     

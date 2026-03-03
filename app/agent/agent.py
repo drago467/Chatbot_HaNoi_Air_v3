@@ -24,7 +24,7 @@ SYSTEM_PROMPT = """Bạn là chatbot thời tiết chuyên về Hà Nội - chuy
 - Sương mù: Quanh năm, nhất là sáng sớm
 
 ## Khuyến nghị theo nhóm đối tượng
-- Người già: Tránh ra ngoài khi ret đăm, gió mùa
+- Người già: Tránh ra ngoài khi rét đậm, gió mùa
 - Trẻ em: Tránh mưa khi rét, bảo hộ khi nắng nóng
 - Người đi xe máy: Đeo khẩu trang, tránh đường có cây
 - Runner/Tập thể dục: Tập buổi sáng sớm hoặc chiều muộn
@@ -97,8 +97,7 @@ def run_agent(message: str, thread_id: str = "default") -> dict:
     Also logs tool calls to evaluation_logger.
     Includes automatic retry on connection errors.
     """
-    import time
-    
+        
     # Get logger
     try:
         from app.agent.evaluation_logger import get_evaluation_logger
@@ -168,7 +167,7 @@ def stream_agent(message: str, thread_id: str = "default"):
     Yields:
         Text chunks from the agent's response
     """
-    from langchain.schema.messages import AIMessageChunk, ToolMessage
+    from langchain_core.messages import ToolMessage, AIMessageChunk
     
     max_retries = 2
     last_error = None
@@ -226,50 +225,67 @@ def stream_agent_with_updates(message: str, thread_id: str = "default"):
     Yields:
         Dict with type and content
     """
-    from langchain.schema.messages import ToolMessage
-    import time
+    from langchain_core.messages import ToolMessage, AIMessageChunk
+        
+    # Retry logic for stale connections
+    max_retries = 2
+    last_error = None
     
-    agent = get_agent()
-    config = {"configurable": {"thread_id": thread_id}}
-    
-    # Get logger
-    try:
-        from app.agent.evaluation_logger import get_evaluation_logger
-        logger = get_evaluation_logger()
-    except Exception:
-        logger = None
-    
-    tool_start_time = None
-    current_tool_name = None
-    
-    # Stream with both messages and updates
-    for event in agent.stream(
-        {"messages": [{"role": "user", "content": message}]},
-        config,
-        stream_mode=["messages", "updates"]
-    ):
-        # Handle different event formats
-        if isinstance(event, tuple):
-            msg_chunk, metadata = event
+    for attempt in range(max_retries):
+        try:
+            agent = get_agent()
+            config = {"configurable": {"thread_id": thread_id}}
             
-            # Skip tool messages (raw JSON from DAL)
-            if isinstance(msg_chunk, ToolMessage):
-                continue
+            # Get logger
+            try:
+                from app.agent.evaluation_logger import get_evaluation_logger
+                logger = get_evaluation_logger()
+            except Exception:
+                logger = None
             
-            # Skip messages with tool_calls (function calling JSON)
-            if hasattr(msg_chunk, "tool_calls") and msg_chunk.tool_calls:
-                continue
+            # Stream with both messages and updates
+            for event in agent.stream(
+                {"messages": [{"role": "user", "content": message}]},
+                config,
+                stream_mode=["messages", "updates"]
+            ):
+                # Handle different event formats from LangGraph
+                # When stream_mode is a list, events come as (stream_name, event_data)
+                if isinstance(event, tuple) and len(event) == 2:
+                    stream_name, event_data = event
+                    
+                    if stream_name == "messages":
+                        # event_data is (chunk, metadata)
+                        if isinstance(event_data, tuple) and len(event_data) == 2:
+                            msg_chunk, metadata = event_data
+                            
+                            # Skip tool messages (raw JSON from DAL)
+                            if isinstance(msg_chunk, ToolMessage):
+                                continue
+                            
+                            # Skip messages with tool_calls (function calling JSON)
+                            if hasattr(msg_chunk, "tool_calls") and msg_chunk.tool_calls:
+                                continue
+                            
+                            # Message chunk from agent node
+                            if metadata.get("langgraph_node") == "agent":
+                                if hasattr(msg_chunk, "content") and msg_chunk.content:
+                                    yield {"type": "message", "content": msg_chunk.content}
+                            
+                            # Tool updates (from tools node)
+                            if metadata.get("langgraph_node") == "tools":
+                                yield {"type": "tool", "content": msg_chunk if isinstance(msg_chunk, str) else str(msg_chunk)}
+                    
+                    elif stream_name == "updates":
+                        # event_data is dict with tool outputs
+                        yield {"type": "tool", "content": event_data}
             
-            # Message chunk from agent node
-            if metadata.get("langgraph_node") == "agent":
-                if hasattr(msg_chunk, "content") and msg_chunk.content:
-                    yield {"type": "message", "content": msg_chunk.content}
-            
-            # Tool updates (from tools node)
-            if metadata.get("langgraph_node") == "tools":
-                yield {"type": "tool", "content": msg_chunk}
-        elif isinstance(event, dict):
-            yield event
-
-if __name__ == "__main__":
-    print("Agent module ready!")
+            return  # Success, exit function
+        
+        except Exception as e:
+            last_error = e
+            if attempt < max_retries - 1:
+                # Reset agent to get fresh connection
+                reset_agent()
+            else:
+                raise last_error

@@ -31,25 +31,20 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         """
         results = query(sql, (ward_id,))
     else:
-        # FIXED: Only 1 ward per district (30 wards total)
+        # District-level: get all forecast hours for representative wards
         sql = """
             SELECT w.ward_id, w.ts_utc, w.temp, w.wind_gust, w.pop, 
                    w.weather_main, w.weather_description, d.district_name_vi
             FROM fact_weather_hourly w
-            INNER JOIN (
-                SELECT ward_id, MIN(ts_utc) as min_ts
-                FROM fact_weather_hourly
-                WHERE data_kind = 'forecast' 
-                  AND ts_utc > NOW() 
-                  AND ts_utc < NOW() + INTERVAL '24 hours'
-                GROUP BY ward_id
-            ) latest ON w.ward_id = latest.ward_id AND w.ts_utc = latest.min_ts
             INNER JOIN dim_ward d ON w.ward_id = d.ward_id
             WHERE d.ward_id IN (
                 SELECT DISTINCT ON (d.district_name_vi) d.ward_id
                 FROM dim_ward d
                 ORDER BY d.district_name_vi, d.ward_id
             )
+              AND w.data_kind = 'forecast'
+              AND w.ts_utc > NOW() 
+              AND w.ts_utc < NOW() + INTERVAL '24 hours'
         """
         results = query(sql)
     
@@ -59,14 +54,14 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
         
         # Wind gust alert
-        if r.get("wind_gust") and r["wind_gust"] > 20:
+        if r.get("wind_gust") is not None and r["wind_gust"] > 20:
             alert["type"] = "wind"
             alert["severity"] = "warning"
             alert["message"] = f"Gio giat {r['wind_gust']:.1f} m/s - Can than"
             alerts.append(alert)
         
         # Cold alert
-        if r.get("temp") and r["temp"] < KTTV_THRESHOLDS["RET_HAI"]:
+        if r.get("temp") is not None and r["temp"] < KTTV_THRESHOLDS["RET_HAI"]:
             alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "cold"
             alert["severity"] = "warning"
@@ -98,15 +93,19 @@ def get_all_district_alerts() -> Dict[str, List[Dict[str, Any]]]:
     Returns:
         Dictionary with district names as keys and list of alerts as values
     """
+    from app.dal.location_dal import get_ward_by_id
+    
     alerts = get_weather_alerts()
     
-    # Group by district
+    # Group by district (resolve ward_id -> district name)
     district_alerts = {}
     for alert in alerts:
-        # Get district from ward_id - simplified for now
         ward_id = alert.get("ward_id", "")
-        if ward_id not in district_alerts:
-            district_alerts[ward_id] = []
-        district_alerts[ward_id].append(alert)
+        ward_info = get_ward_by_id(ward_id) or {}
+        district = ward_info.get("district_name_vi", ward_id)
+        
+        if district not in district_alerts:
+            district_alerts[district] = []
+        district_alerts[district].append(alert)
     
     return district_alerts
