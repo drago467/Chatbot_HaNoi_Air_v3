@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.core.logging_config import get_logger, setup_logging
-from app.db.connection import get_db_connection
+from app.db.connection import get_db_connection, release_connection
 
 
 logger = get_logger(__name__)
@@ -198,24 +198,38 @@ def init_db() -> None:
                     ("sunrise", "TIMESTAMPTZ"),
                     ("sunset", "TIMESTAMPTZ"),
                 ]
-                for col_name, col_type in daily_columns:
-                    try:
+                # Safe migration: use SAVEPOINT to prevent transaction abort
+                # Migration 1: fact_weather_daily columns
+                cur.execute("SAVEPOINT sp1")
+                try:
+                    for col_name, col_type in daily_columns:
                         cur.execute(f"ALTER TABLE fact_weather_daily ADD COLUMN IF NOT EXISTS {col_name} {col_type};")
-                    except Exception as e:
-                        logger.warning(f"Could not add column {col_name}: {e}")
+                except Exception as e:
+                    cur.execute("ROLLBACK TO SAVEPOINT sp1")
+                    logger.warning(f"Could not add columns to fact_weather_daily: {e}")
                 
-                # Add source/source_job to all fact tables
+                # Migration 2: source columns
                 tables = [
                     "fact_air_pollution_hourly", "fact_weather_hourly", "fact_weather_daily",
                     "fact_hanoiair_daily", "fact_hanoiair_ranking"
                 ]
-                for table in tables:
-                    cur.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS source TEXT;")
-                    cur.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS source_job TEXT;")
-
-                # Add new dim_ward columns
-                cur.execute("ALTER TABLE dim_ward ADD COLUMN IF NOT EXISTS ward_name_core_norm TEXT;")
-                cur.execute("ALTER TABLE dim_ward ADD COLUMN IF NOT EXISTS ward_prefix_norm TEXT;")
+                cur.execute("SAVEPOINT sp2")
+                try:
+                    for table in tables:
+                        cur.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS source TEXT;")
+                        cur.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS source_job TEXT;")
+                except Exception as e:
+                    cur.execute("ROLLBACK TO SAVEPOINT sp2")
+                    logger.warning(f"Could not add source columns: {e}")
+                
+                # Migration 3: dim_ward columns
+                cur.execute("SAVEPOINT sp3")
+                try:
+                    cur.execute("ALTER TABLE dim_ward ADD COLUMN IF NOT EXISTS ward_name_core_norm TEXT;")
+                    cur.execute("ALTER TABLE dim_ward ADD COLUMN IF NOT EXISTS ward_prefix_norm TEXT;")
+                except Exception as e:
+                    cur.execute("ROLLBACK TO SAVEPOINT sp3")
+                    logger.warning(f"Could not add dim_ward columns: {e}")
 
                 # Trigram indexes
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_dim_ward_ward_name_trgm ON dim_ward USING GIN (ward_name_vi gin_trgm_ops);")
@@ -227,7 +241,7 @@ def init_db() -> None:
 
         logger.info("Database init/migration completed.")
     finally:
-        conn.close()
+        release_connection(conn)
 
 
 if __name__ == "__main__":

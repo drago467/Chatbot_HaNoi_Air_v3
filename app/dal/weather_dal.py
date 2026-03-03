@@ -126,7 +126,7 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
                summary, sunrise, sunset
         FROM fact_weather_daily
         WHERE ward_id = %s 
-          AND date > CURRENT_DATE
+          AND date >= CURRENT_DATE
         ORDER BY date
         LIMIT %s
     """, (ward_id, days))
@@ -160,7 +160,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
         FROM fact_weather_hourly
         WHERE ward_id = %s 
           AND data_kind = 'history'
-          AND ts_utc::date = %s::date
+          AND (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date = %s::date
     """, (ward_id, date))
     
     if not result:
@@ -199,16 +199,16 @@ def get_weather_range(ward_id: str, start_date: str, end_date: str) -> List[Dict
     return results
 
 
-def get_latest_weather_time(ward_id: str) -> Optional[Dict[str, Any]]:
+def get_latest_weather_time(ward_id: str) -> List[Dict[str, Any]]:
     """Get the latest weather timestamp for a ward.
     
     Args:
         ward_id: Ward ID
         
     Returns:
-        Dictionary with latest timestamp or None
+        List of dictionaries with latest timestamp for each data_kind
     """
-    return query_one("""
+    return query("""
         SELECT MAX(ts_utc) as latest, 
                NOW() - MAX(ts_utc) as age,
                data_kind

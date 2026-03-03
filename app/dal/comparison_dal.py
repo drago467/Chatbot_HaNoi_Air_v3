@@ -78,8 +78,11 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     }
 
 
-def compare_with_yesterday(ward_id: str) -> Dict[str, Any]:
-    """Compare today's weather with yesterday's.
+def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
+    """Compare today's weather with the previous available day.
+    
+    Note: If data is missing for yesterday, compares with the most recent
+    available previous day. Use compare_with_yesterday() for strict yesterday.
     
     Args:
         ward_id: Ward ID
@@ -105,28 +108,43 @@ def compare_with_yesterday(ward_id: str) -> Dict[str, Any]:
             "message": "Can co du lieu it nhat 2 ngay"
         }
     
-    today, yesterday = results[0], results[1]  # results[0] is newest (ORDER BY DESC)
+    today, previous = results[0], results[1]  # results[0] is newest (ORDER BY DESC)
+    
+    # Calculate days between
+    from datetime import datetime
+    today_date = today.get("date")
+    prev_date = previous.get("date")
+    if hasattr(today_date, 'date'):
+        today_date = today_date.date()
+    if hasattr(prev_date, 'date'):
+        prev_date = prev_date.date()
+    days_diff = (today_date - prev_date).days if today_date and prev_date else 1
+    day_label = f"{days_diff} ngay truoc" if days_diff > 1 else "hom qua"
     
     # Calculate changes
-    temp_diff = (today.get("temp_avg") or 0) - (yesterday.get("temp_avg") or 0)
-    rain_diff = (today.get("rain_total") or 0) - (yesterday.get("rain_total") or 0)
+    temp_diff = (today.get("temp_avg") or 0) - (previous.get("temp_avg") or 0)
+    rain_diff = (today.get("rain_total") or 0) - (previous.get("rain_total") or 0)
     
     changes = []
     
     if temp_diff > 2:
-        changes.append(f"Nhiet do tang {temp_diff:.1f}°C so voi hom qua")
+        changes.append(f"Nhiet do tang {temp_diff:.1f}°C so voi {day_label}")
     elif temp_diff < -2:
-        changes.append(f"Nhiet do giam {abs(temp_diff):.1f}°C so voi hom qua")
+        changes.append(f"Nhiet do giam {abs(temp_diff):.1f}°C so voi {day_label}")
     
     if rain_diff > 5:
-        changes.append("Mua nhieu hon hom qua")
+        changes.append(f"Mua nhieu hon {day_label}")
     elif rain_diff < -5:
-        changes.append("Mua it hon hom qua")
+        changes.append(f"Mua it hon {day_label}")
     
     return {
         "today": today,
-        "yesterday": yesterday,
+        "previous": previous,
         "changes": changes,
         "temp_diff": temp_diff,
         "rain_diff": rain_diff
     }
+
+# Alias for backward compatibility
+compare_with_yesterday = compare_with_previous_day
+

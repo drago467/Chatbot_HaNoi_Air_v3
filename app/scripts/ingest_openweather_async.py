@@ -509,7 +509,7 @@ class OpenWeatherAsyncIngestor:
                         )
                         SELECT 
                             ward_id,
-                            ts_utc::date as date,
+                            (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date as date,
                             MIN(temp) as temp_min,
                             MAX(temp) as temp_max,
                             AVG(temp) as temp_avg,
@@ -530,7 +530,7 @@ class OpenWeatherAsyncIngestor:
                         FROM fact_weather_hourly
                         WHERE data_kind = 'history'
                           AND ts_utc > NOW() - INTERVAL '30 days'
-                        GROUP BY ward_id, ts_utc::date
+                        GROUP BY ward_id, (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
                         ON CONFLICT (ward_id, date) DO UPDATE SET
                             temp_min = EXCLUDED.temp_min,
                             temp_max = EXCLUDED.temp_max,

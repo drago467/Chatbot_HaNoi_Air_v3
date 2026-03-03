@@ -28,40 +28,38 @@ def get_activity_advice(activity: str, ward_id: str) -> Dict[str, Any]:
     issues = []
     recommendations = []
     
-    temp = weather.get("temp", 20)
-    humidity = weather.get("humidity", 50)
+    # Get weather values - use None as default to detect missing data
+    temp = weather.get("temp")
+    humidity = weather.get("humidity")
     pop = weather.get("pop", 0)
     rain_1h = weather.get("rain_1h", 0)
     uvi = weather.get("uvi", 0)
     wind_speed = weather.get("wind_speed", 0)
     
-    # Temperature checks
-    if temp > KTTV_THRESHOLDS["NANG_NONG"]:
-        issues.append(f"Nhiet do cao ({temp}°C)")
-        recommendations.append("Nen chon buoi sang som (6-9h) hoac chieu muon (17h tro di)")
-    elif temp < KTTV_THRESHOLDS["RET_DAM"]:
-        issues.append(f"Nhiet do thap ({temp}°C)")
-        recommendations.append("Mac am, han che ra ngoai vao ban dem")
+    # Check for missing data
+    if temp is None:
+        issues.append("Thiếu dữ liệu nhiệt độ")
+        recommendations.append("Không thể đánh giá - dữ liệu thời tiết không có sẵn")
     
-    # Rain checks
-    if pop > THRESHOLDS["POP_LIKELY"] or rain_1h > 0:
-        issues.append(f"Kha nang mua {pop*100:.0f}%")
-        recommendations.append("Mang theo ao mua hoac hoan lai hoat dong")
+    # Check for missing humidity (critical for activity advice)
+    if humidity is None:
+        issues.append("Thiếu dữ liệu độ ẩm")
+        recommendations.append("Không thể đánh giá - dữ liệu thời tiết không có sẵn")
     
-    # UV checks
-    if uvi > THRESHOLDS["UV_HIGH"]:
-        issues.append(f"UV cao ({uvi})")
-        recommendations.append("Doi mu, kem chong nang SPF 30+")
+    # Temperature checks (only if temp is available)
+    if temp is not None:
+        if temp > KTTV_THRESHOLDS["NANG_NONG"]:
+            issues.append(f"Nhiệt độ cao ({temp}°C)")
+            recommendations.append("Nên chọn buổi sáng sớm (6-9h) hoặc chiều muộn (17h trở đi)")
+        elif temp < KTTV_THRESHOLDS["RET_DAM"]:
+            issues.append(f"Nhiệt độ thấp ({temp}°C)")
+            recommendations.append("Mặc ấm, hạn chế ra ngoài vào ban đêm")
     
-    # Wind checks
-    if wind_speed > THRESHOLDS["WIND_STRONG"]:
-        issues.append(f"Gio manh ({wind_speed} m/s)")
-        recommendations.append("Can than khi ra ngoai, tranh cay cao")
-    
-    # Humidity checks (Nom am)
-    if humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"]:
-        issues.append(f"Do am rat cao ({humidity}%)")
-        recommendations.append("Mang quan ao thay dong, tranh hoat dong manh")
+    # Humidity checks (only if humidity is available)
+    if humidity is not None:
+            if humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY"]:
+                issues.append(f"Độ ẩm rất cao ({humidity}%)")
+                recommendations.append("Mang quần áo thay đổng, tránh hoạt động mạnh")
     
     # Hanoi-specific phenomena
     phenomena = detect_hanoi_weather_phenomena(weather)

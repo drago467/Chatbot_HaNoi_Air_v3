@@ -15,7 +15,9 @@ KTTV_THRESHOLDS = {
     
     # Humidity (%)
     "NOM_AM_HUMIDITY": 95,   # humidity >= 95%
+    "NOM_AM_HUMIDITY_MEDIUM": 85,  # humidity >= 85%
     "NOM_AM_DEW_DIFF": 2,    # dew_point - temp < 2°C
+    "NOM_AM_DEW_DIFF_MEDIUM": 3,  # dew_point - temp < 3°C
     
     # Visibility (meters)
     "SUONG_MU_VISIBILITY": 1000,  # < 1000m
@@ -68,21 +70,21 @@ THRESHOLDS = {
 
 # Vietnamese status mappings
 TEMP_STATUS = {
-    "extreme_cold": "Rat lanh",
-    "cold": "Lanh",
-    "cool": "Mat lanh",
-    "comfortable": "Thoai mai",
-    "warm": "Nong nhe",
-    "hot": "Nong",
-    "extreme_hot": "Rat nong",
+    "extreme_cold": "Rất lạnh",
+    "cold": "Lạnh",
+    "cool": "Mát lạnh",
+    "comfortable": "Thoải mái",
+    "warm": "Nóng nhẹ",
+    "hot": "Nóng",
+    "extreme_hot": "Rất nóng",
 }
 
 WEATHER_DESCRIPTIONS = {
-    "Clear": "Troi quang",
-    "Clouds": "Troi co may",
-    "Rain": "Co mua",
-    "Drizzle": "Mua phun",
-    "Thunderstorm": "Co giong",
-    "Mist": "Co suong mu",
-    "Fog": "Suong mu day",
+    "Clear": "Trời quang",
+    "Clouds": "Trời có mây",
+    "Rain": "Có mưa",
+    "Drizzle": "Mưa phun",
+    "Thunderstorm": "Có giông",
+    "Mist": "Có sương mù",
+    "Fog": "Sương mù dày",
 }

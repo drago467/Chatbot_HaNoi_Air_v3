@@ -1,0 +1,16 @@
+# Force LF line endings for shell scripts
+*.sh text eol=lf
+
+# Force LF for Python files (optional but recommended)
+*.py text eol=lf
+
+# Force LF for markdown
+*.md text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pyc binary

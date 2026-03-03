@@ -1,7 +1,7 @@
-from app.dal.timezone_utils import format_ict
 """Weather Alerts DAL - Get weather alerts for a ward or all wards."""
 
 from typing import List, Dict, Any, Optional
+from app.dal.timezone_utils import format_ict
 from app.db.dal import query
 from app.config.thresholds import KTTV_THRESHOLDS
 

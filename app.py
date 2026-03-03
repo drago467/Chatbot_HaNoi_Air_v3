@@ -53,7 +53,7 @@ def get_districts() -> list:
             ORDER BY district_name_vi
         """)
         return [d["district_name_vi"] for d in districts if d.get("district_name_vi")]
-    except:
+    except Exception:
         return []
 
 
@@ -69,7 +69,7 @@ def get_wards_by_district(district: str) -> dict:
             ORDER BY ward_name_vi
         """, (district,))
         return {w["ward_name_vi"]: w["ward_id"] for w in wards}
-    except:
+    except Exception:
         return {}
 
 
@@ -103,14 +103,14 @@ def get_current_weather_summary(ward_id: str = None):
         
         if result:
             return result[0]
-    except:
+    except Exception:
         pass
     return None
 
 
 # Sidebar
 with st.sidebar:
-    st.title("Thoi Tiet Ha Noi")
+    st.title("Thời Tiết Hà Nội")
     
     weather = get_current_weather_summary()
     if weather:
@@ -145,7 +145,7 @@ with st.sidebar:
 
 
 # Main chat area
-st.title("Chatbot Thoi Tiet Ha Noi")
+st.title("Chatbot Thời Tiết Hà Nội")
 
 # Display chat history
 for message in st.session_state.messages:

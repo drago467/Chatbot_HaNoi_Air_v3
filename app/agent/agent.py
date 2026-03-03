@@ -1,6 +1,7 @@
 """LangGraph Agent for Weather Chatbot."""
 
 import os
+import threading
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,48 +14,62 @@ from app.agent.tools import TOOLS
 
 
 # System prompt
-SYSTEM_PROMPT = """Ban la chatbot thoi tiet chuyen ve Ha Noi - chuyen gia ve khi tuong.
+SYSTEM_PROMPT = """Bạn là chatbot thời tiết chuyên về Hà Nội - chuyên gia về khí tượng.
 
-## Cac hien tuong dac biet Ha Noi
-- Nom am: Thang 2-4, do am > 85%, dew_point - temp <= 2C
-- Gio Lao: Thang 5-8, gio Tay Nam, do am < 55%
-- Gio mua Dong Bac: Thang 10-3, gio Bac/Dong Bac
-- Ret dam: Thang 11-3, nhiet < 15C, may > 70%
-- Suong mu: Quanh nam, nhat la sang som
+## Các hiện tượng đặc biệt Hà Nội
+- Nồm ẩm: Tháng 2-4, độ ẩm > 85%, điểm sương - nhiệt <= 2°C
+- Gió Lào: Tháng 5-8, gió Tây Nam, độ ẩm < 55%
+- Gió mùa Đông Bắc: Tháng 10-3, gió Bắc/Đông Bắc
+- Rét đậm: Tháng 11-3, nhiệt < 15°C, mây > 70%
+- Sương mù: Quanh năm, nhất là sáng sớm
 
-## Khuyen nghi theo nhom doi tuong
-- Nguoi gia: Tranh ra ngoai khi ret dam, gio mua
-- Tre em: Tranh mua khi ret, bao ho khi nang nong
-- Nguoi di xe may: Deo khau trang, tranh duong co cay
-- Runner/Tap the duc: Tap buoi sang som hoac chieu muon
+## Khuyến nghị theo nhóm đối tượng
+- Người già: Tránh ra ngoài khi ret đăm, gió mùa
+- Trẻ em: Tránh mưa khi rét, bảo hộ khi nắng nóng
+- Người đi xe máy: Đeo khẩu trang, tránh đường có cây
+- Runner/Tập thể dục: Tập buổi sáng sớm hoặc chiều muộn
 
-## Tool su dung
-- "Bay gio", "hien tai" -> get_current_weather
-- "Chieu nay", "3 gio nua" -> get_hourly_forecast  
-- "Ngay mai", "hom nay" -> get_daily_summary
-- "Tuan nay", "3 ngay toi" -> get_weather_period
-- "So sanh", "Cau Giay vs Ha Dong" -> compare_weather
-- "Hom qua", "tuan truoc" -> get_weather_history
-- "Co canh bao gi khong" -> get_weather_alerts
-- "Co hien tuong gi dac biet" -> detect_phenomena
-- "Nong hon binh thuong khong" -> get_seasonal_comparison
-- "Di choi duoc khong" -> get_activity_advice
+## Tool sử dụng
+- "Bây giờ", "hiện tại" -> get_current_weather
+- "Chiều nay", "3 giờ nữa" -> get_hourly_forecast  
+- "Ngày mai", "hôm nay" -> get_daily_summary
+- "Tuần này", "3 ngày tới" -> get_weather_period
+- "So sánh", "Cầu Giấy vs Hà Đông" -> compare_weather
+- "Hôm qua", "tuần trước" -> get_weather_history
+- "Có cảnh báo gì không" -> get_weather_alerts
+- "Có hiện tượng gì đặc biệt" -> detect_phenomena
+- "Nóng hơn bình thường không" -> get_seasonal_comparison
+- "Đi chơi được không" -> get_activity_advice
 
-## Nguyen tac tra loi
-1. Neu co hien tuong dac biet -> Giai thich co che + khuyen nghi
-2. Neu nhiet do bat thuong -> So sanh voi trung binh mua
-3. Neu co nguy hiem -> Canh bao ro rang
-4. Tuy theo nhom doi tuong -> Dua ra khuyen nghi phu hop
+## Nguyên tắc trả lời
+1. Nếu có hiện tượng đặc biệt -> Giải thích cơ chế + khuyến nghị
+2. Nếu nhiệt độ bất thường -> So sánh với trung bình mùa
+3. Nếu có nguy hiểm -> Cảnh báo rõ ràng
+4. Tùy theo nhóm đối tượng -> Đưa ra khuyến nghị phù hợp
 """
 
-# Cache agent instance
+# Thread-safe agent cache
 _agent = None
+_agent_lock = threading.Lock()
+
 
 def get_agent():
+    """Get or create the weather agent (thread-safe)."""
     global _agent
     if _agent is None:
-        _agent = create_weather_agent()
+        with _agent_lock:
+            # Double-check after acquiring lock
+            if _agent is None:
+                _agent = create_weather_agent()
     return _agent
+
+
+def reset_agent():
+    """Reset the cached agent to force recreation with fresh connections."""
+    global _agent
+    with _agent_lock:
+        _agent = None
+
 
 def create_weather_agent():
     API_BASE = os.getenv("API_BASE")
@@ -80,6 +95,7 @@ def run_agent(message: str, thread_id: str = "default") -> dict:
     """Run agent synchronously (blocking).
     
     Also logs tool calls to evaluation_logger.
+    Includes automatic retry on connection errors.
     """
     import time
     
@@ -87,7 +103,7 @@ def run_agent(message: str, thread_id: str = "default") -> dict:
     try:
         from app.agent.evaluation_logger import get_evaluation_logger
         logger = get_evaluation_logger()
-    except:
+    except Exception:
         logger = None
     
     agent = get_agent()
@@ -98,7 +114,22 @@ def run_agent(message: str, thread_id: str = "default") -> dict:
         # We'll log after getting results
         pass
     
-    result = agent.invoke({"messages": [{"role": "user", "content": message}]}, config)
+    # Retry logic for stale connections
+    max_retries = 2
+    last_error = None
+    
+    for attempt in range(max_retries):
+        try:
+            result = agent.invoke({"messages": [{"role": "user", "content": message}]}, config)
+            break  # Success, exit retry loop
+        except Exception as e:
+            last_error = e
+            if attempt < max_retries - 1:
+                # Reset agent to get fresh connection
+                reset_agent()
+                agent = get_agent()
+            else:
+                raise last_error
     
     # Extract and log tool calls from result
     if logger:
@@ -128,6 +159,8 @@ def stream_agent(message: str, thread_id: str = "default"):
     Yields chunks of the response for real-time display.
     Only yields LLM text (AIMessageChunk from node "agent").
     
+    Includes automatic retry on connection errors.
+    
     Args:
         message: User message
         thread_id: Conversation thread ID
@@ -137,31 +170,44 @@ def stream_agent(message: str, thread_id: str = "default"):
     """
     from langchain.schema.messages import AIMessageChunk, ToolMessage
     
-    agent = get_agent()
-    config = {"configurable": {"thread_id": thread_id}}
+    max_retries = 2
+    last_error = None
     
-    # Stream with "messages" mode to get token-by-token updates
-    for event in agent.stream(
-        {"messages": [{"role": "user", "content": message}]},
-        config,
-        stream_mode="messages"
-    ):
-        # event is a tuple of (message_chunk, metadata)
-        if event and len(event) >= 2:
-            msg_chunk, metadata = event
+    for attempt in range(max_retries):
+        try:
+            agent = get_agent()
+            config = {"configurable": {"thread_id": thread_id}}
             
-            # Skip tool messages (they contain raw JSON from DAL)
-            if isinstance(msg_chunk, ToolMessage):
-                continue
-            
-            # Skip messages with tool_calls (function calling JSON)
-            if hasattr(msg_chunk, "tool_calls") and msg_chunk.tool_calls:
-                continue
-            
-            # Only yield content from agent node, not tools node
-            if metadata.get("langgraph_node") == "agent":
-                if hasattr(msg_chunk, "content") and msg_chunk.content:
-                    yield msg_chunk.content
+            # Stream with "messages" mode to get token-by-token updates
+            for event in agent.stream(
+                {"messages": [{"role": "user", "content": message}]},
+                config,
+                stream_mode="messages"
+            ):
+                # event is a tuple of (message_chunk, metadata)
+                if event and len(event) >= 2:
+                    msg_chunk, metadata = event
+                    
+                    # Skip tool messages (they contain raw JSON from DAL)
+                    if isinstance(msg_chunk, ToolMessage):
+                        continue
+                    
+                    # Skip messages with tool_calls (function calling JSON)
+                    if hasattr(msg_chunk, "tool_calls") and msg_chunk.tool_calls:
+                        continue
+                    
+                    # Only yield content from agent node, not tools node
+                    if metadata.get("langgraph_node") == "agent":
+                        if hasattr(msg_chunk, "content") and msg_chunk.content:
+                            yield msg_chunk.content
+            return  # Success, exit function
+        except Exception as e:
+            last_error = e
+            if attempt < max_retries - 1:
+                # Reset agent to get fresh connection
+                reset_agent()
+            else:
+                raise last_error
 
 
 def stream_agent_with_updates(message: str, thread_id: str = "default"):
@@ -190,7 +236,7 @@ def stream_agent_with_updates(message: str, thread_id: str = "default"):
     try:
         from app.agent.evaluation_logger import get_evaluation_logger
         logger = get_evaluation_logger()
-    except:
+    except Exception:
         logger = None
     
     tool_start_time = None

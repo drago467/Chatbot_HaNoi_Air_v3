@@ -3,6 +3,7 @@ import pandas as pd
 import unicodedata
 import time
 import os
+from pathlib import Path
 from typing import List, Dict, Any, Optional
 from app.core.logging_config import get_logger, setup_logging
 from app.db.connection import get_db_connection
@@ -11,6 +12,9 @@ from psycopg2.extras import execute_values
 
 setup_logging()
 logger = get_logger(__name__)
+
+# Project root directory (parent of app/)
+BASE_DIR = Path(__file__).parent.parent.parent.resolve()
 
 BASE_URL = "https://geoi.com.vn"
 
@@ -114,7 +118,7 @@ def build_dim_ward():
     # 3. Merge with data/location.csv
     logger.info("Merging with data/location.csv...")
     try:
-        df_local = pd.read_csv("data/location.csv")
+        df_local = pd.read_csv(BASE_DIR / "data" / "location.csv")
         # Ensure we have ward_name_norm in local csv
         if "ward_name_norm" not in df_local.columns:
             df_local["ward_name_norm"] = df_local["ward_name_vi"].apply(normalize_name)
@@ -131,8 +135,8 @@ def build_dim_ward():
         df_final = df_hanoiair
 
     # 4. Save to processed data
-    os.makedirs("data/processed", exist_ok=True)
-    processed_path = "data/processed/dim_ward.csv"
+    os.makedirs(BASE_DIR / "data" / "processed", exist_ok=True)
+    processed_path = BASE_DIR / "data" / "processed" / "dim_ward.csv"
     df_final.to_csv(processed_path, index=False)
     logger.info(f"Saved processed data to {processed_path}")
 

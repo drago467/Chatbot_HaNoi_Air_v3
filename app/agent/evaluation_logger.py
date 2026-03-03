@@ -5,14 +5,22 @@ Logs conversations and tool calls for evaluation purposes.
 """
 import csv
 import os
+import threading
 from datetime import datetime
 from app.dal.timezone_utils import now_ict
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 
+# Cross-platform file locking
+try:
+    import fcntl
+    HAS_FCNTL = True
+except ImportError:
+    HAS_FCNTL = False
+
 
 class EvaluationLogger:
-    """Logger for evaluating chatbot performance."""
+    """Logger for evaluating chatbot performance (thread-safe with file locking)."""
     
     def __init__(self, log_dir: str = "data/evaluation"):
         """Initialize logger with log directory."""
@@ -21,6 +29,9 @@ class EvaluationLogger:
         
         self.conversations_file = self.log_dir / "conversations.csv"
         self.tool_calls_file = self.log_dir / "tool_calls.csv"
+        
+        # Thread lock for same-process thread safety
+        self._lock = threading.Lock()
         
         # Initialize CSV files with headers if they don't exist
         self._init_csv_files()
@@ -56,21 +67,29 @@ class EvaluationLogger:
         error_type: Optional[str] = None,
         user_rating: Optional[int] = None
     ):
-        """Log a conversation turn."""
-        with open(self.conversations_file, 'a', newline='', encoding='utf-8') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                now_ict().isoformat(),
-                session_id,
-                turn_number,
-                user_query,
-                resolved_location or "",
-                llm_response[:500],  # Truncate long responses
-                round(response_time_ms, 2),
-                str(tool_calls) if tool_calls else "",
-                error_type or "",
-                user_rating or ""
-            ])
+        """Log a conversation turn (thread-safe)."""
+        with self._lock:
+            with open(self.conversations_file, 'a', newline='', encoding='utf-8') as f:
+                # Acquire file lock for cross-process safety
+                if HAS_FCNTL:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+                try:
+                    writer = csv.writer(f)
+                    writer.writerow([
+                        now_ict().isoformat(),
+                        session_id,
+                        turn_number,
+                        user_query,
+                        resolved_location or "",
+                        llm_response[:500],  # Truncate long responses
+                        round(response_time_ms, 2),
+                        str(tool_calls) if tool_calls else "",
+                        error_type or "",
+                        user_rating or ""
+                    ])
+                finally:
+                    if HAS_FCNTL:
+                        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
     
     def log_tool_call(
         self,
@@ -82,19 +101,27 @@ class EvaluationLogger:
         success: bool = True,
         execution_time_ms: float = 0
     ):
-        """Log a tool call."""
-        with open(self.tool_calls_file, 'a', newline='', encoding='utf-8') as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                now_ict().isoformat(),
-                session_id,
-                turn_number,
-                tool_name,
-                str(tool_input)[:200],  # Truncate
-                str(tool_output)[:200] if tool_output else "",
-                success,
-                round(execution_time_ms, 2)
-            ])
+        """Log a tool call (thread-safe)."""
+        with self._lock:
+            with open(self.tool_calls_file, 'a', newline='', encoding='utf-8') as f:
+                # Acquire file lock for cross-process safety
+                if HAS_FCNTL:
+                    fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+                try:
+                    writer = csv.writer(f)
+                    writer.writerow([
+                        now_ict().isoformat(),
+                        session_id,
+                        turn_number,
+                        tool_name,
+                        str(tool_input)[:200],  # Truncate
+                        str(tool_output)[:200] if tool_output else "",
+                        success,
+                        round(execution_time_ms, 2)
+                    ])
+                finally:
+                    if HAS_FCNTL:
+                        fcntl.flock(f.fileno(), fcntl.LOCK_UN)
     
     def get_conversations(self) -> List[Dict]:
         """Load all logged conversations."""

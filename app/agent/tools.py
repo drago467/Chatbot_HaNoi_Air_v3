@@ -366,8 +366,18 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
     # Seasonal comparison
     seasonal = compare_with_seasonal({"temp": row.get("temp_avg"), "humidity": row.get("humidity")})
 
-    # Phenomena detection
-    phenomena = detect_hanoi_weather_phenomena(row)
+    # Phenomena detection - map row keys to function expected keys
+    phenomena_data = {
+        "temp": row.get("temp_avg"),
+        "humidity": row.get("humidity"),
+        "dew_point": row.get("dew_point"),
+        "wind_deg": row.get("wind_deg"),
+        "wind_speed": row.get("wind_speed"),
+        "clouds": row.get("clouds"),
+        "weather_main": row.get("weather_main"),
+        "visibility": row.get("visibility", 10000)
+    }
+    phenomena = detect_hanoi_weather_phenomena(phenomena_data)
 
     return {
         "date": str(query_date),
@@ -423,7 +433,7 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
         return {"error": "no_data"}
 
     # Aggregation
-    temps = [r["temp_avg"] for r in rows if r.get("temp_avg")]
+    temps = [r["temp_avg"] for r in rows if r.get("temp_avg") is not None]
     temp_min = min(temps) if temps and all(t is not None for t in temps) else None
     temp_max = max(temps) if temps and all(t is not None for t in temps) else None
     temp_avg = sum(temps) / len(temps) if temps and all(t is not None for t in temps) else None

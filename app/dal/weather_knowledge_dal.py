@@ -34,7 +34,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     
     # Calculate dew_point difference (temp - dew_point)
     # Small difference = air is close to saturation = nom am
-    dew_point_diff = temp - dew_point if (temp and dew_point) else 999
+    dew_point_diff = temp - dew_point if temp is not None and dew_point is not None else 999
     
     # 1. Nom Am (Spring Dampness) - ONLY Thang 2-4
     # True nom am: high humidity + dew_point very close to temp (chenh <= 2C)
@@ -46,7 +46,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
                 "description": f"Nom am muc do cao! Do am {humidity}%, nhiet {temp}C, diem suong {dew_point}C - San nha lay mot, quan ao kho beo",
                 "severity": "high"
             })
-        elif humidity >= 85 and dew_point_diff <= 3:
+        elif humidity >= KTTV_THRESHOLDS["NOM_AM_HUMIDITY_MEDIUM"] and dew_point_diff <= KTTV_THRESHOLDS["NOM_AM_DEW_DIFF_MEDIUM"]:
             phenomena.append({
                 "type": "nom_am",
                 "name": "Nom am",
@@ -150,8 +150,8 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
                 "severity": "medium"
             })
     
-    # 8. Mua dong (Thunderstorm) - Thang 5-9
-    if month in [5, 6, 7, 8, 9]:
+    # 8. Mua dong (Thunderstorm) - Thang 4-10
+    if month in [4, 5, 6, 7, 8, 9, 10]:
         if weather_main == "Thunderstorm":
             phenomena.append({
                 "type": "mua_dong",
@@ -226,13 +226,20 @@ def compare_with_seasonal(weather_data: Dict[str, Any], month: int = None) -> Di
         elif hum_diff < -10:
             comparisons.append("Do am thap hon binh thuong")
     
+    # Validate month
+    month_names = [
+        "Thang 1", "Thang 2", "Thang 3", "Thang 4", "Thang 5", "Thang 6",
+        "Thang 7", "Thang 8", "Thang 9", "Thang 10", "Thang 11", "Thang 12"
+    ]
+    if month < 1 or month > 12:
+        month_name = "Khong xac dinh"
+    else:
+        month_name = month_names[month - 1]
+    
     return {
         "seasonal_avg": seasonal,
         "comparisons": comparisons,
-        "month_name": [
-            "Thang 1", "Thang 2", "Thang 3", "Thang 4", "Thang 5", "Thang 6",
-            "Thang 7", "Thang 8", "Thang 9", "Thang 10", "Thang 11", "Thang 12"
-        ][month - 1]
+        "month_name": month_name
     }
 
 
@@ -274,8 +281,9 @@ def get_weather_summary_text(weather_data: Dict[str, Any]) -> str:
     
     # Humidity
     if humidity:
-        if humidity >= 85:
-            parts.append(f"do am cao {humidity}%")
+        from app.config.thresholds import KTTV_THRESHOLDS
+        if humidity >= KTTV_THRESHOLDS.get("NOM_AM_HUMIDITY_MEDIUM", 85):
+            parts.append(f"độ ẩm cao {humidity}%")
     
     # Wind
     if wind_speed and wind_deg:

@@ -7,7 +7,7 @@ from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 
 # Import from connection.py to avoid duplication
-from app.db.connection import get_db_connection
+from app.db.connection import get_db_connection, release_connection
 
 load_dotenv()
 
@@ -22,10 +22,16 @@ def query(sql: str, params: tuple = None) -> List[Dict[str, Any]]:
     Returns:
         List of dictionaries with column names as keys
     """
-    with get_db_connection() as conn:
+    conn = get_db_connection()
+    try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(sql, params)
             return [dict(row) for row in cur.fetchall()]
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        release_connection(conn)
 
 
 def query_one(sql: str, params: tuple = None) -> Optional[Dict[str, Any]]:
@@ -38,8 +44,17 @@ def query_one(sql: str, params: tuple = None) -> Optional[Dict[str, Any]]:
     Returns:
         Single dictionary or None if no result
     """
-    results = query(sql, params)
-    return results[0] if results else None
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(sql, params)
+            row = cur.fetchone()
+            return dict(row) if row else None
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        release_connection(conn)
 
 
 def execute(sql: str, params: tuple = None) -> int:
@@ -52,8 +67,14 @@ def execute(sql: str, params: tuple = None) -> int:
     Returns:
         Number of affected rows
     """
-    with get_db_connection() as conn:
+    conn = get_db_connection()
+    try:
         with conn.cursor() as cur:
             cur.execute(sql, params)
             conn.commit()
             return cur.rowcount
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        release_connection(conn)
