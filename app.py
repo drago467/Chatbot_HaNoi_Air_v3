@@ -42,6 +42,37 @@ def get_weather_icon(weather_main: str) -> str:
     return icons.get(weather_main, "sunny")
 
 
+@st.cache_data(ttl=3600)
+def get_districts() -> list:
+    """Get all districts from database (cached for 1 hour)."""
+    from app.db.dal import query
+    try:
+        districts = query("""
+            SELECT DISTINCT district_name_vi 
+            FROM dim_ward 
+            ORDER BY district_name_vi
+        """)
+        return [d["district_name_vi"] for d in districts if d.get("district_name_vi")]
+    except:
+        return []
+
+
+@st.cache_data(ttl=3600)
+def get_wards_by_district(district: str) -> dict:
+    """Get wards for a specific district (cached for 1 hour)."""
+    from app.db.dal import query
+    try:
+        wards = query("""
+            SELECT ward_id, ward_name_vi 
+            FROM dim_ward 
+            WHERE district_name_vi = %s
+            ORDER BY ward_name_vi
+        """, (district,))
+        return {w["ward_name_vi"]: w["ward_id"] for w in wards}
+    except:
+        return {}
+
+
 def call_agent(prompt: str, thread_id: str):
     """Call the agent and yield response chunks."""
     from app.agent.agent import stream_agent
@@ -53,18 +84,22 @@ def call_agent(prompt: str, thread_id: str):
         yield f"Loi: {str(e)}"
 
 
-def get_current_weather_summary():
+def get_current_weather_summary(ward_id: str = None):
     """Get quick weather summary for sidebar."""
     from app.db.dal import query
+    
+    # Use session state location if not provided
+    if ward_id is None:
+        ward_id = st.session_state.get("location", "ID_00364")
     
     try:
         result = query("""
             SELECT temp, humidity, weather_main, wind_speed
             FROM fact_weather_hourly
-            WHERE ward_id = 'ID_00364'
+            WHERE ward_id = %s
             ORDER BY ts_utc DESC
             LIMIT 1
-        """)
+        """, (ward_id,))
         
         if result:
             return result[0]
@@ -89,25 +124,11 @@ with st.sidebar:
     
     st.subheader("Chon dia diem")
     
-    from app.db.dal import query
     try:
-        districts = query("""
-            SELECT DISTINCT district_name_vi 
-            FROM dim_ward 
-            ORDER BY district_name_vi
-        """)
-        
-        district_names = [d["district_name_vi"] for d in districts if d.get("district_name_vi")]
+        district_names = get_districts()
         selected_district = st.selectbox("Quan/Huyen", district_names, index=0)
         
-        wards = query("""
-            SELECT ward_id, ward_name_vi 
-            FROM dim_ward 
-            WHERE district_name_vi = %s
-            ORDER BY ward_name_vi
-        """, (selected_district,))
-        
-        ward_names = {w["ward_name_vi"]: w["ward_id"] for w in wards}
+        ward_names = get_wards_by_district(selected_district)
         selected_ward = st.selectbox("Phuong/Xa", list(ward_names.keys()))
         
         if selected_ward:
@@ -141,18 +162,32 @@ if prompt := st.chat_input("Hoi ve thoi tiet Ha Noi..."):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
+        start_time = time.time()
         
-        with st.status("Dang xu ly...", expanded=True):
-            start_time = time.time()
-            
-            for chunk in call_agent(prompt, st.session_state.thread_id):
-                full_response += chunk
-                message_placeholder.markdown(full_response + "|")
-            
-            elapsed = time.time() - start_time
-            st.caption(f"Thoi gian: {elapsed:.1f}s")
+        # Stream response (outside status to avoid UI flickering)
+        for chunk in call_agent(prompt, st.session_state.thread_id):
+            full_response += chunk
+            message_placeholder.markdown(full_response + "▌")
         
+        # Final response and timing
         message_placeholder.markdown(full_response)
+        elapsed = time.time() - start_time
+        st.caption(f"⏱ {elapsed:.1f}s")
+        
+        # Log conversation for evaluation
+        try:
+            from app.agent.evaluation_logger import get_evaluation_logger
+            logger = get_evaluation_logger()
+            logger.log_conversation(
+                session_id=st.session_state.thread_id,
+                turn_number=len(st.session_state.messages) // 2,
+                user_query=prompt,
+                llm_response=full_response,
+                response_time_ms=elapsed * 1000
+            )
+        except Exception as e:
+            st.caption(f"Log error: {e}")
+        
         st.session_state.messages.append({
             "role": "assistant", 
             "content": full_response

@@ -8,7 +8,7 @@ from app.dal.weather_helpers import wind_deg_to_vietnamese
 def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     """Compare current weather between two wards.
     
-    FIXED: Uses DISTINCT ON to ensure 1 row per ward.
+    FIXED: Maps results by ward_id to ensure correct order matching input.
     
     Args:
         ward_id1: First ward ID
@@ -32,23 +32,40 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
             "message": f"Khong du lieu (chi co {len(results)}/2 wards)"
         }
     
-    w1, w2 = results[0], results[1]
+    # Map results by ward_id to maintain input order
+    results_by_id = {r["ward_id"]: r for r in results}
+    w1 = results_by_id.get(ward_id1)
+    w2 = results_by_id.get(ward_id2)
+    
+    if not w1 or not w2:
+        return {"error": "missing_data", "message": "Khong tim thay du lieu cho 1 trong 2 dia diem"}
     
     # Add Vietnamese wind direction
     w1["wind_direction_vi"] = wind_deg_to_vietnamese(w1.get("wind_deg"))
     w2["wind_direction_vi"] = wind_deg_to_vietnamese(w2.get("wind_deg"))
     
+    # Get ward names for display
+    from app.dal.location_dal import get_ward_by_id
+    loc1 = get_ward_by_id(ward_id1) or {}
+    loc2 = get_ward_by_id(ward_id2) or {}
+    name1 = loc1.get("ward_name_vi", ward_id1)
+    name2 = loc2.get("ward_name_vi", ward_id2)
+    
+    # Add location names to results
+    w1["ward_name"] = name1
+    w2["ward_name"] = name2
+    
     # Calculate differences
     temp_diff = (w1.get("temp") or 0) - (w2.get("temp") or 0)
     humidity_diff = (w1.get("humidity") or 0) - (w2.get("humidity") or 0)
     
-    # Generate comparison text
+    # Generate comparison text with location names
     if abs(temp_diff) <= 2:
         temp_comparison = "Nhiet do tuong tu"
     elif temp_diff > 0:
-        temp_comparison = f"{w1['ward_id']} nong hon {abs(temp_diff):.1f}°C"
+        temp_comparison = f"{name1} nong hon {name2} {abs(temp_diff):.1f}°C"
     else:
-        temp_comparison = f"{w2['ward_id']} nong hon {abs(temp_diff):.1f}°C"
+        temp_comparison = f"{name2} nong hon {name1} {abs(temp_diff):.1f}°C"
     
     return {
         "location1": w1,

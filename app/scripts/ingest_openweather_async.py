@@ -635,3 +635,8 @@ if __name__ == "__main__":
         # Current
         print("\n=== STEP 2: CURRENT DATA ===")
         asyncio.run(ingestor.run_nowcast())
+    
+    if not args.history_only and not args.current_only:
+        # Forecast
+        print("\n=== STEP 3: FORECAST DATA ===")
+        asyncio.run(ingestor.run_forecast())

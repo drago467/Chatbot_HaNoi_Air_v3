@@ -77,10 +77,48 @@ def create_weather_agent():
     return agent
 
 def run_agent(message: str, thread_id: str = "default") -> dict:
-    """Run agent synchronously (blocking)."""
+    """Run agent synchronously (blocking).
+    
+    Also logs tool calls to evaluation_logger.
+    """
+    import time
+    
+    # Get logger
+    try:
+        from app.agent.evaluation_logger import get_evaluation_logger
+        logger = get_evaluation_logger()
+    except:
+        logger = None
+    
     agent = get_agent()
     config = {"configurable": {"thread_id": thread_id}}
+    
+    # Wrap tools to log calls (if logger available)
+    if logger:
+        # We'll log after getting results
+        pass
+    
     result = agent.invoke({"messages": [{"role": "user", "content": message}]}, config)
+    
+    # Extract and log tool calls from result
+    if logger:
+        try:
+            messages = result.get("messages", [])
+            for msg in messages:
+                if hasattr(msg, "tool_calls") and msg.tool_calls:
+                    for tc in msg.tool_calls:
+                        logger.log_tool_call(
+                            session_id=thread_id,
+                            turn_number=0,
+                            tool_name=tc.get("name", "unknown"),
+                            tool_input=str(tc.get("args", {}))[:200],
+                            tool_output="",
+                            success=True,
+                            execution_time_ms=0
+                        )
+        except Exception as e:
+            pass  # Don't break on logging errors
+    
     return result
 
 
@@ -88,6 +126,7 @@ def stream_agent(message: str, thread_id: str = "default"):
     """Stream agent response token by token.
     
     Yields chunks of the response for real-time display.
+    Only yields LLM text (AIMessageChunk from node "agent").
     
     Args:
         message: User message
@@ -96,6 +135,8 @@ def stream_agent(message: str, thread_id: str = "default"):
     Yields:
         Text chunks from the agent's response
     """
+    from langchain.schema.messages import AIMessageChunk, ToolMessage
+    
     agent = get_agent()
     config = {"configurable": {"thread_id": thread_id}}
     
@@ -106,11 +147,21 @@ def stream_agent(message: str, thread_id: str = "default"):
         stream_mode="messages"
     ):
         # event is a tuple of (message_chunk, metadata)
-        if event and len(event) >= 1:
-            msg_chunk = event[0]
-            # Only yield content from the assistant messages
-            if hasattr(msg_chunk, "content") and msg_chunk.content:
-                yield msg_chunk.content
+        if event and len(event) >= 2:
+            msg_chunk, metadata = event
+            
+            # Skip tool messages (they contain raw JSON from DAL)
+            if isinstance(msg_chunk, ToolMessage):
+                continue
+            
+            # Skip messages with tool_calls (function calling JSON)
+            if hasattr(msg_chunk, "tool_calls") and msg_chunk.tool_calls:
+                continue
+            
+            # Only yield content from agent node, not tools node
+            if metadata.get("langgraph_node") == "agent":
+                if hasattr(msg_chunk, "content") and msg_chunk.content:
+                    yield msg_chunk.content
 
 
 def stream_agent_with_updates(message: str, thread_id: str = "default"):
@@ -120,6 +171,8 @@ def stream_agent_with_updates(message: str, thread_id: str = "default"):
     - type='message': text chunk from LLM
     - type='tool': tool call start/update/end
     
+    Also logs tool calls to evaluation_logger.
+    
     Args:
         message: User message
         thread_id: Conversation thread ID
@@ -127,8 +180,21 @@ def stream_agent_with_updates(message: str, thread_id: str = "default"):
     Yields:
         Dict with type and content
     """
+    from langchain.schema.messages import ToolMessage
+    import time
+    
     agent = get_agent()
     config = {"configurable": {"thread_id": thread_id}}
+    
+    # Get logger
+    try:
+        from app.agent.evaluation_logger import get_evaluation_logger
+        logger = get_evaluation_logger()
+    except:
+        logger = None
+    
+    tool_start_time = None
+    current_tool_name = None
     
     # Stream with both messages and updates
     for event in agent.stream(
@@ -140,13 +206,20 @@ def stream_agent_with_updates(message: str, thread_id: str = "default"):
         if isinstance(event, tuple):
             msg_chunk, metadata = event
             
-            # Message chunk
-            if hasattr(msg_chunk, "content") and msg_chunk.content:
-                # Check if this is from the agent node
-                if metadata.get("langgraph_node") == "agent":
+            # Skip tool messages (raw JSON from DAL)
+            if isinstance(msg_chunk, ToolMessage):
+                continue
+            
+            # Skip messages with tool_calls (function calling JSON)
+            if hasattr(msg_chunk, "tool_calls") and msg_chunk.tool_calls:
+                continue
+            
+            # Message chunk from agent node
+            if metadata.get("langgraph_node") == "agent":
+                if hasattr(msg_chunk, "content") and msg_chunk.content:
                     yield {"type": "message", "content": msg_chunk.content}
             
-            # Tool updates
+            # Tool updates (from tools node)
             if metadata.get("langgraph_node") == "tools":
                 yield {"type": "tool", "content": msg_chunk}
         elif isinstance(event, dict):
