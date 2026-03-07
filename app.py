@@ -85,7 +85,7 @@ def call_agent(prompt: str, thread_id: str):
         for chunk in stream_agent(prompt, thread_id=thread_id):
             yield chunk
     except Exception as e:
-        yield f"Loi: {str(e)}"
+        yield f"Lỗi: {str(e)}"
 
 
 def get_current_weather_summary(ward_id: str = None):
@@ -120,13 +120,13 @@ with st.sidebar:
     if weather:
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Nhiet do", f"{weather.get('temp', '--')}C")
+            st.metric("Nhiệt độ", f"{weather.get('temp', '--')}C")
         with col2:
-            st.metric("Do am", f"{weather.get('humidity', '--')}%")
+            st.metric("Độ ẩm", f"{weather.get('humidity', '--')}%")
     
     st.divider()
     
-    st.subheader("Chon dia diem")
+    st.subheader("Chọn địa điểm")
     
     # Get districts first (outside try to avoid st.stop being caught)
     district_names = get_districts()
@@ -135,19 +135,19 @@ with st.sidebar:
         st.stop()
     
     try:
-        selected_district = st.selectbox("Quan/Huyen", district_names, index=0)
+        selected_district = st.selectbox("Quận/Huyện", district_names, index=0)
         
         ward_names = get_wards_by_district(selected_district)
-        selected_ward = st.selectbox("Phuong/Xa", list(ward_names.keys()))
+        selected_ward = st.selectbox("Phường/Xã", list(ward_names.keys()))
         
         if selected_ward:
             st.session_state.location = ward_names[selected_ward]
     except Exception as e:
-        st.warning(f"Khong the tai danh sach: {e}")
+        st.warning(f"Không thể tải danh sách: {e}")
     
     st.divider()
     
-    if st.button("Xoa hoi thoai", use_container_width=True):
+    if st.button("Xóa hội thoại", use_container_width=True):
         st.session_state.messages = []
         st.session_state.thread_id = str(uuid.uuid4())
         st.rerun()
@@ -162,7 +162,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Chat input
-if prompt := st.chat_input("Hoi ve thoi tiet Ha Noi..."):
+if prompt := st.chat_input("Hỏi về thời tiết Hà Nội..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     
     with st.chat_message("user"):
@@ -204,4 +204,4 @@ if prompt := st.chat_input("Hoi ve thoi tiet Ha Noi..."):
 
 
 st.markdown("---")
-st.caption("Goi y: 'Thoi tiet hom nay the nao?', 'Ngay mai co mua khong?', 'So sanh Cau Giay va Hoan Kiem'")
+st.caption("Gợi ý: 'Thời tiết hôm nay thế nào?', 'Ngày mai có mưa không?', 'So sánh Cầu Giấy và Hoàn Kiếm'")

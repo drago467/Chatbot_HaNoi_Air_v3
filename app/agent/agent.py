@@ -9,6 +9,7 @@ load_dotenv()
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.postgres import PostgresSaver
 from langchain_openai import ChatOpenAI
+import psycopg
 
 from app.agent.tools import TOOLS
 
@@ -51,6 +52,7 @@ SYSTEM_PROMPT = """Bạn là chatbot thời tiết chuyên về Hà Nội - chuy
 # Thread-safe agent cache
 _agent = None
 _agent_lock = threading.Lock()
+_db_connection = None
 
 
 def get_agent():
@@ -67,7 +69,15 @@ def get_agent():
 def reset_agent():
     """Reset the cached agent to force recreation with fresh connections."""
     global _agent
+    global _db_connection
     with _agent_lock:
+        # Close the database connection before resetting
+        if _db_connection is not None:
+            try:
+                _db_connection.close()
+            except:
+                pass
+            _db_connection = None
         _agent = None
 
 
@@ -85,10 +95,19 @@ def create_weather_agent():
     if not DATABASE_URL:
         raise ValueError("DATABASE_URL must be set in .env")
     
-    checkpointer = PostgresSaver.from_conn_string(DATABASE_URL)
+    # Create connection and keep it alive as part of checkpointer
+    # The checkpointer will use this connection for checkpointing
+    import psycopg
+    conn = psycopg.connect(DATABASE_URL, autocommit=True)
+    checkpointer = PostgresSaver(conn)
     checkpointer.setup()
     
-    agent = create_react_agent(model=model, tools=TOOLS, prompt=SYSTEM_PROMPT, checkpointer=checkpointer)
+    # Store connection in global so it doesn't get garbage collected
+    global _db_connection
+    _db_connection = conn
+    
+    agent = create_react_agent(model=model, tools=TOOLS, state_modifier=SYSTEM_PROMPT, checkpointer=checkpointer)
+    
     return agent
 
 def run_agent(message: str, thread_id: str = "default") -> dict:

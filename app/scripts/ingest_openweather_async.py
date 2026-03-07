@@ -96,17 +96,30 @@ class OpenWeatherAsyncIngestor:
         finally:
             conn.close()
 
-    async def run_nowcast(self):
+    async def run_nowcast(self, do_air: bool = True, do_weather: bool = True):
         """Job 1: Air current + OneCall current (Hourly)."""
         wards = self._get_ward_list()
         logger.info(f"Starting Nowcast job for {len(wards)} wards...")
         
         async with aiohttp.ClientSession() as session:
-            air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
-            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
+            air_tasks = []
+            weather_tasks = []
             
-            air_results = await asyncio.gather(*air_tasks)
-            weather_results = await asyncio.gather(*weather_tasks)
+            if do_air:
+                air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
+            
+            if do_weather:
+                weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
+            
+            if air_tasks:
+                air_results = await asyncio.gather(*air_tasks)
+            else:
+                air_results = []
+                
+            if weather_tasks:
+                weather_results = await asyncio.gather(*weather_tasks)
+            else:
+                weather_results = []
 
         # Process and Bulk Upsert
         air_records = []
@@ -207,17 +220,30 @@ class OpenWeatherAsyncIngestor:
         finally:
             conn.close()
 
-    async def run_forecast(self):
+    async def run_forecast(self, do_air: bool = True, do_weather: bool = True):
         """Job 2: Air forecast + OneCall full (6-hourly)."""
         wards = self._get_ward_list()
         logger.info(f"Starting Forecast job for {len(wards)} wards...")
         
         async with aiohttp.ClientSession() as session:
-            air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution/forecast", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
-            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
+            air_tasks = []
+            weather_tasks = []
             
-            air_results = await asyncio.gather(*air_tasks)
-            weather_results = await asyncio.gather(*weather_tasks)
+            if do_air:
+                air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution/forecast", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
+            
+            if do_weather:
+                weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
+            
+            if air_tasks:
+                air_results = await asyncio.gather(*air_tasks)
+            else:
+                air_results = []
+                
+            if weather_tasks:
+                weather_results = await asyncio.gather(*weather_tasks)
+            else:
+                weather_results = []
 
         air_records = []
         for ward, data in zip(wards, air_results):
@@ -350,20 +376,22 @@ class OpenWeatherAsyncIngestor:
         task_meta: List[Dict[str, Any]] = []  # [{"ward_id": ..., ...}, ...]
 
         async with aiohttp.ClientSession() as session:
-            for w in wards:
-                curr_start = start_dt
-                while curr_start < end_dt:
-                    curr_end = min(curr_start + timedelta(days=5), end_dt)
-                    params = {
-                        "lat": w["lat"], "lon": w["lon"],
-                        "start": int(curr_start.timestamp()),
-                        "end": int(curr_end.timestamp())
-                    }
-                    tasks.append(
-                        self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
-                    )
-                    task_meta.append({"ward_id": w["ward_id"]})
-                    curr_start = curr_end
+            # Only fetch air pollution history if do_air is True
+            if do_air:
+                for w in wards:
+                    curr_start = start_dt
+                    while curr_start < end_dt:
+                        curr_end = min(curr_start + timedelta(days=5), end_dt)
+                        params = {
+                            "lat": w["lat"], "lon": w["lon"],
+                            "start": int(curr_start.timestamp()),
+                            "end": int(curr_end.timestamp())
+                        }
+                        tasks.append(
+                            self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
+                        )
+                        task_meta.append({"ward_id": w["ward_id"]})
+                        curr_start = curr_end
 
             logger.info(f"History backfill: {len(tasks)} API chunks across {len(wards)} wards")
             results = await asyncio.gather(*tasks)
@@ -634,9 +662,9 @@ if __name__ == "__main__":
     if not args.history_only and not args.forecast_only:
         # Current
         print("\n=== STEP 2: CURRENT DATA ===")
-        asyncio.run(ingestor.run_nowcast())
+        asyncio.run(ingestor.run_nowcast(do_air=do_air, do_weather=do_weather))
     
     if not args.history_only and not args.current_only:
         # Forecast
         print("\n=== STEP 3: FORECAST DATA ===")
-        asyncio.run(ingestor.run_forecast())
+        asyncio.run(ingestor.run_forecast(do_air=do_air, do_weather=do_weather))
