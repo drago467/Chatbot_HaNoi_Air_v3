@@ -456,3 +456,96 @@ Cảm giác ngoài trời không rét, nhiệt độ khá dễ chịu và bình 
 2026-03-07T10:29:33.554848+07:00,batch_evaluation,63,"Trong tuần này, ngày nào ở Hà Nội nóng nhất?",,,4072.81,,"Error code: 401 - {'error': {'code': '', 'message': '[sk-vjM***zF4] 该令牌额度已用尽 !token.UnlimitedQuota && token.RemainQuota = -15141 (request id: 20260307112932777248287cU389lci)', 'type': 'new_api_error'}}",
 2026-03-07T10:29:38.141280+07:00,batch_evaluation,64,Chênh lệch nhiệt độ ngày và đêm ở Hà Nội hôm nay là bao nhiêu?,,,4586.43,,"Error code: 401 - {'error': {'code': '', 'message': '[sk-vjM***zF4] 该令牌额度已用尽 !token.UnlimitedQuota && token.RemainQuota = -15141 (request id: 20260307112937361133202CPdEwJU0)', 'type': 'new_api_error'}}",
 2026-03-07T10:29:41.807521+07:00,batch_evaluation,65,Nhiệt độ buổi sáng sớm mai ở Ba Đình khoảng bao nhiêu?,,,3666.24,,"Error code: 401 - {'error': {'code': '', 'message': '[sk-vjM***zF4] 该令牌额度已用尽 !token.UnlimitedQuota && token.RemainQuota = -15141 (request id: 20260307112941331933393BJb852O)', 'type': 'new_api_error'}}",
+2026-03-07T11:44:20.083878+07:00,4e848918-d71d-4159-a92b-b4b75a55e2dd,0,Thời tiết của phường Hà Đông 3 ngày tới,,"Dưới đây là dự báo thời tiết cho phường Hà Đông trong 3 ngày tới:
+
+### Ngày 30 tháng 10
+- **Nhiệt độ**: 19.61°C - 23.83°C
+- **Độ ẩm**: 72%
+- **Khả năng mưa**: 20%
+- **Mô tả thời tiết**: Có mưa nhẹ, trời có mây.
+- **Thời gian mặt trời mọc**: 06:12
+- **Thời gian mặt trời lặn**: 18:03
+
+### Ngày 31 tháng 10
+- **Nhiệt độ**: 19.80°C - 22.52°C
+- **Độ ẩm**: 82%
+- **Khả năng mưa**: 97%
+- **Mô tả thời tiết**: Có mưa nhẹ, trời có mây.
+- **Thời gian mặt trời mọc**: 06:12
+- **Thời gian mặt trời lặn**: 18:03
+",19796.69,,,
+2026-03-07T11:45:47.086445+07:00,cf989867-16c8-4b85-8d08-0f5a9d9b2dc6,0,Thời tiết phường Cầu Giấy ngày hôm nay,,"Hôm nay, thời tiết tại phường Cầu Giấy có những thông tin như sau:
+
+- **Nhiệt độ**: 
+  - Thấp nhất: 19.59°C
+  - Cao nhất: 24.12°C
+  - Nhiệt độ hiện tại vào buổi sáng: 20.83°C
+
+- **Độ ẩm**: 72%
+- **Áp suất**: 1018 hPa
+- **Gió**: Tốc độ 4.66 m/s, hướng Đông Nam
+- **Thời tiết**: Có mưa nhẹ (0.1mm), khả năng mưa 20%
+- **Chỉ số UV**: 2.65 (mức thấp)
+- **Thời gian ánh sáng ban ngày**: 11.8 giờ
+
+### Khuyến nghị:
+- Nếu bạn ra ngoài, hãy mang theo ô hoặc áo mưa do có khả năng mưa nhẹ.
+- Đối với người già",4025.91,,,
+2026-03-07T11:46:23.134678+07:00,cf989867-16c8-4b85-8d08-0f5a9d9b2dc6,1,3 ngày tới thì như thế nào,,"Dưới đây là dự báo thời tiết cho phường Cầu Giấy trong 3 ngày tới (từ 8 đến 10 tháng 3):
+
+### Ngày 8 tháng 3
+- **Nhiệt độ**: 
+  - Trung bình: 21.01°C
+  - Khoảng: 19.77 - 22.71°C
+- **Độ ẩm**: 80%
+- **Khả năng mưa**: 96% (tổng lượng mưa: 1.25mm)
+- **Thời tiết**: Có mưa
+
+### Ngày 9 tháng 3
+- **Nhiệt độ**: 
+  - Trung bình: 23.53°C
+  - Khoảng: 18.18 - 24.69°C
+- **Độ ẩm**: 67%
+- **Khả năng mưa**: 100% (tổng lượng mưa: 6.09mm)
+- **Thời tiết**: Có mưa
+
+### Ngày 10 tháng 3
+- **Nhiệt độ**: 
+  - Trung bình",6303.97,,,
+2026-03-07T12:02:05.973225+07:00,22252162-6b65-4421-8182-57a0b3aa3062,0,Cho tôi thông tin dự báo thời tiết của quận Tây Hồ ,,"### Thời tiết hiện tại tại quận Tây Hồ
+- **Nhiệt độ**: 22.02°C (Cảm giác như 22.31°C)
+- **Độ ẩm**: 78%
+- **Áp suất**: 1019 hPa
+- **Gió**: 3.6 m/s từ hướng Đông Nam
+- **Mây**: 75% (Mây rải rác)
+- **Tầm nhìn**: 7000 m
+- **Chỉ số UV**: 0.85 (Thấp - An toàn)
+
+### Dự báo thời tiết hôm nay (07/03/2026)
+- **Nhiệt độ**: 
+  - **Tối thiểu**: 19.52°C
+  - **Tối đa**: 24.22°C
+- **Tiến trình nhiệt độ**:
+  - Sáng: 20.41°C
+  - Trưa: 22.48°C
+  - Chiều: 23.01°C
+  - Tối: 20.78°C
+- **Độ ẩm**: 74%
+- **Áp suất**: 101",6513.26,,,
+2026-03-07T12:03:05.239258+07:00,22252162-6b65-4421-8182-57a0b3aa3062,1,các ngày tiếp theo thì như thế nào,,"### Dự báo thời tiết từ 08/03/2026 đến 14/03/2026 tại quận Tây Hồ
+
+- **Nhiệt độ trung bình**: 24.5°C
+- **Nhiệt độ dao động**: 21 - 27°C
+- **Tổng lượng mưa**: 7.6 mm
+- **Số ngày mưa**: 4 ngày
+- **Độ ẩm trung bình**: 53%
+- **Chỉ số UV tối đa**: 8.0 (Cao)
+- **Xu hướng**: Nhiệt độ có xu hướng tăng
+
+#### Chi tiết từng ngày:
+1. **Ngày 08/03/2026**:
+   - **Nhiệt độ trung bình**: 21.1°C
+   - **Nhiệt độ dao động**: 19.73 - 22.72°C
+   - **Độ ẩm**: 79%
+   - **Khả năng mưa**: 97% (Tổng lượng mưa: 1.07 mm)
+ ",14251.82,,,

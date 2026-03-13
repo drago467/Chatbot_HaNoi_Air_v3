@@ -31,19 +31,77 @@ if "location" not in st.session_state:
     st.session_state.location = None
 
 
-def get_weather_icon(weather_main: str) -> str:
-    """Get weather icon based on weather condition."""
-    icons = {
-        "Clear": "sunny",
-        "Clouds": "cloudy",
-        "Rain": "rainy",
-        "Drizzle": "partly_cloudy_rainy",
-        "Thunderstorm": "thunderstorm",
-        "Snow": "ac_unit",
-        "Mist": "foggy",
-        "Fog": "foggy",
+def get_weather_emoji(weather_main: str) -> str:
+    """Get weather emoji based on weather condition."""
+    emoji_map = {
+        "Clear": "☀️",
+        "Clouds": "☁️",
+        "Few clouds": "⛅",
+        "Scattered clouds": "⛅",
+        "Broken clouds": "☁️",
+        "Overcast clouds": "☁️",
+        "Rain": "🌧️",
+        "Light rain": "🌦️",
+        "Moderate rain": "🌧️",
+        "Heavy rain": "⛈️",
+        "Drizzle": "🌦️",
+        "Thunderstorm": "⛈️",
+        "Snow": "❄️",
+        "Mist": "🌫️",
+        "Fog": "🌫️",
+        "Haze": "🌫️",
+        "Smoke": "🌫️",
+        "Dust": "💨",
+        "Sand": "💨",
+        "Ash": "🌋",
+        "Squall": "🌬️",
+        "Tornado": "🌪️",
     }
-    return icons.get(weather_main, "sunny")
+    return emoji_map.get(weather_main, "🌤️")
+
+
+def get_wind_direction(deg: int) -> str:
+    """Convert wind degree to direction.
+    
+    Uses floor division with offset for correct boundary handling.
+    Standard wind sectors: N(0-22.5), NE(22.5-67.5), E(67.5-112.5), 
+    SE(112.5-157.5), S(157.5-202.5), SW(202.5-247.5), W(247.5-292.5), NW(292.5-337.5)
+    """
+    if deg is None:
+        return ""
+    directions = ["Bắc", "Đông Bắc", "Đông", "Đông Nam", "Nam", "Tây Nam", "Tây", "Tây Bắc"]
+    # Add 22.5 to shift boundaries, then floor divide by 45
+    idx = int((deg + 22.5) / 45) % 8
+    return directions[idx]
+
+
+def get_weather_description_vi(weather_main: str) -> str:
+    """Translate weather condition to Vietnamese."""
+    desc_map = {
+        "Clear": "Trời quang",
+        "Clouds": "Có mây",
+        "Few clouds": "Mây ít",
+        "Scattered clouds": "Mây rải rác",
+        "Broken clouds": "Mây cụm",
+        "Overcast clouds": "Mây đen",
+        "Rain": "Mưa",
+        "Light rain": "Mưa nhẹ",
+        "Moderate rain": "Mưa vừa",
+        "Heavy rain": "Mưa to",
+        "Drizzle": "Mưa phùn",
+        "Thunderstorm": "Giông",
+        "Snow": "Tuyết",
+        "Mist": "Sương mù",
+        "Fog": "Sương mù",
+        "Haze": "Mù",
+        "Smoke": "Khói",
+        "Dust": "Bụi",
+        "Sand": "Cát",
+        "Ash": "Tro",
+        "Squall": "Gió giật",
+        "Tornado": "Lốc xoáy",
+    }
+    return desc_map.get(weather_main, weather_main or "---")
 
 
 @st.cache_data(ttl=3600)
@@ -98,7 +156,7 @@ def get_current_weather_summary(ward_id: str = None):
     
     try:
         result = query("""
-            SELECT temp, humidity, weather_main, wind_speed
+            SELECT temp, humidity, weather_main, wind_speed, wind_deg
             FROM fact_weather_hourly
             WHERE ward_id = %s
             ORDER BY ts_utc DESC
@@ -114,15 +172,59 @@ def get_current_weather_summary(ward_id: str = None):
 
 # Sidebar
 with st.sidebar:
-    st.title("Thời Tiết Hà Nội")
+    st.title("🌤️ Thời Tiết Hà Nội")
     
     weather = get_current_weather_summary()
     if weather:
+        # Weather condition card
+        weather_emoji = get_weather_emoji(weather.get('weather_main'))
+        weather_desc = get_weather_description_vi(weather.get('weather_main'))
+        
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            color: white;
+            margin-bottom: 16px;
+        ">
+            <div style="font-size: 48px; margin-bottom: 8px;">{weather_emoji}</div>
+            <div style="font-size: 18px; font-weight: 600;">{weather_desc}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Metrics in 2x2 grid
         col1, col2 = st.columns(2)
         with col1:
-            st.metric("Nhiệt độ", f"{weather.get('temp', '--')}C")
+            st.metric(
+                "🌡️ Nhiệt độ", 
+                f"{weather.get('temp', '--')}°C",
+                delta_color="off"
+            )
         with col2:
-            st.metric("Độ ẩm", f"{weather.get('humidity', '--')}%")
+            st.metric(
+                "💧 Độ ẩm", 
+                f"{weather.get('humidity', '--')}%",
+                delta_color="off"
+            )
+        
+        col3, col4 = st.columns(2)
+        with col3:
+            wind_speed = weather.get('wind_speed')
+            st.metric(
+                "💨 Gió", 
+                f"{wind_speed:.1f} m/s" if wind_speed else "--",
+                delta_color="off"
+            )
+        with col4:
+            wind_deg = weather.get('wind_deg')
+            wind_dir = get_wind_direction(wind_deg) if wind_deg else "--"
+            st.metric(
+                "🧭 Hướng gió", 
+                wind_dir,
+                delta_color="off"
+            )
     
     st.divider()
     
@@ -163,11 +265,18 @@ for message in st.session_state.messages:
 
 # Chat input
 if prompt := st.chat_input("Hỏi về thời tiết Hà Nội..."):
-    st.session_state.messages.append({"role": "user", "content": prompt})
     
+    # Thêm vào session state
+    st.session_state.messages.append({
+        "role": "user", 
+        "content": prompt
+    })
+    
+    # Hiển thị lên giao diện
     with st.chat_message("user"):
         st.markdown(prompt)
     
+    # Xử lý phản hồi từ Agent (Streaming)
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""

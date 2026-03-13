@@ -106,18 +106,18 @@ class OpenWeatherAsyncIngestor:
             weather_tasks = []
             
             if do_air:
-                air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
+            air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
             
             if do_weather:
-                weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
+            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
             
             if air_tasks:
-                air_results = await asyncio.gather(*air_tasks)
+            air_results = await asyncio.gather(*air_tasks)
             else:
                 air_results = []
                 
             if weather_tasks:
-                weather_results = await asyncio.gather(*weather_tasks)
+            weather_results = await asyncio.gather(*weather_tasks)
             else:
                 weather_results = []
 
@@ -230,18 +230,18 @@ class OpenWeatherAsyncIngestor:
             weather_tasks = []
             
             if do_air:
-                air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution/forecast", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
+            air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution/forecast", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
             
             if do_weather:
-                weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
+            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
             
             if air_tasks:
-                air_results = await asyncio.gather(*air_tasks)
+            air_results = await asyncio.gather(*air_tasks)
             else:
                 air_results = []
                 
             if weather_tasks:
-                weather_results = await asyncio.gather(*weather_tasks)
+            weather_results = await asyncio.gather(*weather_tasks)
             else:
                 weather_results = []
 
@@ -378,20 +378,20 @@ class OpenWeatherAsyncIngestor:
         async with aiohttp.ClientSession() as session:
             # Only fetch air pollution history if do_air is True
             if do_air:
-                for w in wards:
-                    curr_start = start_dt
-                    while curr_start < end_dt:
-                        curr_end = min(curr_start + timedelta(days=5), end_dt)
-                        params = {
-                            "lat": w["lat"], "lon": w["lon"],
-                            "start": int(curr_start.timestamp()),
-                            "end": int(curr_end.timestamp())
-                        }
-                        tasks.append(
-                            self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
-                        )
-                        task_meta.append({"ward_id": w["ward_id"]})
-                        curr_start = curr_end
+            for w in wards:
+                curr_start = start_dt
+                while curr_start < end_dt:
+                    curr_end = min(curr_start + timedelta(days=5), end_dt)
+                    params = {
+                        "lat": w["lat"], "lon": w["lon"],
+                        "start": int(curr_start.timestamp()),
+                        "end": int(curr_end.timestamp())
+                    }
+                    tasks.append(
+                        self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
+                    )
+                    task_meta.append({"ward_id": w["ward_id"]})
+                    curr_start = curr_end
 
             logger.info(f"History backfill: {len(tasks)} API chunks across {len(wards)} wards")
             results = await asyncio.gather(*tasks)

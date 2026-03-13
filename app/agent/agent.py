@@ -89,7 +89,7 @@ def create_weather_agent():
     if not API_BASE or not API_KEY:
         raise ValueError("API_BASE and API_KEY must be set in .env")
     
-    model = ChatOpenAI(model=MODEL_NAME, temperature=0, base_url=API_BASE, api_key=API_KEY)
+    model = ChatOpenAI(model=MODEL_NAME, temperature=0.4, base_url=API_BASE, api_key=API_KEY)
     
     DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:
@@ -138,7 +138,10 @@ def run_agent(message: str, thread_id: str = "default") -> dict:
     
     for attempt in range(max_retries):
         try:
-            result = agent.invoke({"messages": [{"role": "user", "content": message}]}, config)
+            result = agent.invoke(
+                {"messages": [{"role": "user", "content": message}]},
+                config
+            )
             break  # Success, exit retry loop
         except Exception as e:
             last_error = e
