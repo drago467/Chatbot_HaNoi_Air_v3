@@ -10,13 +10,13 @@ from langchain_core.tools import tool
 
 class ResolveLocationInput(BaseModel):
     location_hint: str = Field(
-        description="Ten phuong/xa hoac quan/huyen tai Ha Noi. Vi du: Cau Giay, Dong Da"
+        description="Tên phường/xã hoặc quận/huyện tại Hà Nội. Ví dụ: Cầu Giấy, Đống Đa"
     )
 
 
 @tool(args_schema=ResolveLocationInput)
 def resolve_location(location_hint: str) -> dict:
-    """Giai quyet dia diem mo ho (tim phuong/xa tu ten)."""
+    """Giải quyết địa điểm mơ hồ (tìm phường/xã từ tên)."""
     from app.dal.location_dal import resolve_location as dal_resolve
     return dal_resolve(location_hint)
 
@@ -25,12 +25,12 @@ def resolve_location(location_hint: str) -> dict:
 
 class GetCurrentWeatherInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="ward_id (vi du: ID_00169)")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=GetCurrentWeatherInput)
 def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
-    """Lay thoi tiet Hien tai (real-time) + enrich (heat_index, wind_chill, seasonal)."""
+    """Lấy thời tiết HIỆN TẠI (real-time) + enrich (heat_index, wind_chill, seasonal)."""
     from app.agent.utils import auto_resolve_location, enrich_weather_response
     from app.dal import get_current_weather as dal_get_current_weather
 
@@ -54,12 +54,12 @@ def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
 class GetHourlyForecastInput(BaseModel):
     ward_id: Optional[str] = Field(default=None)
     location_hint: Optional[str] = Field(default=None)
-    hours: int = Field(default=24, description="So gio du bao (1-48)")
+    hours: int = Field(default=24, description="Số giờ dự báo (1-48)")
 
 
 @tool(args_schema=GetHourlyForecastInput)
 def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Lay du bao thoi tiet THEO GIO."""
+    """Lấy dự báo thời tiết THEO GIỜ."""
     from app.agent.utils import auto_resolve_location
     from app.dal import get_hourly_forecast as dal_get_hourly_forecast
 
@@ -81,12 +81,12 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
 class GetDailyForecastInput(BaseModel):
     ward_id: Optional[str] = Field(default=None)
     location_hint: Optional[str] = Field(default=None)
-    days: int = Field(default=7, description="So ngay du bao (1-8)")
+    days: int = Field(default=7, description="Số ngày dự báo (1-8)")
 
 
 @tool(args_schema=GetDailyForecastInput)
 def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int = 7) -> dict:
-    """Lay du bao thoi tiet THEO NGAY."""
+    """Lấy dự báo thời tiết THEO NGÀY."""
     from app.agent.utils import auto_resolve_location
     from app.dal import get_daily_forecast as dal_get_daily_forecast
 
@@ -113,7 +113,7 @@ class GetWeatherHistoryInput(BaseModel):
 
 @tool(args_schema=GetWeatherHistoryInput)
 def get_weather_history(ward_id: str = None, location_hint: str = None, date: str = None) -> dict:
-    """Lay thoi tiet cua mot NGAY trong QUA KHU."""
+    """Lấy thời tiết của một NGÀY trong QUÁ KHỨ."""
     from app.agent.utils import auto_resolve_location
     from app.dal import get_weather_history as dal_get_weather_history
 
@@ -142,7 +142,7 @@ class CompareWeatherInput(BaseModel):
 
 @tool(args_schema=CompareWeatherInput)
 def compare_weather(ward_id1: str = None, location_hint1: str = None, ward_id2: str = None, location_hint2: str = None) -> dict:
-    """So sanh thoi tiet giua HAI dia diem."""
+    """So sánh thời tiết giữa HAI địa điểm."""
     from app.agent.utils import auto_resolve_location
     from app.dal import compare_weather as dal_compare_weather
 
@@ -167,7 +167,7 @@ class CompareWithYesterdayInput(BaseModel):
 
 @tool(args_schema=CompareWithYesterdayInput)
 def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sanh thoi tiet HOM NAY voi HOM QUA."""
+    """So sánh thời tiết HÔM NAY với HÔM QUA."""
     from app.agent.utils import auto_resolve_location
     from app.dal import compare_with_yesterday as dal_compare_with_yesterday
 
@@ -183,14 +183,14 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
 # ============== Tool 8: get_activity_advice ==============
 
 class GetActivityAdviceInput(BaseModel):
-    activity: str = Field(description="Hoat dong: chay bo, dap xe, dao choi, photo, picnic")
+    activity: str = Field(description="Hoạt động: chạy bộ, đạp xe, dạo chơi, photo, picnic")
     ward_id: Optional[str] = Field(default=None)
     location_hint: Optional[str] = Field(default=None)
 
 
 @tool(args_schema=GetActivityAdviceInput)
 def get_activity_advice(activity: str, ward_id: str = None, location_hint: str = None) -> dict:
-    """Khuyen cao co NEN thuc hien hoat dong ngoai troi khong."""
+    """Khuyến cáo có NÊN thực hiện hoạt động ngoài trời không."""
     from app.agent.utils import auto_resolve_location
     from app.dal import get_activity_advice as dal_get_activity_advice
 
@@ -211,7 +211,7 @@ class GetWeatherAlertsInput(BaseModel):
 
 @tool(args_schema=GetWeatherAlertsInput)
 def get_weather_alerts(ward_id: str = "all") -> dict:
-    """Lay CANH BAO thoi tiet nguy hiem."""
+    """Lấy CẢNH BÁO thời tiết nguy hiểm."""
     from app.dal import get_weather_alerts as dal_get_weather_alerts
     # Convert 'all' to None for DAL
     actual_id = None if ward_id == "all" else ward_id
@@ -228,7 +228,7 @@ class DetectPhenomenaInput(BaseModel):
 
 @tool(args_schema=DetectPhenomenaInput)
 def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
-    """Phat hien cac HIEN TUONG THOI TIET DAC BIET tai Ha Noi."""
+    """Phát hiện các HIỆN TƯỢNG THỜI TIẾT ĐẶC BIỆT tại Hà Nội."""
     from app.agent.utils import auto_resolve_location
     from app.dal import get_current_weather as dal_get_current_weather
     from app.dal.weather_knowledge_dal import detect_hanoi_weather_phenomena
@@ -252,7 +252,7 @@ class GetSeasonalComparisonInput(BaseModel):
 
 @tool(args_schema=GetSeasonalComparisonInput)
 def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sanh thoi tiet hien tai voi trung binh mua."""
+    """So sánh thời tiết hiện tại với trung bình mùa."""
     from app.agent.utils import auto_resolve_location
     from app.dal import get_current_weather as dal_get_current_weather
     from app.dal.weather_knowledge_dal import compare_with_seasonal
@@ -287,7 +287,7 @@ class GetDailySummaryInput(BaseModel):
 
 @tool(args_schema=GetDailySummaryInput)
 def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str = "today") -> dict:
-    """Tong hop thoi tiet 1 NGAY: temp_range, feels_like_gap, daylight, phenomena."""
+    """Tổng hợp thời tiết 1 NGÀY: temp_range, feels_like_gap, daylight, hiện tượng."""
     from app.agent.utils import auto_resolve_location
     from app.db.dal import query_one
     from datetime import datetime
@@ -335,15 +335,15 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
     # UV level
     uvi = row.get("uvi") or 0
     if uvi >= 11:
-        uv_level = "Cuc cao - Nguy hiem"
+        uv_level = "Cực cao - Nguy hiểm"
     elif uvi >= 8:
-        uv_level = "Rat cao - Han che ra ngoai 10h-14h"
+        uv_level = "Rất cao - Hạn chế ra ngoài 10h-14h"
     elif uvi >= 6:
-        uv_level = "Cao - Can che nang"
+        uv_level = "Cao - Cần che nắng"
     elif uvi >= 3:
-        uv_level = "Trung binh"
+        uv_level = "Trung bình"
     else:
-        uv_level = "Thap"
+        uv_level = "Thấp"
 
     # Daylight hours
     daylight_hours = None
@@ -412,7 +412,7 @@ class GetWeatherPeriodInput(BaseModel):
 
 @tool(args_schema=GetWeatherPeriodInput)
 def get_weather_period(ward_id: str = None, location_hint: str = None, start_date: str = None, end_date: str = None) -> dict:
-    """Tong hop thoi tiet nhieu NGAY: trend, best/worst day, extremes."""
+    """Tổng hợp thời tiết nhiều NGÀY: trend, best/worst day, extremes."""
     from app.agent.utils import auto_resolve_location
     from app.db.dal import query
     from app.dal.weather_knowledge_dal import get_seasonal_average
