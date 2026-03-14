@@ -239,6 +239,82 @@ def init_db() -> None:
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_dim_ward_ward_prefix_norm_trgm ON dim_ward USING GIN (ward_prefix_norm gin_trgm_ops);")
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_dim_ward_district_name_norm_trgm ON dim_ward USING GIN (district_name_norm gin_trgm_ops);")
 
+                # ============================================================
+                # GIAI DOAN 2: Pre-aggregated Weather Tables
+                # ============================================================
+                
+                # 1. fact_weather_district_hourly
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS fact_weather_district_hourly (
+                        district_name_vi TEXT NOT NULL,
+                        ts_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+                        avg_temp DOUBLE PRECISION,
+                        min_temp DOUBLE PRECISION,
+                        max_temp DOUBLE PRECISION,
+                        avg_humidity DOUBLE PRECISION,
+                        avg_wind_speed DOUBLE PRECISION,
+                        weather_main TEXT,
+                        ward_count INTEGER,
+                        PRIMARY KEY (district_name_vi, ts_utc)
+                    );
+                """)
+                
+                # 2. fact_weather_district_daily
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS fact_weather_district_daily (
+                        district_name_vi TEXT NOT NULL,
+                        date DATE NOT NULL,
+                        avg_temp DOUBLE PRECISION,
+                        temp_min DOUBLE PRECISION,
+                        temp_max DOUBLE PRECISION,
+                        avg_humidity DOUBLE PRECISION,
+                        avg_pop DOUBLE PRECISION,
+                        total_rain DOUBLE PRECISION,
+                        weather_main TEXT,
+                        ward_count INTEGER,
+                        PRIMARY KEY (district_name_vi, date)
+                    );
+                """)
+                
+                # 3. fact_weather_city_hourly
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS fact_weather_city_hourly (
+                        ts_utc TIMESTAMP WITH TIME ZONE NOT NULL,
+                        avg_temp DOUBLE PRECISION,
+                        min_temp DOUBLE PRECISION,
+                        max_temp DOUBLE PRECISION,
+                        avg_humidity DOUBLE PRECISION,
+                        avg_wind_speed DOUBLE PRECISION,
+                        weather_main TEXT,
+                        ward_count INTEGER,
+                        PRIMARY KEY (ts_utc)
+                    );
+                """)
+                
+                # 4. fact_weather_city_daily
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS fact_weather_city_daily (
+                        date DATE NOT NULL,
+                        avg_temp DOUBLE PRECISION,
+                        temp_min DOUBLE PRECISION,
+                        temp_max DOUBLE PRECISION,
+                        avg_humidity DOUBLE PRECISION,
+                        avg_pop DOUBLE PRECISION,
+                        total_rain DOUBLE PRECISION,
+                        weather_main TEXT,
+                        ward_count INTEGER,
+                        PRIMARY KEY (date)
+                    );
+                """)
+                
+                # Indexes for aggregate tables
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_district_hourly_ts_utc ON fact_weather_district_hourly(ts_utc DESC);")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_district_hourly_district_date ON fact_weather_district_hourly(district_name_vi, ts_utc DESC);")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_district_daily_date ON fact_weather_district_daily(date DESC);")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_district_daily_district_date ON fact_weather_district_daily(district_name_vi, date DESC);")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_city_hourly_ts_utc ON fact_weather_city_hourly(ts_utc DESC);")
+                cur.execute("CREATE INDEX IF NOT EXISTS idx_city_daily_date ON fact_weather_city_daily(date DESC);")
+
         logger.info("Database init/migration completed.")
     finally:
         release_connection(conn)

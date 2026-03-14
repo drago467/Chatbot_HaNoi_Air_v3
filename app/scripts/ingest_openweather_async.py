@@ -13,6 +13,12 @@ from psycopg2.extras import execute_values
 from app.core.key_manager import OpenWeatherKeyManager
 from app.core.logging_config import get_logger, setup_logging
 from app.db.connection import get_db_connection
+from app.scripts.aggregate_weather import (
+    aggregate_district_hourly,
+    aggregate_city_hourly,
+    aggregate_district_daily,
+    aggregate_city_daily,
+)
 
 setup_logging()
 logger = get_logger(__name__)
@@ -106,18 +112,18 @@ class OpenWeatherAsyncIngestor:
             weather_tasks = []
             
             if do_air:
-            air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
+                air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
             
             if do_weather:
-            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
+                weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
             
             if air_tasks:
-            air_results = await asyncio.gather(*air_tasks)
+                air_results = await asyncio.gather(*air_tasks)
             else:
                 air_results = []
                 
             if weather_tasks:
-            weather_results = await asyncio.gather(*weather_tasks)
+                weather_results = await asyncio.gather(*weather_tasks)
             else:
                 weather_results = []
 
@@ -153,6 +159,17 @@ class OpenWeatherAsyncIngestor:
 
         self._bulk_upsert_air(air_records, priority='current')
         self._bulk_upsert_weather_hourly(weather_records, priority='current')
+        
+        # === AGGREGATION: District + City level (after current data) ===
+        # run_nowcast only inserts 'current' data, so we only aggregate 'current'
+        logger.info("Starting aggregation for current data...")
+        try:
+            district_result = aggregate_district_hourly('current')
+            city_result = aggregate_city_hourly('current')
+            logger.info(f"Aggregated hourly: current - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
+            logger.info("Aggregation completed for current data")
+        except Exception as e:
+            logger.error(f"Aggregation failed: {e}")
 
     def _bulk_upsert_air(self, records: List[tuple], priority: str):
         if not records: return
@@ -230,18 +247,18 @@ class OpenWeatherAsyncIngestor:
             weather_tasks = []
             
             if do_air:
-            air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution/forecast", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
+                air_tasks = [self.fetch_json(session, f"{self.base_url}/air_pollution/forecast", {"lat": w["lat"], "lon": w["lon"]}, "pollution") for w in wards]
             
             if do_weather:
-            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
+                weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
             
             if air_tasks:
-            air_results = await asyncio.gather(*air_tasks)
+                air_results = await asyncio.gather(*air_tasks)
             else:
                 air_results = []
                 
             if weather_tasks:
-            weather_results = await asyncio.gather(*weather_tasks)
+                weather_results = await asyncio.gather(*weather_tasks)
             else:
                 weather_results = []
 
@@ -304,6 +321,25 @@ class OpenWeatherAsyncIngestor:
         self._bulk_upsert_air(air_records, priority='forecast')
         self._bulk_upsert_weather_hourly(weather_hourly_records, priority='forecast')
         self._bulk_upsert_weather_daily(weather_daily_records)
+        
+        # === AGGREGATION: District + City level (after forecast data) ===
+        logger.info("Starting aggregation for forecast data...")
+        try:
+            # Aggregate hourly (forecast)
+            for data_kind in ['forecast']:
+                district_result = aggregate_district_hourly(data_kind)
+                city_result = aggregate_city_hourly(data_kind)
+                logger.info(f"Aggregated hourly: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
+            
+            # Aggregate daily (forecast)
+            for data_kind in ['forecast']:
+                district_result = aggregate_district_daily(data_kind)
+                city_result = aggregate_city_daily(data_kind)
+                logger.info(f"Aggregated daily: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
+            
+            logger.info("Aggregation completed for forecast data")
+        except Exception as e:
+            logger.error(f"Aggregation failed: {e}")
 
     def _bulk_upsert_weather_daily(self, records: List[tuple], priority='forecast'):
         if not records: return
@@ -378,15 +414,15 @@ class OpenWeatherAsyncIngestor:
         async with aiohttp.ClientSession() as session:
             # Only fetch air pollution history if do_air is True
             if do_air:
-            for w in wards:
-                curr_start = start_dt
-                while curr_start < end_dt:
-                    curr_end = min(curr_start + timedelta(days=5), end_dt)
-                    params = {
-                        "lat": w["lat"], "lon": w["lon"],
-                        "start": int(curr_start.timestamp()),
-                        "end": int(curr_end.timestamp())
-                    }
+                for w in wards:
+                    curr_start = start_dt
+                    while curr_start < end_dt:
+                        curr_end = min(curr_start + timedelta(days=5), end_dt)
+                        params = {
+                            "lat": w["lat"], "lon": w["lon"],
+                            "start": int(curr_start.timestamp()),
+                            "end": int(curr_end.timestamp())
+                        }
                     tasks.append(
                         self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
                     )
@@ -587,6 +623,25 @@ class OpenWeatherAsyncIngestor:
             conn.rollback()
         finally:
             conn.close()
+        
+        # === AGGREGATION: District + City level (after history data) ===
+        logger.info("Starting aggregation for history data...")
+        try:
+            # Aggregate hourly (history)
+            for data_kind in ['history']:
+                district_result = aggregate_district_hourly(data_kind)
+                city_result = aggregate_city_hourly(data_kind)
+                logger.info(f"Aggregated hourly: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
+            
+            # Aggregate daily (history)
+            for data_kind in ['history']:
+                district_result = aggregate_district_daily(data_kind)
+                city_result = aggregate_city_daily(data_kind)
+                logger.info(f"Aggregated daily: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
+            
+            logger.info("Aggregation completed for history data")
+        except Exception as e:
+            logger.error(f"Aggregation failed: {e}")
 
     async def run_smoke_test(self):
         """Mode: smoke_test. Test key 4 (One Call 3.0) with 1 ward to verify activation."""

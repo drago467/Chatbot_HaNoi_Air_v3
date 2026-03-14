@@ -2,6 +2,7 @@
 
 Exports:
 - weather_dal: get_current_weather, get_hourly_forecast, get_daily_forecast, get_weather_history
+- weather_aggregate_dal: get_district_weather, get_city_weather (district/city level)
 - weather_helpers: wind_deg_to_vietnamese, wind_speed_to_beaufort, get_uv_status, etc.
 - weather_knowledge_dal: detect_hanoi_weather_phenomena, get_seasonal_average, compare_with_seasonal
 - location_dal: resolve_location, get_ward_by_id, search_wards
@@ -17,6 +18,16 @@ from app.dal.weather_dal import (
     get_daily_forecast,
     get_weather_history,
     get_weather_range,
+)
+
+from app.dal.weather_aggregate_dal import (
+    get_district_current_weather,
+    get_district_hourly_forecast,
+    get_district_daily_forecast,
+    get_city_current_weather,
+    get_city_hourly_forecast,
+    get_city_daily_forecast,
+    get_all_districts_current_weather,
 )
 
 from app.dal.weather_helpers import (
@@ -75,6 +86,14 @@ __all__ = [
     "get_daily_forecast",
     "get_weather_history",
     "get_weather_range",
+    # Weather Aggregate DAL (district/city level)
+    "get_district_current_weather",
+    "get_district_hourly_forecast",
+    "get_district_daily_forecast",
+    "get_city_current_weather",
+    "get_city_hourly_forecast",
+    "get_city_daily_forecast",
+    "get_all_districts_current_weather",
     # Helpers
     "wind_deg_to_vietnamese",
     "wind_speed_to_beaufort",

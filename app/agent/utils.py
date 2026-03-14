@@ -11,10 +11,11 @@ def auto_resolve_location(
     
     Args:
         ward_id: Ward ID (e.g., ID_00169)
-        location_hint: Location name (e.g., "Cầu Giấy", "Đống Đa")
+        location_hint: Location name (e.g., "Cầu Giấy", "Đống Đa", "Hà Nội")
         
     Returns:
-        Dict with status, ward_id, and data
+        Dict with status, level, ward_id, and data
+        level: "ward" | "district" | "city"
     """
     from app.dal.location_dal import resolve_location, get_ward_by_id
     
@@ -22,32 +23,53 @@ def auto_resolve_location(
     if ward_id:
         ward = get_ward_by_id(ward_id)
         if ward:
-            return {"status": "ok", "ward_id": ward_id, "data": ward}
+            return {"status": "ok", "level": "ward", "ward_id": ward_id, "data": ward}
     
     # If location_hint provided, resolve it
     if location_hint:
         result = resolve_location(location_hint)
         
+        # Get level from result
+        level = result.get("level", "ward")
+        
         if result["status"] in ("exact", "fuzzy"):
-            return {
-                "status": "ok",
-                "ward_id": result["data"]["ward_id"],
-                "data": result["data"]
-            }
+            if level == "ward":
+                return {
+                    "status": "ok",
+                    "level": "ward",
+                    "ward_id": result["data"]["ward_id"],
+                    "data": result["data"]
+                }
+            elif level == "district":
+                return {
+                    "status": "ok",
+                    "level": "district",
+                    "district_name": result["data"]["district_name_vi"],
+                    "data": result["data"]
+                }
+            elif level == "city":
+                return {
+                    "status": "ok",
+                    "level": "city",
+                    "city_name": result["data"]["city_name"],
+                    "data": result["data"]
+                }
         
         elif result["status"] == "multiple":
             return {
                 "status": "multiple",
+                "level": "ward",
                 "candidates": result["data"]
             }
         
-        elif result["status"] == "district_only":
+        elif result["status"] == "not_found":
             return {
-                "status": "district",
-                "data": result["data"]
+                "status": "not_found",
+                "level": "not_found",
+                "message": result.get("message", "Khong tim thay dia diem")
             }
     
-    return {"status": "error", "message": "Khong xac dinh duoc dia diem"}
+    return {"status": "error", "level": "error", "message": "Khong xac dinh duoc dia diem"}
 
 
 def enrich_weather_response(weather_data: Dict[str, Any]) -> Dict[str, Any]:

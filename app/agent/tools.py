@@ -523,6 +523,130 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     }
 
 
+# ============== Tool 14: get_district_weather ==============
+
+class GetDistrictWeatherInput(BaseModel):
+    district_name: str = Field(
+        description="Ten quan/huyen tai Ha Noi. Vi du: 'Quan Cau Giay', 'Huyen Ba Vi', 'Dong Da'"
+    )
+    hours: int = Field(default=24, description="So gio du bao (1-48)")
+
+
+@tool(args_schema=GetDistrictWeatherInput)
+def get_district_weather(district_name: str, hours: int = 24) -> dict:
+    """Lấy thời tiết hiện tại và dự báo theo giờ cho một quận/huyện.
+    
+    Sử dụng dữ liệu tổng hợp từ các phường/xã trong quận/huyện đó.
+    """
+    from app.dal.weather_aggregate_dal import (
+        get_district_current_weather,
+        get_district_hourly_forecast
+    )
+
+    current = get_district_current_weather(district_name)
+    if "error" in current:
+        return current
+    
+    forecasts = get_district_hourly_forecast(district_name, hours)
+    
+    return {
+        "current": current,
+        "forecasts": forecasts[:hours],
+        "count": len(forecasts[:hours]),
+        "source": "aggregated"
+    }
+
+
+# ============== Tool 15: get_city_weather ==============
+
+class GetCityWeatherInput(BaseModel):
+    hours: int = Field(default=24, description="Số giờ dự báo (1-48)")
+
+
+@tool(args_schema=GetCityWeatherInput)
+def get_city_weather(hours: int = 24) -> dict:
+    """Lấy thời tiết hiện tại và dự báo cho toàn TP Hà Nội.
+    
+    Sử dụng dữ liệu tổng hợp từ 126 phường/xã.
+    """
+    from app.dal.weather_aggregate_dal import (
+        get_city_current_weather,
+        get_city_hourly_forecast
+    )
+
+    current = get_city_current_weather()
+    if "error" in current:
+        return current
+    
+    forecasts = get_city_hourly_forecast(hours)
+    
+    return {
+        "current": current,
+        "forecasts": forecasts[:hours],
+        "count": len(forecasts[:hours]),
+        "source": "aggregated"
+    }
+
+
+# ============== Tool 16: get_district_daily_forecast ==============
+
+class GetDistrictDailyForecastInput(BaseModel):
+    district_name: str = Field(
+        description="Tên quận/huyện tại Hà Nội. Ví dụ: 'Quận Cầu Giấy', 'Huyện Ba Vì'"
+    )
+    days: int = Field(default=7, description="Số ngày dự báo (1-8)")
+
+
+@tool(args_schema=GetDistrictDailyForecastInput)
+def get_district_daily_forecast(district_name: str, days: int = 7) -> dict:
+    """Lấy dự báo thời tiết theo NGÀY cho một quận/huyện."""
+    from app.dal.weather_aggregate_dal import (
+        get_district_current_weather,
+        get_district_daily_forecast
+    )
+
+    current = get_district_current_weather(district_name)
+    if "error" in current:
+        return current
+    
+    forecasts = get_district_daily_forecast(district_name, days)
+    
+    return {
+        "current": current,
+        "forecasts": forecasts[:days],
+        "count": len(forecasts[:days]),
+        "source": "aggregated"
+    }
+
+
+# ============== Tool 17: get_city_daily_forecast ==============
+
+class GetCityDailyForecastInput(BaseModel):
+    days: int = Field(default=7, description="Số ngày dự báo (1-8)")
+
+
+@tool(args_schema=GetCityDailyForecastInput)
+def get_city_daily_forecast(days: int = 7) -> dict:
+    """Lấy dự báo thời tiết theo NGÀY cho toàn TP Hà Nội."""
+    from app.dal.weather_aggregate_dal import (
+        get_city_current_weather,
+        get_city_daily_forecast
+    )
+
+    current = get_city_current_weather()
+    if "error" in current:
+        return current
+    
+    forecasts = get_city_daily_forecast(days)
+    
+    return {
+        "current": current,
+        "forecasts": forecasts[:days],
+        "count": len(forecasts[:days]),
+        "source": "aggregated"
+    }
+
+
 # Export all tools
 
 
@@ -540,4 +664,8 @@ TOOLS = [
     get_seasonal_comparison,
     get_daily_summary,
     get_weather_period,
+    get_district_weather,
+    get_city_weather,
+    get_district_daily_forecast,
+    get_city_daily_forecast,
 ]
