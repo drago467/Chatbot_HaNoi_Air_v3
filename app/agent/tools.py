@@ -542,18 +542,31 @@ def get_district_weather(district_name: str, hours: int = 24) -> dict:
         get_district_current_weather,
         get_district_hourly_forecast
     )
+    from app.agent.utils import auto_resolve_location
 
-    current = get_district_current_weather(district_name)
+    # Resolve district name to get proper format with prefix
+    resolved = auto_resolve_location(location_hint=district_name)
+    if resolved.get("status") != "ok" or resolved.get("level") != "district":
+        return {
+            "error": "not_found",
+            "message": f"Không tìm thấy quận/huyện: {district_name}"
+        }
+    
+    # Use the resolved district name (with prefix)
+    resolved_district_name = resolved.get("district_name")
+    
+    current = get_district_current_weather(resolved_district_name)
     if "error" in current:
         return current
     
-    forecasts = get_district_hourly_forecast(district_name, hours)
+    forecasts = get_district_hourly_forecast(resolved_district_name, hours)
     
     return {
         "current": current,
         "forecasts": forecasts[:hours],
         "count": len(forecasts[:hours]),
-        "source": "aggregated"
+        "source": "aggregated",
+        "resolved_location": resolved.get("data")
     }
 
 
@@ -602,20 +615,33 @@ def get_district_daily_forecast(district_name: str, days: int = 7) -> dict:
     """Lấy dự báo thời tiết theo NGÀY cho một quận/huyện."""
     from app.dal.weather_aggregate_dal import (
         get_district_current_weather,
-        get_district_daily_forecast
+        get_district_daily_forecast as get_district_daily_forecast_dal
     )
+    from app.agent.utils import auto_resolve_location
 
-    current = get_district_current_weather(district_name)
+    # Resolve district name to get proper format with prefix
+    resolved = auto_resolve_location(location_hint=district_name)
+    if resolved.get("status") != "ok" or resolved.get("level") != "district":
+        return {
+            "error": "not_found",
+            "message": f"Không tìm thấy quận/huyện: {district_name}"
+        }
+    
+    # Use the resolved district name (with prefix)
+    resolved_district_name = resolved.get("district_name")
+    
+    current = get_district_current_weather(resolved_district_name)
     if "error" in current:
         return current
     
-    forecasts = get_district_daily_forecast(district_name, days)
+    forecasts = get_district_daily_forecast_dal(resolved_district_name, days)
     
     return {
         "current": current,
         "forecasts": forecasts[:days],
         "count": len(forecasts[:days]),
-        "source": "aggregated"
+        "source": "aggregated",
+        "resolved_location": resolved.get("data")
     }
 
 
