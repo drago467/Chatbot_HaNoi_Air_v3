@@ -47,6 +47,7 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
                     FROM fact_weather_hourly w
                     INNER JOIN dim_ward d ON w.ward_id = d.ward_id
                     WHERE w.data_kind = %s
+                      AND d.district_name_vi IS NOT NULL
                     GROUP BY d.district_name_vi, w.ts_utc
                     ON CONFLICT (district_name_vi, ts_utc) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
@@ -58,7 +59,14 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
                         ward_count = EXCLUDED.ward_count
                 """
                 cur.execute(sql, (data_kind,))
-                row_count = cur.rowcount
+                
+                # Get actual count - rowcount doesn't work reliably with INSERT...ON CONFLICT
+                # Note: fact_weather_district_hourly doesn't have data_kind column
+                cur.execute("""
+                    SELECT COUNT(*) FROM fact_weather_district_hourly
+                """)
+                result = cur.fetchone()
+                row_count = result[0] if result else 0
         
         return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     
@@ -115,7 +123,11 @@ def aggregate_city_hourly(data_kind: str = 'current') -> dict:
                         ward_count = EXCLUDED.ward_count
                 """
                 cur.execute(sql, (data_kind,))
-                row_count = cur.rowcount
+                
+                # Get actual count - rowcount doesn't work reliably with INSERT...ON CONFLICT
+                cur.execute("SELECT COUNT(*) FROM fact_weather_city_hourly")
+                result = cur.fetchone()
+                row_count = result[0] if result else 0
         
         return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     
@@ -161,8 +173,8 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         district_name_vi,
                         date,
                         avg_temp,
-                        min_temp,
-                        max_temp,
+                        temp_min,
+                        temp_max,
                         avg_humidity,
                         avg_pop,
                         total_rain,
@@ -186,11 +198,12 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                     FROM fact_weather_daily w
                     INNER JOIN dim_ward d ON w.ward_id = d.ward_id
                     WHERE w.data_kind = %s
+                      AND d.district_name_vi IS NOT NULL
                     GROUP BY d.district_name_vi, w.date
                     ON CONFLICT (district_name_vi, date) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
-                        min_temp = EXCLUDED.min_temp,
-                        max_temp = EXCLUDED.max_temp,
+                        temp_min = EXCLUDED.temp_min,
+                        temp_max = EXCLUDED.temp_max,
                         avg_humidity = EXCLUDED.avg_humidity,
                         avg_pop = EXCLUDED.avg_pop,
                         total_rain = EXCLUDED.total_rain,
@@ -198,7 +211,11 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         ward_count = EXCLUDED.ward_count
                 """
                 cur.execute(sql, (data_kind,))
-                row_count = cur.rowcount
+                
+                # Get actual count - rowcount doesn't work reliably with INSERT...ON CONFLICT
+                cur.execute("SELECT COUNT(*) FROM fact_weather_city_daily")
+                result = cur.fetchone()
+                row_count = result[0] if result else 0
         
         return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     
@@ -226,8 +243,8 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                     INSERT INTO fact_weather_city_daily (
                         date,
                         avg_temp,
-                        min_temp,
-                        max_temp,
+                        temp_min,
+                        temp_max,
                         avg_humidity,
                         avg_pop,
                         total_rain,
@@ -251,8 +268,8 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                     GROUP BY w.date
                     ON CONFLICT (date) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
-                        min_temp = EXCLUDED.min_temp,
-                        max_temp = EXCLUDED.max_temp,
+                        temp_min = EXCLUDED.temp_min,
+                        temp_max = EXCLUDED.temp_max,
                         avg_humidity = EXCLUDED.avg_humidity,
                         avg_pop = EXCLUDED.avg_pop,
                         total_rain = EXCLUDED.total_rain,
@@ -260,7 +277,11 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         ward_count = EXCLUDED.ward_count
                 """
                 cur.execute(sql, (data_kind,))
-                row_count = cur.rowcount
+                
+                # Get actual count - rowcount doesn't work reliably with INSERT...ON CONFLICT
+                cur.execute("SELECT COUNT(*) FROM fact_weather_city_daily")
+                result = cur.fetchone()
+                row_count = result[0] if result else 0
         
         return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     
