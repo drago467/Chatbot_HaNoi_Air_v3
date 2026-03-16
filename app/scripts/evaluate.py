@@ -11,8 +11,11 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from app.agent.agent import run_agent
+from app.agent.agent import run_agent, reset_agent
 from app.agent.evaluation_logger import get_evaluation_logger
+
+# Reset agent to ensure fresh instance with latest code
+reset_agent()
 
 
 def load_test_queries(csv_path):

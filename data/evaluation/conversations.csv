@@ -1,113 +1,130 @@
 timestamp,session_id,turn_number,user_query,resolved_location,llm_response,response_time_ms,tool_calls,error_type,user_rating
-2026-03-15T22:43:43.156659+07:00,batch_evaluation,1,Bây giờ thời tiết ở Hà Nội như thế nào?,,"Hiện tại, thời tiết ở Hà Nội như sau:
+2026-03-16T11:14:28.079855+07:00,batch_evaluation,1,Bây giờ thời tiết ở Hà Nội như thế nào?,,"Hiện tại, thời tiết ở Hà Nội như sau:
 
-- **Nhiệt độ trung bình**: 23.74°C
-- **Nhiệt độ tối thiểu**: 22.62°C
-- **Nhiệt độ tối đa**: 25.66°C
-- **Độ ẩm trung bình**: 66.7%
-- **Tốc độ gió trung bình**: 5.92 km/h
-- **Thời tiết**: Có mây
+- **Nhiệt độ trung bình**: 24.37°C
+- **Độ ẩm**: 70.2%
+- **Tốc độ gió**: 2.48 m/s
+- **Trời**: Có mây
 
-Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết mát mẻ và có thể hơi ẩm.",6851.46,,,
-2026-03-15T22:43:53.712973+07:00,batch_evaluation,2,Hiện tại ở quận Cầu Giấy thời tiết ra sao?,,"Hiện tại, thời tiết ở quận Cầu Giấy như sau:
+Dự báo thời tiết trong vài giờ tới cho thấy nhiệt độ sẽ tăng lên khoảng 26°C và có thể có nhiều mây. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",5657.5,,,
+2026-03-16T11:14:33.522300+07:00,batch_evaluation,2,Hiện tại ở quận Cầu Giấy thời tiết ra sao?,,"Hiện tại, thời tiết ở quận Cầu Giấy như sau:
 
-- **Nhiệt độ trung bình**: 23.77°C
-- **Nhiệt độ tối thiểu**: 23.76°C
-- **Nhiệt độ tối đa**: 23.8°C
-- **Độ ẩm trung bình**: 66.0%
-- **Tốc độ gió trung bình**: 5.99 km/h
-- **Thời tiết**: Có mây
+- **Nhiệt độ trung bình**: 24.44°C
+- **Độ ẩm**: 70.7%
+- **Tốc độ gió**: 2.78 m/s
+- **Trời**: Có mây
 
-Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết mát mẻ và có thể hơi ẩm.",10555.31,,,
-2026-03-15T22:44:08.699627+07:00,batch_evaluation,3,Thời tiết ở phường Dịch Vọng lúc này có mưa không?,,"Hiện tại, thời tiết ở phường Dịch Vọng (gần phường Phú Diễn) như sau:
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",5440.93,,,
+2026-03-16T11:14:48.794124+07:00,batch_evaluation,3,Thời tiết ở phường Dịch Vọng lúc này có mưa không?,,"Hiện tại, thời tiết ở phường Dịch Vọng (thuộc quận Cầu Giấy) như sau:
 
-- **Nhiệt độ**: 22.03°C
-- **Độ ẩm**: 88%
-- **Mây**: Có nhiều mây (75% mây che phủ)
-- **Mô tả thời tiết**: Mây rải rác
+- **Nhiệt độ trung bình**: 24.44°C
+- **Độ ẩm**: 70.7%
+- **Tốc độ gió**: 2.78 m/s
+- **Trời**: Có mây
 
-Hiện tại không có mưa. Tuy nhiên, với độ ẩm cao, bạn nên chuẩn bị cho thời tiết ẩm ướt.",14985.47,,,
-2026-03-15T22:44:31.233600+07:00,batch_evaluation,4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,,"Hiện tại, thời tiết ở quận Hoàn Kiếm như sau:
+Hiện tại không có mưa. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",15271.82,,,
+2026-03-16T11:14:55.738508+07:00,batch_evaluation,4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,,"Hiện tại, thời tiết ở quận Hoàn Kiếm như sau:
 
-- **Nhiệt độ**: 22.01°C
-- **Độ ẩm**: 77%
-- **Thời tiết**: Trời trong, không có mây
+- **Nhiệt độ**: 24.14°C
+- **Độ ẩm**: 72.0%
+- **Tốc độ gió**: 2.68 m/s
+- **Trời**: Có mây
 
-Nếu bạn có kế hoạch ra ngoài, thời tiết khá dễ chịu và không có mưa.",22533.97,,,
-2026-03-15T22:44:45.729118+07:00,batch_evaluation,5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",,"Hiện tại, thời tiết ở phường Phú Diễn, Bắc Từ Liêm như sau:
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",6944.38,,,
+2026-03-16T11:17:10.842906+07:00,batch_evaluation,5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",,"Hiện tại, thời tiết ở phường Phú Diễn, quận Bắc Từ Liêm như sau:
 
-- **Nhiệt độ**: 22.03°C
-- **Độ ẩm**: 88%
-- **Mây**: Có nhiều mây (75% mây che phủ)
-- **Mô tả thời tiết**: Mây rải rác
-
-Với độ ẩm cao và nhiều mây, bạn nên chuẩn bị cho thời tiết ẩm ướt.",14495.52,,,
-2026-03-15T22:44:54.559863+07:00,batch_evaluation,6,Gió ở quận Long Biên hiện tại mạnh không?,,"Hiện tại, thời tiết ở quận Long Biên như sau:
-
-- **Nhiệt độ**: 23.27°C
+- **Nhiệt độ**: 25.03°C
 - **Độ ẩm**: 69%
-- **Tốc độ gió trung bình**: 5.71 km/h
-- **Thời tiết**: Có mây
+- **Tốc độ gió**: 4.63 m/s
+- **Trời**: Có nhiều mây (75% mây)
 
-Gió hiện tại không mạnh, với tốc độ khoảng 5.71 km/h. Nếu bạn có kế hoạch ra ngoài, thời tiết khá dễ chịu.",8830.22,,,
-2026-03-15T22:45:05.657923+07:00,batch_evaluation,7,Trời Hà Nội lúc này có nắng không?,,"Hiện tại, thời tiết ở Hà Nội như sau:
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",135102.31,,,
+2026-03-16T11:17:16.174180+07:00,batch_evaluation,6,Gió ở quận Long Biên hiện tại mạnh không?,,"Hiện tại, gió ở quận Long Biên có tốc độ trung bình là 2.6 m/s. Đây là mức gió nhẹ, không được coi là mạnh. 
 
-- **Nhiệt độ**: 23.74°C
-- **Độ ẩm**: 66.7%
-- **Thời tiết**: Có mây, không có nắng
+Nếu bạn có kế hoạch ra ngoài, thời tiết hiện tại chủ yếu có mây, với nhiệt độ khoảng 23.95°C và độ ẩm 73.3%.",5331.27,,,
+2026-03-16T11:17:24.526032+07:00,batch_evaluation,7,Trời Hà Nội lúc này có nắng không?,,"Hiện tại, trời ở Hà Nội có nhiều mây và không có nắng. Nhiệt độ hiện tại là khoảng 24.37°C với độ ẩm 70.2%. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",8350.75,,,
+2026-03-16T11:17:37.779161+07:00,batch_evaluation,8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,,"Hiện tại, độ ẩm ở quận Hoàng Mai là 72.0%. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",13253.13,,,
+2026-03-16T11:17:54.936608+07:00,batch_evaluation,9,Cho mình biết thời tiết hiện tại ở khu vực Mỹ Đình với.,,"Hiện tại, thời tiết ở khu vực Mỹ Đình (thuộc quận Ba Đình) như sau:
 
-Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết mát mẻ và có thể hơi ẩm.",11098.06,,,
-2026-03-15T22:45:17.257071+07:00,batch_evaluation,8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,,"Hiện tại, độ ẩm ở quận Hoàng Mai là **68.5%**. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ẩm ướt.",11599.15,,,
-2026-03-15T22:45:34.114078+07:00,batch_evaluation,9,Cho mình biết thời tiết hiện tại ở khu vực Mỹ Đình với.,,"Hiện tại, thời tiết ở khu vực Mỹ Đình (quận Ba Đình) như sau:
+- **Nhiệt độ**: 24.27°C
+- **Độ ẩm**: 71.0%
+- **Tốc độ gió**: 2.73 m/s
+- **Trời**: Có mây
 
-- **Nhiệt độ**: 23.6°C
-- **Độ ẩm**: 67%
-- **Thời tiết**: Có mây
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",17157.45,,,
+2026-03-16T11:18:02.480129+07:00,batch_evaluation,10,Bầu trời ở khu vực Hồ Gươm bây giờ trông như thế nào?,,"Hiện tại, bầu trời ở khu vực Hồ Gươm (thuộc quận Hoàn Kiếm) có nhiều mây. Thời tiết cụ thể như sau:
 
-Nếu bạn có kế hoạch ra ngoài, thời tiết khá dễ chịu và không có mưa.",16857.01,,,
-2026-03-15T22:45:51.038959+07:00,batch_evaluation,10,Bầu trời ở khu vực Hồ Gươm bây giờ trông như thế nào?,,"Xin lỗi, tôi không tìm thấy thông tin về khu vực Hồ Gươm. Bạn có thể hỏi về một địa điểm khác hoặc một phường cụ thể trong khu vực đó để biết thông tin thời tiết.",16922.89,,,
-2026-03-15T22:46:05.867741+07:00,batch_evaluation,11,Nhiệt độ cảm giác ngoài trời ở Thanh Xuân lúc này là bao nhiêu?,,"Hiện tại, thời tiết ở quận Thanh Xuân như sau:
+- **Nhiệt độ**: 24.14°C
+- **Độ ẩm**: 72.0%
+- **Tốc độ gió**: 2.68 m/s
+- **Trời**: Có mây
 
-- **Nhiệt độ**: 23.6°C
-- **Độ ẩm**: 67%
-- **Thời tiết**: Có mây
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",7542.52,,,
+2026-03-16T11:18:13.420286+07:00,batch_evaluation,11,Nhiệt độ cảm giác ngoài trời ở Thanh Xuân lúc này là bao nhiêu?,,"Hiện tại, thời tiết ở khu vực Thanh Xuân như sau:
 
-Nếu bạn có kế hoạch ra ngoài, thời tiết khá dễ chịu và không có mưa.",14828.78,,,
-2026-03-15T22:46:18.634995+07:00,batch_evaluation,12,Tầm nhìn hiện tại ở sân bay Nội Bài có ổn không?,,"Hiện tại, tầm nhìn ở sân bay Nội Bài là khoảng **8,000 mét**. Thời tiết có nhiều mây (75% mây che phủ) và độ ẩm cao (88%), nhưng tầm nhìn vẫn ổn. 
+- **Nhiệt độ**: 24.42°C
+- **Độ ẩm**: 70.5%
+- **Tốc độ gió**: 2.78 m/s
+- **Trời**: Có mây
 
-Nếu bạn có kế hoạch bay hoặc đón khách, thời tiết hiện tại không có vấn đề gì nghiêm trọng.",12767.25,,,
-2026-03-15T22:46:42.441795+07:00,batch_evaluation,13,Chiều nay ở quận Hai Bà Trưng có mưa không?,,"Xin lỗi, hiện tại không thể lấy dữ liệu dự báo thời tiết cho quận Hai Bà Trưng. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",23806.8,,,
-2026-03-15T22:47:05.254829+07:00,batch_evaluation,14,"Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",,"Xin lỗi, hiện tại không có dữ liệu dự báo thời tiết cho phường Khương Trung, Thanh Xuân trong thời gian tới. Tuy nhiên, nhiệt độ hiện tại ở phường Khương Đình (gần khu vực bạn hỏi) là khoảng **22.01°C**. 
+Nhiệt độ cảm giác ngoài trời có thể khoảng 24.42°C, nhưng do độ ẩm cao, bạn có thể cảm thấy hơi oi bức. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có độ ẩm cao.",10940.16,,,
+2026-03-16T11:18:25.851049+07:00,batch_evaluation,12,Tầm nhìn hiện tại ở sân bay Nội Bài có ổn không?,,"Hiện tại, thời tiết ở khu vực sân bay Nội Bài (thuộc huyện Đông Anh) như sau:
 
-Nếu bạn cần thông tin cụ thể hơn, hãy thử hỏi về một phường khác hoặc về thời tiết toàn thành phố Hà Nội.",22812.03,,,
-2026-03-15T22:47:23.106908+07:00,batch_evaluation,15,Khoảng 9 giờ tối nay ở Cầu Giấy có lạnh không?,,"Xin lỗi, hiện tại không thể lấy dữ liệu dự báo thời tiết cho quận Cầu Giấy. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",17852.08,,,
-2026-03-15T22:47:43.004530+07:00,batch_evaluation,16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,,"Hiện tại, thời tiết ở Hà Nội như sau:
+- **Nhiệt độ**: 22.26°C
+- **Độ ẩm**: 83.5%
+- **Tốc độ gió**: 2.2 m/s
+- **Trời**: Có mây
 
-- **Nhiệt độ**: 23.74°C
-- **Độ ẩm**: 66.7%
-- **Thời tiết**: Có mây
+Với độ ẩm cao như vậy, tầm nhìn có thể bị ảnh hưởng một chút, nhưng không có cảnh báo nào về thời tiết nguy hiểm. Tầm nhìn hiện tại có thể được coi là ổn, nhưng bạn nên kiểm tra thường xuyên nếu có kế hoạch bay hoặc di chuyển qua khu vực này.",12429.33,,,
+2026-03-16T11:18:35.213138+07:00,batch_evaluation,13,Chiều nay ở quận Hai Bà Trưng có mưa không?,,"Chiều nay ở quận Hai Bà Trưng có khả năng có mưa. Dự báo cụ thể như sau:
 
-Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết mát mẻ và có thể hơi ẩm.",19897.62,,,
-2026-03-15T22:47:57.406014+07:00,batch_evaluation,17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,,"Hiện tại, thời tiết ở quận Tây Hồ như sau:
+- **Nhiệt độ trung bình**: 25.82°C
+- **Độ ẩm**: 62%
+- **Khả năng có mưa**: 20%
+- **Lượng mưa dự kiến**: 0.33 mm
 
-- **Nhiệt độ**: 23.63°C
-- **Độ ẩm**: 66.5%
-- **Tốc độ gió trung bình**: 6.02 km/h
-- **Thời tiết**: Có mây
+Nếu bạn có kế hoạch ra ngoài, hãy mang theo ô hoặc áo mưa để chuẩn bị cho thời tiết có thể ẩm ướt.",9352.97,,,
+2026-03-16T11:18:54.505201+07:00,batch_evaluation,14,"Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",,"Tối nay ở phường Khương Trung, quận Thanh Xuân dự báo nhiệt độ khoảng 22.02°C. 
 
-Gió hiện tại không quá mạnh, với tốc độ khoảng 6.02 km/h. Nếu bạn có kế hoạch ra ngoài, thời tiết khá dễ chịu.",14401.48,,,
-2026-03-15T22:48:10.359985+07:00,batch_evaluation,18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,,"Trong 3 giờ tới, thời tiết ở phường Xuân Đỉnh sẽ không có mưa rào hay giông. Dự báo thời tiết như sau:
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ấm áp và có thể có mưa nhẹ.",19291.06,,,
+2026-03-16T11:19:07.440272+07:00,batch_evaluation,15,Khoảng 9 giờ tối nay ở Cầu Giấy có lạnh không?,,"Hiện tại, thời tiết ở quận Cầu Giấy như sau:
 
-- **23:00**: Nhiệt độ 21.21°C, độ ẩm 83%, có mây rải rác.
-- **00:00**: Nhiệt độ 20.73°C, độ ẩm 84%, có mây rải rác.
-- **01:00**: Nhiệt độ 20.11°C, độ ẩm 85%, có mây rải rác.
+- **Nhiệt độ**: 24.44°C
+- **Độ ẩm**: 70.7%
+- **Tốc độ gió**: 2.78 m/s
+- **Trời**: Có mây
 
-Tóm lại, không có khả năng mưa trong thời gian tới.",12953.97,,,
-2026-03-15T22:48:32.746930+07:00,batch_evaluation,19,Sáng mai từ 6h đến 9h ở Long Biên trời có sương mù không?,,"Xin lỗi, hiện tại không có dữ liệu thời tiết cho quận Long Biên. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",22385.93,,,
-2026-03-15T22:48:45.398286+07:00,batch_evaluation,20,Mấy tiếng nữa ở Đống Đa mưa sẽ tạnh không?,,"Xin lỗi, hiện tại không có dữ liệu thời tiết cho quận Đống Đa. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",12651.36,,,
-2026-03-15T22:49:09.382355+07:00,batch_evaluation,21,Từ 8h tối đến nửa đêm ở Thanh Trì có mưa không?,,"Xin lỗi, hiện tại không có dữ liệu thời tiết cho quận Thanh Trì. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",23984.07,,,
-2026-03-15T22:49:31.452783+07:00,batch_evaluation,22,Lúc 2 giờ sáng mai ở nội thành Hà Nội nhiệt độ khoảng bao nhiêu?,,"Xin lỗi, hiện tại không thể lấy dữ liệu dự báo thời tiết cho phường Khương Trung, Thanh Xuân trong thời gian tới. Tuy nhiên, nhiệt độ hiện tại ở phường Khương Đình (gần khu vực bạn hỏi) là khoảng **22.01°C**. 
+Dự báo cho tối nay ở phường Khương Trung (quận Thanh Xuân) cho thấy nhiệt độ sẽ rơi vào khoảng 22.02°C. Do đó, có thể nói rằng tối nay sẽ không lạnh, nhưng bạn nên chuẩn bị cho độ ẩm cao.",12934.09,,,
+2026-03-16T11:19:20.366244+07:00,batch_evaluation,16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,,"Hiện tại, không có cảnh báo về mưa lớn cho Hà Nội. Tuy nhiên, từ giờ đến nửa đêm, thời tiết có thể có mưa nhẹ với độ ẩm cao.
 
-Nếu bạn cần thông tin cụ thể hơn, hãy thử hỏi về một phường khác hoặc về thời tiết toàn thành phố Hà Nội.",22070.43,,,
-2026-03-15T22:49:46.309566+07:00,batch_evaluation,23,"Trưa nay ở Đông Anh nắng không, có ra ngoài được không?",,"Xin lỗi, hiện tại không có dữ liệu thời tiết cho quận Đông Anh. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",14856.78,,,
-2026-03-15T22:50:09.452620+07:00,batch_evaluation,24,Khoảng 7 giờ sáng mai ở Hoàn Kiếm trời như thế nào?,,"Hiện tại, không có dữ liệu thời tiết cho quận Thanh Trì. Bạn có thể thử hỏi về một phường cụ thể trong quận hoặc về thời tiết toàn thành phố Hà Nội.",23143.05,,,
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết có thể ẩm ướt.",12922.86,,,
+2026-03-16T11:19:31.298104+07:00,batch_evaluation,17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,,"Hiện tại, gió ở quận Tây Hồ có tốc độ trung bình là 2.7 m/s. Đây là mức gió nhẹ, không được coi là mạnh. 
+
+Nếu bạn có kế hoạch ra ngoài vào buổi tối, thời tiết sẽ không lạnh và gió cũng không mạnh.",10931.86,,,
+2026-03-16T11:19:47.926316+07:00,batch_evaluation,18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,,"Trong 3 giờ tới, thời tiết ở phường Xuân Đỉnh dự báo sẽ không có mưa rào hay giông. Cụ thể như sau:
+
+- **Thời gian 12:00**: Nhiệt độ khoảng 25.34°C, độ ẩm 66%, không có khả năng mưa.
+- **Thời gian 13:00**: Nhiệt độ khoảng 25.82°C, độ ẩm 63%, không có khả năng mưa.
+- **Thời gian 14:00**: Nhiệt độ khoảng 26.14°C, độ ẩm 60%, không có khả năng mưa.
+
+Trời chủ yếu có mây và không có dự báo mưa trong khoảng thời gian này.",16628.21,,,
+2026-03-16T11:20:13.540612+07:00,batch_evaluation,19,Sáng mai từ 6h đến 9h ở Long Biên trời có sương mù không?,,"Hiện tại, không có dự báo cụ thể về sương mù cho khu vực Tây Hồ vào sáng mai. Tuy nhiên, với độ ẩm cao (khoảng 73.3%) và thời tiết có mây, có khả năng xuất hiện sương mù vào sáng sớm.
+
+Nếu bạn có kế hoạch ra ngoài vào sáng mai, hãy chuẩn bị cho điều kiện tầm nhìn có thể bị hạn chế do sương mù.",25614.3,,,
+2026-03-16T11:20:23.638484+07:00,batch_evaluation,20,Mấy tiếng nữa ở Đống Đa mưa sẽ tạnh không?,,"Hiện tại, không có dự báo cụ thể về mưa cho khu vực Đống Đa trong thời gian tới. Tuy nhiên, với độ ẩm cao và thời tiết có mây, có khả năng có mưa nhẹ.
+
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết có thể ẩm ướt.",10097.87,,,
+2026-03-16T11:20:35.563502+07:00,batch_evaluation,21,Từ 8h tối đến nửa đêm ở Thanh Trì có mưa không?,,"Hiện tại, không có dự báo cụ thể về mưa cho khu vực Thanh Trì trong thời gian từ 8h tối đến nửa đêm. Tuy nhiên, với độ ẩm cao và thời tiết có mây, có khả năng có mưa nhẹ.
+
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết có thể ẩm ướt.",11924.02,,,
+2026-03-16T11:20:59.031667+07:00,batch_evaluation,22,Lúc 2 giờ sáng mai ở nội thành Hà Nội nhiệt độ khoảng bao nhiêu?,,"Lúc 2 giờ sáng mai ở nội thành Hà Nội, nhiệt độ dự kiến khoảng 20.67°C. Thời tiết sẽ có mây và độ ẩm cao, nên có thể cảm thấy hơi lạnh. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị một chiếc áo khoác nhẹ.",23467.16,,,
+2026-03-16T11:21:11.986657+07:00,batch_evaluation,23,"Trưa nay ở Đông Anh nắng không, có ra ngoài được không?",,"Trưa nay ở huyện Đông Anh, thời tiết chủ yếu có mây và không có mưa. Nhiệt độ dự kiến sẽ khoảng 25.38°C với độ ẩm 62%. 
+
+Bạn có thể ra ngoài, nhưng hãy chuẩn bị cho thời tiết có thể ẩm ướt.",12953.99,,,
+2026-03-16T11:21:30.682534+07:00,batch_evaluation,24,Khoảng 7 giờ sáng mai ở Hoàn Kiếm trời như thế nào?,,"Khoảng 7 giờ sáng mai ở quận Hoàn Kiếm, thời tiết dự báo như sau:
+
+- **Nhiệt độ**: Khoảng 19.61°C
+- **Độ ẩm**: 63%
+- **Khả năng có mưa**: 20%
+
+Trời sẽ có mây và có khả năng có mưa nhẹ. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị một chiếc ô hoặc áo mưa để phòng tránh.",18695.88,,,
