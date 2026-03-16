@@ -55,6 +55,17 @@ def auto_resolve_location(
                     "data": result["data"]
                 }
         
+        elif result["status"] in ("ambiguous", "not_found"):
+            # Handle ambiguous or not found cases - ask user for clarification
+            return {
+                "status": result["status"],
+                "level": "not_found",
+                "message": result.get("message", "Khong tim thay dia diem"),
+                "needs_clarification": result.get("needs_clarification", False),
+                "alternatives": result.get("alternatives", []),
+                "suggestion": result.get("suggestion", "Vui long cho biet them dia diem cu the")
+            }
+        
         elif result["status"] == "multiple":
             return {
                 "status": "multiple",
@@ -66,7 +77,9 @@ def auto_resolve_location(
             return {
                 "status": "not_found",
                 "level": "not_found",
-                "message": result.get("message", "Khong tim thay dia diem")
+                "message": result.get("message", "Khong tim thay dia diem"),
+                "needs_clarification": True,
+                "suggestion": "Vui long cho biet them dia diem (vi du: 'quan TenQuan' hoac 'phuong TenPhuong')"
             }
     
     return {"status": "error", "level": "error", "message": "Khong xac dinh duoc dia diem"}
