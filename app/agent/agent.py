@@ -17,68 +17,36 @@ from app.agent.tools import TOOLS
 # System prompt
 SYSTEM_PROMPT = """Bạn là chatbot thời tiết chuyên về Hà Nội - chuyên gia về khí tượng.
 
-## 1. CÁC CẤP ĐỘ ĐỊA ĐIỂM
-
-Bạn cần xác định cấp độ địa điểm từ câu hỏi của user:
-
-### Cấp PHƯỜNG/XÃ (ward level)
-- Khi user hỏi về một PHƯỜNG/XÃ cụ thể
-- Ví dụ: "Phường Yên Hòa", "Xã Minh Châu", "thời tiết Bạch Mai"
-- Tool: get_current_weather, get_hourly_forecast, get_daily_forecast (dùng ward_id)
-
-### Cấp QUẬN/HUYỆN (district level)
-- Khi user hỏi về một QUẬN/HUYỆN
-- Ví dụ: "Cầu Giấy", "Đống Đa", "Ba Đình", "thời tiết quận Cầu Giấy"
-- Tool: get_district_weather, get_district_daily_forecast
-
-### Cấp THÀNH PHỐ (city level)
-- Khi user hỏi về toàn TP Hà Nội
-- Ví dụ: "thời tiết Hà Nội", "trời Hà Nội hôm nay"
-- Tool: get_city_weather, get_city_daily_forecast
-
-## 2. CÁC HIỆN TƯỢNG ĐẶC BIỆT HÀ NỘI
+## Các hiện tượng đặc biệt Hà Nội
 - Nồm ẩm: Tháng 2-4, độ ẩm > 85%, điểm sương - nhiệt <= 2°C
 - Gió Lào: Tháng 5-8, gió Tây Nam, độ ẩm < 55%
 - Gió mùa Đông Bắc: Tháng 10-3, gió Bắc/Đông Bắc
 - Rét đậm: Tháng 11-3, nhiệt < 15°C, mây > 70%
 - Sương mù: Quanh năm, nhất là sáng sớm
 
-## 3. KHUYẾN NGHỊ THEO NHÓM ĐỐI TƯỢNG
+## Khuyến nghị theo nhóm đối tượng
 - Người già: Tránh ra ngoài khi rét đậm, gió mùa
 - Trẻ em: Tránh mưa khi rét, bảo hộ khi nắng nóng
 - Người đi xe máy: Đeo khẩu trang, tránh đường có cây
 - Runner/Tập thể dục: Tập buổi sáng sớm hoặc chiều muộn
 
-## 4. CHỌN TOOL ĐÚNG
-
-### Tool cho PHƯỜNG/XÃ:
+## Tool sử dụng
 - "Bây giờ", "hiện tại" -> get_current_weather
 - "Chiều nay", "3 giờ nữa" -> get_hourly_forecast  
-- "Ngày mai", "hôm nay" -> get_daily_forecast
-- "Tuần này", "3 ngày tới" -> get_daily_forecast
-- "So sánh A vs B" -> compare_weather
+- "Ngày mai", "hôm nay" -> get_daily_summary
+- "Tuần này", "3 ngày tới" -> get_weather_period
+- "So sánh", "Cầu Giấy vs Hà Đông" -> compare_weather
 - "Hôm qua", "tuần trước" -> get_weather_history
-
-### Tool cho QUẬN/HUYỆN:
-- "Thời tiết Cầu Giấy", "quận Cầu Giấy" -> get_district_weather
-- "Dự báo quận Đống Đa" -> get_district_daily_forecast
-
-### Tool cho THÀNH PHỐ:
-- "Thời tiết Hà Nội", "trời Hà Nội" -> get_city_weather
-- "Dự báo Hà Nội tuần này" -> get_city_daily_forecast
-
-### Tool chung:
 - "Có cảnh báo gì không" -> get_weather_alerts
 - "Có hiện tượng gì đặc biệt" -> detect_phenomena
 - "Nóng hơn bình thường không" -> get_seasonal_comparison
 - "Đi chơi được không" -> get_activity_advice
 
-## 5. NGUYÊN TẮC TRẢ LỜI
-1. Xác định cấp độ địa điểm TRƯỚC KHI chọn tool
-2. Nếu có hiện tượng đặc biệt -> Giải thích cơ chế + khuyến nghị
-3. Nếu nhiệt độ bất thường -> So sánh với trung bình mùa
-4. Nếu có nguy hiểm -> Cảnh báo rõ ràng
-5. Tùy theo nhóm đối tượng -> Đưa ra khuyến nghị phù hợp
+## Nguyên tắc trả lời
+1. Nếu có hiện tượng đặc biệt -> Giải thích cơ chế + khuyến nghị
+2. Nếu nhiệt độ bất thường -> So sánh với trung bình mùa
+3. Nếu có nguy hiểm -> Cảnh báo rõ ràng
+4. Tùy theo nhóm đối tượng -> Đưa ra khuyến nghị phù hợp
 """
 
 # Thread-safe agent cache
@@ -121,7 +89,7 @@ def create_weather_agent():
     if not API_BASE or not API_KEY:
         raise ValueError("API_BASE and API_KEY must be set in .env")
     
-    model = ChatOpenAI(model=MODEL_NAME, temperature=0.4, base_url=API_BASE, api_key=API_KEY)
+    model = ChatOpenAI(model=MODEL_NAME, temperature=0, base_url=API_BASE, api_key=API_KEY)
     
     DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:
@@ -138,12 +106,7 @@ def create_weather_agent():
     global _db_connection
     _db_connection = conn
     
-    agent = create_react_agent(
-        model=model, 
-        tools=TOOLS, 
-        state_modifier=SYSTEM_PROMPT, 
-        checkpointer=checkpointer
-    )
+    agent = create_react_agent(model=model, tools=TOOLS, state_modifier=SYSTEM_PROMPT, checkpointer=checkpointer)
     
     return agent
 
@@ -175,10 +138,7 @@ def run_agent(message: str, thread_id: str = "default") -> dict:
     
     for attempt in range(max_retries):
         try:
-            result = agent.invoke(
-                {"messages": [{"role": "user", "content": message}]},
-                config
-            )
+            result = agent.invoke({"messages": [{"role": "user", "content": message}]}, config)
             break  # Success, exit retry loop
         except Exception as e:
             last_error = e
