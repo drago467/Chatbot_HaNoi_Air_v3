@@ -317,3 +317,141 @@ def get_daily_summary_data(ward_id: str, query_date) -> Dict[str, Any]:
         "sunset": str(row.get("sunset")) if row.get("sunset") else None,
         "note": bien_do_nhiet,
     }
+
+
+def get_rain_timeline(ward_id: str, hours: int = 24) -> Dict[str, Any]:
+    """Scan hourly forecast to detect rain start/stop transitions.
+
+    Returns rain periods, next rain time, next clear time.
+    """
+    rows = query("""
+        SELECT ts_utc, pop, rain_1h, weather_main
+        FROM fact_weather_hourly
+        WHERE ward_id = %s
+          AND data_kind = 'forecast'
+          AND ts_utc > NOW()
+        ORDER BY ts_utc
+        LIMIT %s
+    """, (ward_id, min(hours, 48)))
+
+    if not rows:
+        return {"error": "no_data", "message": "Khong co du lieu du bao"}
+
+    # Detect rain periods (pop >= 0.3 or weather_main contains Rain/Drizzle/Thunderstorm)
+    rain_keywords = {"Rain", "Drizzle", "Thunderstorm"}
+    periods = []
+    current_period = None
+
+    for row in rows:
+        pop = row.get("pop") or 0
+        rain_1h = row.get("rain_1h") or 0
+        wm = row.get("weather_main", "")
+        is_rain = pop >= 0.3 or wm in rain_keywords or rain_1h > 0
+
+        ts = row["ts_utc"]
+        if is_rain and current_period is None:
+            current_period = {"start": ts, "end": ts, "max_pop": pop, "max_rain_1h": rain_1h}
+        elif is_rain and current_period is not None:
+            current_period["end"] = ts
+            current_period["max_pop"] = max(current_period["max_pop"], pop)
+            current_period["max_rain_1h"] = max(current_period["max_rain_1h"], rain_1h)
+        elif not is_rain and current_period is not None:
+            periods.append(current_period)
+            current_period = None
+
+    if current_period is not None:
+        periods.append(current_period)
+
+    # Format periods
+    from app.dal.timezone_utils import format_ict
+    formatted = []
+    for p in periods:
+        formatted.append({
+            "start": format_ict(p["start"]),
+            "end": format_ict(p["end"]),
+            "max_pop": round(p["max_pop"] * 100),
+            "max_rain_1h": p["max_rain_1h"],
+        })
+
+    # Next rain / next clear
+    first_rain = format_ict(periods[0]["start"]) if periods else None
+    # Find first clear after first rain
+    first_clear = None
+    if periods:
+        last_rain_end = periods[0]["end"]
+        for row in rows:
+            if row["ts_utc"] > last_rain_end:
+                pop = row.get("pop") or 0
+                wm = row.get("weather_main", "")
+                if pop < 0.3 and wm not in rain_keywords:
+                    first_clear = format_ict(row["ts_utc"])
+                    break
+
+    return {
+        "rain_periods": formatted,
+        "total_rain_periods": len(formatted),
+        "next_rain": first_rain,
+        "next_clear": first_clear,
+        "hours_scanned": len(rows),
+    }
+
+
+def get_temperature_trend(ward_id: str, days: int = 7) -> Dict[str, Any]:
+    """Analyze daily forecast to detect warming/cooling trend."""
+    rows = query("""
+        SELECT date, temp_min, temp_max, temp_avg, weather_main
+        FROM fact_weather_daily
+        WHERE ward_id = %s
+          AND data_kind = 'forecast'
+          AND date >= CURRENT_DATE
+        ORDER BY date
+        LIMIT %s
+    """, (ward_id, min(days, 8)))
+
+    if len(rows) < 2:
+        return {"error": "no_data", "message": "Khong du du lieu de phan tich xu huong"}
+
+    temps = [r["temp_avg"] for r in rows if r.get("temp_avg") is not None]
+    if len(temps) < 2:
+        return {"error": "no_data", "message": "Khong du du lieu nhiet do"}
+
+    # Simple linear trend: slope = (last - first) / n
+    slope = (temps[-1] - temps[0]) / (len(temps) - 1)
+
+    if slope > 0.5:
+        trend = "warming"
+        trend_vi = "Am dan len"
+    elif slope < -0.5:
+        trend = "cooling"
+        trend_vi = "Lanh dan"
+    else:
+        trend = "stable"
+        trend_vi = "On dinh"
+
+    # Find inflection point (day when trend reverses)
+    inflection = None
+    for i in range(1, len(temps) - 1):
+        prev_diff = temps[i] - temps[i - 1]
+        next_diff = temps[i + 1] - temps[i]
+        if (prev_diff > 0 and next_diff < -0.5) or (prev_diff < 0 and next_diff > 0.5):
+            inflection = str(rows[i]["date"])
+            break
+
+    # Find hottest and coldest days
+    max_row = max(rows, key=lambda r: r.get("temp_max") or 0)
+    min_row = min(rows, key=lambda r: r.get("temp_min") or 999)
+
+    return {
+        "trend": trend,
+        "trend_vi": trend_vi,
+        "slope_per_day": round(slope, 1),
+        "days_analyzed": len(rows),
+        "inflection_date": inflection,
+        "hottest_day": {"date": str(max_row["date"]), "temp_max": max_row.get("temp_max")},
+        "coldest_day": {"date": str(min_row["date"]), "temp_min": min_row.get("temp_min")},
+        "daily_summary": [
+            {"date": str(r["date"]), "min": r.get("temp_min"), "max": r.get("temp_max"),
+             "avg": r.get("temp_avg"), "weather": r.get("weather_main")}
+            for r in rows
+        ],
+    }

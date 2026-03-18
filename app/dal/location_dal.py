@@ -210,6 +210,16 @@ def get_districts() -> List[Dict[str, Any]]:
     """)
 
 
+def get_wards_in_district(district_name: str) -> List[Dict[str, Any]]:
+    """Get all wards in a district."""
+    return query("""
+        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        FROM dim_ward
+        WHERE district_name_vi = %s
+        ORDER BY ward_name_vi
+    """, (district_name,))
+
+
 def search_wards(keyword: str, limit: int = 10) -> List[Dict[str, Any]]:
     norm = normalize_name(keyword).replace(' ', '_')
     return query("""

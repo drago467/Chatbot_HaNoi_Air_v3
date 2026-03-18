@@ -246,3 +246,172 @@ def get_activity_advice_detailed(activity: str, ward_id: str, hours_ahead: int =
     advice["bad_conditions"] = activity_info["bad_conditions"]
 
     return advice
+
+
+# ---- Activity scoring rules ----
+_ACTIVITY_SCORING = {
+    "chay_bo": {"temp": (15, 25), "pop_max": 0.2, "uv_max": 6, "wind_max": 5},
+    "dua_dieu": {"temp": (20, 30), "pop_max": 0.2, "uv_max": 8, "wind_max": 5},
+    "picnic": {"temp": (22, 28), "pop_max": 0.1, "uv_max": 7, "wind_max": 3},
+    "bike": {"temp": (18, 28), "pop_max": 0.2, "uv_max": 7, "wind_max": 5},
+    "chup_anh": {"temp": (15, 32), "pop_max": 0.2, "uv_max": 10, "wind_max": 8},
+    "tap_the_duc": {"temp": (18, 25), "pop_max": 0.2, "uv_max": 6, "wind_max": 5},
+    "phoi_do": {"temp": (20, 40), "pop_max": 0.1, "uv_max": 99, "wind_max": 10, "humidity_max": 75},
+}
+
+
+def get_best_time_for_activity(
+    activity: str, ward_id: str, hours: int = 24
+) -> Dict[str, Any]:
+    """Scan hourly forecast and score each hour for an activity.
+
+    Returns best hours sorted by score (highest first).
+    """
+    forecasts = get_hourly_forecast(ward_id, hours=min(hours, 48))
+    if not forecasts:
+        return {"error": "no_data", "message": "Khong co du lieu du bao"}
+
+    rules = _ACTIVITY_SCORING.get(activity, _ACTIVITY_SCORING["chay_bo"])
+    temp_lo, temp_hi = rules["temp"]
+
+    from app.dal.timezone_utils import format_ict
+
+    scored = []
+    for f in forecasts:
+        temp = f.get("temp")
+        pop = f.get("pop") or 0
+        uvi = f.get("uvi") or 0
+        wind = f.get("wind_speed") or 0
+        humidity = f.get("humidity") or 50
+
+        if temp is None:
+            continue
+
+        score = 100
+        reasons = []
+
+        # Temperature penalty
+        if temp < temp_lo:
+            score -= min(30, (temp_lo - temp) * 5)
+            reasons.append(f"Lanh ({temp}C)")
+        elif temp > temp_hi:
+            score -= min(30, (temp - temp_hi) * 5)
+            reasons.append(f"Nong ({temp}C)")
+
+        # Rain penalty
+        if pop > rules["pop_max"]:
+            score -= min(40, pop * 50)
+            reasons.append(f"Mua {pop*100:.0f}%")
+
+        # UV penalty
+        if uvi > rules["uv_max"]:
+            score -= min(20, (uvi - rules["uv_max"]) * 5)
+            reasons.append(f"UV {uvi}")
+
+        # Wind penalty
+        if wind > rules["wind_max"]:
+            score -= min(20, (wind - rules["wind_max"]) * 5)
+            reasons.append(f"Gio {wind}m/s")
+
+        # Humidity penalty (if rule exists)
+        hum_max = rules.get("humidity_max")
+        if hum_max and humidity > hum_max:
+            score -= min(15, (humidity - hum_max) * 0.5)
+            reasons.append(f"Am {humidity}%")
+
+        score = max(0, round(score))
+        scored.append({
+            "time_ict": format_ict(f.get("ts_utc")),
+            "score": score,
+            "temp": temp,
+            "pop": round(pop * 100),
+            "uvi": uvi,
+            "wind_speed": wind,
+            "issues": reasons if reasons else ["Tot"],
+        })
+
+    scored.sort(key=lambda x: x["score"], reverse=True)
+
+    return {
+        "activity": activity,
+        "best_hours": scored[:5],
+        "worst_hours": scored[-3:] if len(scored) > 3 else [],
+        "total_hours_scanned": len(scored),
+    }
+
+
+def get_clothing_advice(ward_id: str, hours_ahead: int = 0) -> Dict[str, Any]:
+    """Get clothing recommendation based on weather conditions."""
+    weather = _get_weather_for_activity(ward_id, hours_ahead)
+
+    if "error" in weather:
+        return {"error": weather.get("message", "Khong co du lieu")}
+
+    temp = weather.get("temp")
+    humidity = weather.get("humidity") or 50
+    pop = weather.get("pop") or 0
+    wind = weather.get("wind_speed") or 0
+    uvi = weather.get("uvi") or 0
+    wm = weather.get("weather_main", "")
+
+    if temp is None:
+        return {"error": "Khong co du lieu nhiet do"}
+
+    items = []
+    notes = []
+
+    # Base clothing by temperature
+    if temp < 10:
+        items.extend(["Ao phao/ao khoac day", "Khan quang co", "Gang tay", "Mu len"])
+        notes.append("Ret dam - mac nhieu lop, giu am co va tay")
+    elif temp < 15:
+        items.extend(["Ao khoac day", "Ao len", "Quan dai"])
+        notes.append("Lanh - nen mac ao khoac day")
+    elif temp < 20:
+        items.extend(["Ao khoac nhe", "Ao dai tay"])
+        notes.append("Se lanh - ao khoac nhe la du")
+    elif temp < 25:
+        items.extend(["Ao thun dai tay hoac ngan tay", "Quan dai hoac short"])
+    elif temp < 32:
+        items.extend(["Ao mong thoang", "Quan short", "Mu chong nang"])
+        notes.append("Nong - chon vai thoang mat")
+    else:
+        items.extend(["Ao mong thoang mat nhat", "Mu rong vanh", "Kinh ram"])
+        notes.append("Rat nong - han che ra ngoai, uong nhieu nuoc")
+
+    # Rain additions
+    if pop > 0.5 or wm in ("Rain", "Drizzle", "Thunderstorm"):
+        items.append("O/ao mua")
+        notes.append("Co mua - nho mang o")
+    elif pop > 0.3:
+        items.append("O gap nho")
+        notes.append("Co the mua - mang o phong")
+
+    # Humidity additions
+    if humidity > 90 and temp > 20:
+        notes.append("Nom am - tranh vai cotton, chon vai nhanh kho")
+
+    # UV additions
+    if uvi >= 8:
+        if "Kem chong nang SPF50+" not in items:
+            items.append("Kem chong nang SPF50+")
+        if "Kinh ram" not in items:
+            items.append("Kinh ram")
+        notes.append("UV rat cao - bao ve da")
+    elif uvi >= 5:
+        items.append("Kem chong nang SPF30+")
+
+    # Wind additions
+    if wind > 8:
+        notes.append("Gio manh - tranh ao rong, chon ao sat nguoi")
+
+    return {
+        "clothing_items": items,
+        "notes": notes,
+        "temp": temp,
+        "humidity": humidity,
+        "pop": round(pop * 100),
+        "uvi": uvi,
+        "wind_speed": wind,
+        "data_source": weather.get("data_source", "current"),
+    }
