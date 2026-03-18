@@ -289,10 +289,10 @@ class GetDailySummaryInput(BaseModel):
 def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str = "today") -> dict:
     """Tổng hợp thời tiết 1 NGÀY: temp_range, feels_like_gap, daylight, hiện tượng."""
     from app.agent.utils import auto_resolve_location
-    from app.db.dal import query_one
-    from datetime import datetime
-    from app.dal.weather_helpers import wind_deg_to_vietnamese
+    from app.dal.weather_dal import get_daily_summary_data
     from app.dal.weather_knowledge_dal import compare_with_seasonal, detect_hanoi_weather_phenomena
+    from datetime import datetime
+    from app.dal.timezone_utils import now_ict
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":
@@ -300,105 +300,31 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
 
     query_date = now_ict().date() if date == "today" else datetime.strptime(date, "%Y-%m-%d").date()
 
-    row = query_one(
-        "SELECT * FROM fact_weather_daily WHERE ward_id = %s AND date = %s",
-        (resolved["ward_id"], query_date)
-    )
+    # Get daily data from DAL
+    summary = get_daily_summary_data(resolved["ward_id"], query_date)
+    if "error" in summary:
+        return summary
 
-    if not row:
-        return {"error": "no_data", "message": f"Khong co du lieu ngay {date}"}
+    # Add seasonal comparison
+    seasonal = compare_with_seasonal({"temp": summary["temp_range"].get("min"), "humidity": summary.get("humidity")})
+    summary["seasonal_comparison"] = seasonal.get("comparisons", [])
 
-    # Temp range + bien do nhiet
-    temp_min = row.get("temp_min")
-    temp_max = row.get("temp_max")
-    temp_range = temp_max - temp_min if temp_min is not None and temp_max is not None else 0
-    bien_do_nhiet = f"Bien do nhiet {temp_range:.0f}C" if temp_range > 0 else ""
-    if temp_range > 10:
-        bien_do_nhiet += " - Sang lanh, trua nong, nen mac ao khoac"
-
-    # Feels like gap
-    feels_like_day = row.get("feels_like_day")
-    temp_day = row.get("temp_day")
-    feels_like_gap = feels_like_day - temp_day
-
-    # Rain assessment
-    rain_total = row.get("rain_total") or 0
-    if rain_total == 0:
-        rain_assessment = "Khong mua"
-    elif rain_total < 10:
-        rain_assessment = f"Mua nhe {rain_total:.1f}mm"
-    elif rain_total < 25:
-        rain_assessment = f"Mua vua {rain_total:.1f}mm"
-    else:
-        rain_assessment = f"Mua to {rain_total:.1f}mm - Nen mang o"
-
-    # UV level
-    uvi = row.get("uvi") or 0
-    if uvi >= 11:
-        uv_level = "Cực cao - Nguy hiểm"
-    elif uvi >= 8:
-        uv_level = "Rất cao - Hạn chế ra ngoài 10h-14h"
-    elif uvi >= 6:
-        uv_level = "Cao - Cần che nắng"
-    elif uvi >= 3:
-        uv_level = "Trung bình"
-    else:
-        uv_level = "Thấp"
-
-    # Daylight hours
-    daylight_hours = None
-    if row.get("sunrise") and row.get("sunset"):
-        try:
-            sunrise = row["sunrise"]
-            sunset = row["sunset"]
-            if hasattr(sunrise, "replace"):
-                sunrise = sunrise.replace(tzinfo=None)
-                sunset = sunset.replace(tzinfo=None)
-            daylight = sunset - sunrise
-            daylight_hours = round((sunset - sunrise).total_seconds() / 3600, 1)
-        except (TypeError, ValueError, AttributeError):
-            pass
-
-    # Wind direction
-    wind_dir = wind_deg_to_vietnamese(row.get("wind_deg")) if row.get("wind_deg") is not None else None
-
-    # Seasonal comparison
-    seasonal = compare_with_seasonal({"temp": row.get("temp_avg"), "humidity": row.get("humidity")})
-
-    # Phenomena detection - map row keys to function expected keys
+    # Add phenomena detection
     phenomena_data = {
-        "temp": row.get("temp_avg"),
-        "humidity": row.get("humidity"),
-        "dew_point": row.get("dew_point"),
-        "wind_deg": row.get("wind_deg"),
-        "wind_speed": row.get("wind_speed"),
-        "clouds": row.get("clouds"),
-        "weather_main": row.get("weather_main"),
-        "visibility": row.get("visibility", 10000)
+        "temp": summary["temp_progression"].get("trua"),
+        "humidity": summary.get("humidity"),
+        "dew_point": summary.get("dew_point"),
+        "wind_deg": summary["wind"].get("direction"),
+        "wind_speed": summary["wind"].get("speed"),
+        "clouds": summary.get("clouds"),
+        "weather_main": summary.get("weather_main"),
+        "visibility": 10000,
     }
     phenomena = detect_hanoi_weather_phenomena(phenomena_data)
+    summary["phenomena"] = phenomena.get("phenomena", [])
 
-    return {
-        "date": str(query_date),
-        "resolved_location": resolved["data"],
-        "temp_range": {"min": temp_min, "max": temp_max, "bien_do": temp_range},
-        "temp_progression": {"sang": row.get("temp_morn"), "trua": row.get("temp_day"), "chieu": row.get("temp_eve"), "toi": row.get("temp_night")},
-        "feels_like_gap": feels_like_gap,
-        "humidity": row.get("humidity"),
-        "dew_point": row.get("dew_point"),
-        "pressure": row.get("pressure"),
-        "rain_assessment": rain_assessment,
-        "pop": row.get("pop"),
-        "uvi": uvi,
-        "uv_level": uv_level,
-        "daylight_hours": daylight_hours,
-        "wind": {"speed": row.get("wind_speed"), "direction": wind_dir},
-        "weather_main": row.get("weather_main"),
-        "weather_description": row.get("weather_description"),
-        "seasonal_comparison": seasonal.get("comparisons", []),
-        "phenomena": phenomena.get("phenomena", []),
-        "note": bien_do_nhiet
-    }
+    summary["resolved_location"] = resolved["data"]
+    return summary
 
 
 # ============== Tool 13: get_weather_period ==============

@@ -315,6 +315,51 @@ def init_db() -> None:
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_city_hourly_ts_utc ON fact_weather_city_hourly(ts_utc DESC);")
                 cur.execute("CREATE INDEX IF NOT EXISTS idx_city_daily_date ON fact_weather_city_daily(date DESC);")
 
+                # Migration: Add missing columns to aggregated tables (Phase 2.1)
+                logger.info("Adding columns to aggregated tables...")
+
+                # Hourly tables - add missing weather columns
+                hourly_cols = [
+                    ("avg_dew_point", "DOUBLE PRECISION"),
+                    ("avg_pressure", "DOUBLE PRECISION"),
+                    ("avg_clouds", "DOUBLE PRECISION"),
+                    ("avg_visibility", "DOUBLE PRECISION"),
+                    ("avg_uvi", "DOUBLE PRECISION"),
+                    ("avg_pop", "DOUBLE PRECISION"),
+                    ("avg_rain_1h", "DOUBLE PRECISION"),
+                    ("avg_wind_deg", "DOUBLE PRECISION"),
+                    ("max_wind_gust", "DOUBLE PRECISION"),
+                    ("max_uvi", "DOUBLE PRECISION"),
+                ]
+
+                cur.execute("SAVEPOINT sp_hourly")
+                try:
+                    for col_name, col_type in hourly_cols:
+                        cur.execute(f"ALTER TABLE fact_weather_district_hourly ADD COLUMN IF NOT EXISTS {col_name} {col_type};")
+                        cur.execute(f"ALTER TABLE fact_weather_city_hourly ADD COLUMN IF NOT EXISTS {col_name} {col_type};")
+                except Exception as e:
+                    cur.execute("ROLLBACK TO SAVEPOINT sp_hourly")
+                    logger.warning(f"Could not add hourly columns: {e}")
+
+                # Daily tables - add missing weather columns
+                daily_cols = [
+                    ("avg_dew_point", "DOUBLE PRECISION"),
+                    ("avg_pressure", "DOUBLE PRECISION"),
+                    ("avg_clouds", "DOUBLE PRECISION"),
+                    ("max_uvi", "DOUBLE PRECISION"),
+                    ("avg_wind_deg", "DOUBLE PRECISION"),
+                    ("max_wind_gust", "DOUBLE PRECISION"),
+                ]
+
+                cur.execute("SAVEPOINT sp_daily")
+                try:
+                    for col_name, col_type in daily_cols:
+                        cur.execute(f"ALTER TABLE fact_weather_district_daily ADD COLUMN IF NOT EXISTS {col_name} {col_type};")
+                        cur.execute(f"ALTER TABLE fact_weather_city_daily ADD COLUMN IF NOT EXISTS {col_name} {col_type};")
+                except Exception as e:
+                    cur.execute("ROLLBACK TO SAVEPOINT sp_daily")
+                    logger.warning(f"Could not add daily columns: {e}")
+
         logger.info("Database init/migration completed.")
     finally:
         release_connection(conn)

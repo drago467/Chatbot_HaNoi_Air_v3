@@ -166,8 +166,8 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
     if not result:
         return {
             "error": "no_data", 
-            "message": f"Khong co du lieu thoi tiet ngay {date}",
-            "note": "Chi co du lieu luc 12:00 ICT (noon)"
+            "message": f"Không có dữ liệu thời tiết ngày {date}",
+            "note": "Chỉ có dữ liệu lúc 12:00 ICT (noon)"
         }
     
     result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
@@ -217,3 +217,103 @@ def get_latest_weather_time(ward_id: str) -> List[Dict[str, Any]]:
         GROUP BY data_kind
         ORDER BY data_kind
     """, (ward_id,))
+
+
+def get_daily_summary_data(ward_id: str, query_date) -> Dict[str, Any]:
+    """Get daily weather summary data for a ward.
+
+    Args:
+        ward_id: Ward ID
+        query_date: Date object (date or datetime.date)
+
+    Returns:
+        Dictionary with daily weather data or error
+    """
+    row = query_one(
+        "SELECT * FROM fact_weather_daily WHERE ward_id = %s AND date = %s",
+        (ward_id, query_date)
+    )
+
+    if not row:
+        return {"error": "no_data", "message": f"Khong co du lieu ngay {query_date}"}
+
+    # Temp range + bien do nhiet
+    temp_min = row.get("temp_min")
+    temp_max = row.get("temp_max")
+    temp_range = temp_max - temp_min if temp_min is not None and temp_max is not None else 0
+    bien_do_nhiet = f"Bien do nhiet {temp_range:.0f}C" if temp_range > 0 else ""
+    if temp_range > 10:
+        bien_do_nhiet += " - Sang lanh, trua nong, nen mac ao khoac"
+
+    # Feels like gap
+    feels_like_day = row.get("feels_like_day")
+    temp_day = row.get("temp_day")
+    feels_like_gap = (feels_like_day - temp_day) if feels_like_day is not None and temp_day is not None else 0
+
+    # Rain assessment
+    rain_total = row.get("rain_total") or 0
+    if rain_total == 0:
+        rain_assessment = "Khong mua"
+    elif rain_total < 10:
+        rain_assessment = f"Mua nhe {rain_total:.1f}mm"
+    elif rain_total < 25:
+        rain_assessment = f"Mua vua {rain_total:.1f}mm"
+    else:
+        rain_assessment = f"Mua to {rain_total:.1f}mm - Nen mang o"
+
+    # UV level
+    uvi = row.get("uvi") or 0
+    if uvi >= 11:
+        uv_level = "Cực cao - Nguy hiểm"
+    elif uvi >= 8:
+        uv_level = "Rất cao - Hạn chế ra ngoài 10h-14h"
+    elif uvi >= 6:
+        uv_level = "Cao - Cần che nắng"
+    elif uvi >= 3:
+        uv_level = "Trung bình"
+    else:
+        uv_level = "Thấp"
+
+    # Daylight hours
+    daylight_hours = None
+    if row.get("sunrise") and row.get("sunset"):
+        try:
+            sunrise = row["sunrise"]
+            sunset = row["sunset"]
+            if hasattr(sunrise, "replace"):
+                sunrise = sunrise.replace(tzinfo=None)
+                sunset = sunset.replace(tzinfo=None)
+            daylight_hours = round((sunset - sunrise).total_seconds() / 3600, 1)
+        except (TypeError, ValueError, AttributeError):
+            pass
+
+    # Wind direction
+    wind_dir = wind_deg_to_vietnamese(row.get("wind_deg")) if row.get("wind_deg") is not None else None
+
+    return {
+        "date": str(query_date),
+        "temp_range": {"min": temp_min, "max": temp_max, "bien_do": temp_range},
+        "temp_progression": {
+            "sang": row.get("temp_morn"),
+            "trua": row.get("temp_day"),
+            "chieu": row.get("temp_eve"),
+            "toi": row.get("temp_night"),
+        },
+        "feels_like_gap": feels_like_gap,
+        "humidity": row.get("humidity"),
+        "dew_point": row.get("dew_point"),
+        "pressure": row.get("pressure"),
+        "rain_assessment": rain_assessment,
+        "rain_total": rain_total,
+        "pop": row.get("pop"),
+        "uvi": uvi,
+        "uv_level": uv_level,
+        "daylight_hours": daylight_hours,
+        "wind": {"speed": row.get("wind_speed"), "direction": wind_dir, "gust": row.get("wind_gust")},
+        "clouds": row.get("clouds"),
+        "weather_main": row.get("weather_main"),
+        "weather_description": row.get("weather_description"),
+        "sunrise": str(row.get("sunrise")) if row.get("sunrise") else None,
+        "sunset": str(row.get("sunset")) if row.get("sunset") else None,
+        "note": bien_do_nhiet,
+    }

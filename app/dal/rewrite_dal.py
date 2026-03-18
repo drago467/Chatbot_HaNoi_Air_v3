@@ -1,29 +1,43 @@
 """Question rewriting DAL - Extract location and intent from user questions.
 
-Uses LLM to rewrite questions and extract location information.
-This is a best practice pattern from LangGraph for handling ambiguous queries.
+Uses LLM with Pydantic structured output for reliable parsing.
+Best practice pattern from LangGraph.
 """
 
 import json
 import re
 import os
 from typing import Dict, Any, Optional, List
+from pydantic import BaseModel, Field
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 
 
+# Pydantic models for structured output
+class LocationInfo(BaseModel):
+    """Structured output for location extraction."""
+    location: str = Field(description="Tên địa điểm chính xác")
+    district: Optional[str] = Field(default=None, description="Tên quận/huyện")
+    ward: Optional[str] = Field(default=None, description="Tên phường/xã")
+    is_ambiguous: bool = Field(description="Địa điểm có mơ hồ không")
+    confidence: float = Field(description="Độ chính xác 0.0-1.0")
+
+
 def get_llm():
-    """Get LLM instance for question rewriting."""
+    """Get LLM instance for question rewriting with Pydantic structured output."""
     # Load .env
     from dotenv import load_dotenv
     load_dotenv()
     
-    return ChatOpenAI(
+    base_llm = ChatOpenAI(
         model=os.getenv("MODEL", "gpt-4o-mini"),
         temperature=0,
         base_url=os.getenv("API_BASE"),
         api_key=os.getenv("API_KEY")
     )
+    
+    # Return LLM with structured output
+    return base_llm.with_structured_output(LocationInfo)
 
 
 REWRITE_PROMPT = """Phân tích câu hỏi và trả lời JSON.
@@ -68,44 +82,30 @@ def get_wards_list() -> str:
 
 
 def rewrite_question(question: str) -> Dict[str, Any]:
-    """Rewrite question and extract location using LLM."""
+    """Rewrite question and extract location using LLM with Pydantic structured output."""
     try:
         llm = get_llm()
         
-        prompt = REWRITE_PROMPT.format(question=question)
+        # Use structured output - returns LocationInfo directly
+        result = llm.invoke(question)
         
-        response = llm.invoke([HumanMessage(content=prompt)])
-        content = response.content
+        # Convert Pydantic object to dict
+        if result:
+            return {
+                "location": result.location,
+                "district": result.district,
+                "ward": result.ward,
+                "is_ambiguous": result.is_ambiguous,
+                "confidence": result.confidence
+            }
         
-        # Try to parse JSON from response
-        try:
-            result = json.loads(content)
-            return result
-        except json.JSONDecodeError:
-            pass
-        
-        # Try to extract JSON from text (handles markdown code blocks)
-        try:
-            # Remove markdown code blocks
-            cleaned = content.replace('```json', '').replace('```', '').strip()
-            # Find JSON object
-            start = cleaned.find('{')
-            end = cleaned.rfind('}')
-            if start >= 0 and end > start:
-                json_str = cleaned[start:end+1]
-                result = json.loads(json_str)
-                return result
-        except:
-            pass
-        
-        # If all parsing fails, return error
         return {
             "location": None,
             "district": None,
             "ward": None,
             "is_ambiguous": True,
             "confidence": 0.0,
-            "reasoning": "LLM response parsing failed"
+            "reasoning": "LLM returned empty result"
         }
         
     except Exception as e:

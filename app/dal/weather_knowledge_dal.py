@@ -117,7 +117,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     if month in [5, 6, 7, 8, 9]:
         if temp is not None and temp >= KTTV_THRESHOLDS["NANG_NONG_DB"]:
             severity = "high"
-        elif temp >= KTTV_THRESHOLDS["NANG_NONG_GAY_GAT"]:
+        elif temp is not None and temp >= KTTV_THRESHOLDS["NANG_NONG_GAY_GAT"]:
             severity = "medium"
         elif temp is not None and temp >= KTTV_THRESHOLDS["NANG_NONG"]:
             severity = "low"
