@@ -1,11 +1,15 @@
 """
 Batch Evaluation Script for Weather Chatbot.
 
-Improvements over original:
+Features:
 1. Unique thread_id per question (no conversation contamination)
-2. Tool selection accuracy tracking
-3. LLM-as-Judge evaluation (relevance, completeness, accuracy, fluency)
-4. Metrics breakdown by intent, difficulty, location scope
+2. Tool selection accuracy tracking (intent -> expected tools)
+3. LLM-as-Judge evaluation (relevance, completeness, fluency, faithfulness)
+   - Based on G-Eval (NeurIPS 2023), RAGAS framework best practices
+   - Scale 1-5 for highest human-LLM alignment
+   - Chain-of-thought before scoring
+   - Separate faithfulness judge (reference-based, needs tool output)
+4. Metrics breakdown by intent, difficulty
 5. Response time percentiles (p50, p90, p95)
 """
 import csv
@@ -15,9 +19,15 @@ import os
 from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
+from typing import Optional
 
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+from dotenv import load_dotenv
+load_dotenv()
+
+from pydantic import BaseModel, Field
 
 from app.agent.agent import run_agent, reset_agent
 from app.agent.evaluation_logger import get_evaluation_logger
@@ -78,6 +88,84 @@ INTENT_TO_TOOLS = {
 }
 
 
+# ---- Pydantic Models for Judge Responses ----
+
+class QualityScore(BaseModel):
+    """LLM judge response for quality evaluation."""
+    reasoning: str = Field(description="Phan tich ngan gon 2-3 cau")
+    relevance: int = Field(ge=1, le=5, description="Muc do lien quan 1-5")
+    completeness: int = Field(ge=1, le=5, description="Muc do day du 1-5")
+    fluency: int = Field(ge=1, le=5, description="Muc do tu nhien 1-5")
+
+
+class FaithfulnessScore(BaseModel):
+    """LLM judge response for faithfulness evaluation."""
+    reasoning: str = Field(description="Giai thich ngan")
+    faithfulness: int = Field(ge=1, le=5, description="Do trung thuc 1-5")
+
+
+# ---- LLM-as-Judge Prompts ----
+# Based on G-Eval (NeurIPS 2023) chain-of-thought approach
+# Scale 1-5 for highest human-LLM alignment (arxiv 2601.03444)
+
+JUDGE_PROMPT_QUALITY = """Ban la chuyen gia danh gia chatbot thoi tiet Ha Noi. Hay danh gia cau tra loi duoi day.
+Day la chatbot thoi tiet chuyen ve Ha Noi voi cac thuat ngu chuyen nganh nhu "nom am", "gio Lao", "ret dam", "suong mu".
+
+## Cau hoi cua nguoi dung:
+{question}
+
+## Cau tra loi cua chatbot:
+{response}
+
+## Huong dan danh gia:
+Hay suy nghi tung buoc truoc khi cho diem.
+
+**RELEVANCE (Muc do lien quan):**
+- 5: Tra loi chinh xac, dung trong tam cau hoi
+- 4: Tra loi dung nhung co thong tin thua nho
+- 3: Tra loi mot phan, bo sot diem quan trong
+- 2: Tra loi lac de hoac sai huong
+- 1: Hoan toan khong lien quan hoac tu choi tra loi
+
+**COMPLETENESS (Day du):**
+- 5: Day du tat ca thong tin quan trong (nhiet do, do am, gio, mua, khuyen nghi neu can)
+- 4: Day du, thieu chi tiet nho khong quan trong
+- 3: Thieu mot so thong tin quan trong
+- 2: Thieu nhieu thong tin can thiet
+- 1: Gan nhu khong co thong tin huu ich
+
+**FLUENCY (Tu nhien):**
+- 5: Rat tu nhien, chuyen nghiep, de doc
+- 4: Tu nhien, co loi nho khong dang ke
+- 3: Chap nhan duoc, co vai cho guong
+- 2: Kho doc, nhieu loi ngu phap/tu vung
+- 1: Khong the doc duoc"""
+
+JUDGE_PROMPT_FAITHFULNESS = """Ban la chuyen gia kiem tra tinh chinh xac cua chatbot thoi tiet Ha Noi.
+
+## Cau hoi cua nguoi dung:
+{question}
+
+## Du lieu thoi tiet thuc te (tu database):
+{tool_output}
+
+## Cau tra loi cua chatbot:
+{response}
+
+## Nhiem vu:
+Kiem tra xem cau tra loi co chua thong tin SAI hoac BIA DAT khong co trong du lieu thuc te khong.
+Luu y: chatbot co the lam tron so hoac dien giai du lieu, dieu do la chap nhan duoc.
+
+**FAITHFULNESS (Do trung thuc):**
+- 5: Tat ca thong tin deu chinh xac, khong co gi bia dat
+- 4: Hau het chinh xac, co 1 chi tiet nho khong chinh xac
+- 3: Co 1-2 thong tin sai hoac khong co trong du lieu
+- 2: Co nhieu thong tin sai hoac bia dat
+- 1: Phan lon thong tin sai hoac khong co co so"""
+
+
+# ---- Helper Functions ----
+
 def extract_tool_names(result) -> list:
     """Extract tool names called from agent result messages."""
     tools = []
@@ -90,12 +178,115 @@ def extract_tool_names(result) -> list:
     return tools
 
 
+def extract_tool_outputs(result) -> str:
+    """Extract tool outputs from agent result for faithfulness check."""
+    outputs = []
+    for msg in result.get("messages", []):
+        msg_type = getattr(msg, "type", None)
+        if msg_type == "tool":
+            content = getattr(msg, "content", str(msg))
+            if content:
+                outputs.append(str(content)[:1000])
+    return "\n---\n".join(outputs) if outputs else ""
+
+
 def check_tool_accuracy(intent: str, tools_called: list) -> bool:
     """Check if at least one correct tool was called for the intent."""
     expected = INTENT_TO_TOOLS.get(intent, [])
     if not expected:
         return True  # Unknown intent, skip check
     return any(t in expected for t in tools_called)
+
+
+def call_judge_quality(client, prompt, model=None) -> Optional[QualityScore]:
+    """Call LLM judge for quality scoring with structured output via response_format."""
+    if model is None:
+        model = os.getenv("JUDGE_MODEL", os.getenv("MODEL", "gpt-4o-mini"))
+    try:
+        resp = client.beta.chat.completions.parse(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            max_tokens=400,
+            response_format=QualityScore,
+        )
+        return resp.choices[0].message.parsed
+    except Exception:
+        # Fallback: try without structured output (for APIs that don't support it)
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0,
+                max_tokens=400,
+                response_format={"type": "json_object"},
+            )
+            data = json.loads(resp.choices[0].message.content)
+            return QualityScore(**data)
+        except Exception:
+            return None
+
+
+def call_judge_faithfulness(client, prompt, model=None) -> Optional[FaithfulnessScore]:
+    """Call LLM judge for faithfulness scoring with structured output via response_format."""
+    if model is None:
+        model = os.getenv("JUDGE_MODEL", os.getenv("MODEL", "gpt-4o-mini"))
+    try:
+        resp = client.beta.chat.completions.parse(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            max_tokens=400,
+            response_format=FaithfulnessScore,
+        )
+        return resp.choices[0].message.parsed
+    except Exception:
+        # Fallback: try without structured output
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0,
+                max_tokens=400,
+                response_format={"type": "json_object"},
+            )
+            data = json.loads(resp.choices[0].message.content)
+            return FaithfulnessScore(**data)
+        except Exception:
+            return None
+
+
+def llm_judge(question, response, tool_output=None, client=None) -> dict:
+    """Run LLM-as-Judge evaluation. Returns dict with validated scores 1-5."""
+    if client is None:
+        from openai import OpenAI
+        client = OpenAI(
+            base_url=os.getenv("API_BASE"),
+            api_key=os.getenv("API_KEY"),
+        )
+
+    # Quality judge (always run)
+    quality = call_judge_quality(client, JUDGE_PROMPT_QUALITY.format(
+        question=question, response=response,
+    ))
+
+    # Faithfulness judge (only if tool output available)
+    faith = None
+    if tool_output and len(tool_output.strip()) > 10:
+        faith = call_judge_faithfulness(client, JUDGE_PROMPT_FAITHFULNESS.format(
+            question=question, response=response,
+            tool_output=tool_output[:2000],
+        ))
+
+    return {
+        "relevance": quality.relevance if quality else None,
+        "completeness": quality.completeness if quality else None,
+        "fluency": quality.fluency if quality else None,
+        "faithfulness": faith.faithfulness if faith else None,
+        "judge_reasoning": quality.reasoning if quality else "",
+        "faith_reasoning": faith.reasoning if faith else "",
+    }
+# CONTINUE_MARKER_2
 
 
 def load_test_queries(csv_path):
@@ -107,8 +298,9 @@ def load_test_queries(csv_path):
     return queries
 
 
-def evaluate_query(question, query_id, expected_tool=None, expected_location=None):
-    """Evaluate a single query with unique thread_id."""
+def evaluate_query(question, query_id, expected_tool=None, expected_location=None,
+                   judge_client=None, skip_judge=False):
+    """Evaluate a single query with unique thread_id and optional LLM judge."""
     start_time = time.time()
     thread_id = f"eval_{query_id}_{uuid4().hex[:8]}"
 
@@ -120,8 +312,9 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
 
         tools_called = extract_tool_names(result)
         tool_correct = check_tool_accuracy(expected_tool or "", tools_called)
+        tool_output = extract_tool_outputs(result)
 
-        return {
+        eval_result = {
             "question": question,
             "intent": expected_tool,
             "location": expected_location,
@@ -131,7 +324,30 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "error": None,
             "tools_called": ",".join(tools_called),
             "tool_correct": tool_correct,
+            "tool_output_raw": tool_output[:500],
         }
+
+        # LLM-as-Judge
+        if not skip_judge and response:
+            judge_scores = llm_judge(question, response, tool_output, judge_client)
+            eval_result.update({
+                "judge_relevance": judge_scores.get("relevance"),
+                "judge_completeness": judge_scores.get("completeness"),
+                "judge_fluency": judge_scores.get("fluency"),
+                "judge_faithfulness": judge_scores.get("faithfulness"),
+                "judge_reasoning": judge_scores.get("judge_reasoning", ""),
+            })
+        else:
+            eval_result.update({
+                "judge_relevance": None,
+                "judge_completeness": None,
+                "judge_fluency": None,
+                "judge_faithfulness": None,
+                "judge_reasoning": "",
+            })
+
+        return eval_result
+
     except Exception as e:
         elapsed_ms = (time.time() - start_time) * 1000
         return {
@@ -144,14 +360,17 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "error": str(e),
             "tools_called": "",
             "tool_correct": False,
+            "tool_output_raw": "",
+            "judge_relevance": None,
+            "judge_completeness": None,
+            "judge_fluency": None,
+            "judge_faithfulness": None,
+            "judge_reasoning": "",
         }
 
 
-# --- PLACEHOLDER_METRICS ---
-
-
 def compute_metrics(results):
-    """Compute comprehensive evaluation metrics."""
+    """Compute comprehensive evaluation metrics including judge scores."""
     total = len(results)
     successful = [r for r in results if r["success"]]
     times = sorted([r["response_time_ms"] for r in results])
@@ -169,48 +388,77 @@ def compute_metrics(results):
         "p95_time_ms": round(times[int(total * 0.95)]) if times else 0,
     }
 
-    # By intent
+    # Judge score averages
+    judge_dims = ["judge_relevance", "judge_completeness", "judge_fluency", "judge_faithfulness"]
+    for dim in judge_dims:
+        vals = [r[dim] for r in results if r.get(dim) is not None]
+        metrics[dim + "_avg"] = round(sum(vals) / len(vals), 2) if vals else None
+        metrics[dim + "_count"] = len(vals)
+
+    # By intent (with judge scores)
     by_intent = {}
     for r in results:
         intent = r.get("intent", "unknown")
         if intent not in by_intent:
-            by_intent[intent] = {"total": 0, "success": 0, "tool_correct": 0, "times": []}
+            by_intent[intent] = {
+                "total": 0, "success": 0, "tool_correct": 0, "times": [],
+                "judge_scores": {d: [] for d in judge_dims},
+            }
         by_intent[intent]["total"] += 1
         if r["success"]:
             by_intent[intent]["success"] += 1
         if r.get("tool_correct"):
             by_intent[intent]["tool_correct"] += 1
         by_intent[intent]["times"].append(r["response_time_ms"])
+        for d in judge_dims:
+            if r.get(d) is not None:
+                by_intent[intent]["judge_scores"][d].append(r[d])
 
-    metrics["by_intent"] = {
-        k: {
+    metrics["by_intent"] = {}
+    for k, v in by_intent.items():
+        entry = {
             "total": v["total"],
             "success_rate": round(v["success"] / v["total"] * 100, 1),
             "tool_accuracy": round(v["tool_correct"] / v["total"] * 100, 1),
             "avg_time_ms": round(sum(v["times"]) / len(v["times"])),
         }
-        for k, v in by_intent.items()
-    }
+        for d in judge_dims:
+            vals = v["judge_scores"][d]
+            entry[d + "_avg"] = round(sum(vals) / len(vals), 2) if vals else None
+        metrics["by_intent"][k] = entry
 
-    # By difficulty
+    # By difficulty (with judge scores)
     by_diff = {}
     for r in results:
         diff = r.get("difficulty", "unknown")
         if diff not in by_diff:
-            by_diff[diff] = {"total": 0, "success": 0}
+            by_diff[diff] = {
+                "total": 0, "success": 0,
+                "judge_scores": {d: [] for d in judge_dims},
+            }
         by_diff[diff]["total"] += 1
         if r["success"]:
             by_diff[diff]["success"] += 1
+        for d in judge_dims:
+            if r.get(d) is not None:
+                by_diff[diff]["judge_scores"][d].append(r[d])
 
-    metrics["by_difficulty"] = {
-        k: {"total": v["total"], "success_rate": round(v["success"] / v["total"] * 100, 1)}
-        for k, v in by_diff.items()
-    }
+    metrics["by_difficulty"] = {}
+    for k, v in by_diff.items():
+        entry = {
+            "total": v["total"],
+            "success_rate": round(v["success"] / v["total"] * 100, 1),
+        }
+        for d in judge_dims:
+            vals = v["judge_scores"][d]
+            entry[d + "_avg"] = round(sum(vals) / len(vals), 2) if vals else None
+        metrics["by_difficulty"][k] = entry
 
     return metrics
 
 
-def run_evaluation(output_dir="data/evaluation"):
+def run_evaluation(output_dir="data/evaluation", skip_judge=False):
+    """Run full evaluation pipeline."""
     logger = get_evaluation_logger(output_dir)
 
     test_file = Path(output_dir) / "hanoi_weather_chatbot_eval_questions.csv"
@@ -220,6 +468,22 @@ def run_evaluation(output_dir="data/evaluation"):
 
     queries = load_test_queries(str(test_file))
     print(f"Loaded {len(queries)} test queries")
+
+    # Initialize judge client once (reuse connection)
+    judge_client = None
+    if not skip_judge:
+        try:
+            from openai import OpenAI
+            judge_client = OpenAI(
+                base_url=os.getenv("API_BASE"),
+                api_key=os.getenv("API_KEY"),
+            )
+            print("LLM-as-Judge: ENABLED")
+        except Exception as e:
+            print(f"LLM-as-Judge: DISABLED ({e})")
+            skip_judge = True
+    else:
+        print("LLM-as-Judge: SKIPPED (--skip-judge)")
 
     results = []
     for i, q in enumerate(queries, 1):
@@ -231,12 +495,24 @@ def run_evaluation(output_dir="data/evaluation"):
             query_id=i,
             expected_tool=q.get("intent"),
             expected_location=q.get("location_name"),
+            judge_client=judge_client,
+            skip_judge=skip_judge,
         )
         result["difficulty"] = q.get("difficulty", "unknown")
         results.append(result)
 
+        # Print judge scores inline
+        if not skip_judge and result.get("judge_relevance") is not None:
+            r, c, fl, fa = (
+                result.get("judge_relevance", "-"),
+                result.get("judge_completeness", "-"),
+                result.get("judge_fluency", "-"),
+                result.get("judge_faithfulness", "-"),
+            )
+            print(f"  -> Judge: R={r} C={c} F={fl} Faith={fa}")
+
         logger.log_conversation(
-            session_id="batch_evaluation",
+            session_id=f"eval_{i}",
             turn_number=i,
             user_query=question,
             llm_response=result["response"][:500],
@@ -256,14 +532,34 @@ def run_evaluation(output_dir="data/evaluation"):
     print(f"Success rate: {metrics['success_rate']}%")
     print(f"Tool accuracy: {metrics['tool_accuracy']}%")
     print(f"Avg time: {metrics['avg_time_ms']}ms | p50: {metrics['p50_time_ms']}ms | p90: {metrics['p90_time_ms']}ms | p95: {metrics['p95_time_ms']}ms")
+
+    # Judge scores
+    if not skip_judge:
+        print()
+        print("LLM-as-Judge Scores (1-5):")
+        for dim in ["judge_relevance", "judge_completeness", "judge_fluency", "judge_faithfulness"]:
+            avg = metrics.get(dim + "_avg")
+            cnt = metrics.get(dim + "_count", 0)
+            label = dim.replace("judge_", "").capitalize()
+            print(f"  {label}: {avg}/5 ({cnt} rated)")
+
     print()
     print("By Intent:")
     for intent, data in sorted(metrics["by_intent"].items()):
-        print(f"  {intent}: {data['success_rate']}% success, {data['tool_accuracy']}% tool acc, {data['avg_time_ms']}ms avg ({data['total']} queries)")
+        judge_str = ""
+        if not skip_judge:
+            r_avg = data.get("judge_relevance_avg", "-")
+            judge_str = f", judge_rel={r_avg}"
+        print(f"  {intent}: {data['success_rate']}% success, {data['tool_accuracy']}% tool acc, {data['avg_time_ms']}ms{judge_str} ({data['total']}q)")
+
     print()
     print("By Difficulty:")
     for diff, data in sorted(metrics["by_difficulty"].items()):
-        print(f"  {diff}: {data['success_rate']}% success ({data['total']} queries)")
+        judge_str = ""
+        if not skip_judge:
+            r_avg = data.get("judge_relevance_avg", "-")
+            judge_str = f", judge_rel={r_avg}"
+        print(f"  {diff}: {data['success_rate']}% success{judge_str} ({data['total']}q)")
 
     # Save results
     output_path = Path(output_dir)
@@ -289,5 +585,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Evaluate weather chatbot")
     parser.add_argument("--output", default="data/evaluation")
+    parser.add_argument("--skip-judge", action="store_true",
+                        help="Skip LLM-as-Judge evaluation (faster, no judge scores)")
     args = parser.parse_args()
-    run_evaluation(args.output)
+    run_evaluation(args.output, skip_judge=args.skip_judge)
