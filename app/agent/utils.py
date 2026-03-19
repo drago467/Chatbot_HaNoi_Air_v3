@@ -1,11 +1,85 @@
 """Agent utilities - auto_resolve and enrich functions."""
 
 from typing import Optional, Dict, Any
-
+import json
+import os
 
 # Enable/disable LLM-based question rewriting for location resolution
 # Set to True to use the new rewrite_dal for better location resolution
 USE_LLM_REWRITE = True
+
+# Load POI mapping from JSON config (O(1) lookup, no LLM token cost)
+_POI_MAPPING = None
+
+def _get_poi_mapping() -> Dict[str, str]:
+    """Load POI → district mapping from config file. Cached after first load."""
+    global _POI_MAPPING
+    if _POI_MAPPING is None:
+        poi_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'poi_mapping.json')
+        try:
+            with open(poi_path, 'r', encoding='utf-8') as f:
+                _POI_MAPPING = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            _POI_MAPPING = {}
+    return _POI_MAPPING
+
+
+def _resolve_poi(location_hint: str) -> Optional[Dict[str, Any]]:
+    """Try to resolve location via POI mapping before LLM rewrite.
+
+    Returns resolved dict if POI matched, None otherwise.
+    Uses case-insensitive matching with normalized hint.
+    """
+    poi_map = _get_poi_mapping()
+    if not poi_map:
+        return None
+
+    hint = location_hint.strip()
+
+    # Direct match
+    if hint in poi_map:
+        district_name = poi_map[hint]
+        from app.dal.location_dal import resolve_location
+        result = resolve_location(district_name)
+        if result.get("status") in ("exact", "fuzzy") and result.get("level") == "district":
+            return {
+                "status": "ok",
+                "level": "district",
+                "district_name": result["data"]["district_name_vi"],
+                "data": result["data"],
+                "poi_matched": hint
+            }
+
+    # Case-insensitive match
+    hint_lower = hint.lower()
+    for poi_name, district_name in poi_map.items():
+        if poi_name.lower() == hint_lower:
+            from app.dal.location_dal import resolve_location
+            result = resolve_location(district_name)
+            if result.get("status") in ("exact", "fuzzy") and result.get("level") == "district":
+                return {
+                    "status": "ok",
+                    "level": "district",
+                    "district_name": result["data"]["district_name_vi"],
+                    "data": result["data"],
+                    "poi_matched": poi_name
+                }
+
+    # Substring match: check if hint contains a POI name
+    for poi_name, district_name in poi_map.items():
+        if poi_name.lower() in hint_lower or hint_lower in poi_name.lower():
+            from app.dal.location_dal import resolve_location
+            result = resolve_location(district_name)
+            if result.get("status") in ("exact", "fuzzy") and result.get("level") == "district":
+                return {
+                    "status": "ok",
+                    "level": "district",
+                    "district_name": result["data"]["district_name_vi"],
+                    "data": result["data"],
+                    "poi_matched": poi_name
+                }
+
+    return None
 
 
 def auto_resolve_location(
@@ -32,6 +106,11 @@ def auto_resolve_location(
     
     # If location_hint provided, resolve it
     if location_hint:
+        # Step 0: Try POI mapping first (fast, no LLM cost)
+        poi_result = _resolve_poi(location_hint)
+        if poi_result:
+            return poi_result
+
         # Use LLM-based rewrite for better resolution (NEW APPROACH)
         if USE_LLM_REWRITE:
             try:

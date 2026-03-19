@@ -164,7 +164,14 @@ class CompareWeatherInput(BaseModel):
 
 @tool(args_schema=CompareWeatherInput)
 def compare_weather(ward_id1: str = None, location_hint1: str = None, ward_id2: str = None, location_hint2: str = None) -> dict:
-    """So sánh thời tiết giữa HAI địa điểm."""
+    """So sánh thời tiết HIỆN TẠI giữa HAI địa điểm.
+
+    DÙNG KHI: "A và B nơi nào nóng/lạnh/ẩm hơn?", "so sánh thời tiết A với B",
+    "Cầu Giấy hay Hoàn Kiếm mát hơn?".
+    KHÔNG DÙNG KHI: so sánh hôm nay vs hôm qua (dùng compare_with_yesterday),
+    so sánh với trung bình mùa (dùng get_seasonal_comparison).
+    Trả về: thời tiết hiện tại của cả 2 nơi để so sánh.
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal import compare_weather as dal_compare_weather
 
@@ -189,7 +196,11 @@ class CompareWithYesterdayInput(BaseModel):
 
 @tool(args_schema=CompareWithYesterdayInput)
 def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sánh thời tiết HÔM NAY với HÔM QUA."""
+    """So sánh thời tiết HÔM NAY với HÔM QUA cho một địa điểm.
+
+    DÙNG KHI: "hôm nay nóng hơn hôm qua không?", "so với hôm qua thế nào?".
+    KHÔNG DÙNG KHI: so sánh 2 địa điểm (dùng compare_weather).
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal import compare_with_yesterday as dal_compare_with_yesterday
 
@@ -205,14 +216,23 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
 # ============== Tool 8: get_activity_advice ==============
 
 class GetActivityAdviceInput(BaseModel):
-    activity: str = Field(description="Hoạt động: chạy bộ, đạp xe, dạo chơi, photo, picnic")
+    activity: str = Field(description="Hoạt động: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc, phoi_do, du_lich, cam_trai, cau_ca, lam_vuon, boi_loi, leo_nui, di_dao, su_kien")
     ward_id: Optional[str] = Field(default=None)
     location_hint: Optional[str] = Field(default=None)
 
 
 @tool(args_schema=GetActivityAdviceInput)
 def get_activity_advice(activity: str, ward_id: str = None, location_hint: str = None) -> dict:
-    """Khuyến cáo có NÊN thực hiện hoạt động ngoài trời không."""
+    """Khuyến cáo có NÊN thực hiện hoạt động ngoài trời không.
+
+    DÙNG KHI: "đi chơi được không?", "chạy bộ có ổn không?", "có nên picnic không?",
+    "thời tiết có phù hợp để [hoạt động] không?".
+    KHÔNG DÙNG KHI: hỏi mấy giờ tốt nhất (dùng get_best_time),
+    hỏi mặc gì (dùng get_clothing_advice).
+    Trả về: mức khuyến cáo (nen/co_the/han_che/khong_nen), lý do, khuyến nghị.
+    Hoạt động hỗ trợ: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc,
+    phoi_do, du_lich, cam_trai, cau_ca, lam_vuon, boi_loi, leo_nui, di_dao, su_kien.
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_activity_advice as dal_get_activity_advice
 
@@ -233,7 +253,12 @@ class GetWeatherAlertsInput(BaseModel):
 
 @tool(args_schema=GetWeatherAlertsInput)
 def get_weather_alerts(ward_id: str = "all") -> dict:
-    """Lấy CẢNH BÁO thời tiết nguy hiểm."""
+    """Lấy CẢNH BÁO thời tiết nguy hiểm trong 24h tới.
+
+    DÙNG KHI: "có cảnh báo gì không?", "thời tiết có nguy hiểm không?",
+    "có giông bão không?", "có rét hại không?".
+    Trả về: danh sách cảnh báo (gió giật > 20m/s, rét hại < 13°C, nắng nóng > 39°C, giông).
+    """
     from app.dal import get_weather_alerts as dal_get_weather_alerts
     # Convert 'all' to None for DAL
     actual_id = None if ward_id == "all" else ward_id
@@ -250,7 +275,12 @@ class DetectPhenomenaInput(BaseModel):
 
 @tool(args_schema=DetectPhenomenaInput)
 def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
-    """Phát hiện các HIỆN TƯỢNG THỜI TIẾT ĐẶC BIỆT tại Hà Nội."""
+    """Phát hiện các HIỆN TƯỢNG THỜI TIẾT ĐẶC BIỆT tại Hà Nội.
+
+    DÙNG KHI: "có hiện tượng gì đặc biệt không?", "có nồm ẩm không?",
+    "có gió mùa đông bắc không?", "có rét đậm không?".
+    Trả về: danh sách hiện tượng (nồm ẩm, gió Lào, gió mùa ĐB, rét đậm, sương mù, mưa dông).
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_current_weather as dal_get_current_weather
     from app.dal.weather_knowledge_dal import detect_hanoi_weather_phenomena
@@ -274,7 +304,12 @@ class GetSeasonalComparisonInput(BaseModel):
 
 @tool(args_schema=GetSeasonalComparisonInput)
 def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sánh thời tiết hiện tại với trung bình mùa."""
+    """So sánh thời tiết hiện tại với trung bình mùa (climatology Hà Nội).
+
+    DÙNG KHI: "nóng hơn bình thường không?", "thời tiết có bất thường không?",
+    "so với mùa này thế nào?".
+    Trả về: nhiệt độ/độ ẩm hiện tại vs trung bình tháng, nhận xét chênh lệch.
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_current_weather as dal_get_current_weather
     from app.dal.weather_knowledge_dal import compare_with_seasonal
@@ -362,7 +397,7 @@ class GetWeatherPeriodInput(BaseModel):
 def get_weather_period(ward_id: str = None, location_hint: str = None, start_date: str = None, end_date: str = None) -> dict:
     """Tổng hợp thời tiết nhiều NGÀY: trend, best/worst day, extremes."""
     from app.agent.utils import auto_resolve_location
-    from app.db.dal import query
+    from app.dal.weather_dal import get_weather_period_data
     from app.dal.weather_knowledge_dal import get_seasonal_average
     from datetime import datetime
 
@@ -370,11 +405,7 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    # Query with more columns
-    rows = query(
-        "SELECT date, temp_min, temp_max, temp_avg, humidity, pop, rain_total, uvi, wind_speed, weather_main FROM fact_weather_daily WHERE ward_id = %s AND date BETWEEN %s AND %s ORDER BY date",
-        (resolved["ward_id"], start_date, end_date)
-    )
+    rows = get_weather_period_data(resolved["ward_id"], start_date, end_date)
 
     if not rows:
         return {"error": "no_data"}
@@ -702,19 +733,30 @@ def get_rain_timeline(
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved.get("status") != "ok":
-        return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
+        return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
+
+    wid = resolved.get("ward_id")
+    if not wid and resolved["level"] == "district":
+        # Fallback: dùng phường đại diện trong quận
+        from app.dal.location_dal import get_wards_in_district
+        wards = get_wards_in_district(resolved["district_name"])
+        wid = wards[0]["ward_id"] if wards else None
+        if wid:
+            result = dal_rain_timeline(wid, hours)
+            result["note"] = f"Dữ liệu đại diện từ {wards[0].get('ward_name_vi', '')} trong {resolved['district_name']}"
+            return result
 
     if resolved["level"] == "ward":
         return dal_rain_timeline(resolved["ward_id"], hours)
     else:
-        return {"error": "need_ward", "message": "Can chi dinh phuong/xa cu the de xem timeline mua"}
+        return {"error": "need_ward", "message": "Cần chỉ định phường/xã cụ thể để xem timeline mưa"}
 
 
 # ============== Tool 21: get_best_time ==============
 
 class GetBestTimeInput(BaseModel):
     activity: str = Field(
-        description="Hoạt động: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc, phoi_do"
+        description="Hoạt động: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc, phoi_do, du_lich, cam_trai, cau_ca, lam_vuon, boi_loi, leo_nui, di_dao, su_kien"
     )
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
     location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
@@ -826,6 +868,112 @@ def get_temperature_trend(
     return dal_temp_trend(wid, days)
 
 
+# ============== Tool 24: get_comfort_index ==============
+
+class GetComfortIndexInput(BaseModel):
+    ward_id: Optional[str] = Field(default=None, description="Ward ID")
+    location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
+    hours_ahead: int = Field(default=0, description="Số giờ phía trước (0=hiện tại)")
+
+
+@tool(args_schema=GetComfortIndexInput)
+def get_comfort_index(
+    ward_id: Optional[str] = None, location_hint: Optional[str] = None, hours_ahead: int = 0
+) -> dict:
+    """Tính chỉ số thoải mái tổng hợp (0-100) dựa trên nhiệt độ, độ ẩm, gió, UV, mưa.
+
+    DÙNG KHI: user hỏi "ra ngoài có thoải mái không?", "thời tiết dễ chịu không?",
+    "có nên ra ngoài không?", "thời tiết thế nào cho hoạt động ngoài trời?".
+    KHÔNG DÙNG KHI: hỏi hoạt động cụ thể (dùng get_activity_advice),
+    hỏi mặc gì (dùng get_clothing_advice).
+    Trả về: điểm 0-100, nhãn (Rất thoải mái/Thoải mái/Chấp nhận được/Khó chịu/Rất khó chịu),
+    phân tích từng yếu tố, khuyến nghị.
+    """
+    from app.agent.utils import auto_resolve_location
+    from app.dal.weather_helpers import compute_comfort_index
+    from app.dal.activity_dal import _get_weather_for_activity
+
+    resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
+    if resolved.get("status") != "ok":
+        return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
+
+    wid = resolved.get("ward_id")
+    if not wid and resolved["level"] == "district":
+        from app.dal.location_dal import get_wards_in_district
+        wards = get_wards_in_district(resolved["district_name"])
+        wid = wards[0]["ward_id"] if wards else None
+
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+
+    weather = _get_weather_for_activity(wid, hours_ahead)
+    if "error" in weather:
+        return weather
+
+    result = compute_comfort_index(
+        temp=weather.get("temp"),
+        humidity=weather.get("humidity"),
+        wind_speed=weather.get("wind_speed"),
+        uvi=weather.get("uvi") or 0,
+        pop=weather.get("pop") or 0,
+    )
+
+    if result is None:
+        return {"error": "no_data", "message": "Không đủ dữ liệu để tính chỉ số thoải mái"}
+
+    result["weather_summary"] = {
+        "temp": weather.get("temp"),
+        "humidity": weather.get("humidity"),
+        "wind_speed": weather.get("wind_speed"),
+        "uvi": weather.get("uvi"),
+        "pop": weather.get("pop"),
+        "weather_main": weather.get("weather_main"),
+    }
+    result["resolved_location"] = resolved["data"]
+    return result
+
+
+# ============== Tool 25: get_weather_change_alert ==============
+
+class GetWeatherChangeAlertInput(BaseModel):
+    ward_id: Optional[str] = Field(default=None, description="Ward ID")
+    location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
+    hours: int = Field(default=6, description="Số giờ scan phía trước (1-12)")
+
+
+@tool(args_schema=GetWeatherChangeAlertInput)
+def get_weather_change_alert(
+    ward_id: Optional[str] = None, location_hint: Optional[str] = None, hours: int = 6
+) -> dict:
+    """Phát hiện thay đổi thời tiết đáng kể trong vài giờ tới.
+
+    DÙNG KHI: user hỏi "thời tiết có thay đổi gì không?", "trời có chuyển mưa không?",
+    "có gì bất thường không?", "thời tiết sắp tới thế nào?".
+    KHÔNG DÙNG KHI: hỏi dự báo chi tiết (dùng get_hourly_forecast),
+    hỏi cảnh báo nguy hiểm (dùng get_weather_alerts).
+    Trả về: danh sách thay đổi đáng kể (nhiệt độ, mưa, gió) + thời điểm xảy ra.
+    """
+    from app.agent.utils import auto_resolve_location
+    from app.dal.weather_dal import detect_weather_changes
+
+    resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
+    if resolved.get("status") != "ok":
+        return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
+
+    wid = resolved.get("ward_id")
+    if not wid and resolved["level"] == "district":
+        from app.dal.location_dal import get_wards_in_district
+        wards = get_wards_in_district(resolved["district_name"])
+        wid = wards[0]["ward_id"] if wards else None
+
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+
+    result = detect_weather_changes(wid, min(hours, 12))
+    result["resolved_location"] = resolved["data"]
+    return result
+
+
 # Export all tools
 
 
@@ -853,4 +1001,6 @@ TOOLS = [
     get_best_time,
     get_clothing_advice,
     get_temperature_trend,
+    get_comfort_index,
+    get_weather_change_alert,
 ]

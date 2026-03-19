@@ -219,6 +219,46 @@ ACTIVITY_TEMPLATES = {
         "good_conditions": "Nhiệt độ 18-25°C, độ ẩm thấp",
         "bad_conditions": "Nắng nóng, nồm ẩm, mưa"
     },
+    "du_lich": {
+        "name": "Du lịch/Tham quan",
+        "good_conditions": "Nhiệt độ 20-32°C, trời quang, gió nhẹ",
+        "bad_conditions": "Mưa to, gió mạnh, nắng nóng gay gắt"
+    },
+    "cam_trai": {
+        "name": "Cắm trại",
+        "good_conditions": "Nhiệt độ 18-30°C, không mưa, gió nhẹ",
+        "bad_conditions": "Mưa, giông, gió mạnh"
+    },
+    "cau_ca": {
+        "name": "Câu cá",
+        "good_conditions": "Nhiệt độ 15-35°C, gió nhẹ, áp suất ổn định",
+        "bad_conditions": "Giông, gió mạnh, mưa to"
+    },
+    "lam_vuon": {
+        "name": "Làm vườn",
+        "good_conditions": "Nhiệt độ 18-32°C, không mưa to, UV vừa",
+        "bad_conditions": "Nắng nóng gay gắt, mưa to, gió mạnh"
+    },
+    "boi_loi": {
+        "name": "Bơi lội ngoài trời",
+        "good_conditions": "Nhiệt độ 28-38°C, trời nắng",
+        "bad_conditions": "Giông sét, gió mạnh, nhiệt độ thấp"
+    },
+    "leo_nui": {
+        "name": "Leo núi/Trekking",
+        "good_conditions": "Nhiệt độ 15-30°C, không mưa, tầm nhìn tốt",
+        "bad_conditions": "Mưa, sương mù, gió mạnh, nắng nóng"
+    },
+    "di_dao": {
+        "name": "Đi dạo",
+        "good_conditions": "Nhiệt độ 18-32°C, không mưa, gió nhẹ",
+        "bad_conditions": "Mưa, gió mạnh, nắng nóng"
+    },
+    "su_kien": {
+        "name": "Sự kiện ngoài trời",
+        "good_conditions": "Nhiệt độ 20-32°C, không mưa, gió nhẹ",
+        "bad_conditions": "Mưa, giông, gió mạnh, nắng nóng"
+    },
 }
 
 
@@ -257,6 +297,14 @@ _ACTIVITY_SCORING = {
     "chup_anh": {"temp": (15, 32), "pop_max": 0.2, "uv_max": 10, "wind_max": 8},
     "tap_the_duc": {"temp": (18, 25), "pop_max": 0.2, "uv_max": 6, "wind_max": 5},
     "phoi_do": {"temp": (20, 40), "pop_max": 0.1, "uv_max": 99, "wind_max": 10, "humidity_max": 75},
+    "du_lich": {"temp": (20, 32), "pop_max": 0.2, "uv_max": 8, "wind_max": 8},
+    "cam_trai": {"temp": (18, 30), "pop_max": 0.1, "uv_max": 8, "wind_max": 6},
+    "cau_ca": {"temp": (15, 35), "pop_max": 0.3, "uv_max": 9, "wind_max": 7},
+    "lam_vuon": {"temp": (18, 32), "pop_max": 0.2, "uv_max": 8, "wind_max": 5},
+    "boi_loi": {"temp": (28, 38), "pop_max": 0.3, "uv_max": 10, "wind_max": 10},
+    "leo_nui": {"temp": (15, 30), "pop_max": 0.1, "uv_max": 8, "wind_max": 8},
+    "di_dao": {"temp": (18, 32), "pop_max": 0.2, "uv_max": 8, "wind_max": 6},
+    "su_kien": {"temp": (20, 32), "pop_max": 0.1, "uv_max": 7, "wind_max": 5},
 }
 
 

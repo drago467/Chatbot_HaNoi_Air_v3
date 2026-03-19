@@ -149,3 +149,16 @@
 148,Hà Nội năm nay rét muộn không bạn?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,năm nay,temperature_seasonal,onecall/timemachine+daily,temp,hard,"Câu hỏi mùa vụ, so sánh lịch sử"
 149,Thời tiết hôm nay có gì bất thường không?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,anomaly,onecall/current,"temp,weather,wind_speed,humidity",hard,Phát hiện bất thường
 150,Tối nay trời có đẹp để ngắm sao không?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,tối nay,stargazing,onecall/hourly,"clouds,visibility,pop",medium,Hoạt động ngắm sao đêm
+151,Bây giờ ra ngoài có thoải mái không?,activity_weather,Thời tiết theo hoạt động,city,Hà Nội,hiện tại,comfort,comfort_index,comfort_score,easy,Tool mới: comfort index
+152,Thời tiết ở Cầu Giấy có dễ chịu không?,activity_weather,Thời tiết theo hoạt động,district,Cầu Giấy,hiện tại,comfort,comfort_index,comfort_score,easy,Tool mới: comfort index
+153,Chiều nay ở Hồ Tây ra ngoài có ổn không?,activity_weather,Thời tiết theo hoạt động,poi,Hồ Tây,chiều nay,comfort,comfort_index,comfort_score,medium,POI + comfort index
+154,Trời có chuyển mưa không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,vài giờ tới,weather_change,weather_change,changes,medium,Tool mới: weather change
+155,Thời tiết sắp có thay đổi gì không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,vài giờ tới,weather_change,weather_change,changes,medium,Tool mới: weather change
+156,Vài giờ tới ở Đống Đa thời tiết có biến động không?,weather_alert,Cảnh báo thời tiết,district,Đống Đa,vài giờ tới,weather_change,weather_change,changes,medium,Tool mới: weather change
+157,Xin chào bạn!,smalltalk_weather,Small talk khí tượng,city,,hiện tại,greeting,,none,easy,Edge case: greeting - không gọi tool
+158,Thời tiết ở Đà Nẵng hôm nay thế nào?,smalltalk_weather,Small talk khí tượng,city,Đà Nẵng,hôm nay,general,,none,easy,Edge case: ngoài Hà Nội
+159,Dự báo thời tiết Hà Nội tháng sau?,daily_forecast,Dự báo theo ngày,city,Hà Nội,tháng sau,general,onecall/daily,daily,hard,Edge case: vượt quá 8 ngày
+160,Cuối tuần này đi cắm trại ở Ba Vì có được không?,activity_weather,Thời tiết theo hoạt động,district,Ba Vì,cuối tuần,camping,onecall/daily,"pop,wind_speed,temp",medium,Activity mới: cam_trai
+161,Ngày mai có nên đi câu cá ở Sóc Sơn không?,activity_weather,Thời tiết theo hoạt động,district,Sóc Sơn,ngày mai,fishing,onecall/daily,"pop,wind_speed,temp",medium,Activity mới: cau_ca
+162,Hôm nay thời tiết có phù hợp để tổ chức sự kiện ngoài trời ở Mỹ Đình không?,activity_weather,Thời tiết theo hoạt động,poi,Mỹ Đình,hôm nay,event,onecall/current+hourly,"weather,pop,wind_speed,temp",hard,Activity mới: su_kien
+163,Mưa ở Hoàng Mai kéo dài đến mấy giờ?,rain_query,Truy vấn mưa,district,Hoàng Mai,hôm nay,rain_duration,onecall/hourly,"pop,rain.1h",hard,Rain timeline cho district level
