@@ -1,1 +1,32 @@
 timestamp,session_id,turn_number,user_query,resolved_location,llm_response,response_time_ms,tool_calls,error_type,user_rating
+2026-03-19T08:57:48.596891+07:00,adb192ca-9062-4303-b455-9eaf20b8e3eb,0,Thời tiết quận Cầu Giấy 3 ngày tới như thế nào,,"Dưới đây là dự báo thời tiết cho quận Cầu Giấy trong 3 ngày tới:
+
+### Ngày 19/03/2026
+- **Nhiệt độ trung bình**: 25.45°C
+- **Nhiệt độ tối thiểu**: 21.4°C
+- **Nhiệt độ tối đa**: 27.03°C
+- **Độ ẩm trung bình**: 68%
+- **Thời tiết**: Có mây
+- **Xác suất mưa**: 0% (không có mưa)
+
+### Ngày 20/03/2026
+- **Nhiệt độ trung bình**: 25.85°C
+- **Nhiệt độ tối thiểu**: 20.47°C
+- **Nhiệt độ tối đa**: 26.37°C
+- **Độ ẩm trung bình**: 64.7%
+- **Thời tiết**: Mưa
+- **Xác suất mưa**: 48%
+- **Lượng mưa dự kiến**: 0.32",15891.78,,,
+2026-03-19T08:58:34.828868+07:00,adb192ca-9062-4303-b455-9eaf20b8e3eb,1,vậy thành phố Hà Nội hôm nay thì nơi nào nắng nóng nhất,,"Hôm nay, theo dự báo thời tiết, các khu vực nắng nóng nhất tại thành phố Hà Nội là:
+
+1. **Huyện Chương Mỹ**: 22.14°C
+2. **Huyện Mỹ Đức**: 22.09°C
+3. **Quận Hà Đông**: 22.08°C
+4. **Quận Cầu Giấy**: 22.06°C
+5. **Huyện Quốc Oai**: 22.05°C
+
+### Thời tiết chung
+- **Nhiệt độ trung bình toàn thành phố**: 21.96°C
+- **Thời tiết**: Có mưa
+
+Mặc dù nhiệt độ không quá cao, nhưng có mưa nên bạn hãy chuẩn bị ô hoặc áo mưa khi ra ngoài nhé!",9601.75,,,

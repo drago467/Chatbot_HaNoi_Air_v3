@@ -169,10 +169,10 @@ def auto_resolve_location(
             return {
                 "status": result["status"],
                 "level": "not_found",
-                "message": result.get("message", "Khong tim thay dia diem"),
+                "message": result.get("message", "Không tìm thấy địa điểm"),
                 "needs_clarification": result.get("needs_clarification", False),
                 "alternatives": result.get("alternatives", []),
-                "suggestion": result.get("suggestion", "Vui long cho biet them dia diem cu the")
+                "suggestion": result.get("suggestion", "Vui lòng cho biết thêm địa điểm cụ thể")
                 }
         
         elif result["status"] == "multiple":
@@ -186,12 +186,12 @@ def auto_resolve_location(
             return {
                 "status": "not_found",
                 "level": "not_found",
-                "message": result.get("message", "Khong tim thay dia diem"),
+                "message": result.get("message", "Không tìm thấy địa điểm"),
                 "needs_clarification": True,
-                "suggestion": "Vui long cho biet them dia diem (vi du: 'quan TenQuan' hoac 'phuong TenPhuong')"
+                "suggestion": "Vui lòng cho biết thêm địa điểm (ví dụ: 'quận TênQuận' hoặc 'phường TênPhường')"
             }
     
-    return {"status": "error", "level": "error", "message": "Khong xac dinh duoc dia diem"}
+    return {"status": "error", "level": "error", "message": "Không xác định được địa điểm"}
 
 
 def enrich_weather_response(weather_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -313,7 +313,7 @@ def _base_enrich_aggregated(data: Dict[str, Any]) -> Dict[str, Any]:
         data["temp_spread"] = spread
         if spread > 2:
             data["temp_spread_note"] = (
-                f"Chenh lech nhiet do giua cac phuong/xa: {spread}C"
+                f"Chênh lệch nhiệt độ giữa các phường/xã: {spread}°C"
             )
 
     # Wind direction Vietnamese
@@ -325,29 +325,29 @@ def _base_enrich_aggregated(data: Dict[str, Any]) -> Dict[str, Any]:
     uvi = data.get("max_uvi") or data.get("avg_uvi")
     if uvi is not None:
         if uvi >= 11:
-            data["uv_status"] = "Cuc cao - Nguy hiem"
+            data["uv_status"] = "Cực cao - Nguy hiểm"
         elif uvi >= 8:
-            data["uv_status"] = "Rat cao - Han che ra ngoai 10h-14h"
+            data["uv_status"] = "Rất cao - Hạn chế ra ngoài 10h-14h"
         elif uvi >= 6:
-            data["uv_status"] = "Cao - Can che nang"
+            data["uv_status"] = "Cao - Cần che nắng"
         elif uvi >= 3:
-            data["uv_status"] = "Trung binh"
+            data["uv_status"] = "Trung bình"
         else:
-            data["uv_status"] = "Thap"
+            data["uv_status"] = "Thấp"
 
     # Dew point comfort
     dp = data.get("avg_dew_point")
     if dp is not None:
         if dp > 24:
-            data["dew_point_status"] = "Rat oi buc, kho chiu"
+            data["dew_point_status"] = "Rất oi bức, khó chịu"
         elif dp > 20:
-            data["dew_point_status"] = "Oi buc"
+            data["dew_point_status"] = "Oi bức"
         elif dp > 16:
-            data["dew_point_status"] = "De chiu"
+            data["dew_point_status"] = "Dễ chịu"
         elif dp > 10:
-            data["dew_point_status"] = "Kho rao"
+            data["dew_point_status"] = "Khô ráo"
         else:
-            data["dew_point_status"] = "Rat kho"
+            data["dew_point_status"] = "Rất khô"
 
     # Seasonal comparison (map avg_temp -> temp for the helper)
     try:

@@ -166,19 +166,6 @@ def aggregate_city_hourly(data_kind: str = 'current') -> dict:
             release_connection(conn)
 
 
-def run_aggregation():
-    """Run hourly aggregation functions (backward compat)."""
-    results = {
-        "district_hourly_current": aggregate_district_hourly('current'),
-        "district_hourly_forecast": aggregate_district_hourly('forecast'),
-        "district_hourly_history": aggregate_district_hourly('history'),
-        "city_hourly_current": aggregate_city_hourly('current'),
-        "city_hourly_forecast": aggregate_city_hourly('forecast'),
-        "city_hourly_history": aggregate_city_hourly('history'),
-    }
-    return results
-
-
 def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
     """Aggregate weather data from ward level to district level (daily)."""
     conn = get_db_connection()

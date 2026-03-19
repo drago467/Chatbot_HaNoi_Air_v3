@@ -57,7 +57,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         if r.get("wind_gust") is not None and r["wind_gust"] > 20:
             alert["type"] = "wind"
             alert["severity"] = "warning"
-            alert["message"] = f"Gio giat {r['wind_gust']:.1f} m/s - Can than"
+            alert["message"] = f"Gió giật {r['wind_gust']:.1f} m/s - Cẩn thận"
             alerts.append(alert)
         
         # Cold alert
@@ -65,7 +65,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
             alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "cold"
             alert["severity"] = "warning"
-            alert["message"] = f"Ret hai {r['temp']:.1f}°C - Can mac am"
+            alert["message"] = f"Rét hại {r['temp']:.1f}°C - Cần mặc ấm"
             alerts.append(alert)
         
         # Heat alert
@@ -73,7 +73,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
             alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "heat"
             alert["severity"] = "warning"
-            alert["message"] = f"Nang nong nguy hiem {r['temp']:.1f}°C - Han che ra ngoai"
+            alert["message"] = f"Nắng nóng nguy hiểm {r['temp']:.1f}°C - Hạn chế ra ngoài"
             alerts.append(alert)
         
         # Thunderstorm alert
@@ -81,7 +81,7 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
             alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
             alert["type"] = "thunderstorm"
             alert["severity"] = "warning"
-            alert["message"] = f"Co giong - Tranh ra ngoai"
+            alert["message"] = f"Có giông - Tránh ra ngoài"
             alerts.append(alert)
     
     return alerts

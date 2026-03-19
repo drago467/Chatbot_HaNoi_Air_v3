@@ -84,7 +84,7 @@ def get_activity_advice(activity: str, ward_id: str, hours_ahead: int = 3) -> Di
     if "error" in weather:
         return {
             "advice": "unknown",
-            "reason": weather.get("message", "Khong co du lieu thoi tiet"),
+            "reason": weather.get("message", "Không có dữ liệu thời tiết"),
             "activity": activity
         }
 
@@ -160,16 +160,16 @@ def get_activity_advice(activity: str, ward_id: str, hours_ahead: int = 3) -> Di
     # Determine overall advice
     if len(issues) == 0:
         advice = "nen"
-        reason = "Thoi tiet thuan loi cho hoat dong ngoai troi"
+        reason = "Thời tiết thuận lợi cho hoạt động ngoài trời"
     elif len(issues) == 1:
         advice = "co_the"
-        reason = f"Can luu y: {issues[0]}"
+        reason = f"Cần lưu ý: {issues[0]}"
     elif any("NGUY HIỂM" in r for r in recommendations):
         advice = "khong_nen"
-        reason = f"Thoi tiet nguy hiem: {', '.join(issues)}"
+        reason = f"Thời tiết nguy hiểm: {', '.join(issues)}"
     else:
         advice = "han_che"
-        reason = f"Nhieu yeu to bat loi: {', '.join(issues)}"
+        reason = f"Nhiều yếu tố bất lợi: {', '.join(issues)}"
 
     return {
         "advice": advice,
@@ -190,34 +190,34 @@ def get_activity_advice(activity: str, ward_id: str, hours_ahead: int = 3) -> Di
 # Activity-specific advice templates
 ACTIVITY_TEMPLATES = {
     "chay_bo": {
-        "name": "Chay bo",
-        "good_conditions": "Nhiet do 15-25°C, do am <80%, khong mua",
-        "bad_conditions": "Nang nong, mua, gio manh"
+        "name": "Chạy bộ",
+        "good_conditions": "Nhiệt độ 15-25°C, độ ẩm <80%, không mưa",
+        "bad_conditions": "Nắng nóng, mưa, gió mạnh"
     },
     "dua_dieu": {
-        "name": "Dua dien/Cho con choi",
-        "good_conditions": "Nhiet do 20-30°C, troi quang hoac may nhe",
-        "bad_conditions": "UV cao, mua, gio manh"
+        "name": "Đưa điện/Cho con chơi",
+        "good_conditions": "Nhiệt độ 20-30°C, trời quang hoặc mây nhẹ",
+        "bad_conditions": "UV cao, mưa, gió mạnh"
     },
     "picnic": {
-        "name": "Picnic/Du lich ngoai troi",
-        "good_conditions": "Nhiet do 22-28°C, troi quang",
-        "bad_conditions": "Mua, gio manh, nang nong"
+        "name": "Picnic/Du lịch ngoài trời",
+        "good_conditions": "Nhiệt độ 22-28°C, trời quang",
+        "bad_conditions": "Mưa, gió mạnh, nắng nóng"
     },
     "bike": {
-        "name": "Di xe dap",
-        "good_conditions": "Nhiet do 18-28°C, gio nhe (<5 m/s)",
-        "bad_conditions": "Gio manh, mua, troi tuot"
+        "name": "Đi xe đạp",
+        "good_conditions": "Nhiệt độ 18-28°C, gió nhẹ (<5 m/s)",
+        "bad_conditions": "Gió mạnh, mưa, trời ướt"
     },
     "chup_anh": {
-        "name": "Chup anh ngoai troi",
-        "good_conditions": "Sang som hoac chieu muon, may nhe",
-        "bad_conditions": "Nang gay, mua, suong mu"
+        "name": "Chụp ảnh ngoài trời",
+        "good_conditions": "Sáng sớm hoặc chiều muộn, mây nhẹ",
+        "bad_conditions": "Nắng gắt, mưa, sương mù"
     },
     "tap_the_duc": {
-        "name": "Tap the duc ngoai troi",
-        "good_conditions": "Nhiet do 18-25°C, do am thap",
-        "bad_conditions": "Nang nong, nom am, mua"
+        "name": "Tập thể dục ngoài trời",
+        "good_conditions": "Nhiệt độ 18-25°C, độ ẩm thấp",
+        "bad_conditions": "Nắng nóng, nồm ẩm, mưa"
     },
 }
 
@@ -237,8 +237,8 @@ def get_activity_advice_detailed(activity: str, ward_id: str, hours_ahead: int =
 
     activity_info = ACTIVITY_TEMPLATES.get(activity, {
         "name": activity,
-        "good_conditions": "Thoi tiet thuan loi",
-        "bad_conditions": "Thoi tiet bat loi"
+        "good_conditions": "Thời tiết thuận lợi",
+        "bad_conditions": "Thời tiết bất lợi"
     })
 
     advice["activity_name"] = activity_info["name"]
@@ -269,7 +269,7 @@ def get_best_time_for_activity(
     """
     forecasts = get_hourly_forecast(ward_id, hours=min(hours, 48))
     if not forecasts:
-        return {"error": "no_data", "message": "Khong co du lieu du bao"}
+        return {"error": "no_data", "message": "Không có dữ liệu dự báo"}
 
     rules = _ACTIVITY_SCORING.get(activity, _ACTIVITY_SCORING["chay_bo"])
     temp_lo, temp_hi = rules["temp"]
@@ -293,15 +293,15 @@ def get_best_time_for_activity(
         # Temperature penalty
         if temp < temp_lo:
             score -= min(30, (temp_lo - temp) * 5)
-            reasons.append(f"Lanh ({temp}C)")
+            reasons.append(f"Lạnh ({temp}°C)")
         elif temp > temp_hi:
             score -= min(30, (temp - temp_hi) * 5)
-            reasons.append(f"Nong ({temp}C)")
+            reasons.append(f"Nóng ({temp}°C)")
 
         # Rain penalty
         if pop > rules["pop_max"]:
             score -= min(40, pop * 50)
-            reasons.append(f"Mua {pop*100:.0f}%")
+            reasons.append(f"Mưa {pop*100:.0f}%")
 
         # UV penalty
         if uvi > rules["uv_max"]:
@@ -311,13 +311,13 @@ def get_best_time_for_activity(
         # Wind penalty
         if wind > rules["wind_max"]:
             score -= min(20, (wind - rules["wind_max"]) * 5)
-            reasons.append(f"Gio {wind}m/s")
+            reasons.append(f"Gió {wind}m/s")
 
         # Humidity penalty (if rule exists)
         hum_max = rules.get("humidity_max")
         if hum_max and humidity > hum_max:
             score -= min(15, (humidity - hum_max) * 0.5)
-            reasons.append(f"Am {humidity}%")
+            reasons.append(f"Ẩm {humidity}%")
 
         score = max(0, round(score))
         scored.append({
@@ -327,7 +327,7 @@ def get_best_time_for_activity(
             "pop": round(pop * 100),
             "uvi": uvi,
             "wind_speed": wind,
-            "issues": reasons if reasons else ["Tot"],
+            "issues": reasons if reasons else ["Tốt"],
         })
 
     scored.sort(key=lambda x: x["score"], reverse=True)
@@ -345,7 +345,7 @@ def get_clothing_advice(ward_id: str, hours_ahead: int = 0) -> Dict[str, Any]:
     weather = _get_weather_for_activity(ward_id, hours_ahead)
 
     if "error" in weather:
-        return {"error": weather.get("message", "Khong co du lieu")}
+        return {"error": weather.get("message", "Không có dữ liệu")}
 
     temp = weather.get("temp")
     humidity = weather.get("humidity") or 50
@@ -355,55 +355,55 @@ def get_clothing_advice(ward_id: str, hours_ahead: int = 0) -> Dict[str, Any]:
     wm = weather.get("weather_main", "")
 
     if temp is None:
-        return {"error": "Khong co du lieu nhiet do"}
+        return {"error": "Không có dữ liệu nhiệt độ"}
 
     items = []
     notes = []
 
     # Base clothing by temperature
     if temp < 10:
-        items.extend(["Ao phao/ao khoac day", "Khan quang co", "Gang tay", "Mu len"])
-        notes.append("Ret dam - mac nhieu lop, giu am co va tay")
+        items.extend(["Áo phao/áo khoác dày", "Khăn quàng cổ", "Găng tay", "Mũ len"])
+        notes.append("Rét đậm - mặc nhiều lớp, giữ ấm cổ và tay")
     elif temp < 15:
-        items.extend(["Ao khoac day", "Ao len", "Quan dai"])
-        notes.append("Lanh - nen mac ao khoac day")
+        items.extend(["Áo khoác dày", "Áo len", "Quần dài"])
+        notes.append("Lạnh - nên mặc áo khoác dày")
     elif temp < 20:
-        items.extend(["Ao khoac nhe", "Ao dai tay"])
-        notes.append("Se lanh - ao khoac nhe la du")
+        items.extend(["Áo khoác nhẹ", "Áo dài tay"])
+        notes.append("Se lạnh - áo khoác nhẹ là đủ")
     elif temp < 25:
-        items.extend(["Ao thun dai tay hoac ngan tay", "Quan dai hoac short"])
+        items.extend(["Áo thun dài tay hoặc ngắn tay", "Quần dài hoặc short"])
     elif temp < 32:
-        items.extend(["Ao mong thoang", "Quan short", "Mu chong nang"])
-        notes.append("Nong - chon vai thoang mat")
+        items.extend(["Áo mỏng thoáng", "Quần short", "Mũ chống nắng"])
+        notes.append("Nóng - chọn vải thoáng mát")
     else:
-        items.extend(["Ao mong thoang mat nhat", "Mu rong vanh", "Kinh ram"])
-        notes.append("Rat nong - han che ra ngoai, uong nhieu nuoc")
+        items.extend(["Áo mỏng thoáng mát nhất", "Mũ rộng vành", "Kính râm"])
+        notes.append("Rất nóng - hạn chế ra ngoài, uống nhiều nước")
 
     # Rain additions
     if pop > 0.5 or wm in ("Rain", "Drizzle", "Thunderstorm"):
-        items.append("O/ao mua")
-        notes.append("Co mua - nho mang o")
+        items.append("Ô/áo mưa")
+        notes.append("Có mưa - nhớ mang ô")
     elif pop > 0.3:
-        items.append("O gap nho")
-        notes.append("Co the mua - mang o phong")
+        items.append("Ô gấp nhỏ")
+        notes.append("Có thể mưa - mang ô phòng")
 
     # Humidity additions
     if humidity > 90 and temp > 20:
-        notes.append("Nom am - tranh vai cotton, chon vai nhanh kho")
+        notes.append("Nồm ẩm - tránh vải cotton, chọn vải nhanh khô")
 
     # UV additions
     if uvi >= 8:
-        if "Kem chong nang SPF50+" not in items:
-            items.append("Kem chong nang SPF50+")
-        if "Kinh ram" not in items:
-            items.append("Kinh ram")
-        notes.append("UV rat cao - bao ve da")
+        if "Kem chống nắng SPF50+" not in items:
+            items.append("Kem chống nắng SPF50+")
+        if "Kính râm" not in items:
+            items.append("Kính râm")
+        notes.append("UV rất cao - bảo vệ da")
     elif uvi >= 5:
-        items.append("Kem chong nang SPF30+")
+        items.append("Kem chống nắng SPF30+")
 
     # Wind additions
     if wind > 8:
-        notes.append("Gio manh - tranh ao rong, chon ao sat nguoi")
+        notes.append("Gió mạnh - tránh áo rộng, chọn áo sát người")
 
     return {
         "clothing_items": items,

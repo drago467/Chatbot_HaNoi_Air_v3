@@ -52,10 +52,10 @@ def get_current_weather(ward_id: str) -> Dict[str, Any]:
         if result:
             # Mark as stale data
             result["data_stale"] = True
-            result["data_warning"] = "Du lieu cu, co the khong chinh xac"
-    
+            result["data_warning"] = "Dữ liệu cũ, có thể không chính xác"
+
     if not result:
-        return {"error": "no_data", "message": "Khong co du lieu thoi tiet hien tai"}
+        return {"error": "no_data", "message": "Không có dữ liệu thời tiết hiện tại"}
     
     # Add data age info
     data_age = result.pop('data_age', None)
@@ -171,7 +171,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
         }
     
     result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
-    result["note"] = "Du lieu luc 12:00 ICT (noon)"
+    result["note"] = "Dữ liệu lúc 12:00 ICT (noon)"
     
     return result
 
@@ -235,15 +235,15 @@ def get_daily_summary_data(ward_id: str, query_date) -> Dict[str, Any]:
     )
 
     if not row:
-        return {"error": "no_data", "message": f"Khong co du lieu ngay {query_date}"}
+        return {"error": "no_data", "message": f"Không có dữ liệu ngày {query_date}"}
 
     # Temp range + bien do nhiet
     temp_min = row.get("temp_min")
     temp_max = row.get("temp_max")
     temp_range = temp_max - temp_min if temp_min is not None and temp_max is not None else 0
-    bien_do_nhiet = f"Bien do nhiet {temp_range:.0f}C" if temp_range > 0 else ""
+    bien_do_nhiet = f"Biên độ nhiệt {temp_range:.0f}°C" if temp_range > 0 else ""
     if temp_range > 10:
-        bien_do_nhiet += " - Sang lanh, trua nong, nen mac ao khoac"
+        bien_do_nhiet += " - Sáng lạnh, trưa nóng, nên mặc áo khoác"
 
     # Feels like gap
     feels_like_day = row.get("feels_like_day")
@@ -253,13 +253,13 @@ def get_daily_summary_data(ward_id: str, query_date) -> Dict[str, Any]:
     # Rain assessment
     rain_total = row.get("rain_total") or 0
     if rain_total == 0:
-        rain_assessment = "Khong mua"
+        rain_assessment = "Không mưa"
     elif rain_total < 10:
-        rain_assessment = f"Mua nhe {rain_total:.1f}mm"
+        rain_assessment = f"Mưa nhẹ {rain_total:.1f}mm"
     elif rain_total < 25:
-        rain_assessment = f"Mua vua {rain_total:.1f}mm"
+        rain_assessment = f"Mưa vừa {rain_total:.1f}mm"
     else:
-        rain_assessment = f"Mua to {rain_total:.1f}mm - Nen mang o"
+        rain_assessment = f"Mưa to {rain_total:.1f}mm - Nên mang ô"
 
     # UV level
     uvi = row.get("uvi") or 0
@@ -335,7 +335,7 @@ def get_rain_timeline(ward_id: str, hours: int = 24) -> Dict[str, Any]:
     """, (ward_id, min(hours, 48)))
 
     if not rows:
-        return {"error": "no_data", "message": "Khong co du lieu du bao"}
+        return {"error": "no_data", "message": "Không có dữ liệu dự báo"}
 
     # Detect rain periods (pop >= 0.3 or weather_main contains Rain/Drizzle/Thunderstorm)
     rain_keywords = {"Rain", "Drizzle", "Thunderstorm"}
@@ -409,24 +409,24 @@ def get_temperature_trend(ward_id: str, days: int = 7) -> Dict[str, Any]:
     """, (ward_id, min(days, 8)))
 
     if len(rows) < 2:
-        return {"error": "no_data", "message": "Khong du du lieu de phan tich xu huong"}
+        return {"error": "no_data", "message": "Không đủ dữ liệu để phân tích xu hướng"}
 
     temps = [r["temp_avg"] for r in rows if r.get("temp_avg") is not None]
     if len(temps) < 2:
-        return {"error": "no_data", "message": "Khong du du lieu nhiet do"}
+        return {"error": "no_data", "message": "Không đủ dữ liệu nhiệt độ"}
 
     # Simple linear trend: slope = (last - first) / n
     slope = (temps[-1] - temps[0]) / (len(temps) - 1)
 
     if slope > 0.5:
         trend = "warming"
-        trend_vi = "Am dan len"
+        trend_vi = "Ấm dần lên"
     elif slope < -0.5:
         trend = "cooling"
-        trend_vi = "Lanh dan"
+        trend_vi = "Lạnh dần"
     else:
         trend = "stable"
-        trend_vi = "On dinh"
+        trend_vi = "Ổn định"
 
     # Find inflection point (day when trend reverses)
     inflection = None

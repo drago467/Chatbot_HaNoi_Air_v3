@@ -92,76 +92,76 @@ INTENT_TO_TOOLS = {
 
 class QualityScore(BaseModel):
     """LLM judge response for quality evaluation."""
-    reasoning: str = Field(description="Phan tich ngan gon 2-3 cau")
-    relevance: int = Field(ge=1, le=5, description="Muc do lien quan 1-5")
-    completeness: int = Field(ge=1, le=5, description="Muc do day du 1-5")
-    fluency: int = Field(ge=1, le=5, description="Muc do tu nhien 1-5")
+    reasoning: str = Field(description="Phân tích ngắn gọn 2-3 câu")
+    relevance: int = Field(ge=1, le=5, description="Mức độ liên quan 1-5")
+    completeness: int = Field(ge=1, le=5, description="Mức độ đầy đủ 1-5")
+    fluency: int = Field(ge=1, le=5, description="Mức độ tự nhiên 1-5")
 
 
 class FaithfulnessScore(BaseModel):
     """LLM judge response for faithfulness evaluation."""
-    reasoning: str = Field(description="Giai thich ngan")
-    faithfulness: int = Field(ge=1, le=5, description="Do trung thuc 1-5")
+    reasoning: str = Field(description="Giải thích ngắn")
+    faithfulness: int = Field(ge=1, le=5, description="Độ trung thực 1-5")
 
 
 # ---- LLM-as-Judge Prompts ----
 # Based on G-Eval (NeurIPS 2023) chain-of-thought approach
 # Scale 1-5 for highest human-LLM alignment (arxiv 2601.03444)
 
-JUDGE_PROMPT_QUALITY = """Ban la chuyen gia danh gia chatbot thoi tiet Ha Noi. Hay danh gia cau tra loi duoi day.
-Day la chatbot thoi tiet chuyen ve Ha Noi voi cac thuat ngu chuyen nganh nhu "nom am", "gio Lao", "ret dam", "suong mu".
+JUDGE_PROMPT_QUALITY = """Bạn là chuyên gia đánh giá chatbot thời tiết Hà Nội. Hãy đánh giá câu trả lời dưới đây.
+Đây là chatbot thời tiết chuyên về Hà Nội với các thuật ngữ chuyên ngành như "nồm ẩm", "gió Lào", "rét đậm", "sương mù".
 
-## Cau hoi cua nguoi dung:
+## Câu hỏi của người dùng:
 {question}
 
-## Cau tra loi cua chatbot:
+## Câu trả lời của chatbot:
 {response}
 
-## Huong dan danh gia:
-Hay suy nghi tung buoc truoc khi cho diem.
+## Hướng dẫn đánh giá:
+Hãy suy nghĩ từng bước trước khi cho điểm.
 
-**RELEVANCE (Muc do lien quan):**
-- 5: Tra loi chinh xac, dung trong tam cau hoi
-- 4: Tra loi dung nhung co thong tin thua nho
-- 3: Tra loi mot phan, bo sot diem quan trong
-- 2: Tra loi lac de hoac sai huong
-- 1: Hoan toan khong lien quan hoac tu choi tra loi
+**RELEVANCE (Mức độ liên quan):**
+- 5: Trả lời chính xác, đúng trọng tâm câu hỏi
+- 4: Trả lời đúng nhưng có thông tin thừa nhỏ
+- 3: Trả lời một phần, bỏ sót điểm quan trọng
+- 2: Trả lời lạc đề hoặc sai hướng
+- 1: Hoàn toàn không liên quan hoặc từ chối trả lời
 
-**COMPLETENESS (Day du):**
-- 5: Day du tat ca thong tin quan trong (nhiet do, do am, gio, mua, khuyen nghi neu can)
-- 4: Day du, thieu chi tiet nho khong quan trong
-- 3: Thieu mot so thong tin quan trong
-- 2: Thieu nhieu thong tin can thiet
-- 1: Gan nhu khong co thong tin huu ich
+**COMPLETENESS (Đầy đủ):**
+- 5: Đầy đủ tất cả thông tin quan trọng (nhiệt độ, độ ẩm, gió, mưa, khuyến nghị nếu cần)
+- 4: Đầy đủ, thiếu chi tiết nhỏ không quan trọng
+- 3: Thiếu một số thông tin quan trọng
+- 2: Thiếu nhiều thông tin cần thiết
+- 1: Gần như không có thông tin hữu ích
 
-**FLUENCY (Tu nhien):**
-- 5: Rat tu nhien, chuyen nghiep, de doc
-- 4: Tu nhien, co loi nho khong dang ke
-- 3: Chap nhan duoc, co vai cho guong
-- 2: Kho doc, nhieu loi ngu phap/tu vung
-- 1: Khong the doc duoc"""
+**FLUENCY (Tự nhiên):**
+- 5: Rất tự nhiên, chuyên nghiệp, dễ đọc
+- 4: Tự nhiên, có lỗi nhỏ không đáng kể
+- 3: Chấp nhận được, có vài chỗ gượng
+- 2: Khó đọc, nhiều lỗi ngữ pháp/từ vựng
+- 1: Không thể đọc được"""
 
-JUDGE_PROMPT_FAITHFULNESS = """Ban la chuyen gia kiem tra tinh chinh xac cua chatbot thoi tiet Ha Noi.
+JUDGE_PROMPT_FAITHFULNESS = """Bạn là chuyên gia kiểm tra tính chính xác của chatbot thời tiết Hà Nội.
 
-## Cau hoi cua nguoi dung:
+## Câu hỏi của người dùng:
 {question}
 
-## Du lieu thoi tiet thuc te (tu database):
+## Dữ liệu thời tiết thực tế (từ database):
 {tool_output}
 
-## Cau tra loi cua chatbot:
+## Câu trả lời của chatbot:
 {response}
 
-## Nhiem vu:
-Kiem tra xem cau tra loi co chua thong tin SAI hoac BIA DAT khong co trong du lieu thuc te khong.
-Luu y: chatbot co the lam tron so hoac dien giai du lieu, dieu do la chap nhan duoc.
+## Nhiệm vụ:
+Kiểm tra xem câu trả lời có chứa thông tin SAI hoặc BỊA ĐẶT không có trong dữ liệu thực tế không.
+Lưu ý: chatbot có thể làm tròn số hoặc diễn giải dữ liệu, điều đó là chấp nhận được.
 
-**FAITHFULNESS (Do trung thuc):**
-- 5: Tat ca thong tin deu chinh xac, khong co gi bia dat
-- 4: Hau het chinh xac, co 1 chi tiet nho khong chinh xac
-- 3: Co 1-2 thong tin sai hoac khong co trong du lieu
-- 2: Co nhieu thong tin sai hoac bia dat
-- 1: Phan lon thong tin sai hoac khong co co so"""
+**FAITHFULNESS (Độ trung thực):**
+- 5: Tất cả thông tin đều chính xác, không có gì bịa đặt
+- 4: Hầu hết chính xác, có 1 chi tiết nhỏ không chính xác
+- 3: Có 1-2 thông tin sai hoặc không có trong dữ liệu
+- 2: Có nhiều thông tin sai hoặc bịa đặt
+- 1: Phần lớn thông tin sai hoặc không có cơ sở"""
 
 
 # ---- Helper Functions ----

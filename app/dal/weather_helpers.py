@@ -24,11 +24,11 @@ def wind_deg_to_vietnamese(deg: Optional[int]) -> str:
         Vietnamese direction name
     """
     if deg is None:
-        return "Khong xac dinh"
-    
+        return "Không xác định"
+
     deg = deg % 360
     idx = round(deg / 45) % 8
-    directions = ['Bac', 'Dong Bac', 'Dong', 'Dong Nam', 'Nam', 'Tay Nam', 'Tay', 'Tay Bac']
+    directions = ['Bắc', 'Đông Bắc', 'Đông', 'Đông Nam', 'Nam', 'Tây Nam', 'Tây', 'Tây Bắc']
     return directions[idx]
 
 
@@ -81,21 +81,21 @@ def wind_beaufort_vietnamese(beaufort: int) -> str:
         Vietnamese description
     """
     descriptions = {
-        0: "Gio lang",
-        1: "Gio nhe",
-        2: "Gio nhe",
-        3: "Gio diu",
-        4: "Gio vua",
-        5: "Gio manh",
-        6: "Gio rat manh",
-        7: "Gio viet manh",
-        8: "Gio bao",
-        9: "Gio bao manh",
-        10: "Gio bao rat manh",
-        11: "Gio bao du doi",
-        12: "Bao"
+        0: "Gió lặng",
+        1: "Gió nhẹ",
+        2: "Gió nhẹ",
+        3: "Gió dịu",
+        4: "Gió vừa",
+        5: "Gió mạnh",
+        6: "Gió rất mạnh",
+        7: "Gió giật mạnh",
+        8: "Gió bão",
+        9: "Gió bão mạnh",
+        10: "Gió bão rất mạnh",
+        11: "Gió bão dữ dội",
+        12: "Bão"
     }
-    return descriptions.get(beaufort, "Khong xac dinh")
+    return descriptions.get(beaufort, "Không xác định")
 
 
 def get_uv_status(uvi: Optional[float]) -> str:
@@ -108,16 +108,16 @@ def get_uv_status(uvi: Optional[float]) -> str:
         Vietnamese UV status
     """
     if uvi is None:
-        return "Khong xac dinh"
+        return "Không xác định"
     if uvi <= 2:
-        return "Thap - An toan"
+        return "Thấp - An toàn"
     if uvi <= 5:
-        return "Trung binh - Can che nang"
+        return "Trung bình - Cần che nắng"
     if uvi <= 7:
-        return "Cao - Han che ra ngoai"
+        return "Cao - Hạn chế ra ngoài"
     if uvi <= 10:
-        return "Rat cao - Khong nen ra ngoai"
-    return "Cuc cao - Nguy hiem"
+        return "Rất cao - Không nên ra ngoài"
+    return "Cực cao - Nguy hiểm"
 
 
 def get_dew_point_status(dew_point: Optional[float]) -> str:
@@ -130,18 +130,18 @@ def get_dew_point_status(dew_point: Optional[float]) -> str:
         Vietnamese dew point status
     """
     if dew_point is None:
-        return "Khong xac dinh"
+        return "Không xác định"
     if dew_point < 10:
-        return "Kho rao, de chiu"
+        return "Khô ráo, dễ chịu"
     if dew_point < 15:
-        return "Hoi kho, de chiu"
+        return "Hơi khô, dễ chịu"
     if dew_point < 18:
-        return "Bat dau am"
+        return "Bắt đầu ẩm"
     if dew_point < 21:
-        return "Am, oi buc"
+        return "Ẩm, oi bức"
     if dew_point < 24:
-        return "Rat am, kho chiu"
-    return "Nguy hiem - Nom am"
+        return "Rất ẩm, khó chịu"
+    return "Nguy hiểm - Nồm ẩm"
 
 
 def get_pressure_status(pressure: Optional[int]) -> str:
@@ -154,16 +154,16 @@ def get_pressure_status(pressure: Optional[int]) -> str:
         Vietnamese pressure status
     """
     if pressure is None:
-        return "Khong xac dinh"
+        return "Không xác định"
     if pressure < 1000:
-        return "Ap thap"
+        return "Áp thấp"
     if pressure < 1010:
-        return "Trung binh"
+        return "Trung bình"
     if pressure < 1020:
-        return "Ap trung binh cao"
+        return "Áp trung bình cao"
     if pressure < 1030:
-        return "Ap cao"
-    return "Ap rat cao"
+        return "Áp cao"
+    return "Áp rất cao"
 
 
 def get_feels_like_status(temp: Optional[float], feels_like: Optional[float]) -> str:
@@ -177,13 +177,13 @@ def get_feels_like_status(temp: Optional[float], feels_like: Optional[float]) ->
         Vietnamese comparison
     """
     if temp is None or feels_like is None:
-        return "Khong xac dinh"
+        return "Không xác định"
     diff = feels_like - temp
     if diff > 3:
-        return "Nong hon thuc te"
+        return "Nóng hơn thực tế"
     if diff < -3:
-        return "Lanh hon thuc te"
-    return "Nhu thuc te"
+        return "Lạnh hơn thực tế"
+    return "Như thực tế"
 
 
 def weather_main_to_vietnamese(weather_main: str) -> str:
@@ -197,47 +197,47 @@ def weather_main_to_vietnamese(weather_main: str) -> str:
     """
     translations = {
         # 8xx - May (Clouds)
-        "Clear": "Troi quang, khong may",
-        "Clouds": "Troi may",
-        "Few clouds": "It may, troi trong",
-        "Scattered clouds": "May rai rac",
-        "Broken clouds": "Nhieu may",
-        "Overcast": "Troi u am, day may",
-        
+        "Clear": "Trời quang, không mây",
+        "Clouds": "Trời mây",
+        "Few clouds": "Ít mây, trời trong",
+        "Scattered clouds": "Mây rải rác",
+        "Broken clouds": "Nhiều mây",
+        "Overcast": "Trời u ám, đầy mây",
+
         # 2xx - Gio (Thunderstorm) - Mua dong mua he
-        "Thunderstorm": "Co giong kem mua",
-        
+        "Thunderstorm": "Có giông kèm mưa",
+
         # 3xx - Mua phun (Drizzle) - Mua mua xuan
-        "Drizzle": "Mua phun nhe",
-        
-        # 5xx - Mua (Rain) 
-        "Rain": "Co mua",
-        "Light rain": "Mua nho",
-        "Moderate rain": "Mua vua",
-        "Heavy intensity rain": "Mua to",
-        "Very heavy rain": "Mua rat to",
-        "Extreme rain": "Mua cuc lon",
-        "Freezing rain": "Mua dong bang (vung nui cao)",
-        
+        "Drizzle": "Mưa phùn nhẹ",
+
+        # 5xx - Mua (Rain)
+        "Rain": "Có mưa",
+        "Light rain": "Mưa nhỏ",
+        "Moderate rain": "Mưa vừa",
+        "Heavy intensity rain": "Mưa to",
+        "Very heavy rain": "Mưa rất to",
+        "Extreme rain": "Mưa cực lớn",
+        "Freezing rain": "Mưa đóng băng (vùng núi cao)",
+
         # 7xx - Khi quyen (Atmosphere)
-        "Mist": "Suong mu nhe (tam nhin 1-2km)",
-        "Fog": "Suong mu day (tam nhin < 1km)",
-        "Haze": "Co mu (tam nhin giam do bui/am)",
-        "Smoke": "Co khoi (co the do dot ram)",
-        "Dust": "Co bui",
-        "Sand": "Co cat",
-        "Ash": "Co tro",
-        "Squall": "Gio giat",
-        "Tornado": "Thien tai",
-        
+        "Mist": "Sương mù nhẹ (tầm nhìn 1-2km)",
+        "Fog": "Sương mù dày (tầm nhìn < 1km)",
+        "Haze": "Có mù (tầm nhìn giảm do bụi/ẩm)",
+        "Smoke": "Có khói (có thể do đốt rơm)",
+        "Dust": "Có bụi",
+        "Sand": "Có cát",
+        "Ash": "Có tro",
+        "Squall": "Gió giật",
+        "Tornado": "Thiên tai",
+
         # Snow (hiem vung nui cao)
-        "Snow": "Tuyet (vung nui cao)",
-        "Light snow": "Tuyet nhe",
-        "Heavy snow": "Tuyet to",
-        "Sleet": "Mua dong (vung nui cao)",
-        
+        "Snow": "Tuyết (vùng núi cao)",
+        "Light snow": "Tuyết nhẹ",
+        "Heavy snow": "Tuyết to",
+        "Sleet": "Mưa đông (vùng núi cao)",
+
         # Additional
-        "Sky is clear": "Troi quang",
+        "Sky is clear": "Trời quang",
     }
     return translations.get(weather_main, weather_main)
 
@@ -273,19 +273,19 @@ def compute_heat_index(temp_c: Optional[float], humidity: Optional[int]) -> Opti
     
     # Determine warning level
     if hi_c >= 52:
-        level = "Cuc nguy hiem"
+        level = "Cực nguy hiểm"
         description = "Say nan/soc nhiet gan nhu chắc chắn. Tránh ra ngoài."
     elif hi_c >= 40:
-        level = "Nguy hiem"
+        level = "Nguy hiểm"
         description = "Say nan rất có thể xảy ra. Hạn chế hoạt động ngoài trời."
     elif hi_c >= 33:
-        level = "Canh bao cao"
+        level = "Cảnh báo cao"
         description = "Có thể say nắng, chuột rút. Uống nhiều nước."
     elif hi_c >= 27:
-        level = "Than trong"
+        level = "Thận trọng"
         description = "Mệt mỏi có thể xảy ra khi hoạt động kéo dài."
     else:
-        level = "An toan"
+        level = "An toàn"
         description = "Hoạt động ngoài trời bình thường."
     
     return {
@@ -322,16 +322,16 @@ def compute_wind_chill(temp_c: Optional[float], wind_speed_ms: Optional[float]) 
     
     # Determine warning level
     if WC <= -20:
-        level = "Cuc nguy hiem"
+        level = "Cực nguy hiểm"
         description = "Nguy hiểm cho sức khỏe. Ở trong nhà."
     elif WC <= -10:
-        level = "Nguy hiem"
+        level = "Nguy hiểm"
         description = "Nguy cơ hạ thân nhiệt. Hạn chế ra ngoài."
     elif WC <= 0:
-        level = "Rat lanh"
+        level = "Rất lạnh"
         description = "Cơ thể mất nhiệt nhanh. Mặc đủ ấm."
     else:
-        level = "Lanh"
+        level = "Lạnh"
         description = "Có thể lạnh. Mặc áo ấm."
     
     return {

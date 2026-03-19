@@ -16,15 +16,11 @@ import sys
 import argparse
 from datetime import datetime
 
-# Add parent directory to path for imports
-sys.path.insert(0, '/c/Users/X1 gen 9/Downloads/Chatbot_HanoiAir')
-
 from app.scripts.aggregate_weather import (
     aggregate_district_hourly,
     aggregate_city_hourly,
     aggregate_district_daily,
     aggregate_city_daily,
-    run_all_aggregations,
 )
 
 

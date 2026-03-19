@@ -101,3 +101,9 @@ timestamp,session_id,turn_number,tool_name,tool_input,tool_output,success,execut
 2026-03-19T08:25:30.774157+07:00,eval_2_ce6c6c71,0,get_daily_forecast,{'days': 1},,True,0
 2026-03-19T08:25:30.775190+07:00,eval_2_ce6c6c71,0,get_daily_forecast,{'days': 1},,True,0
 2026-03-19T08:25:40.408552+07:00,eval_3_26537a1e,0,get_clothing_advice,{},,True,0
+2026-03-19T09:41:22.456600+07:00,test_diac_1,0,get_district_weather,{'district_name': 'Quận Cầu Giấy'},,True,0
+2026-03-19T09:41:50.093398+07:00,test_diac_2,0,get_current_weather,{'location_hint': 'Đống Đa'},,True,0
+2026-03-19T09:41:50.094439+07:00,test_diac_2,0,resolve_location,{'location_hint': 'Đống Đa'},,True,0
+2026-03-19T09:41:50.094439+07:00,test_diac_2,0,get_district_weather,{'district_name': 'Quận Đống Đa'},,True,0
+2026-03-19T09:41:50.094439+07:00,test_diac_2,0,get_clothing_advice,{'ward_id': 'ID_00169'},,True,0
+2026-03-19T09:41:50.095399+07:00,test_diac_2,0,get_ward_ranking_in_district,{'district_name': 'Quận Đống Đa'},,True,0

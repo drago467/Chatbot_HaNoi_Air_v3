@@ -81,7 +81,7 @@ def get_district_current_weather(district_name: str) -> Dict[str, Any]:
             result["data_stale"] = True
 
     if not result:
-        return {"error": "no_data", "message": f"Khong co du lieu thoi tiet cho {district_name}"}
+        return {"error": "no_data", "message": f"Không có dữ liệu thời tiết cho {district_name}"}
 
     data_age = result.pop('data_age', None)
     if data_age:
@@ -154,7 +154,7 @@ def get_city_current_weather() -> Dict[str, Any]:
             result["data_stale"] = True
 
     if not result:
-        return {"error": "no_data", "message": "Khong co du lieu thoi tiet Ha Noi"}
+        return {"error": "no_data", "message": "Không có dữ liệu thời tiết Hà Nội"}
 
     data_age = result.pop('data_age', None)
     if data_age:
@@ -163,7 +163,7 @@ def get_city_current_weather() -> Dict[str, Any]:
 
     result["time_ict"] = format_ict(result.get("ts_utc"))
     result["level"] = "city"
-    result["city_name"] = "Ha Noi"
+    result["city_name"] = "Hà Nội"
     _add_wind_dir(result)
     return result
 
@@ -182,7 +182,7 @@ def get_city_hourly_forecast(hours: int = 24) -> List[Dict[str, Any]]:
     for r in results:
         r["time_ict"] = format_ict(r.get("ts_utc"))
         r["level"] = "city"
-        r["city_name"] = "Ha Noi"
+        r["city_name"] = "Hà Nội"
         _add_wind_dir(r)
     return results
 
@@ -200,7 +200,7 @@ def get_city_daily_forecast(days: int = 7) -> List[Dict[str, Any]]:
 
     for r in results:
         r["level"] = "city"
-        r["city_name"] = "Ha Noi"
+        r["city_name"] = "Hà Nội"
         _add_wind_dir(r)
     return results
 

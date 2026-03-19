@@ -29,7 +29,7 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     if len(results) != 2:
         return {
             "error": "missing_data",
-            "message": f"Khong du lieu (chi co {len(results)}/2 wards)"
+            "message": f"Không đủ dữ liệu (chỉ có {len(results)}/2 wards)"
         }
     
     # Map results by ward_id to maintain input order
@@ -38,7 +38,7 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     w2 = results_by_id.get(ward_id2)
     
     if not w1 or not w2:
-        return {"error": "missing_data", "message": "Khong tim thay du lieu cho 1 trong 2 dia diem"}
+        return {"error": "missing_data", "message": "Không tìm thấy dữ liệu cho 1 trong 2 địa điểm"}
     
     # Add Vietnamese wind direction
     w1["wind_direction_vi"] = wind_deg_to_vietnamese(w1.get("wind_deg"))
@@ -63,11 +63,11 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     
     # Generate comparison text with location names
     if abs(temp_diff) <= 2:
-        temp_comparison = "Nhiet do tuong tu"
+        temp_comparison = "Nhiệt độ tương tự"
     elif temp_diff > 0:
-        temp_comparison = f"{name1} nong hon {name2} {abs(temp_diff):.1f}°C"
+        temp_comparison = f"{name1} nóng hơn {name2} {abs(temp_diff):.1f}°C"
     else:
-        temp_comparison = f"{name2} nong hon {name1} {abs(temp_diff):.1f}°C"
+        temp_comparison = f"{name2} nóng hơn {name1} {abs(temp_diff):.1f}°C"
     
     return {
         "location1": w1,
@@ -107,7 +107,7 @@ def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
     if len(results) < 2:
         return {
             "error": "not_enough_data",
-            "message": "Can co du lieu it nhat 2 ngay"
+            "message": "Cần có dữ liệu ít nhất 2 ngày"
         }
     
     today, previous = results[0], results[1]  # results[0] is newest (ORDER BY DESC)
@@ -121,7 +121,7 @@ def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
     if hasattr(prev_date, 'date'):
         prev_date = prev_date.date()
     days_diff = (today_date - prev_date).days if today_date and prev_date else 1
-    day_label = f"{days_diff} ngay truoc" if days_diff > 1 else "hom qua"
+    day_label = f"{days_diff} ngày trước" if days_diff > 1 else "hôm qua"
     
     # Calculate changes
     if today.get("temp_avg") is None or previous.get("temp_avg") is None:
@@ -132,14 +132,14 @@ def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
     changes = []
     
     if temp_diff > 2:
-        changes.append(f"Nhiet do tang {temp_diff:.1f}°C so voi {day_label}")
+        changes.append(f"Nhiệt độ tăng {temp_diff:.1f}°C so với {day_label}")
     elif temp_diff < -2:
-        changes.append(f"Nhiet do giam {abs(temp_diff):.1f}°C so voi {day_label}")
-    
+        changes.append(f"Nhiệt độ giảm {abs(temp_diff):.1f}°C so với {day_label}")
+
     if rain_diff > 5:
-        changes.append(f"Mua nhieu hon {day_label}")
+        changes.append(f"Mưa nhiều hơn {day_label}")
     elif rain_diff < -5:
-        changes.append(f"Mua it hon {day_label}")
+        changes.append(f"Mưa ít hơn {day_label}")
     
     return {
         "today": today,

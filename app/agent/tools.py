@@ -24,19 +24,19 @@ def resolve_location(location_hint: str) -> dict:
 # ============== Tool 2: get_current_weather ==============
 
 class GetCurrentWeatherInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None, description="ward_id (vi du: ID_00169)")
+    ward_id: Optional[str] = Field(default=None, description="ward_id (ví dụ: ID_00169)")
     location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=GetCurrentWeatherInput)
 def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
-    """Lay thoi tiet HIEN TAI (real-time) cho mot phuong/xa.
+    """Lấy thời tiết HIỆN TẠI (real-time) cho một phường/xã.
 
-    DUNG KHI: user hoi "bay gio", "hien tai", "dang", "luc nay".
-    KHONG DUNG KHI: hoi ve tuong lai (dung get_hourly_forecast),
-    hoi ca ngay (dung get_daily_summary), hoi ve quan/TP (dung get_district_weather/get_city_weather).
-    Luu y: du lieu hien tai KHONG co pop (xac suat mua). Neu user hoi "co mua khong?",
-    check weather_main + goi them get_hourly_forecast 1-2h.
+    DÙNG KHI: user hỏi "bây giờ", "hiện tại", "đang", "lúc này".
+    KHÔNG DÙNG KHI: hỏi về tương lai (dùng get_hourly_forecast),
+    hỏi cả ngày (dùng get_daily_summary), hỏi về quận/TP (dùng get_district_weather/get_city_weather).
+    Lưu ý: dữ liệu hiện tại KHÔNG có pop (xác suất mưa). Nếu user hỏi "có mưa không?",
+    check weather_main + gọi thêm get_hourly_forecast 1-2h.
     """
     from app.agent.utils import auto_resolve_location, enrich_weather_response
     from app.dal import get_current_weather as dal_get_current_weather
@@ -66,12 +66,12 @@ class GetHourlyForecastInput(BaseModel):
 
 @tool(args_schema=GetHourlyForecastInput)
 def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Lay du bao thoi tiet THEO GIO (1-48 gio toi).
+    """Lấy dự báo thời tiết THEO GIỜ (1-48 giờ tới).
 
-    DUNG KHI: user hoi ve chieu nay, toi nay, sang mai, vai gio toi,
-    mua luc may gio, nhiet do toi nay, gio dem nay, khoang thoi gian cu the.
-    KHONG DUNG KHI: hoi ca ngay mai/tuan nay (dung get_daily_summary hoac get_weather_period),
-    hoi hien tai (dung get_current_weather), hoi mua den bao gio (dung get_rain_timeline).
+    DÙNG KHI: user hỏi về chiều nay, tối nay, sáng mai, vài giờ tới,
+    mưa lúc mấy giờ, nhiệt độ tối nay, gió đêm nay, khoảng thời gian cụ thể.
+    KHÔNG DÙNG KHI: hỏi cả ngày mai/tuần này (dùng get_daily_summary hoặc get_weather_period),
+    hỏi hiện tại (dùng get_current_weather), hỏi mưa đến bao giờ (dùng get_rain_timeline).
     """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_hourly_forecast as dal_get_hourly_forecast
@@ -99,11 +99,11 @@ class GetDailyForecastInput(BaseModel):
 
 @tool(args_schema=GetDailyForecastInput)
 def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int = 7) -> dict:
-    """Lay du bao thoi tiet THEO NGAY (1-8 ngay toi) cho mot phuong/xa.
+    """Lấy dự báo thời tiết THEO NGÀY (1-8 ngày tới) cho một phường/xã.
 
-    DUNG KHI: user hoi "ngay mai", "cuoi tuan", "3 ngay toi" cho mot phuong cu the.
-    KHONG DUNG KHI: hoi ve quan/TP (dung get_district_daily_forecast/get_city_daily_forecast),
-    hoi theo gio (dung get_hourly_forecast).
+    DÙNG KHI: user hỏi "ngày mai", "cuối tuần", "3 ngày tới" cho một phường cụ thể.
+    KHÔNG DÙNG KHI: hỏi về quận/TP (dùng get_district_daily_forecast/get_city_daily_forecast),
+    hỏi theo giờ (dùng get_hourly_forecast).
     """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_daily_forecast as dal_get_daily_forecast
@@ -131,10 +131,10 @@ class GetWeatherHistoryInput(BaseModel):
 
 @tool(args_schema=GetWeatherHistoryInput)
 def get_weather_history(ward_id: str = None, location_hint: str = None, date: str = None) -> dict:
-    """Lay thoi tiet cua mot NGAY trong QUA KHU.
+    """Lấy thời tiết của một NGÀY trong QUÁ KHỨ.
 
-    DUNG KHI: user hoi "hom qua", "tuan truoc", "ngay 15/3".
-    Luu y: du lieu lich su THIEU visibility va UV - khong hua tra cac thong so nay.
+    DÙNG KHI: user hỏi "hôm qua", "tuần trước", "ngày 15/3".
+    Lưu ý: dữ liệu lịch sử THIẾU visibility và UV - không hứa trả các thông số này.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_weather_history as dal_get_weather_history
@@ -228,7 +228,7 @@ def get_activity_advice(activity: str, ward_id: str = None, location_hint: str =
 # ============== Tool 9: get_weather_alerts ==============
 
 class GetWeatherAlertsInput(BaseModel):
-    ward_id: str = Field(default="all", description="ward_id (mac dinh all)")
+    ward_id: str = Field(default="all", description="ward_id (mặc định all)")
 
 
 @tool(args_schema=GetWeatherAlertsInput)
@@ -475,19 +475,19 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
 
 class GetDistrictWeatherInput(BaseModel):
     district_name: str = Field(
-        description="Ten quan/huyen tai Ha Noi. Vi du: 'Quan Cau Giay', 'Huyen Ba Vi', 'Dong Da'"
+        description="Tên quận/huyện tại Hà Nội. Ví dụ: 'Quận Cầu Giấy', 'Huyện Ba Vì', 'Đống Đa'"
     )
-    hours: int = Field(default=24, description="So gio du bao (1-48)")
+    hours: int = Field(default=24, description="Số giờ dự báo (1-48)")
 
 
 @tool(args_schema=GetDistrictWeatherInput)
 def get_district_weather(district_name: str, hours: int = 24) -> dict:
-    """Lay thoi tiet hien tai va du bao theo gio cho mot quan/huyen.
+    """Lấy thời tiết hiện tại và dự báo theo giờ cho một quận/huyện.
 
-    DUNG KHI: user hoi ve thoi tiet mot quan/huyen cu the.
-    Du lieu tong hop tu tat ca phuong/xa, bao gom: nhiet do, do am, gio, ap suat,
-    diem suong, UV, may, tam nhin, xac suat mua, huong gio.
-    Co enrichment: heat_index, wind_chill, seasonal_comparison, phenomena, temp_spread.
+    DÙNG KHI: user hỏi về thời tiết một quận/huyện cụ thể.
+    Dữ liệu tổng hợp từ tất cả phường/xã, bao gồm: nhiệt độ, độ ẩm, gió, áp suất,
+    điểm sương, UV, mây, tầm nhìn, xác suất mưa, hướng gió.
+    Có enrichment: heat_index, wind_chill, seasonal_comparison, phenomena, temp_spread.
     """
     from app.dal.weather_aggregate_dal import (
         get_district_current_weather,
@@ -527,11 +527,11 @@ class GetCityWeatherInput(BaseModel):
 
 @tool(args_schema=GetCityWeatherInput)
 def get_city_weather(hours: int = 24) -> dict:
-    """Lay thoi tiet hien tai va du bao cho toan TP Ha Noi.
+    """Lấy thời tiết hiện tại và dự báo cho toàn TP Hà Nội.
 
-    DUNG KHI: user hoi "thoi tiet Ha Noi", "Ha Noi hom nay the nao".
-    Du lieu tong hop tu 126 phuong/xa, co enrichment day du.
-    Nen ket hop voi get_district_ranking de cho biet quan nao nong/lanh nhat.
+    DÙNG KHI: user hỏi "thời tiết Hà Nội", "Hà Nội hôm nay thế nào".
+    Dữ liệu tổng hợp từ 126 phường/xã, có enrichment đầy đủ.
+    Nên kết hợp với get_district_ranking để cho biết quận nào nóng/lạnh nhất.
     """
     from app.dal.weather_aggregate_dal import (
         get_city_current_weather,
@@ -633,19 +633,19 @@ def get_city_daily_forecast(days: int = 7) -> dict:
 class GetDistrictRankingInput(BaseModel):
     metric: str = Field(
         default="nhiet_do",
-        description="Metric: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may"
+        description="Chỉ số: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may"
     )
-    order: str = Field(default="cao_nhat", description="cao_nhat hoac thap_nhat")
-    limit: int = Field(default=5, description="So luong ket qua (1-30)")
+    order: str = Field(default="cao_nhat", description="cao_nhat hoặc thap_nhat")
+    limit: int = Field(default=5, description="Số lượng kết quả (1-30)")
 
 
 @tool(args_schema=GetDistrictRankingInput)
 def get_district_ranking(metric: str = "nhiet_do", order: str = "cao_nhat", limit: int = 5) -> dict:
-    """Xep hang cac quan/huyen theo chi so thoi tiet.
+    """Xếp hạng các quận/huyện theo chỉ số thời tiết.
 
-    DUNG KHI: user hoi "quan nao nong nhat?", "top 5 quan am nhat?",
-    "noi nao gio manh nhat Ha Noi?", "quan nao mua nhieu nhat?".
-    Metric: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may.
+    DÙNG KHI: user hỏi "quận nào nóng nhất?", "top 5 quận ẩm nhất?",
+    "nơi nào gió mạnh nhất Hà Nội?", "quận nào mưa nhiều nhất?".
+    Chỉ số: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may.
     """
     from app.dal.weather_aggregate_dal import get_district_rankings
     return get_district_rankings(metric, order, limit)
@@ -654,20 +654,20 @@ def get_district_ranking(metric: str = "nhiet_do", order: str = "cao_nhat", limi
 # ============== Tool 19: get_ward_ranking_in_district ==============
 
 class GetWardRankingInput(BaseModel):
-    district_name: str = Field(description="Ten quan/huyen. Vi du: 'Quan Cau Giay'")
-    metric: str = Field(default="nhiet_do", description="Metric: nhiet_do, do_am, gio, uvi")
-    order: str = Field(default="cao_nhat", description="cao_nhat hoac thap_nhat")
-    limit: int = Field(default=10, description="So luong ket qua")
+    district_name: str = Field(description="Tên quận/huyện. Ví dụ: 'Quận Cầu Giấy'")
+    metric: str = Field(default="nhiet_do", description="Chỉ số: nhiet_do, do_am, gio, uvi")
+    order: str = Field(default="cao_nhat", description="cao_nhat hoặc thap_nhat")
+    limit: int = Field(default=10, description="Số lượng kết quả")
 
 
 @tool(args_schema=GetWardRankingInput)
 def get_ward_ranking_in_district(
     district_name: str, metric: str = "nhiet_do", order: str = "cao_nhat", limit: int = 10
 ) -> dict:
-    """Xep hang cac phuong/xa trong mot quan/huyen theo chi so thoi tiet.
+    """Xếp hạng các phường/xã trong một quận/huyện theo chỉ số thời tiết.
 
-    DUNG KHI: user hoi "phuong nao o Cau Giay nong nhat?",
-    "top phuong mua nhieu nhat quan Dong Da?".
+    DÙNG KHI: user hỏi "phường nào ở Cầu Giấy nóng nhất?",
+    "top phường mưa nhiều nhất quận Đống Đa?".
     """
     from app.dal.weather_aggregate_dal import get_ward_rankings_in_district
     from app.agent.utils import auto_resolve_location
@@ -683,19 +683,19 @@ def get_ward_ranking_in_district(
 
 class GetRainTimelineInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten dia diem")
-    hours: int = Field(default=24, description="So gio scan (1-48)")
+    location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
+    hours: int = Field(default=24, description="Số giờ scan (1-48)")
 
 
 @tool(args_schema=GetRainTimelineInput)
 def get_rain_timeline(
     ward_id: Optional[str] = None, location_hint: Optional[str] = None, hours: int = 24
 ) -> dict:
-    """Phan tich timeline mua/tanh tu du bao theo gio.
+    """Phân tích timeline mưa/tạnh từ dự báo theo giờ.
 
-    DUNG KHI: user hoi "mua den bao gio?", "may gio tanh?",
-    "khi nao mua?", "ngay mai mua vao khoang may gio?".
-    Tra ve: cac khoang thoi gian mua, thoi diem mua tiep theo, thoi diem tanh.
+    DÙNG KHI: user hỏi "mưa đến bao giờ?", "mấy giờ tạnh?",
+    "khi nào mưa?", "ngày mai mưa vào khoảng mấy giờ?".
+    Trả về: các khoảng thời gian mưa, thời điểm mưa tiếp theo, thời điểm tạnh.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_dal import get_rain_timeline as dal_rain_timeline
@@ -714,11 +714,11 @@ def get_rain_timeline(
 
 class GetBestTimeInput(BaseModel):
     activity: str = Field(
-        description="Hoat dong: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc, phoi_do"
+        description="Hoạt động: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc, phoi_do"
     )
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten dia diem")
-    hours: int = Field(default=24, description="So gio scan (1-48)")
+    location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
+    hours: int = Field(default=24, description="Số giờ scan (1-48)")
 
 
 @tool(args_schema=GetBestTimeInput)
@@ -726,11 +726,11 @@ def get_best_time(
     activity: str, ward_id: Optional[str] = None,
     location_hint: Optional[str] = None, hours: int = 24
 ) -> dict:
-    """Tim thoi diem tot nhat trong ngay cho mot hoat dong.
+    """Tìm thời điểm tốt nhất trong ngày cho một hoạt động.
 
-    DUNG KHI: user hoi "may gio chay bo tot nhat?", "luc nao chup anh dep nhat?",
-    "khi nao phoi do tot?", "gio nao nen di picnic?".
-    Tra ve: top 5 gio tot nhat va 3 gio xau nhat voi diem so.
+    DÙNG KHI: user hỏi "mấy giờ chạy bộ tốt nhất?", "lúc nào chụp ảnh đẹp nhất?",
+    "khi nào phơi đồ tốt?", "giờ nào nên đi picnic?".
+    Trả về: top 5 giờ tốt nhất và 3 giờ xấu nhất với điểm số.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.activity_dal import get_best_time_for_activity
@@ -756,19 +756,19 @@ def get_best_time(
 
 class GetClothingAdviceInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten dia diem")
-    hours_ahead: int = Field(default=0, description="So gio phia truoc (0=hien tai)")
+    location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
+    hours_ahead: int = Field(default=0, description="Số giờ phía trước (0=hiện tại)")
 
 
 @tool(args_schema=GetClothingAdviceInput)
 def get_clothing_advice(
     ward_id: Optional[str] = None, location_hint: Optional[str] = None, hours_ahead: int = 0
 ) -> dict:
-    """Tu van trang phuc dua tren thoi tiet.
+    """Tư vấn trang phục dựa trên thời tiết.
 
-    DUNG KHI: user hoi "hom nay mac gi?", "can ao khoac khong?",
-    "can mang o khong?", "mac gi di lam?".
-    Tra ve: danh sach quan ao, ghi chu, thong tin thoi tiet.
+    DÙNG KHI: user hỏi "hôm nay mặc gì?", "cần áo khoác không?",
+    "cần mang ô không?", "mặc gì đi làm?".
+    Trả về: danh sách quần áo, ghi chú, thông tin thời tiết.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.activity_dal import get_clothing_advice as dal_clothing
@@ -793,19 +793,19 @@ def get_clothing_advice(
 
 class GetTemperatureTrendInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten dia diem")
-    days: int = Field(default=7, description="So ngay phan tich (2-8)")
+    location_hint: Optional[str] = Field(default=None, description="Tên địa điểm")
+    days: int = Field(default=7, description="Số ngày phân tích (2-8)")
 
 
 @tool(args_schema=GetTemperatureTrendInput)
 def get_temperature_trend(
     ward_id: Optional[str] = None, location_hint: Optional[str] = None, days: int = 7
 ) -> dict:
-    """Phan tich xu huong nhiet do trong vai ngay toi.
+    """Phân tích xu hướng nhiệt độ trong vài ngày tới.
 
-    DUNG KHI: user hoi "khi nao am len?", "may ngay toi co lanh hon khong?",
-    "xu huong nhiet do tuan nay?", "bao gio het ret?".
-    Tra ve: xu huong (warming/cooling/stable), ngay nong/lanh nhat, diem ngoat.
+    DÙNG KHI: user hỏi "khi nào ấm lên?", "mấy ngày tới có lạnh hơn không?",
+    "xu hướng nhiệt độ tuần này?", "bao giờ hết rét?".
+    Trả về: xu hướng (warming/cooling/stable), ngày nóng/lạnh nhất, điểm ngoặt.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_dal import get_temperature_trend as dal_temp_trend

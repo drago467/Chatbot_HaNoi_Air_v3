@@ -12,12 +12,13 @@ from psycopg2.extras import execute_values
 
 from app.core.key_manager import OpenWeatherKeyManager
 from app.core.logging_config import get_logger, setup_logging
-from app.db.connection import get_db_connection
+from app.db.connection import get_db_connection, release_connection
 from app.scripts.aggregate_weather import (
     aggregate_district_hourly,
     aggregate_city_hourly,
     aggregate_district_daily,
     aggregate_city_daily,
+    _WIND_DEG_CIRCULAR_MEAN,
 )
 
 setup_logging()
@@ -432,11 +433,11 @@ class OpenWeatherAsyncIngestor:
                             "start": int(curr_start.timestamp()),
                             "end": int(curr_end.timestamp())
                         }
-                    tasks.append(
-                        self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
-                    )
-                    task_meta.append({"ward_id": w["ward_id"]})
-                    curr_start = curr_end
+                        tasks.append(
+                            self.fetch_json(session, f"{self.base_url}/air_pollution/history", params, "pollution")
+                        )
+                        task_meta.append({"ward_id": w["ward_id"]})
+                        curr_start = curr_end
 
             logger.info(f"History backfill: {len(tasks)} API chunks across {len(wards)} wards")
             results = await asyncio.gather(*tasks)
@@ -570,7 +571,7 @@ class OpenWeatherAsyncIngestor:
                 with conn.cursor() as cur:
                     # Aggregate query: group hourly history by date
                     # Note: We use ts_utc at noon as proxy for daily temp
-                    agg_sql = """
+                    agg_sql = f"""
                         INSERT INTO fact_weather_daily (
                             ward_id, date,
                             temp_min, temp_max, temp_avg,
@@ -580,7 +581,7 @@ class OpenWeatherAsyncIngestor:
                             weather_main, weather_description,
                             data_kind, source, source_job
                         )
-                        SELECT 
+                        SELECT
                             ward_id,
                             (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date as date,
                             MIN(temp) as temp_min,
@@ -590,7 +591,7 @@ class OpenWeatherAsyncIngestor:
                             AVG(pressure)::int as pressure,
                             AVG(dew_point) as dew_point,
                             AVG(wind_speed) as wind_speed,
-                            (array_agg(wind_deg ORDER BY wind_speed DESC))[1] as wind_deg,
+                            {_WIND_DEG_CIRCULAR_MEAN} as wind_deg,
                             AVG(clouds)::int as clouds,
                             MAX(pop) as pop,
                             SUM(COALESCE(rain_1h, 0)) as rain_total,
@@ -600,10 +601,10 @@ class OpenWeatherAsyncIngestor:
                             'history',
                             'openweather',
                             'history_aggregation'
-                        FROM fact_weather_hourly
-                        WHERE data_kind = 'history'
-                          AND ts_utc > NOW() - INTERVAL '30 days'
-                        GROUP BY ward_id, (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
+                        FROM fact_weather_hourly w
+                        WHERE w.data_kind = 'history'
+                          AND w.ts_utc > NOW() - INTERVAL '30 days'
+                        GROUP BY w.ward_id, (w.ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
                         ON CONFLICT (ward_id, date) DO UPDATE SET
                             temp_min = EXCLUDED.temp_min,
                             temp_max = EXCLUDED.temp_max,
@@ -625,13 +626,11 @@ class OpenWeatherAsyncIngestor:
                     """
                     cur.execute(agg_sql)
                     affected = cur.rowcount
-                    conn.commit()
                     logger.info(f"Aggregated {affected} daily history records")
         except Exception as e:
             logger.error(f"Error aggregating history to daily: {e}")
-            conn.rollback()
         finally:
-            conn.close()
+            release_connection(conn)
         
         # === AGGREGATION: District + City level (after history data) ===
         logger.info("Starting aggregation for history data...")

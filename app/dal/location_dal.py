@@ -65,12 +65,12 @@ def resolve_location(location_hint: str) -> Dict[str, Any]:
                     'status': 'ambiguous',
                     'level': 'district',
                     'needs_clarification': True,
-                    'message': f'Co the la {osm_district} hoac {db_district}',
+                    'message': f'Có thể là {osm_district} hoặc {db_district}',
                     'alternatives': [
                         {'district_name_vi': db_district, 'source': 'database'},
                         {'district_name_vi': osm_district, 'source': 'osm'},
                     ],
-                    'suggestion': 'Vui long cho biet them (vi du: "quan TenQuan")'
+                    'suggestion': 'Vui lòng cho biết thêm (ví dụ: "quận TênQuận")'
                 }
     
     # If we have database fuzzy result, return it
@@ -86,10 +86,10 @@ def resolve_location(location_hint: str) -> Dict[str, Any]:
     return {
         'status': 'not_found',
         'level': 'not_found',
-        'message': f'Khong tim thay dia diem: {location_hint}',
+        'message': f'Không tìm thấy địa điểm: {location_hint}',
         'needs_clarification': True,
         'alternatives': alternatives,
-        'suggestion': 'Vui long cho biet them thong tin (vi du: "quan TenQuan" hoac "phuong TenPhuong")'
+        'suggestion': 'Vui lòng cho biết thêm thông tin (ví dụ: "quận TênQuận" hoặc "phường TênPhường")'
     }
 
 
