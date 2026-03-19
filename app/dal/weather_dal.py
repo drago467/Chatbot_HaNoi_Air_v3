@@ -155,24 +155,36 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
         Dictionary with historical weather data or error
     """
     result = query_one("""
-        SELECT temp, feels_like, humidity, dew_point, wind_speed, wind_deg, 
+        SELECT temp, feels_like, humidity, dew_point, wind_speed, wind_deg,
                weather_main, weather_description, ts_utc
         FROM fact_weather_hourly
-        WHERE ward_id = %s 
+        WHERE ward_id = %s
           AND data_kind = 'history'
           AND (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date = %s::date
     """, (ward_id, date))
-    
+
     if not result:
         return {
-            "error": "no_data", 
+            "error": "no_data",
             "message": f"Không có dữ liệu thời tiết ngày {date}",
-            "note": "Chỉ có dữ liệu lúc 12:00 ICT (noon)"
+            "note": "Chỉ có dữ liệu 14 ngày gần nhất"
         }
-    
+
     result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
     result["note"] = "Dữ liệu lúc 12:00 ICT (noon)"
-    
+
+    # Bổ sung daily summary (temp_min/max, rain_total, sunrise/sunset)
+    daily = query_one(
+        "SELECT temp_min, temp_max, temp_avg, humidity AS daily_humidity, "
+        "rain_total, uvi, weather_main AS daily_weather_main, "
+        "weather_description AS daily_weather_desc, sunrise, sunset "
+        "FROM fact_weather_daily WHERE ward_id = %s AND date = %s::date",
+        (ward_id, date)
+    )
+    if daily:
+        result["daily_summary"] = daily
+        result["note"] = "Dữ liệu trưa 12:00 ICT + tổng hợp ngày"
+
     return result
 
 
@@ -454,4 +466,131 @@ def get_temperature_trend(ward_id: str, days: int = 7) -> Dict[str, Any]:
              "avg": r.get("temp_avg"), "weather": r.get("weather_main")}
             for r in rows
         ],
+    }
+
+
+def get_weather_period_data(ward_id: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
+    """Get daily weather data for a date range (used by get_weather_period tool).
+
+    Args:
+        ward_id: Ward ID
+        start_date: Start date (YYYY-MM-DD)
+        end_date: End date (YYYY-MM-DD)
+
+    Returns:
+        List of daily weather rows
+    """
+    return query(
+        "SELECT date, temp_min, temp_max, temp_avg, humidity, pop, rain_total, "
+        "uvi, wind_speed, weather_main "
+        "FROM fact_weather_daily "
+        "WHERE ward_id = %s AND date BETWEEN %s AND %s ORDER BY date",
+        (ward_id, start_date, end_date)
+    )
+
+
+def detect_weather_changes(ward_id: str, hours: int = 6) -> Dict[str, Any]:
+    """Detect significant weather changes in the next few hours.
+
+    Compares current weather with forecast to find:
+    - Temperature drop/rise > 5°C
+    - Rain probability jump > 50%
+    - Wind speed increase > 5 m/s
+    - Weather condition change (clear → rain, etc.)
+
+    Args:
+        ward_id: Ward ID
+        hours: Hours ahead to scan (default 6)
+
+    Returns:
+        Dictionary with detected changes and timing
+    """
+    current = get_current_weather(ward_id)
+    if "error" in current:
+        return current
+
+    forecasts = get_hourly_forecast(ward_id, hours=min(hours, 12))
+    if not forecasts:
+        return {"error": "no_data", "message": "Không có dữ liệu dự báo"}
+
+    changes = []
+    cur_temp = current.get("temp")
+    cur_pop = current.get("pop") or 0
+    cur_wind = current.get("wind_speed") or 0
+    cur_weather = current.get("weather_main", "")
+
+    rain_keywords = {"Rain", "Drizzle", "Thunderstorm"}
+    cur_is_rain = cur_weather in rain_keywords
+
+    for f in forecasts:
+        f_temp = f.get("temp")
+        f_pop = f.get("pop") or 0
+        f_wind = f.get("wind_speed") or 0
+        f_weather = f.get("weather_main", "")
+        f_time = format_ict(f.get("ts_utc"))
+        f_is_rain = f_weather in rain_keywords
+
+        # Temperature change > 5°C
+        if cur_temp is not None and f_temp is not None:
+            temp_diff = f_temp - cur_temp
+            if abs(temp_diff) >= 5:
+                direction = "tăng" if temp_diff > 0 else "giảm"
+                changes.append({
+                    "type": "temperature",
+                    "description": f"Nhiệt độ {direction} {abs(temp_diff):.1f}°C ({cur_temp:.1f}→{f_temp:.1f}°C)",
+                    "time": f_time,
+                    "severity": "high" if abs(temp_diff) >= 8 else "medium"
+                })
+                break  # Only report first significant temp change
+
+        # Rain probability jump
+        if f_pop - cur_pop >= 0.5:
+            changes.append({
+                "type": "rain_start",
+                "description": f"Khả năng mưa tăng mạnh ({cur_pop*100:.0f}%→{f_pop*100:.0f}%)",
+                "time": f_time,
+                "severity": "high" if f_pop >= 0.8 else "medium"
+            })
+            break
+
+        # Weather condition change: clear → rain
+        if not cur_is_rain and f_is_rain:
+            changes.append({
+                "type": "weather_change",
+                "description": f"Trời chuyển mưa ({cur_weather}→{f_weather})",
+                "time": f_time,
+                "severity": "high" if f_weather == "Thunderstorm" else "medium"
+            })
+            break
+
+        # Rain → clear
+        if cur_is_rain and not f_is_rain and f_pop < 0.3:
+            changes.append({
+                "type": "rain_stop",
+                "description": f"Mưa có thể tạnh",
+                "time": f_time,
+                "severity": "low"
+            })
+            break
+
+        # Wind increase > 5 m/s
+        if f_wind - cur_wind >= 5:
+            changes.append({
+                "type": "wind_increase",
+                "description": f"Gió mạnh lên ({cur_wind:.1f}→{f_wind:.1f} m/s)",
+                "time": f_time,
+                "severity": "high" if f_wind >= 15 else "medium"
+            })
+            break
+
+    return {
+        "changes": changes,
+        "has_significant_change": len(changes) > 0,
+        "hours_scanned": len(forecasts),
+        "current_summary": {
+            "temp": cur_temp,
+            "weather_main": cur_weather,
+            "wind_speed": cur_wind,
+            "pop": cur_pop
+        }
     }

@@ -49,7 +49,7 @@ INTENT_TO_TOOLS = {
         "get_district_daily_forecast", "get_city_daily_forecast",
     ],
     "rain_query": [
-        "get_hourly_forecast", "get_daily_forecast", "get_rain_timeline",
+        "get_rain_timeline", "get_hourly_forecast", "get_daily_forecast",
         "get_current_weather",
     ],
     "temperature_query": [
@@ -70,16 +70,17 @@ INTENT_TO_TOOLS = {
     ],
     "activity_weather": [
         "get_activity_advice", "get_best_time", "get_clothing_advice",
+        "get_comfort_index",
     ],
     "expert_weather_param": [
         "get_current_weather", "get_hourly_forecast", "get_daily_summary",
     ],
     "weather_alert": [
-        "get_weather_alerts", "detect_phenomena",
+        "get_weather_alerts", "detect_phenomena", "get_weather_change_alert",
     ],
     "smalltalk_weather": [
         "get_current_weather", "get_daily_summary", "get_clothing_advice",
-        "get_city_weather",
+        "get_city_weather", "get_comfort_index",
     ],
     "weather_overview": [
         "get_daily_summary", "get_weather_period", "get_city_daily_forecast",
@@ -96,6 +97,7 @@ class QualityScore(BaseModel):
     relevance: int = Field(ge=1, le=5, description="Mức độ liên quan 1-5")
     completeness: int = Field(ge=1, le=5, description="Mức độ đầy đủ 1-5")
     fluency: int = Field(ge=1, le=5, description="Mức độ tự nhiên 1-5")
+    actionability: int = Field(ge=1, le=5, description="Tính hữu dụng thực tế 1-5")
 
 
 class FaithfulnessScore(BaseModel):
@@ -139,7 +141,14 @@ Hãy suy nghĩ từng bước trước khi cho điểm.
 - 4: Tự nhiên, có lỗi nhỏ không đáng kể
 - 3: Chấp nhận được, có vài chỗ gượng
 - 2: Khó đọc, nhiều lỗi ngữ pháp/từ vựng
-- 1: Không thể đọc được"""
+- 1: Không thể đọc được
+
+**ACTIONABILITY (Tính hữu dụng):**
+- 5: Có khuyến nghị cụ thể, thực tế (mang ô, mặc áo khoác, tránh ra ngoài 10-14h, uống nhiều nước)
+- 4: Có khuyến nghị nhưng chung chung (nên cẩn thận, chú ý thời tiết)
+- 3: Ít khuyến nghị, chủ yếu liệt kê số liệu
+- 2: Không có khuyến nghị dù câu hỏi cần (ví dụ: hỏi có nên ra ngoài không mà chỉ trả lời nhiệt độ)
+- 1: Thông tin không dùng được, không giúp người dùng ra quyết định"""
 
 JUDGE_PROMPT_FAITHFULNESS = """Bạn là chuyên gia kiểm tra tính chính xác của chatbot thời tiết Hà Nội.
 
@@ -191,11 +200,53 @@ def extract_tool_outputs(result) -> str:
 
 
 def check_tool_accuracy(intent: str, tools_called: list) -> bool:
-    """Check if at least one correct tool was called for the intent."""
+    """Check if at least one correct tool was called for the intent (legacy)."""
     expected = INTENT_TO_TOOLS.get(intent, [])
     if not expected:
         return True  # Unknown intent, skip check
     return any(t in expected for t in tools_called)
+
+
+def check_tool_precision(intent: str, tools_called: list) -> float:
+    """What fraction of called tools were relevant? (precision)
+
+    Higher = agent doesn't call unnecessary tools.
+    """
+    expected = set(INTENT_TO_TOOLS.get(intent, []))
+    if not tools_called:
+        return 0.0
+    # Exclude resolve_location from precision calc (it's a helper, always valid)
+    relevant_calls = [t for t in tools_called if t != "resolve_location"]
+    if not relevant_calls:
+        return 1.0
+    relevant = sum(1 for t in relevant_calls if t in expected)
+    return round(relevant / len(relevant_calls), 2)
+
+
+def check_tool_recall(intent: str, tools_called: list) -> float:
+    """Did the agent call the primary tool for this intent? (recall)
+
+    Primary tool = first in the INTENT_TO_TOOLS list.
+    """
+    expected = INTENT_TO_TOOLS.get(intent, [])
+    if not expected:
+        return 1.0  # Unknown intent
+    # Check if any expected tool was called (not just primary)
+    return 1.0 if any(t in expected for t in tools_called) else 0.0
+
+
+def categorize_error(error_str: str) -> str:
+    """Categorize error type for analysis."""
+    err = error_str.lower()
+    if "location" in err or "not_found" in err or "ambiguous" in err:
+        return "location_resolution"
+    elif "no_data" in err or "database" in err or "không có dữ liệu" in err:
+        return "data_unavailable"
+    elif "timeout" in err or "connection" in err or "refused" in err:
+        return "network"
+    elif "openai" in err or "api" in err or "rate_limit" in err:
+        return "llm_api"
+    return "unknown"
 
 
 def call_judge_quality(client, prompt, model=None) -> Optional[QualityScore]:
@@ -282,6 +333,7 @@ def llm_judge(question, response, tool_output=None, client=None) -> dict:
         "relevance": quality.relevance if quality else None,
         "completeness": quality.completeness if quality else None,
         "fluency": quality.fluency if quality else None,
+        "actionability": quality.actionability if quality else None,
         "faithfulness": faith.faithfulness if faith else None,
         "judge_reasoning": quality.reasoning if quality else "",
         "faith_reasoning": faith.reasoning if faith else "",
@@ -322,8 +374,11 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "response_time_ms": round(elapsed_ms),
             "success": True,
             "error": None,
+            "error_category": None,
             "tools_called": ",".join(tools_called),
             "tool_correct": tool_correct,
+            "tool_precision": check_tool_precision(expected_tool or "", tools_called),
+            "tool_recall": check_tool_recall(expected_tool or "", tools_called),
             "tool_output_raw": tool_output[:500],
         }
 
@@ -334,6 +389,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
                 "judge_relevance": judge_scores.get("relevance"),
                 "judge_completeness": judge_scores.get("completeness"),
                 "judge_fluency": judge_scores.get("fluency"),
+                "judge_actionability": judge_scores.get("actionability"),
                 "judge_faithfulness": judge_scores.get("faithfulness"),
                 "judge_reasoning": judge_scores.get("judge_reasoning", ""),
             })
@@ -342,6 +398,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
                 "judge_relevance": None,
                 "judge_completeness": None,
                 "judge_fluency": None,
+                "judge_actionability": None,
                 "judge_faithfulness": None,
                 "judge_reasoning": "",
             })
@@ -350,6 +407,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
 
     except Exception as e:
         elapsed_ms = (time.time() - start_time) * 1000
+        error_str = str(e)
         return {
             "question": question,
             "intent": expected_tool,
@@ -357,13 +415,17 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "response": "",
             "response_time_ms": round(elapsed_ms),
             "success": False,
-            "error": str(e),
+            "error": error_str,
+            "error_category": categorize_error(error_str),
             "tools_called": "",
             "tool_correct": False,
+            "tool_precision": 0.0,
+            "tool_recall": 0.0,
             "tool_output_raw": "",
             "judge_relevance": None,
             "judge_completeness": None,
             "judge_fluency": None,
+            "judge_actionability": None,
             "judge_faithfulness": None,
             "judge_reasoning": "",
         }
@@ -382,14 +444,29 @@ def compute_metrics(results):
         "tool_accuracy": round(
             sum(1 for r in results if r.get("tool_correct")) / total * 100, 1
         ) if total else 0,
+        "tool_precision_avg": round(
+            sum(r.get("tool_precision", 0) for r in results) / total, 2
+        ) if total else 0,
+        "tool_recall_avg": round(
+            sum(r.get("tool_recall", 0) for r in results) / total, 2
+        ) if total else 0,
         "avg_time_ms": round(sum(times) / total) if total else 0,
         "p50_time_ms": round(times[total // 2]) if times else 0,
         "p90_time_ms": round(times[int(total * 0.9)]) if times else 0,
         "p95_time_ms": round(times[int(total * 0.95)]) if times else 0,
     }
 
+    # Error category breakdown
+    error_cats = {}
+    for r in results:
+        cat = r.get("error_category")
+        if cat:
+            error_cats[cat] = error_cats.get(cat, 0) + 1
+    if error_cats:
+        metrics["error_categories"] = error_cats
+
     # Judge score averages
-    judge_dims = ["judge_relevance", "judge_completeness", "judge_fluency", "judge_faithfulness"]
+    judge_dims = ["judge_relevance", "judge_completeness", "judge_fluency", "judge_actionability", "judge_faithfulness"]
     for dim in judge_dims:
         vals = [r[dim] for r in results if r.get(dim) is not None]
         metrics[dim + "_avg"] = round(sum(vals) / len(vals), 2) if vals else None
@@ -531,6 +608,7 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False):
     print(f"Total: {metrics['total']}")
     print(f"Success rate: {metrics['success_rate']}%")
     print(f"Tool accuracy: {metrics['tool_accuracy']}%")
+    print(f"Tool precision: {metrics['tool_precision_avg']} | Tool recall: {metrics['tool_recall_avg']}")
     print(f"Avg time: {metrics['avg_time_ms']}ms | p50: {metrics['p50_time_ms']}ms | p90: {metrics['p90_time_ms']}ms | p95: {metrics['p95_time_ms']}ms")
 
     # Judge scores

@@ -274,10 +274,10 @@ def compute_heat_index(temp_c: Optional[float], humidity: Optional[int]) -> Opti
     # Determine warning level
     if hi_c >= 52:
         level = "Cực nguy hiểm"
-        description = "Say nan/soc nhiet gan nhu chắc chắn. Tránh ra ngoài."
+        description = "Say nắng/sốc nhiệt gần như chắc chắn. Tránh ra ngoài."
     elif hi_c >= 40:
         level = "Nguy hiểm"
-        description = "Say nan rất có thể xảy ra. Hạn chế hoạt động ngoài trời."
+        description = "Say nắng rất có thể xảy ra. Hạn chế hoạt động ngoài trời."
     elif hi_c >= 33:
         level = "Cảnh báo cao"
         description = "Có thể say nắng, chuột rút. Uống nhiều nước."
@@ -338,4 +338,143 @@ def compute_wind_chill(temp_c: Optional[float], wind_speed_ms: Optional[float]) 
         "wind_chill": round(WC, 1),
         "level": level,
         "description": description
+    }
+
+
+def compute_comfort_index(
+    temp: Optional[float],
+    humidity: Optional[float],
+    wind_speed: Optional[float],
+    uvi: float = 0,
+    pop: float = 0
+) -> Optional[dict]:
+    """Compute a 0-100 comfort score combining multiple weather factors.
+
+    Higher score = more comfortable for outdoor activities.
+    Optimal: 22-28°C, 40-70% humidity, light wind, low UV, no rain.
+
+    Args:
+        temp: Temperature in °C
+        humidity: Relative humidity in %
+        wind_speed: Wind speed in m/s
+        uvi: UV index (0-11+)
+        pop: Probability of precipitation (0-1)
+
+    Returns:
+        Dict with score, label, breakdown, and recommendation. None if temp is missing.
+    """
+    if temp is None:
+        return None
+
+    score = 100
+    breakdown = {}
+
+    # Temperature: optimal 22-28°C
+    if temp < 10:
+        penalty = (10 - temp) * 5
+        breakdown["temp"] = f"Rất lạnh ({temp:.1f}°C), -{penalty:.0f} điểm"
+    elif temp < 15:
+        penalty = (15 - temp) * 4
+        breakdown["temp"] = f"Lạnh ({temp:.1f}°C), -{penalty:.0f} điểm"
+    elif temp < 22:
+        penalty = (22 - temp) * 1.5
+        breakdown["temp"] = f"Se lạnh ({temp:.1f}°C), -{penalty:.0f} điểm"
+    elif temp <= 28:
+        penalty = 0
+        breakdown["temp"] = f"Lý tưởng ({temp:.1f}°C)"
+    elif temp <= 32:
+        penalty = (temp - 28) * 2
+        breakdown["temp"] = f"Hơi nóng ({temp:.1f}°C), -{penalty:.0f} điểm"
+    elif temp <= 35:
+        penalty = (temp - 28) * 3
+        breakdown["temp"] = f"Nóng ({temp:.1f}°C), -{penalty:.0f} điểm"
+    else:
+        penalty = (temp - 28) * 5
+        breakdown["temp"] = f"Rất nóng ({temp:.1f}°C), -{penalty:.0f} điểm"
+    score -= penalty
+
+    # Humidity: optimal 40-70%
+    if humidity is not None:
+        if humidity > 90:
+            penalty = (humidity - 70) * 0.8
+            breakdown["humidity"] = f"Rất ẩm ({humidity:.0f}%), -{penalty:.0f} điểm"
+        elif humidity > 80:
+            penalty = (humidity - 70) * 0.5
+            breakdown["humidity"] = f"Ẩm ({humidity:.0f}%), -{penalty:.0f} điểm"
+        elif humidity > 70:
+            penalty = (humidity - 70) * 0.3
+            breakdown["humidity"] = f"Hơi ẩm ({humidity:.0f}%), -{penalty:.0f} điểm"
+        else:
+            penalty = 0
+            breakdown["humidity"] = f"Tốt ({humidity:.0f}%)"
+        score -= penalty
+
+    # Wind: mild is fine, strong is bad
+    if wind_speed is not None:
+        if wind_speed > 15:
+            penalty = (wind_speed - 6) * 3
+            breakdown["wind"] = f"Gió rất mạnh ({wind_speed:.1f} m/s), -{penalty:.0f} điểm"
+        elif wind_speed > 10:
+            penalty = (wind_speed - 6) * 2
+            breakdown["wind"] = f"Gió mạnh ({wind_speed:.1f} m/s), -{penalty:.0f} điểm"
+        elif wind_speed > 6:
+            penalty = (wind_speed - 6) * 1
+            breakdown["wind"] = f"Gió hơi mạnh ({wind_speed:.1f} m/s), -{penalty:.0f} điểm"
+        else:
+            penalty = 0
+            breakdown["wind"] = f"Gió nhẹ ({wind_speed:.1f} m/s)"
+        score -= penalty
+
+    # UV
+    if uvi > 10:
+        penalty = (uvi - 6) * 3
+        breakdown["uvi"] = f"UV cực cao ({uvi}), -{penalty:.0f} điểm"
+    elif uvi > 8:
+        penalty = (uvi - 6) * 2.5
+        breakdown["uvi"] = f"UV rất cao ({uvi}), -{penalty:.0f} điểm"
+    elif uvi > 6:
+        penalty = (uvi - 6) * 1.5
+        breakdown["uvi"] = f"UV cao ({uvi}), -{penalty:.0f} điểm"
+    else:
+        penalty = 0
+    score -= penalty
+
+    # Rain probability
+    if pop > 0.7:
+        penalty = pop * 30
+        breakdown["rain"] = f"Rất có thể mưa ({pop*100:.0f}%), -{penalty:.0f} điểm"
+    elif pop > 0.5:
+        penalty = pop * 20
+        breakdown["rain"] = f"Có thể mưa ({pop*100:.0f}%), -{penalty:.0f} điểm"
+    elif pop > 0.3:
+        penalty = pop * 10
+        breakdown["rain"] = f"Có thể mưa nhẹ ({pop*100:.0f}%), -{penalty:.0f} điểm"
+    else:
+        penalty = 0
+    score -= penalty
+
+    score = max(0, min(100, round(score)))
+
+    # Label
+    if score >= 80:
+        label = "Rất thoải mái"
+        recommendation = "Thời tiết lý tưởng cho mọi hoạt động ngoài trời."
+    elif score >= 60:
+        label = "Thoải mái"
+        recommendation = "Phù hợp hoạt động ngoài trời, lưu ý một vài yếu tố."
+    elif score >= 40:
+        label = "Chấp nhận được"
+        recommendation = "Có thể ra ngoài nhưng cần chuẩn bị (ô, áo khoác, kem chống nắng...)."
+    elif score >= 20:
+        label = "Khó chịu"
+        recommendation = "Nên hạn chế hoạt động ngoài trời, chọn thời điểm khác nếu có thể."
+    else:
+        label = "Rất khó chịu"
+        recommendation = "Nên ở trong nhà, tránh ra ngoài nếu không cần thiết."
+
+    return {
+        "score": score,
+        "label": label,
+        "recommendation": recommendation,
+        "breakdown": breakdown,
     }
