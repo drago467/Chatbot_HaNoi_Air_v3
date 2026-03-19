@@ -88,7 +88,7 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
                 cur.execute(sql, (data_kind,))
                 cur.execute("SELECT COUNT(*) FROM fact_weather_district_hourly")
                 row_count = cur.fetchone()[0]
-        return {"status": "ok", "data_kind": data_kind, "records": row_count}
+        return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     except Exception as e:
         return {"status": "error", "message": str(e)}
     finally:
@@ -158,7 +158,7 @@ def aggregate_city_hourly(data_kind: str = 'current') -> dict:
                 cur.execute(sql, (data_kind,))
                 cur.execute("SELECT COUNT(*) FROM fact_weather_city_hourly")
                 row_count = cur.fetchone()[0]
-        return {"status": "ok", "data_kind": data_kind, "records": row_count}
+        return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     except Exception as e:
         return {"status": "error", "message": str(e)}
     finally:
@@ -239,7 +239,7 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                 cur.execute(sql, (data_kind,))
                 cur.execute("SELECT COUNT(*) FROM fact_weather_district_daily")
                 row_count = cur.fetchone()[0]
-        return {"status": "ok", "data_kind": data_kind, "records": row_count}
+        return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     except Exception as e:
         return {"status": "error", "message": str(e)}
     finally:
@@ -302,7 +302,7 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                 cur.execute(sql, (data_kind,))
                 cur.execute("SELECT COUNT(*) FROM fact_weather_city_daily")
                 row_count = cur.fetchone()[0]
-        return {"status": "ok", "data_kind": data_kind, "records": row_count}
+        return {"status": "ok", "data_kind": data_kind, "records_upserted": row_count}
     except Exception as e:
         return {"status": "error", "message": str(e)}
     finally:

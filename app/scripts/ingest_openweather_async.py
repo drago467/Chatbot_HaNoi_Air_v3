@@ -166,6 +166,9 @@ class OpenWeatherAsyncIngestor:
         try:
             district_result = aggregate_district_hourly('current')
             city_result = aggregate_city_hourly('current')
+            for label, res in [("district_hourly", district_result), ("city_hourly", city_result)]:
+                if res.get('status') == 'error':
+                    logger.error(f"Aggregation {label} failed: {res.get('message')}")
             logger.info(f"Aggregated hourly: current - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
             logger.info("Aggregation completed for current data")
         except Exception as e:
@@ -329,14 +332,20 @@ class OpenWeatherAsyncIngestor:
             for data_kind in ['forecast']:
                 district_result = aggregate_district_hourly(data_kind)
                 city_result = aggregate_city_hourly(data_kind)
+                for label, res in [("district_hourly", district_result), ("city_hourly", city_result)]:
+                    if res.get('status') == 'error':
+                        logger.error(f"Aggregation {label} ({data_kind}) failed: {res.get('message')}")
                 logger.info(f"Aggregated hourly: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
-            
+
             # Aggregate daily (forecast)
             for data_kind in ['forecast']:
                 district_result = aggregate_district_daily(data_kind)
                 city_result = aggregate_city_daily(data_kind)
+                for label, res in [("district_daily", district_result), ("city_daily", city_result)]:
+                    if res.get('status') == 'error':
+                        logger.error(f"Aggregation {label} ({data_kind}) failed: {res.get('message')}")
                 logger.info(f"Aggregated daily: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
-            
+
             logger.info("Aggregation completed for forecast data")
         except Exception as e:
             logger.error(f"Aggregation failed: {e}")
@@ -631,14 +640,20 @@ class OpenWeatherAsyncIngestor:
             for data_kind in ['history']:
                 district_result = aggregate_district_hourly(data_kind)
                 city_result = aggregate_city_hourly(data_kind)
+                for label, res in [("district_hourly", district_result), ("city_hourly", city_result)]:
+                    if res.get('status') == 'error':
+                        logger.error(f"Aggregation {label} ({data_kind}) failed: {res.get('message')}")
                 logger.info(f"Aggregated hourly: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
-            
+
             # Aggregate daily (history)
             for data_kind in ['history']:
                 district_result = aggregate_district_daily(data_kind)
                 city_result = aggregate_city_daily(data_kind)
+                for label, res in [("district_daily", district_result), ("city_daily", city_result)]:
+                    if res.get('status') == 'error':
+                        logger.error(f"Aggregation {label} ({data_kind}) failed: {res.get('message')}")
                 logger.info(f"Aggregated daily: {data_kind} - district: {district_result.get('records_upserted', 0)}, city: {city_result.get('records_upserted', 0)}")
-            
+
             logger.info("Aggregation completed for history data")
         except Exception as e:
             logger.error(f"Aggregation failed: {e}")
