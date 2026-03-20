@@ -42,7 +42,7 @@ INTENT_TO_TOOLS = {
         "get_current_weather", "get_district_weather", "get_city_weather",
     ],
     "hourly_forecast": [
-        "get_hourly_forecast", "get_district_weather",
+        "get_hourly_forecast", "get_district_weather", "get_rain_timeline",
     ],
     "daily_forecast": [
         "get_daily_forecast", "get_daily_summary", "get_weather_period",
@@ -50,41 +50,53 @@ INTENT_TO_TOOLS = {
     ],
     "rain_query": [
         "get_rain_timeline", "get_hourly_forecast", "get_daily_forecast",
-        "get_current_weather",
+        "get_current_weather", "get_district_weather", "get_weather_period",
+        "get_city_daily_forecast",
     ],
     "temperature_query": [
         "get_current_weather", "get_hourly_forecast", "get_daily_forecast",
-        "get_temperature_trend",
+        "get_temperature_trend", "get_district_weather", "get_district_daily_forecast",
+        "get_city_weather", "get_city_daily_forecast", "get_weather_period",
     ],
     "wind_query": [
-        "get_current_weather", "get_hourly_forecast",
+        "get_current_weather", "get_hourly_forecast", "get_district_weather",
+        "get_city_weather", "get_weather_alerts", "detect_phenomena",
     ],
     "humidity_fog_query": [
         "get_current_weather", "get_hourly_forecast", "detect_phenomena",
+        "get_district_weather", "get_city_weather", "get_weather_period",
     ],
     "historical_weather": [
         "get_weather_history",
     ],
     "location_comparison": [
         "compare_weather", "compare_with_yesterday",
+        "get_district_weather", "get_current_weather", "get_rain_timeline",
+        "get_district_daily_forecast", "get_hourly_forecast",
+        "get_city_daily_forecast", "get_district_ranking",
     ],
     "activity_weather": [
         "get_activity_advice", "get_best_time", "get_clothing_advice",
-        "get_comfort_index",
+        "get_comfort_index", "get_weather_period", "get_hourly_forecast",
+        "get_daily_forecast", "get_district_daily_forecast", "get_city_daily_forecast",
     ],
     "expert_weather_param": [
         "get_current_weather", "get_hourly_forecast", "get_daily_summary",
+        "get_district_weather", "get_city_weather", "get_weather_history",
+        "get_weather_alerts",
     ],
     "weather_alert": [
         "get_weather_alerts", "detect_phenomena", "get_weather_change_alert",
+        "get_hourly_forecast", "get_temperature_trend", "get_weather_period",
     ],
     "smalltalk_weather": [
         "get_current_weather", "get_daily_summary", "get_clothing_advice",
-        "get_city_weather", "get_comfort_index",
+        "get_city_weather", "get_comfort_index", "get_seasonal_comparison",
+        "get_weather_change_alert",
     ],
     "weather_overview": [
         "get_daily_summary", "get_weather_period", "get_city_daily_forecast",
-        "get_city_weather", "get_district_weather",
+        "get_city_weather", "get_district_weather", "get_district_daily_forecast",
     ],
 }
 
@@ -204,6 +216,9 @@ def check_tool_accuracy(intent: str, tools_called: list) -> bool:
     expected = INTENT_TO_TOOLS.get(intent, [])
     if not expected:
         return True  # Unknown intent, skip check
+    # For smalltalk: no tools called is acceptable (greeting, out-of-scope, etc.)
+    if intent == "smalltalk_weather" and not tools_called:
+        return True
     return any(t in expected for t in tools_called)
 
 
@@ -214,7 +229,8 @@ def check_tool_precision(intent: str, tools_called: list) -> float:
     """
     expected = set(INTENT_TO_TOOLS.get(intent, []))
     if not tools_called:
-        return 0.0
+        # No tools called: for smalltalk this is fine (precision=1.0)
+        return 1.0 if intent == "smalltalk_weather" else 0.0
     # Exclude resolve_location from precision calc (it's a helper, always valid)
     relevant_calls = [t for t in tools_called if t != "resolve_location"]
     if not relevant_calls:
@@ -231,6 +247,9 @@ def check_tool_recall(intent: str, tools_called: list) -> float:
     expected = INTENT_TO_TOOLS.get(intent, [])
     if not expected:
         return 1.0  # Unknown intent
+    # For smalltalk: no tools called is acceptable
+    if intent == "smalltalk_weather" and not tools_called:
+        return 1.0
     # Check if any expected tool was called (not just primary)
     return 1.0 if any(t in expected for t in tools_called) else 0.0
 

@@ -12,11 +12,24 @@ from langchain_openai import ChatOpenAI
 import psycopg
 
 from app.agent.tools import TOOLS
+from app.dal.timezone_utils import now_ict
 
+# Vietnamese weekday names
+_WEEKDAYS_VI = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"]
 
-# System prompt
-SYSTEM_PROMPT = """Bạn là trợ lý thời tiết chuyên về Hà Nội. CHỈ trả lời về thời tiết khu vực Hà Nội.
+# System prompt template — {today_weekday}, {today_date}, {today_time} are injected at runtime
+SYSTEM_PROMPT_TEMPLATE = """Bạn là trợ lý thời tiết chuyên về Hà Nội. CHỈ trả lời về thời tiết khu vực Hà Nội.
 Phong cách: thân thiện, chuyên nghiệp, ngắn gọn, dùng tiếng Việt tự nhiên có dấu.
+
+## Thời gian hiện tại
+Hôm nay là: {today_weekday}, ngày {today_date} | Giờ hiện tại: {today_time} ICT (UTC+7)
+→ LUÔN dùng thông tin này khi tính "hôm qua", "tuần này", "cuối tuần", "3 ngày tới", v.v.
+→ KHÔNG BAO GIỜ tự suy đoán ngày tháng. Chỉ dùng ngày ở trên.
+
+## 30 quận/huyện Hà Nội (TẤT CẢ đều thuộc Hà Nội)
+Nội thành: Ba Đình, Hoàn Kiếm, Hai Bà Trưng, Đống Đa, Tây Hồ, Cầu Giấy, Thanh Xuân, Hoàng Mai, Long Biên, Bắc Từ Liêm, Nam Từ Liêm, Hà Đông
+Ngoại thành: Sóc Sơn, Đông Anh, Gia Lâm, Thanh Trì, Mê Linh, Sơn Tây, Ba Vì, Phúc Thọ, Đan Phượng, Hoài Đức, Quốc Oai, Thạch Thất, Chương Mỹ, Thanh Oai, Thường Tín, Phú Xuyên, Ứng Hòa, Mỹ Đức
+→ Khi user hỏi về BẤT KỲ quận/huyện nào ở trên → ĐÂY LÀ HÀ NỘI, PHẢI gọi tool.
 
 ## Quy tắc chọn tool
 - "bây giờ", "hiện tại", "đang" → get_current_weather (phường) hoặc get_district_weather / get_city_weather
@@ -30,19 +43,29 @@ Phong cách: thân thiện, chuyên nghiệp, ngắn gọn, dùng tiếng Việt
 - "mấy giờ tốt nhất", "lúc nào nên" → get_best_time
 - "mặc gì", "cần áo khoác không", "mang ô không" → get_clothing_advice
 - "ấm lên khi nào", "xu hướng nhiệt", "bao giờ hết rét" → get_temperature_trend
-- "so sánh A và B" → compare_weather
-- "có cảnh báo gì" → get_weather_alerts
-- "có hiện tượng gì" → detect_phenomena
 - "nóng hơn bình thường không" → get_seasonal_comparison
 - "đi chơi được không", "chạy bộ được không" → get_activity_advice
 - "thoải mái không", "dễ chịu không", "ra ngoài được không" → get_comfort_index
 - "trời có thay đổi không", "có chuyển mưa không" → get_weather_change_alert
 
+### So sánh hai địa điểm → BẮT BUỘC dùng compare_weather
+- "A và B nơi nào nóng/lạnh/ẩm hơn?" → compare_weather(location_hint1="A", location_hint2="B")
+- "so sánh thời tiết A với B" → compare_weather
+- KHÔNG gọi get_district_weather 2 lần riêng lẻ khi so sánh. PHẢI dùng compare_weather.
+
+### Cảnh báo thời tiết → get_weather_alerts + detect_phenomena
+- "cảnh báo", "nguy hiểm", "giông lốc", "bão", "lũ", "ngập", "rét hại", "nắng nóng gay gắt" → get_weather_alerts
+- "nồm ẩm", "gió mùa", "sương mù", "hiện tượng đặc biệt" → detect_phenomena
+- "trời có thay đổi gì", "sắp mưa", "chuyển thời tiết" → get_weather_change_alert
+- Câu hỏi về ngập lụt, tầm nhìn, gió giật → ĐÂY LÀ thời tiết, dùng get_weather_alerts hoặc get_hourly_forecast
+
 ## Khi KHÔNG gọi tool
 - Lời chào ("xin chào", "hello", "hi") → trả lời thân thiện, giới thiệu bản thân là trợ lý thời tiết Hà Nội
 - Câu hỏi về bản thân chatbot ("bạn là ai", "bạn làm gì") → trả lời trực tiếp
 - Cảm ơn, tạm biệt → đáp lại lịch sự
-- Câu hỏi ngoài phạm vi thời tiết Hà Nội → "Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn muốn hỏi về thời tiết ở đâu trong Hà Nội?"
+- Câu hỏi về thời tiết NGOÀI Hà Nội (Đà Nẵng, Sài Gòn, nước ngoài...) → "Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội."
+- LƯU Ý: Nếu câu hỏi nhắc đến Hà Nội hoặc bất kỳ quận/huyện nào ở trên → PHẢI gọi tool, KHÔNG được từ chối.
+- Nếu user hỏi chung chung không rõ địa điểm (VD: "trời lạnh quá", "ngoài trời có mưa không") → mặc định dùng get_city_weather cho toàn Hà Nội.
 
 ## Quy ước thời gian (ICT = UTC+7)
 - "sáng" = 6h-11h, "trưa" = 11h-13h, "chiều" = 13h-18h, "tối" = 18h-22h, "đêm" = 22h-6h
@@ -115,6 +138,23 @@ Mưa có thể kéo dài 2-3 tiếng. Nên mang ô khi ra ngoài."
 - Dữ liệu cũ → Cảnh báo rõ ràng thời gian cập nhật cuối cùng
 """
 
+
+def get_system_prompt() -> str:
+    """Build system prompt with current date/time injected."""
+    now = now_ict()
+    return SYSTEM_PROMPT_TEMPLATE.format(
+        today_weekday=_WEEKDAYS_VI[now.weekday()],
+        today_date=now.strftime("%d/%m/%Y"),
+        today_time=now.strftime("%H:%M"),
+    )
+
+
+def _prompt_with_datetime(state) -> list:
+    """LangGraph prompt callable: inject current datetime into system message + keep existing messages."""
+    from langchain_core.messages import SystemMessage
+    system_msg = SystemMessage(content=get_system_prompt())
+    return [system_msg] + state["messages"]
+
 # Thread-safe agent cache
 _agent = None
 _agent_lock = threading.Lock()
@@ -172,7 +212,7 @@ def create_weather_agent():
     global _db_connection
     _db_connection = conn
     
-    agent = create_react_agent(model=model, tools=TOOLS, state_modifier=SYSTEM_PROMPT, checkpointer=checkpointer)
+    agent = create_react_agent(model=model, tools=TOOLS, prompt=_prompt_with_datetime, checkpointer=checkpointer)
     
     return agent
 

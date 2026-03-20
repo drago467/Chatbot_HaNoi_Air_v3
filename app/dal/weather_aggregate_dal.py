@@ -120,7 +120,7 @@ def get_district_daily_forecast(district_name: str, days: int = 7) -> List[Dict[
         SELECT {_DISTRICT_DAILY_COLS}
         FROM fact_weather_district_daily
         WHERE district_name_vi = %s
-          AND date >= CURRENT_DATE
+          AND date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
         ORDER BY date
         LIMIT %s
     """, (district_name, days))
@@ -193,7 +193,7 @@ def get_city_daily_forecast(days: int = 7) -> List[Dict[str, Any]]:
     results = query(f"""
         SELECT {_CITY_DAILY_COLS}
         FROM fact_weather_city_daily
-        WHERE date >= CURRENT_DATE
+        WHERE date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
         ORDER BY date
         LIMIT %s
     """, (days,))

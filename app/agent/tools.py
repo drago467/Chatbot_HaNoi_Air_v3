@@ -6,6 +6,41 @@ from app.dal.timezone_utils import now_ict
 from langchain_core.tools import tool
 
 
+def _get_ward_id_or_fallback(resolved: dict) -> dict:
+    """Extract ward_id from resolved location, or provide fallback info for district/city.
+
+    Returns dict with:
+      - ward_id: str if available (ward level, or first ward in district)
+      - level: "ward" | "district" | "city"
+      - district_name: str if district level
+      - fallback_ward: True if ward_id came from district fallback
+    """
+    level = resolved.get("level", "ward")
+
+    if level == "ward":
+        return {"ward_id": resolved["ward_id"], "level": "ward"}
+
+    if level == "district":
+        district_name = resolved.get("district_name", "")
+        # Get first ward in district as representative
+        from app.dal.location_dal import get_wards_in_district
+        wards = get_wards_in_district(district_name)
+        if wards:
+            return {
+                "ward_id": wards[0]["ward_id"],
+                "level": "district",
+                "district_name": district_name,
+                "fallback_ward": True,
+                "note": f"Dữ liệu đại diện từ {wards[0].get('ward_name_vi', '')} trong {district_name}"
+            }
+        return {"level": "district", "district_name": district_name, "error": "no_wards"}
+
+    if level == "city":
+        return {"level": "city", "city_name": resolved.get("city_name", "Hà Nội")}
+
+    return {"level": level, "error": "unknown_level"}
+
+
 # ============== Tool 1: resolve_location ==============
 
 class ResolveLocationInput(BaseModel):
@@ -45,12 +80,34 @@ def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
     if resolved["status"] != "ok":
         return {"error": resolved["status"], "message": resolved.get("message", "")}
 
-    weather = dal_get_current_weather(resolved["ward_id"])
-    
+    info = _get_ward_id_or_fallback(resolved)
+
+    # District level → redirect to get_district_weather
+    if info["level"] == "district":
+        from app.dal.weather_aggregate_dal import get_district_current_weather
+        from app.agent.utils import enrich_district_response
+        current = get_district_current_weather(info["district_name"])
+        if "error" in current:
+            return current
+        current = enrich_district_response(current)
+        return {"current": current, "source": "aggregated", "resolved_location": resolved["data"]}
+
+    # City level → redirect to get_city_weather
+    if info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_current_weather
+        from app.agent.utils import enrich_city_response
+        current = get_city_current_weather()
+        if "error" in current:
+            return current
+        current = enrich_city_response(current)
+        return {"current": current, "source": "aggregated", "resolved_location": resolved["data"]}
+
+    weather = dal_get_current_weather(info["ward_id"])
+
     # Guard: if weather has error, return early
     if "error" in weather:
         return weather
-    
+
     weather = enrich_weather_response(weather)
     weather["resolved_location"] = resolved["data"]
     return weather
@@ -80,12 +137,30 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    data = dal_get_hourly_forecast(resolved["ward_id"], hours)
-    
+    info = _get_ward_id_or_fallback(resolved)
+
+    # District level → redirect to district hourly forecast
+    if info["level"] == "district" and not info.get("ward_id"):
+        return {"error": "no_wards", "message": f"Không tìm thấy phường/xã trong {info.get('district_name', '')}"}
+    if info["level"] == "district":
+        from app.dal.weather_aggregate_dal import get_district_hourly_forecast
+        forecasts = get_district_hourly_forecast(info["district_name"], hours)
+        return {"forecasts": forecasts[:hours], "count": len(forecasts[:hours]),
+                "resolved_location": resolved["data"], "source": "aggregated"}
+
+    # City level → redirect to city hourly forecast
+    if info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_hourly_forecast
+        forecasts = get_city_hourly_forecast(hours)
+        return {"forecasts": forecasts[:hours], "count": len(forecasts[:hours]),
+                "resolved_location": resolved["data"], "source": "aggregated"}
+
+    data = dal_get_hourly_forecast(info["ward_id"], hours)
+
     # Guard: if data has error, return early
     if isinstance(data, dict) and "error" in data:
         return data
-    
+
     return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"]}
 
 
@@ -112,12 +187,28 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    data = dal_get_daily_forecast(resolved["ward_id"], days)
-    
+    info = _get_ward_id_or_fallback(resolved)
+
+    # District level → redirect to district daily forecast
+    if info["level"] == "district":
+        from app.dal.weather_aggregate_dal import get_district_daily_forecast as dal_district_daily
+        forecasts = dal_district_daily(info["district_name"], days)
+        return {"forecasts": forecasts[:days], "count": len(forecasts[:days]),
+                "resolved_location": resolved["data"], "source": "aggregated"}
+
+    # City level → redirect to city daily forecast
+    if info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_daily_forecast as dal_city_daily
+        forecasts = dal_city_daily(days)
+        return {"forecasts": forecasts[:days], "count": len(forecasts[:days]),
+                "resolved_location": resolved["data"], "source": "aggregated"}
+
+    data = dal_get_daily_forecast(info["ward_id"], days)
+
     # Guard: if data has error, return early
     if isinstance(data, dict) and "error" in data:
         return data
-    
+
     return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"]}
 
 
@@ -143,13 +234,22 @@ def get_weather_history(ward_id: str = None, location_hint: str = None, date: st
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    history = dal_get_weather_history(resolved["ward_id"], date)
-    
+    info = _get_ward_id_or_fallback(resolved)
+
+    # Need a ward_id for historical data
+    wid = info.get("ward_id")
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã để tra cứu lịch sử"}
+
+    history = dal_get_weather_history(wid, date)
+
     # Guard: if history has error, return early
     if "error" in history:
         return history
-    
+
     history["resolved_location"] = resolved["data"]
+    if info.get("fallback_ward"):
+        history["note"] = info.get("note", "")
     return history
 
 
@@ -181,7 +281,16 @@ def compare_weather(ward_id1: str = None, location_hint1: str = None, ward_id2: 
     if r1["status"] != "ok" or r2["status"] != "ok":
         return {"error": "location"}
 
-    result = dal_compare_weather(r1["ward_id"], r2["ward_id"])
+    info1 = _get_ward_id_or_fallback(r1)
+    info2 = _get_ward_id_or_fallback(r2)
+
+    wid1 = info1.get("ward_id")
+    wid2 = info2.get("ward_id")
+
+    if not wid1 or not wid2:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã để so sánh"}
+
+    result = dal_compare_weather(wid1, wid2)
     result["location1_info"] = r1["data"]
     result["location2_info"] = r2["data"]
     return result
@@ -208,7 +317,12 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    result = dal_compare_with_yesterday(resolved["ward_id"])
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+
+    result = dal_compare_with_yesterday(wid)
     result["resolved_location"] = resolved["data"]
     return result
 
@@ -240,7 +354,12 @@ def get_activity_advice(activity: str, ward_id: str = None, location_hint: str =
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    result = dal_get_activity_advice(activity, resolved["ward_id"])
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+
+    result = dal_get_activity_advice(activity, wid)
     result["resolved_location"] = resolved["data"]
     return result
 
@@ -289,7 +408,18 @@ def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    weather = dal_get_current_weather(resolved["ward_id"])
+    info = _get_ward_id_or_fallback(resolved)
+
+    # District level → use aggregated data
+    if info["level"] == "district" and not info.get("ward_id"):
+        from app.dal.weather_aggregate_dal import get_district_current_weather
+        weather = get_district_current_weather(info["district_name"])
+    elif info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_current_weather
+        weather = get_city_current_weather()
+    else:
+        weather = dal_get_current_weather(info["ward_id"])
+
     phenomena = detect_hanoi_weather_phenomena(weather)
 
     return {"phenomena": phenomena.get("phenomena", []), "resolved_location": resolved["data"]}
@@ -318,7 +448,17 @@ def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> d
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    weather = dal_get_current_weather(resolved["ward_id"])
+    info = _get_ward_id_or_fallback(resolved)
+
+    # Get weather data based on level
+    if info["level"] == "district" and not info.get("ward_id"):
+        from app.dal.weather_aggregate_dal import get_district_current_weather
+        weather = get_district_current_weather(info["district_name"])
+    elif info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_current_weather
+        weather = get_city_current_weather()
+    else:
+        weather = dal_get_current_weather(info["ward_id"])
 
     if weather.get("error"):
         return {"error": weather.get("error"), "message": weather.get("message", "")}
@@ -355,10 +495,15 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+
     query_date = now_ict().date() if date == "today" else datetime.strptime(date, "%Y-%m-%d").date()
 
     # Get daily data from DAL
-    summary = get_daily_summary_data(resolved["ward_id"], query_date)
+    summary = get_daily_summary_data(wid, query_date)
     if "error" in summary:
         return summary
 
@@ -405,7 +550,12 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
-    rows = get_weather_period_data(resolved["ward_id"], start_date, end_date)
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
+    if not wid:
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+
+    rows = get_weather_period_data(wid, start_date, end_date)
 
     if not rows:
         return {"error": "no_data"}
@@ -735,21 +885,16 @@ def get_rain_timeline(
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
-    wid = resolved.get("ward_id")
-    if not wid and resolved["level"] == "district":
-        # Fallback: dùng phường đại diện trong quận
-        from app.dal.location_dal import get_wards_in_district
-        wards = get_wards_in_district(resolved["district_name"])
-        wid = wards[0]["ward_id"] if wards else None
-        if wid:
-            result = dal_rain_timeline(wid, hours)
-            result["note"] = f"Dữ liệu đại diện từ {wards[0].get('ward_name_vi', '')} trong {resolved['district_name']}"
-            return result
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
 
-    if resolved["level"] == "ward":
-        return dal_rain_timeline(resolved["ward_id"], hours)
-    else:
+    if not wid:
         return {"error": "need_ward", "message": "Cần chỉ định phường/xã cụ thể để xem timeline mưa"}
+
+    result = dal_rain_timeline(wid, hours)
+    if info.get("fallback_ward"):
+        result["note"] = info.get("note", "")
+    return result
 
 
 # ============== Tool 21: get_best_time ==============
@@ -781,12 +926,8 @@ def get_best_time(
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
 
-    wid = resolved.get("ward_id")
-    if not wid and resolved["level"] == "district":
-        # Use first ward in district
-        from app.dal.location_dal import get_wards_in_district
-        wards = get_wards_in_district(resolved["district_name"])
-        wid = wards[0]["ward_id"] if wards else None
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
 
     if not wid:
         return {"error": "need_ward", "message": "Khong xac dinh duoc phuong/xa"}
@@ -819,11 +960,8 @@ def get_clothing_advice(
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
 
-    wid = resolved.get("ward_id")
-    if not wid and resolved["level"] == "district":
-        from app.dal.location_dal import get_wards_in_district
-        wards = get_wards_in_district(resolved["district_name"])
-        wid = wards[0]["ward_id"] if wards else None
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
 
     if not wid:
         return {"error": "need_ward", "message": "Khong xac dinh duoc phuong/xa"}
@@ -856,11 +994,8 @@ def get_temperature_trend(
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
 
-    wid = resolved.get("ward_id")
-    if not wid and resolved["level"] == "district":
-        from app.dal.location_dal import get_wards_in_district
-        wards = get_wards_in_district(resolved["district_name"])
-        wid = wards[0]["ward_id"] if wards else None
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
 
     if not wid:
         return {"error": "need_ward", "message": "Khong xac dinh duoc phuong/xa"}
@@ -897,11 +1032,8 @@ def get_comfort_index(
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
-    wid = resolved.get("ward_id")
-    if not wid and resolved["level"] == "district":
-        from app.dal.location_dal import get_wards_in_district
-        wards = get_wards_in_district(resolved["district_name"])
-        wid = wards[0]["ward_id"] if wards else None
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
 
     if not wid:
         return {"error": "need_ward", "message": "Không xác định được phường/xã"}
@@ -960,11 +1092,8 @@ def get_weather_change_alert(
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
-    wid = resolved.get("ward_id")
-    if not wid and resolved["level"] == "district":
-        from app.dal.location_dal import get_wards_in_district
-        wards = get_wards_in_district(resolved["district_name"])
-        wid = wards[0]["ward_id"] if wards else None
+    info = _get_ward_id_or_fallback(resolved)
+    wid = info.get("ward_id")
 
     if not wid:
         return {"error": "need_ward", "message": "Không xác định được phường/xã"}

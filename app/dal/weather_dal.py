@@ -125,8 +125,8 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
                humidity, pop, rain_total, uvi, weather_main, weather_description, 
                summary, sunrise, sunset
         FROM fact_weather_daily
-        WHERE ward_id = %s 
-          AND date >= CURRENT_DATE
+        WHERE ward_id = %s
+          AND date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
         ORDER BY date
         LIMIT %s
     """, (ward_id, days))
@@ -143,14 +143,14 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
 
 def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
     """Get weather for a specific date in the past.
-    
-    IMPORTANT: Queries fact_weather_hourly with data_kind='history'
-    because we only have 1 record/day (noon) in hourly table.
-    
+
+    Queries fact_weather_hourly with data_kind='history' first.
+    Falls back to fact_weather_daily if no hourly history available.
+
     Args:
         ward_id: Ward ID
         date: Date in YYYY-MM-DD format
-        
+
     Returns:
         Dictionary with historical weather data or error
     """
@@ -163,15 +163,9 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
           AND (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date = %s::date
     """, (ward_id, date))
 
-    if not result:
-        return {
-            "error": "no_data",
-            "message": f"Không có dữ liệu thời tiết ngày {date}",
-            "note": "Chỉ có dữ liệu 14 ngày gần nhất"
-        }
-
-    result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
-    result["note"] = "Dữ liệu lúc 12:00 ICT (noon)"
+    if result:
+        result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
+        result["note"] = "Dữ liệu lúc 12:00 ICT (noon)"
 
     # Bổ sung daily summary (temp_min/max, rain_total, sunrise/sunset)
     daily = query_one(
@@ -181,11 +175,37 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
         "FROM fact_weather_daily WHERE ward_id = %s AND date = %s::date",
         (ward_id, date)
     )
-    if daily:
+
+    if result and daily:
         result["daily_summary"] = daily
         result["note"] = "Dữ liệu trưa 12:00 ICT + tổng hợp ngày"
+        return result
 
-    return result
+    if result:
+        return result
+
+    # Fallback: use daily data only when no hourly history
+    if daily:
+        return {
+            "temp": daily.get("temp_avg"),
+            "temp_min": daily.get("temp_min"),
+            "temp_max": daily.get("temp_max"),
+            "humidity": daily.get("daily_humidity"),
+            "rain_total": daily.get("rain_total"),
+            "uvi": daily.get("uvi"),
+            "weather_main": daily.get("daily_weather_main"),
+            "weather_description": daily.get("daily_weather_desc"),
+            "sunrise": daily.get("sunrise"),
+            "sunset": daily.get("sunset"),
+            "note": "Dữ liệu tổng hợp ngày (không có chi tiết theo giờ)",
+            "source": "daily_summary"
+        }
+
+    return {
+        "error": "no_data",
+        "message": f"Không có dữ liệu thời tiết ngày {date}",
+        "note": "Chỉ có dữ liệu 14 ngày gần nhất"
+    }
 
 
 def get_weather_range(ward_id: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
@@ -415,7 +435,7 @@ def get_temperature_trend(ward_id: str, days: int = 7) -> Dict[str, Any]:
         FROM fact_weather_daily
         WHERE ward_id = %s
           AND data_kind = 'forecast'
-          AND date >= CURRENT_DATE
+          AND date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
         ORDER BY date
         LIMIT %s
     """, (ward_id, min(days, 8)))
@@ -484,7 +504,8 @@ def get_weather_period_data(ward_id: str, start_date: str, end_date: str) -> Lis
         "SELECT date, temp_min, temp_max, temp_avg, humidity, pop, rain_total, "
         "uvi, wind_speed, weather_main "
         "FROM fact_weather_daily "
-        "WHERE ward_id = %s AND date BETWEEN %s AND %s ORDER BY date",
+        "WHERE ward_id = %s AND date BETWEEN %s AND %s "
+        "AND data_kind IN ('forecast', 'history') ORDER BY date",
         (ward_id, start_date, end_date)
     )
 

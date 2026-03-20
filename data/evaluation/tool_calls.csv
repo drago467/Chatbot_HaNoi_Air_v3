@@ -1,109 +1,355 @@
 timestamp,session_id,turn_number,tool_name,tool_input,tool_output,success,execution_time_ms
-2026-03-18T23:18:42.398181+07:00,eval_1_6b1ff1f0,0,get_current_weather,{},,True,0
-2026-03-18T23:18:42.399179+07:00,eval_1_6b1ff1f0,0,get_city_weather,{},,True,0
-2026-03-18T23:18:50.617632+07:00,eval_2_504da67b,0,get_district_weather,{'district_name': 'Quan Cau Giay'},,True,0
-2026-03-18T23:19:01.830586+07:00,eval_3_7f1eaeed,0,get_current_weather,{'location_hint': 'Dịch Vọng'},,True,0
-2026-03-18T23:19:01.830586+07:00,eval_3_7f1eaeed,0,get_hourly_forecast,"{'location_hint': 'Dịch Vọng', 'hours': 2}",,True,0
-2026-03-18T23:19:01.831586+07:00,eval_3_7f1eaeed,0,resolve_location,{'location_hint': 'Dịch Vọng'},,True,0
-2026-03-18T23:19:15.071597+07:00,eval_4_f940357f,0,get_current_weather,{'location_hint': 'Hoan Kiem'},,True,0
-2026-03-18T23:19:15.071597+07:00,eval_4_f940357f,0,resolve_location,{'location_hint': 'Hoan Kiem'},,True,0
-2026-03-18T23:19:15.072584+07:00,eval_4_f940357f,0,get_district_weather,{'district_name': 'Quận Hoàn Kiếm'},,True,0
-2026-03-18T23:19:35.127153+07:00,eval_5_35216019,0,get_current_weather,"{'location_hint': 'Phú Diễn, Bắc Từ Liêm'}",,True,0
-2026-03-18T23:19:35.128163+07:00,eval_5_35216019,0,resolve_location,"{'location_hint': 'Phú Diễn, Bắc Từ Liêm'}",,True,0
-2026-03-18T23:19:35.128505+07:00,eval_5_35216019,0,get_district_weather,{'district_name': 'Quận Bắc Từ Liêm'},,True,0
-2026-03-18T23:19:54.248936+07:00,eval_6_23804408,0,get_current_weather,{'location_hint': 'quận Long Biên'},,True,0
-2026-03-18T23:19:54.248936+07:00,eval_6_23804408,0,resolve_location,{'location_hint': 'quận Long Biên'},,True,0
-2026-03-18T23:19:54.249941+07:00,eval_6_23804408,0,get_district_weather,{'district_name': 'Quận Long Biên'},,True,0
-2026-03-18T23:20:00.109354+07:00,eval_7_31bc4bb8,0,get_current_weather,{},,True,0
-2026-03-18T23:20:00.109354+07:00,eval_7_31bc4bb8,0,get_city_weather,{},,True,0
-2026-03-18T23:20:23.334969+07:00,eval_8_49cd2fa8,0,get_current_weather,{'location_hint': 'quận Hoàng Mai'},,True,0
-2026-03-18T23:20:23.334969+07:00,eval_8_49cd2fa8,0,resolve_location,{'location_hint': 'quận Hoàng Mai'},,True,0
-2026-03-18T23:20:23.334969+07:00,eval_8_49cd2fa8,0,get_current_weather,{'location_hint': 'quận Hai Bà Trưng'},,True,0
-2026-03-18T23:20:23.334969+07:00,eval_8_49cd2fa8,0,get_district_weather,{'district_name': 'Quận Hoàng Mai'},,True,0
-2026-03-18T23:20:59.799033+07:00,eval_9_5cf9f00f,0,get_current_weather,{'location_hint': 'Mỹ Đình'},,True,0
-2026-03-18T23:20:59.799882+07:00,eval_9_5cf9f00f,0,resolve_location,{'location_hint': 'Mỹ Đình'},,True,0
-2026-03-18T23:20:59.799882+07:00,eval_9_5cf9f00f,0,get_current_weather,{'location_hint': 'Quận Ba Đình'},,True,0
-2026-03-18T23:20:59.801317+07:00,eval_9_5cf9f00f,0,resolve_location,{'location_hint': 'Nam Từ Liêm'},,True,0
-2026-03-18T23:20:59.802733+07:00,eval_9_5cf9f00f,0,get_current_weather,{'location_hint': 'Quận Nam Từ Liêm'},,True,0
-2026-03-18T23:20:59.804039+07:00,eval_9_5cf9f00f,0,resolve_location,{'location_hint': 'Nam Từ Liêm'},,True,0
-2026-03-18T23:20:59.804039+07:00,eval_9_5cf9f00f,0,get_current_weather,{'location_hint': 'Nam Từ Liêm'},,True,0
-2026-03-18T23:20:59.804039+07:00,eval_9_5cf9f00f,0,get_district_weather,{'district_name': 'Nam Từ Liêm'},,True,0
-2026-03-18T23:21:10.392071+07:00,eval_10_4982f29a,0,get_current_weather,{'location_hint': 'quan Hoan Kiem'},,True,0
-2026-03-18T23:21:10.392675+07:00,eval_10_4982f29a,0,resolve_location,{'location_hint': 'Ho Guom'},,True,0
-2026-03-18T23:21:28.058572+07:00,eval_11_e91c104b,0,get_current_weather,{'location_hint': 'Thanh Xuân'},,True,0
-2026-03-18T23:21:28.058572+07:00,eval_11_e91c104b,0,resolve_location,{'location_hint': 'Thanh Xuân'},,True,0
-2026-03-18T23:21:28.058572+07:00,eval_11_e91c104b,0,get_district_weather,{'district_name': 'Quận Thanh Xuân'},,True,0
-2026-03-18T23:21:59.096168+07:00,eval_13_012b1a14,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'quận Hai Bà Trưng'}",,True,0
-2026-03-18T23:21:59.097182+07:00,eval_13_012b1a14,0,resolve_location,{'location_hint': 'quận Hai Bà Trưng'},,True,0
-2026-03-18T23:21:59.097182+07:00,eval_13_012b1a14,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'quận Hai Bà Trưng'}",,True,0
-2026-03-18T23:21:59.098203+07:00,eval_13_012b1a14,0,resolve_location,{'location_hint': 'Hai Bà Trưng'},,True,0
-2026-03-18T23:21:59.098203+07:00,eval_13_012b1a14,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'Quận Hai Bà Trưng'}",,True,0
-2026-03-18T23:21:59.099376+07:00,eval_13_012b1a14,0,get_district_weather,{'district_name': 'Quận Hai Bà Trưng'},,True,0
-2026-03-18T23:22:13.593625+07:00,eval_14_ce24f0ef,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Khương Trung, Thanh Xuân'}",,True,0
-2026-03-18T23:22:13.594627+07:00,eval_14_ce24f0ef,0,resolve_location,"{'location_hint': 'Khương Trung, Thanh Xuân'}",,True,0
-2026-03-18T23:22:13.595627+07:00,eval_14_ce24f0ef,0,get_district_weather,"{'hours': 6, 'district_name': 'Quận Thanh Xuân'}",,True,0
-2026-03-18T23:22:33.339596+07:00,eval_15_67e00e5c,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'Cầu Giấy'}",,True,0
-2026-03-18T23:22:33.340930+07:00,eval_15_67e00e5c,0,resolve_location,{'location_hint': 'Cầu Giấy'},,True,0
-2026-03-18T23:22:33.341901+07:00,eval_15_67e00e5c,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'Quận Cầu Giấy'}",,True,0
-2026-03-18T23:22:33.342903+07:00,eval_15_67e00e5c,0,get_district_weather,"{'hours': 3, 'district_name': 'Quận Cầu Giấy'}",,True,0
-2026-03-18T23:22:38.402750+07:00,eval_16_8a39dc63,0,get_current_weather,{},,True,0
-2026-03-18T23:22:38.402750+07:00,eval_16_8a39dc63,0,get_hourly_forecast,{'hours': 6},,True,0
-2026-03-18T23:22:53.458280+07:00,eval_17_c930caf6,0,get_current_weather,{'location_hint': 'quan Tay Ho'},,True,0
-2026-03-18T23:22:53.459518+07:00,eval_17_c930caf6,0,resolve_location,{'location_hint': 'Tay Ho'},,True,0
-2026-03-18T23:22:53.460516+07:00,eval_17_c930caf6,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
-2026-03-18T23:23:12.366766+07:00,eval_18_d29e09ae,0,get_hourly_forecast,"{'location_hint': 'Xuân Đỉnh', 'hours': 3}",,True,0
-2026-03-18T23:23:12.366766+07:00,eval_18_d29e09ae,0,resolve_location,{'location_hint': 'Xuân Đỉnh'},,True,0
-2026-03-18T23:23:12.367640+07:00,eval_18_d29e09ae,0,get_hourly_forecast,"{'ward_id': 'ID_01061', 'hours': 3}",,True,0
-2026-03-18T23:23:34.877420+07:00,eval_19_70d7efb3,0,get_hourly_forecast,"{'ward_id': 'ID_00169', 'hours': 3}",,True,0
-2026-03-18T23:23:34.878830+07:00,eval_19_70d7efb3,0,resolve_location,{'location_hint': 'Long Biên'},,True,0
-2026-03-18T23:23:34.878830+07:00,eval_19_70d7efb3,0,get_hourly_forecast,"{'location_hint': 'Quận Long Biên', 'hours': 3}",,True,0
-2026-03-18T23:23:34.879920+07:00,eval_19_70d7efb3,0,get_district_weather,{'district_name': 'Quận Long Biên'},,True,0
-2026-03-18T23:24:24.253399+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Đống Đa'}",,True,0
-2026-03-18T23:24:24.254419+07:00,eval_20_456b3d6b,0,resolve_location,{'location_hint': 'Đống Đa'},,True,0
-2026-03-18T23:24:24.254419+07:00,eval_20_456b3d6b,0,get_ward_ranking_in_district,{'district_name': 'Quận Đống Đa'},,True,0
-2026-03-18T23:24:24.255389+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Văn Miếu - Quốc Tử Giám'}",,True,0
-2026-03-18T23:24:24.255389+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Ô Chợ Dừa'}",,True,0
-2026-03-18T23:24:24.255389+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Kim Liên'}",,True,0
-2026-03-18T23:24:24.255389+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Láng'}",,True,0
-2026-03-18T23:24:24.255389+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Đống Đa'}",,True,0
-2026-03-18T23:24:24.256433+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Văn Miếu'}",,True,0
-2026-03-18T23:24:24.256433+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Ô Chợ Dừa'}",,True,0
-2026-03-18T23:24:24.257381+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Kim Liên'}",,True,0
-2026-03-18T23:24:24.257381+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Láng'}",,True,0
-2026-03-18T23:24:24.257381+07:00,eval_20_456b3d6b,0,get_rain_timeline,"{'hours': 24, 'location_hint': 'Phường Đống Đa'}",,True,0
-2026-03-18T23:24:40.576782+07:00,eval_21_abfecaa1,0,get_rain_timeline,"{'hours': 4, 'location_hint': 'Thanh Trì'}",,True,0
-2026-03-18T23:24:40.576782+07:00,eval_21_abfecaa1,0,resolve_location,{'location_hint': 'Thanh Trì'},,True,0
-2026-03-18T23:24:40.577728+07:00,eval_21_abfecaa1,0,get_district_weather,"{'district_name': 'Huyện Thanh Trì', 'hours': 4}",,True,0
-2026-03-18T23:24:51.637811+07:00,eval_22_c68c583d,0,get_hourly_forecast,"{'location_hint': 'Ha Noi', 'hours': 24}",,True,0
-2026-03-18T23:24:51.638903+07:00,eval_22_c68c583d,0,get_hourly_forecast,{'hours': 24},,True,0
-2026-03-18T23:24:51.638903+07:00,eval_22_c68c583d,0,get_city_weather,{},,True,0
-2026-03-18T23:25:16.898196+07:00,eval_23_4d6b2e9a,0,get_hourly_forecast,"{'location_hint': 'Đông Anh', 'hours': 6}",,True,0
-2026-03-18T23:25:16.898196+07:00,eval_23_4d6b2e9a,0,get_activity_advice,"{'location_hint': 'Đông Anh', 'activity': 'đi ra ngoài'}",,True,0
-2026-03-18T23:25:16.899194+07:00,eval_23_4d6b2e9a,0,resolve_location,{'location_hint': 'Đông Anh'},,True,0
-2026-03-18T23:25:16.899194+07:00,eval_23_4d6b2e9a,0,get_hourly_forecast,"{'location_hint': 'Huyện Đông Anh', 'hours': 6}",,True,0
-2026-03-18T23:25:16.899194+07:00,eval_23_4d6b2e9a,0,get_activity_advice,"{'location_hint': 'Huyện Đông Anh', 'activity': 'đi ra ngoài'}",,True,0
-2026-03-18T23:25:16.899194+07:00,eval_23_4d6b2e9a,0,get_district_weather,{'district_name': 'Huyện Đông Anh'},,True,0
-2026-03-18T23:25:38.146275+07:00,eval_24_ff8d4fbd,0,get_hourly_forecast,"{'hours': 1, 'location_hint': 'Hoan Kiem'}",,True,0
-2026-03-18T23:25:38.147251+07:00,eval_24_ff8d4fbd,0,resolve_location,{'location_hint': 'Hoan Kiem'},,True,0
-2026-03-18T23:25:38.147251+07:00,eval_24_ff8d4fbd,0,get_hourly_forecast,"{'hours': 1, 'location_hint': 'Quận Hoàn Kiếm'}",,True,0
-2026-03-18T23:25:38.147251+07:00,eval_24_ff8d4fbd,0,get_district_weather,{'district_name': 'Quận Hoàn Kiếm'},,True,0
-2026-03-18T23:25:50.546461+07:00,eval_25_be33b05a,0,get_weather_period,"{'start_date': '2023-10-14', 'end_date': '2023-10-15', 'location_hint': 'Ha Noi'}",,True,0
-2026-03-18T23:25:50.547560+07:00,eval_25_be33b05a,0,get_city_daily_forecast,{'days': 2},,True,0
-2026-03-18T23:25:59.328874+07:00,eval_26_b6239102,0,get_district_daily_forecast,"{'days': 1, 'district_name': 'Nam Tu Liem'}",,True,0
-2026-03-18T23:26:15.174575+07:00,eval_27_13d708dc,0,get_daily_forecast,"{'location_hint': 'Gia Lam', 'days': 3}",,True,0
-2026-03-18T23:26:15.174575+07:00,eval_27_13d708dc,0,resolve_location,{'location_hint': 'Gia Lam'},,True,0
-2026-03-18T23:26:15.175543+07:00,eval_27_13d708dc,0,get_district_daily_forecast,"{'district_name': 'Huyện Gia Lâm', 'days': 3}",,True,0
-2026-03-18T23:26:29.866300+07:00,eval_28_b72d0fa9,0,get_weather_period,"{'start_date': '2023-10-30', 'end_date': '2023-11-05', 'location_hint': 'Hoan Kiem'}",,True,0
-2026-03-18T23:26:29.866300+07:00,eval_28_b72d0fa9,0,get_district_daily_forecast,"{'days': 7, 'district_name': 'Quan Hoan Kiem'}",,True,0
-2026-03-18T23:26:41.028632+07:00,eval_29_22171f22,0,get_weather_period,"{'location_hint': 'Long Biên', 'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
-2026-03-18T23:26:41.028632+07:00,eval_29_22171f22,0,get_district_daily_forecast,"{'days': 7, 'district_name': 'Quận Long Biên'}",,True,0
-2026-03-19T08:25:18.327444+07:00,eval_1_1a76ad9e,0,get_district_weather,{'district_name': 'Quan Cau Giay'},,True,0
-2026-03-19T08:25:30.774157+07:00,eval_2_ce6c6c71,0,get_daily_forecast,{'days': 1},,True,0
-2026-03-19T08:25:30.775190+07:00,eval_2_ce6c6c71,0,get_daily_forecast,{'days': 1},,True,0
-2026-03-19T08:25:40.408552+07:00,eval_3_26537a1e,0,get_clothing_advice,{},,True,0
-2026-03-19T09:41:22.456600+07:00,test_diac_1,0,get_district_weather,{'district_name': 'Quận Cầu Giấy'},,True,0
-2026-03-19T09:41:50.093398+07:00,test_diac_2,0,get_current_weather,{'location_hint': 'Đống Đa'},,True,0
-2026-03-19T09:41:50.094439+07:00,test_diac_2,0,resolve_location,{'location_hint': 'Đống Đa'},,True,0
-2026-03-19T09:41:50.094439+07:00,test_diac_2,0,get_district_weather,{'district_name': 'Quận Đống Đa'},,True,0
-2026-03-19T09:41:50.094439+07:00,test_diac_2,0,get_clothing_advice,{'ward_id': 'ID_00169'},,True,0
-2026-03-19T09:41:50.095399+07:00,test_diac_2,0,get_ward_ranking_in_district,{'district_name': 'Quận Đống Đa'},,True,0
+2026-03-19T13:56:20.872648+07:00,eval_1_47888a62,0,get_current_weather,{'location_hint': 'Hà Nội'},,True,0
+2026-03-19T13:56:20.872648+07:00,eval_1_47888a62,0,get_city_weather,{},,True,0
+2026-03-19T13:56:27.943592+07:00,eval_2_15319fa6,0,get_district_weather,{'district_name': 'Cầu Giấy'},,True,0
+2026-03-19T13:56:43.639814+07:00,eval_3_0373219d,0,get_current_weather,{'location_hint': 'Dịch Vọng'},,True,0
+2026-03-19T13:56:43.639814+07:00,eval_3_0373219d,0,get_hourly_forecast,"{'hours': 2, 'location_hint': 'Dịch Vọng'}",,True,0
+2026-03-19T13:56:43.639814+07:00,eval_3_0373219d,0,get_current_weather,{'location_hint': 'Dịch Vọng'},,True,0
+2026-03-19T13:56:43.639814+07:00,eval_3_0373219d,0,resolve_location,{'location_hint': 'Dịch Vọng'},,True,0
+2026-03-19T13:56:58.264903+07:00,eval_4_31b6754f,0,get_current_weather,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T13:56:58.264903+07:00,eval_4_31b6754f,0,resolve_location,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T13:56:58.264903+07:00,eval_4_31b6754f,0,get_district_weather,{'district_name': 'Quận Hoàn Kiếm'},,True,0
+2026-03-19T13:57:14.748121+07:00,eval_5_abccb2c8,0,get_current_weather,"{'location_hint': 'Phú Diễn, Bắc Từ Liêm'}",,True,0
+2026-03-19T13:57:14.748121+07:00,eval_5_abccb2c8,0,resolve_location,"{'location_hint': 'Phú Diễn, Bắc Từ Liêm'}",,True,0
+2026-03-19T13:57:14.748121+07:00,eval_5_abccb2c8,0,get_district_weather,{'district_name': 'Quận Bắc Từ Liêm'},,True,0
+2026-03-19T13:57:20.717545+07:00,eval_6_8daab409,0,get_district_weather,{'district_name': 'Long Biên'},,True,0
+2026-03-19T13:57:24.667632+07:00,eval_7_7b52dd3a,0,get_current_weather,{},,True,0
+2026-03-19T13:57:32.780335+07:00,eval_8_1be96f84,0,get_district_weather,{'district_name': 'Hoàng Mai'},,True,0
+2026-03-19T13:57:48.011397+07:00,eval_9_4ed0e634,0,get_current_weather,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T13:57:48.011397+07:00,eval_9_4ed0e634,0,resolve_location,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T13:57:48.011397+07:00,eval_9_4ed0e634,0,get_district_weather,{'district_name': 'Quận Ba Đình'},,True,0
+2026-03-19T13:57:56.980924+07:00,eval_10_2abc27e2,0,get_current_weather,{'location_hint': 'Hồ Gươm'},,True,0
+2026-03-19T13:57:56.980924+07:00,eval_10_2abc27e2,0,resolve_location,{'location_hint': 'Hồ Gươm'},,True,0
+2026-03-19T13:58:12.750263+07:00,eval_11_ec0ecefa,0,get_current_weather,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T13:58:12.750263+07:00,eval_11_ec0ecefa,0,resolve_location,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T13:58:12.750263+07:00,eval_11_ec0ecefa,0,get_district_weather,{'district_name': 'Quận Thanh Xuân'},,True,0
+2026-03-19T13:58:22.651617+07:00,eval_13_5cabf846,0,get_rain_timeline,"{'hours': 6, 'location_hint': 'Quận Hai Bà Trưng'}",,True,0
+2026-03-19T13:58:38.625275+07:00,eval_14_f2965885,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Khương Trung, Thanh Xuân'}",,True,0
+2026-03-19T13:58:38.625275+07:00,eval_14_f2965885,0,resolve_location,"{'location_hint': 'Khương Trung, Thanh Xuân'}",,True,0
+2026-03-19T13:58:38.625275+07:00,eval_14_f2965885,0,get_district_weather,"{'hours': 6, 'district_name': 'Quận Thanh Xuân'}",,True,0
+2026-03-19T13:58:52.163495+07:00,eval_15_8e3cc6ac,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'Cầu Giấy'}",,True,0
+2026-03-19T13:58:52.163495+07:00,eval_15_8e3cc6ac,0,resolve_location,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T13:58:52.163495+07:00,eval_15_8e3cc6ac,0,get_district_weather,{'district_name': 'Quận Cầu Giấy'},,True,0
+2026-03-19T13:58:56.698896+07:00,eval_16_963d71e1,0,get_rain_timeline,{'hours': 12},,True,0
+2026-03-19T13:59:13.217075+07:00,eval_17_08fb6525,0,get_current_weather,{'location_hint': 'Tây Hồ'},,True,0
+2026-03-19T13:59:13.217075+07:00,eval_17_08fb6525,0,resolve_location,{'location_hint': 'Tây Hồ'},,True,0
+2026-03-19T13:59:13.222796+07:00,eval_17_08fb6525,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T13:59:29.111322+07:00,eval_18_2be5f481,0,get_hourly_forecast,"{'hours': 3, 'location_hint': 'Xuân Đỉnh'}",,True,0
+2026-03-19T13:59:29.111322+07:00,eval_18_2be5f481,0,resolve_location,{'location_hint': 'Xuân Đỉnh'},,True,0
+2026-03-19T13:59:29.111322+07:00,eval_18_2be5f481,0,get_hourly_forecast,"{'hours': 3, 'ward_id': 'ID_01061'}",,True,0
+2026-03-19T13:59:41.550590+07:00,eval_19_4053aaea,0,get_hourly_forecast,"{'ward_id': 'ID_00170', 'hours': 3}",,True,0
+2026-03-19T13:59:41.550590+07:00,eval_19_4053aaea,0,resolve_location,{'location_hint': 'Long Biên'},,True,0
+2026-03-19T13:59:41.550590+07:00,eval_19_4053aaea,0,get_district_weather,{'district_name': 'Quận Long Biên'},,True,0
+2026-03-19T13:59:49.789446+07:00,eval_20_270e3f2d,0,get_rain_timeline,"{'hours': 2, 'location_hint': 'Đống Đa'}",,True,0
+2026-03-19T13:59:57.335013+07:00,eval_21_d3a9c397,0,get_rain_timeline,"{'location_hint': 'Thanh Trì', 'hours': 4}",,True,0
+2026-03-19T14:00:05.002487+07:00,eval_22_cb7e3bcf,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Hà Nội'}",,True,0
+2026-03-19T14:00:05.002487+07:00,eval_22_cb7e3bcf,0,get_hourly_forecast,{'hours': 24},,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Đông Anh'}",,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,get_comfort_index,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,get_current_weather,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,resolve_location,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Đông Anh'}",,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,get_comfort_index,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:00:30.691393+07:00,eval_23_81c36986,0,get_district_weather,{'district_name': 'Huyện Đông Anh'},,True,0
+2026-03-19T14:00:49.714794+07:00,eval_24_eb9cd724,0,get_hourly_forecast,"{'location_hint': 'Hoàn Kiếm', 'hours': 24}",,True,0
+2026-03-19T14:00:49.714794+07:00,eval_24_eb9cd724,0,resolve_location,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T14:00:49.714794+07:00,eval_24_eb9cd724,0,get_hourly_forecast,"{'location_hint': 'Quận Hoàn Kiếm', 'hours': 24}",,True,0
+2026-03-19T14:00:49.714794+07:00,eval_24_eb9cd724,0,get_district_weather,{'district_name': 'Quận Hoàn Kiếm'},,True,0
+2026-03-19T14:00:59.038392+07:00,eval_25_e2668128,0,get_weather_period,"{'start_date': '2023-10-14', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:00:59.038392+07:00,eval_25_e2668128,0,get_city_daily_forecast,{'days': 2},,True,0
+2026-03-19T14:01:07.426507+07:00,eval_26_14800d6c,0,get_district_daily_forecast,"{'days': 1, 'district_name': 'Quận Nam Từ Liêm'}",,True,0
+2026-03-19T14:02:22.980819+07:00,eval_27_79cff2a9,0,get_weather_period,"{'location_hint': 'Gia Lâm', 'start_date': '2023-10-10', 'end_date': '2023-10-12'}",,True,0
+2026-03-19T14:02:22.980819+07:00,eval_27_79cff2a9,0,get_district_daily_forecast,"{'district_name': 'Huyện Gia Lâm', 'days': 3}",,True,0
+2026-03-19T14:02:36.854381+07:00,eval_28_4c713c95,0,get_weather_period,"{'start_date': '2023-10-30', 'end_date': '2023-11-05', 'location_hint': 'Quận Hoàn Kiếm'}",,True,0
+2026-03-19T14:02:36.854381+07:00,eval_28_4c713c95,0,get_district_daily_forecast,"{'district_name': 'Quận Hoàn Kiếm', 'days': 7}",,True,0
+2026-03-19T14:02:44.819438+07:00,eval_29_7750e66e,0,get_district_daily_forecast,"{'days': 7, 'district_name': 'Quận Long Biên'}",,True,0
+2026-03-19T14:03:05.866198+07:00,eval_30_d068b11a,0,get_daily_forecast,"{'days': 7, 'location_hint': 'Quang Trung'}",,True,0
+2026-03-19T14:03:05.866198+07:00,eval_30_d068b11a,0,resolve_location,"{'location_hint': 'Quang Trung, Đống Đa'}",,True,0
+2026-03-19T14:03:05.866198+07:00,eval_30_d068b11a,0,get_district_daily_forecast,"{'days': 7, 'district_name': 'Quận Đống Đa'}",,True,0
+2026-03-19T14:03:09.654165+07:00,eval_31_7afcbd18,0,get_daily_summary,{'date': 'tomorrow'},,True,0
+2026-03-19T14:03:24.938615+07:00,eval_32_bc37947e,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Hoàng Mai'}",,True,0
+2026-03-19T14:03:24.939725+07:00,eval_32_bc37947e,0,resolve_location,{'location_hint': 'Hoàng Mai'},,True,0
+2026-03-19T14:03:24.940740+07:00,eval_32_bc37947e,0,get_district_daily_forecast,"{'district_name': 'Quận Hoàng Mai', 'days': 1}",,True,0
+2026-03-19T14:03:35.475188+07:00,eval_33_9e7ed163,0,get_weather_period,"{'start_date': '2023-10-30', 'end_date': '2023-11-05'}",,True,0
+2026-03-19T14:03:35.475737+07:00,eval_33_9e7ed163,0,get_city_daily_forecast,{'days': 7},,True,0
+2026-03-19T14:03:43.483783+07:00,eval_34_c9d8d58f,0,get_district_daily_forecast,"{'district_name': 'Huyện Đan Phượng', 'days': 1}",,True,0
+2026-03-19T14:03:58.052588+07:00,eval_35_05e3ad37,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Ba Đình'}",,True,0
+2026-03-19T14:03:58.053956+07:00,eval_35_05e3ad37,0,resolve_location,{'location_hint': 'Ba Đình'},,True,0
+2026-03-19T14:03:58.053956+07:00,eval_35_05e3ad37,0,get_district_daily_forecast,"{'days': 1, 'district_name': 'Quận Ba Đình'}",,True,0
+2026-03-19T14:04:07.415750+07:00,eval_36_4519feaa,0,get_district_daily_forecast,"{'district_name': 'Huyện Sóc Sơn', 'days': 5}",,True,0
+2026-03-19T14:04:14.129612+07:00,eval_37_30b9e974,0,get_city_weather,{},,True,0
+2026-03-19T14:04:14.129612+07:00,eval_37_30b9e974,0,get_district_ranking,{'metric': 'nhiet_do'},,True,0
+2026-03-19T14:04:25.391067+07:00,eval_38_7a1f678c,0,get_weather_period,"{'district_name': 'Quận Long Biên', 'start_date': '2023-10-06', 'end_date': '2023-10-08'}",,True,0
+2026-03-19T14:04:25.391067+07:00,eval_38_7a1f678c,0,get_district_daily_forecast,"{'days': 3, 'district_name': 'Quận Long Biên'}",,True,0
+2026-03-19T14:04:35.885013+07:00,eval_39_0bae6ca2,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
+2026-03-19T14:04:35.886145+07:00,eval_39_0bae6ca2,0,get_city_daily_forecast,{'days': 7},,True,0
+2026-03-19T14:04:53.012962+07:00,eval_40_d86718c8,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:04:53.012962+07:00,eval_40_d86718c8,0,get_weather_period,"{'start_date': '2023-10-20', 'end_date': '2023-10-27', 'ward_id': 'ID_00169'}",,True,0
+2026-03-19T14:04:53.012962+07:00,eval_40_d86718c8,0,get_city_daily_forecast,{'days': 7},,True,0
+2026-03-19T14:04:58.408259+07:00,eval_41_8da285be,0,get_city_daily_forecast,{'days': 1},,True,0
+2026-03-19T14:05:07.412977+07:00,eval_42_9a8f7306,0,get_weather_period,"{'start_date': '2023-10-14', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:05:07.412977+07:00,eval_42_9a8f7306,0,get_city_daily_forecast,{'days': 2},,True,0
+2026-03-19T14:05:11.801706+07:00,eval_43_f620b981,0,get_weather_period,"{'start_date': '2023-10-30', 'end_date': '2023-11-05'}",,True,0
+2026-03-19T14:05:11.801706+07:00,eval_43_f620b981,0,detect_phenomena,{},,True,0
+2026-03-19T14:05:28.692612+07:00,eval_44_8b2e9200,0,get_weather_period,"{'location_hint': 'Sóc Sơn', 'start_date': '2023-10-10', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:05:28.692612+07:00,eval_44_8b2e9200,0,resolve_location,{'location_hint': 'Sóc Sơn'},,True,0
+2026-03-19T14:05:28.692612+07:00,eval_44_8b2e9200,0,get_district_daily_forecast,"{'district_name': 'Huyện Sóc Sơn', 'days': 5}",,True,0
+2026-03-19T14:05:52.334880+07:00,eval_45_cce12e8a,0,get_district_weather,{'district_name': 'Gia Lâm'},,True,0
+2026-03-19T14:05:52.334880+07:00,eval_45_cce12e8a,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22', 'location_hint': 'Gia Lâm'}",,True,0
+2026-03-19T14:05:52.334880+07:00,eval_45_cce12e8a,0,get_district_daily_forecast,{'district_name': 'Gia Lâm'},,True,0
+2026-03-19T14:05:56.805712+07:00,eval_46_c3ddbee4,0,get_weather_period,"{'start_date': '2023-10-01', 'end_date': '2023-10-31', 'ward_id': 'ID_00173'}",,True,0
+2026-03-19T14:06:03.619353+07:00,eval_47_3850438f,0,get_rain_timeline,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T14:06:18.400891+07:00,eval_48_40961ac1,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Nhật Tân, Tây Hồ'}",,True,0
+2026-03-19T14:06:18.400891+07:00,eval_48_40961ac1,0,resolve_location,"{'location_hint': 'Nhật Tân, Tây Hồ'}",,True,0
+2026-03-19T14:06:18.401897+07:00,eval_48_40961ac1,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:06:35.799593+07:00,eval_49_0065d136,0,get_rain_timeline,"{'hours': 2, 'location_hint': 'Hoàng Mai'}",,True,0
+2026-03-19T14:06:35.799593+07:00,eval_49_0065d136,0,get_current_weather,{'location_hint': 'Hoàng Mai'},,True,0
+2026-03-19T14:06:35.799593+07:00,eval_49_0065d136,0,resolve_location,{'location_hint': 'Hoàng Mai'},,True,0
+2026-03-19T14:06:35.799593+07:00,eval_49_0065d136,0,get_district_weather,"{'hours': 2, 'district_name': 'Quận Hoàng Mai'}",,True,0
+2026-03-19T14:06:50.164097+07:00,eval_50_9e0222c3,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Hà Đông'}",,True,0
+2026-03-19T14:06:50.164097+07:00,eval_50_9e0222c3,0,resolve_location,{'location_hint': 'Hà Đông'},,True,0
+2026-03-19T14:06:50.164097+07:00,eval_50_9e0222c3,0,get_district_weather,{'district_name': 'Quận Hà Đông'},,True,0
+2026-03-19T14:06:59.982396+07:00,eval_51_662a8dce,0,get_current_weather,{'location_hint': 'Hà Nội'},,True,0
+2026-03-19T14:06:59.982396+07:00,eval_51_662a8dce,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Hà Nội'}",,True,0
+2026-03-19T14:06:59.982396+07:00,eval_51_662a8dce,0,get_city_weather,{},,True,0
+2026-03-19T14:07:08.795766+07:00,eval_52_f4f40268,0,get_rain_timeline,{'location_hint': 'Gia Lâm'},,True,0
+2026-03-19T14:07:08.795766+07:00,eval_52_f4f40268,0,get_hourly_forecast,"{'location_hint': 'Gia Lâm', 'hours': 12}",,True,0
+2026-03-19T14:07:13.110534+07:00,eval_53_25c6df3e,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
+2026-03-19T14:07:25.616974+07:00,eval_54_9326bd06,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Đông Anh'}",,True,0
+2026-03-19T14:07:25.633146+07:00,eval_54_9326bd06,0,resolve_location,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:07:25.633146+07:00,eval_54_9326bd06,0,get_district_daily_forecast,"{'days': 1, 'district_name': 'Huyện Đông Anh'}",,True,0
+2026-03-19T14:07:35.807407+07:00,eval_55_4af96ced,0,get_rain_timeline,"{'ward_id': 'ID_00173', 'hours': 24}",,True,0
+2026-03-19T14:07:35.807407+07:00,eval_55_4af96ced,0,resolve_location,{'location_hint': 'Hoàng Mai'},,True,0
+2026-03-19T14:07:35.807407+07:00,eval_55_4af96ced,0,get_rain_timeline,"{'location_hint': 'Quận Hoàng Mai', 'hours': 24}",,True,0
+2026-03-19T14:07:40.139740+07:00,eval_56_c35a6433,0,get_rain_timeline,{},,True,0
+2026-03-19T14:07:45.656695+07:00,eval_57_e108b89a,0,get_city_daily_forecast,{'days': 2},,True,0
+2026-03-19T14:07:50.937597+07:00,eval_58_92893a72,0,detect_phenomena,{},,True,0
+2026-03-19T14:07:50.943596+07:00,eval_58_92893a72,0,get_weather_period,"{'start_date': '2023-10-09', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:08:01.959375+07:00,eval_59_b29bf897,0,get_current_weather,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T14:08:01.959375+07:00,eval_59_b29bf897,0,resolve_location,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T14:08:01.959375+07:00,eval_59_b29bf897,0,get_district_weather,{'district_name': 'Quận Hoàn Kiếm'},,True,0
+2026-03-19T14:08:07.665691+07:00,eval_60_9206fe71,0,get_current_weather,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:08:07.665691+07:00,eval_60_9206fe71,0,get_comfort_index,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:08:18.984705+07:00,eval_61_0fdcc7b5,0,get_daily_forecast,"{'ward_id': 'ID_00170', 'days': 1}",,True,0
+2026-03-19T14:08:18.984705+07:00,eval_61_0fdcc7b5,0,resolve_location,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T14:08:18.984705+07:00,eval_61_0fdcc7b5,0,get_district_daily_forecast,"{'district_name': 'Quận Thanh Xuân', 'days': 1}",,True,0
+2026-03-19T14:08:31.759405+07:00,eval_62_bb8ef689,0,get_hourly_forecast,"{'location_hint': 'Đông Anh', 'hours': 6}",,True,0
+2026-03-19T14:08:31.759405+07:00,eval_62_bb8ef689,0,resolve_location,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:08:31.759405+07:00,eval_62_bb8ef689,0,get_district_weather,{'district_name': 'Huyện Đông Anh'},,True,0
+2026-03-19T14:08:38.959189+07:00,eval_63_185c7c87,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
+2026-03-19T14:08:38.959189+07:00,eval_63_185c7c87,0,get_city_daily_forecast,{'days': 7},,True,0
+2026-03-19T14:08:45.400484+07:00,eval_64_0eaa5945,0,get_daily_summary,{'date': 'today'},,True,0
+2026-03-19T14:08:45.400484+07:00,eval_64_0eaa5945,0,get_city_weather,{},,True,0
+2026-03-19T14:08:59.102865+07:00,eval_65_cc66270d,0,get_hourly_forecast,"{'location_hint': 'Ba Đình', 'hours': 12}",,True,0
+2026-03-19T14:08:59.102865+07:00,eval_65_cc66270d,0,resolve_location,{'location_hint': 'Ba Đình'},,True,0
+2026-03-19T14:08:59.102865+07:00,eval_65_cc66270d,0,get_district_weather,"{'district_name': 'Quận Ba Đình', 'hours': 12}",,True,0
+2026-03-19T14:09:06.469026+07:00,eval_66_95b6e9ba,0,get_hourly_forecast,{'hours': 6},,True,0
+2026-03-19T14:09:06.469026+07:00,eval_66_95b6e9ba,0,get_city_weather,{},,True,0
+2026-03-19T14:09:13.898534+07:00,eval_67_a1459914,0,get_temperature_trend,{},,True,0
+2026-03-19T14:09:13.898534+07:00,eval_67_a1459914,0,get_city_weather,{},,True,0
+2026-03-19T14:09:31.913141+07:00,eval_68_1854efb7,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Mỹ Đình'}",,True,0
+2026-03-19T14:09:31.914137+07:00,eval_68_1854efb7,0,resolve_location,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:09:31.915052+07:00,eval_68_1854efb7,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Quận Ba Đình'}",,True,0
+2026-03-19T14:09:31.916053+07:00,eval_68_1854efb7,0,get_district_weather,"{'hours': 6, 'district_name': 'Quận Ba Đình'}",,True,0
+2026-03-19T14:09:39.820254+07:00,eval_69_73401410,0,get_district_daily_forecast,"{'district_name': 'Huyện Ba Vì', 'days': 1}",,True,0
+2026-03-19T14:09:46.486447+07:00,eval_70_d055646e,0,get_temperature_trend,{'days': 7},,True,0
+2026-03-19T14:09:46.486447+07:00,eval_70_d055646e,0,get_city_weather,{},,True,0
+2026-03-19T14:09:58.830948+07:00,eval_71_11eb9121,0,get_current_weather,{'location_hint': 'Sóc Sơn'},,True,0
+2026-03-19T14:09:58.831559+07:00,eval_71_11eb9121,0,resolve_location,{'location_hint': 'Sóc Sơn'},,True,0
+2026-03-19T14:09:58.831559+07:00,eval_71_11eb9121,0,get_district_weather,{'district_name': 'Huyện Sóc Sơn'},,True,0
+2026-03-19T14:10:05.361172+07:00,eval_72_f09fdb4e,0,get_district_weather,{'district_name': 'Bắc Từ Liêm'},,True,0
+2026-03-19T14:10:09.309419+07:00,eval_73_194c152c,0,get_weather_alerts,{},,True,0
+2026-03-19T14:10:14.002510+07:00,eval_74_ee728f4c,0,get_daily_summary,{'date': 'tomorrow'},,True,0
+2026-03-19T14:10:14.002510+07:00,eval_74_ee728f4c,0,detect_phenomena,{},,True,0
+2026-03-19T14:10:18.793546+07:00,eval_75_d949c702,0,get_hourly_forecast,{'hours': 6},,True,0
+2026-03-19T14:10:22.865936+07:00,eval_76_7e1bc3aa,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
+2026-03-19T14:10:35.797644+07:00,eval_77_938ce649,0,get_current_weather,{'location_hint': 'Gia Lâm'},,True,0
+2026-03-19T14:10:35.798649+07:00,eval_77_938ce649,0,resolve_location,{'location_hint': 'Gia Lâm'},,True,0
+2026-03-19T14:10:35.798649+07:00,eval_77_938ce649,0,get_district_weather,{'district_name': 'Huyện Gia Lâm'},,True,0
+2026-03-19T14:10:41.226212+07:00,eval_78_9f554a04,0,get_hourly_forecast,{'hours': 5},,True,0
+2026-03-19T14:10:41.227201+07:00,eval_78_9f554a04,0,get_current_weather,{},,True,0
+2026-03-19T14:10:58.666299+07:00,eval_79_1305af7b,0,get_hourly_forecast,"{'hours': 12, 'location_hint': 'Đông Anh'}",,True,0
+2026-03-19T14:10:58.666299+07:00,eval_79_1305af7b,0,resolve_location,{'location_hint': 'Đông Anh'},,True,0
+2026-03-19T14:10:58.667298+07:00,eval_79_1305af7b,0,get_hourly_forecast,"{'hours': 12, 'location_hint': 'Huyện Đông Anh'}",,True,0
+2026-03-19T14:10:58.667298+07:00,eval_79_1305af7b,0,get_district_weather,{'district_name': 'Huyện Đông Anh'},,True,0
+2026-03-19T14:11:15.079553+07:00,eval_81_ccafdf1f,0,resolve_location,{'location_hint': 'Quốc Oai'},,True,0
+2026-03-19T14:11:15.080654+07:00,eval_81_ccafdf1f,0,get_hourly_forecast,"{'location_hint': 'Huyện Quốc Oai', 'hours': 24}",,True,0
+2026-03-19T14:11:15.080654+07:00,eval_81_ccafdf1f,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Huyện Quốc Oai'}",,True,0
+2026-03-19T14:11:28.214527+07:00,eval_82_bd5f7717,0,get_current_weather,{'location_hint': 'Hà Đông'},,True,0
+2026-03-19T14:11:28.214527+07:00,eval_82_bd5f7717,0,resolve_location,{'location_hint': 'Hà Đông'},,True,0
+2026-03-19T14:11:28.214527+07:00,eval_82_bd5f7717,0,get_district_weather,{'district_name': 'Quận Hà Đông'},,True,0
+2026-03-19T14:11:42.972565+07:00,eval_83_fac77350,0,get_hourly_forecast,"{'location_hint': 'Tây Hồ', 'hours': 6}",,True,0
+2026-03-19T14:11:42.972565+07:00,eval_83_fac77350,0,resolve_location,{'location_hint': 'Tây Hồ'},,True,0
+2026-03-19T14:11:42.972565+07:00,eval_83_fac77350,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:11:49.365413+07:00,eval_84_fa7b573b,0,detect_phenomena,{'location_hint': 'Hà Nội'},,True,0
+2026-03-19T14:11:49.366404+07:00,eval_84_fa7b573b,0,detect_phenomena,{},,True,0
+2026-03-19T14:12:05.950304+07:00,eval_86_e8eec2dc,0,get_current_weather,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T14:12:05.951312+07:00,eval_86_e8eec2dc,0,resolve_location,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T14:12:05.951312+07:00,eval_86_e8eec2dc,0,get_district_weather,{'district_name': 'Quận Thanh Xuân'},,True,0
+2026-03-19T14:12:10.331367+07:00,eval_87_afd34617,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
+2026-03-19T14:12:14.956526+07:00,eval_88_cc084a9e,0,get_city_weather,{},,True,0
+2026-03-19T14:12:18.998991+07:00,eval_89_6abcbfc9,0,get_city_weather,{},,True,0
+2026-03-19T14:12:25.551462+07:00,eval_91_c46a08be,0,get_weather_history,{'date': '2023-10-25'},,True,0
+2026-03-19T14:12:39.353050+07:00,eval_92_5e0cf1bf,0,get_weather_history,"{'location_hint': 'Đống Đa', 'date': '2023-02-28'}",,True,0
+2026-03-19T14:12:39.353050+07:00,eval_92_5e0cf1bf,0,resolve_location,{'location_hint': 'Đống Đa'},,True,0
+2026-03-19T14:12:39.353050+07:00,eval_92_5e0cf1bf,0,get_weather_history,"{'date': '2023-02-28', 'location_hint': 'Quận Đống Đa'}",,True,0
+2026-03-19T14:12:51.694699+07:00,eval_93_6604395b,0,resolve_location,{'location_hint': 'Gia Lâm'},,True,0
+2026-03-19T14:12:51.695698+07:00,eval_93_6604395b,0,get_weather_history,"{'date': '2023-10-20', 'location_hint': 'Huyện Gia Lâm'}",,True,0
+2026-03-19T14:12:51.695698+07:00,eval_93_6604395b,0,get_weather_history,"{'date': '2023-10-20', 'location_hint': 'Gia Lâm'}",,True,0
+2026-03-19T14:13:07.919880+07:00,eval_94_2b562cec,0,get_weather_history,"{'date': '2023-10-25', 'location_hint': 'Long Biên'}",,True,0
+2026-03-19T14:13:07.920889+07:00,eval_94_2b562cec,0,resolve_location,{'location_hint': 'Long Biên'},,True,0
+2026-03-19T14:13:07.920889+07:00,eval_94_2b562cec,0,get_weather_history,"{'date': '2023-10-25', 'location_hint': 'Quận Long Biên'}",,True,0
+2026-03-19T14:13:07.920889+07:00,eval_94_2b562cec,0,get_district_weather,{'district_name': 'Quận Long Biên'},,True,0
+2026-03-19T14:13:25.922581+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-09'},,True,0
+2026-03-19T14:13:25.923588+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-10'},,True,0
+2026-03-19T14:13:25.923588+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-11'},,True,0
+2026-03-19T14:13:25.923588+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-12'},,True,0
+2026-03-19T14:13:25.924587+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-13'},,True,0
+2026-03-19T14:13:25.924587+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-14'},,True,0
+2026-03-19T14:13:25.924587+07:00,eval_95_101bfefd,0,get_weather_history,{'date': '2023-10-15'},,True,0
+2026-03-19T14:13:30.169780+07:00,eval_96_296b7613,0,get_weather_history,{'date': '2023-10-25'},,True,0
+2026-03-19T14:13:59.950679+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-01'},,True,0
+2026-03-19T14:13:59.950679+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-02'},,True,0
+2026-03-19T14:13:59.951680+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-03'},,True,0
+2026-03-19T14:13:59.951680+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-04'},,True,0
+2026-03-19T14:13:59.951680+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-05'},,True,0
+2026-03-19T14:13:59.952719+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-06'},,True,0
+2026-03-19T14:13:59.952719+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-07'},,True,0
+2026-03-19T14:13:59.952719+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-08'},,True,0
+2026-03-19T14:13:59.952719+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-09'},,True,0
+2026-03-19T14:13:59.953725+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-10'},,True,0
+2026-03-19T14:13:59.953725+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-11'},,True,0
+2026-03-19T14:13:59.954725+07:00,eval_97_7615f1aa,0,get_weather_history,{'date': '2023-02-12'},,True,0
+2026-03-19T14:14:04.782578+07:00,eval_98_e32a3102,0,get_weather_history,{'date': '2023-10-20'},,True,0
+2026-03-19T14:14:15.405494+07:00,eval_99_9bddfed2,0,get_weather_history,"{'date': '2023-10-14', 'location_hint': 'Cầu Giấy'}",,True,0
+2026-03-19T14:14:15.405494+07:00,eval_99_9bddfed2,0,resolve_location,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:14:15.406498+07:00,eval_99_9bddfed2,0,get_weather_history,"{'date': '2023-10-14', 'location_hint': 'Quận Cầu Giấy'}",,True,0
+2026-03-19T14:14:33.391772+07:00,eval_101_21424fe9,0,get_current_weather,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:14:33.391772+07:00,eval_101_21424fe9,0,get_current_weather,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T14:14:33.392771+07:00,eval_101_21424fe9,0,resolve_location,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:14:33.393776+07:00,eval_101_21424fe9,0,resolve_location,{'location_hint': 'Hoàn Kiếm'},,True,0
+2026-03-19T14:14:33.393776+07:00,eval_101_21424fe9,0,get_district_weather,{'district_name': 'Quận Cầu Giấy'},,True,0
+2026-03-19T14:14:33.393776+07:00,eval_101_21424fe9,0,get_district_weather,{'district_name': 'Quận Hoàn Kiếm'},,True,0
+2026-03-19T14:14:41.929661+07:00,eval_102_70987da8,0,get_rain_timeline,{'location_hint': 'Hà Đông'},,True,0
+2026-03-19T14:14:41.929661+07:00,eval_102_70987da8,0,get_rain_timeline,{'location_hint': 'Thanh Xuân'},,True,0
+2026-03-19T14:14:52.249569+07:00,eval_103_c8b01a52,0,get_district_weather,{'district_name': 'Sóc Sơn'},,True,0
+2026-03-19T14:14:52.249569+07:00,eval_103_c8b01a52,0,get_district_weather,{'district_name': 'Bắc Từ Liêm'},,True,0
+2026-03-19T14:15:03.738741+07:00,eval_104_10cada3d,0,get_current_weather,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:15:03.739743+07:00,eval_104_10cada3d,0,get_current_weather,{'location_hint': 'Times City'},,True,0
+2026-03-19T14:15:03.739743+07:00,eval_104_10cada3d,0,resolve_location,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:15:03.739743+07:00,eval_104_10cada3d,0,resolve_location,{'location_hint': 'Times City'},,True,0
+2026-03-19T14:15:13.021738+07:00,eval_105_0571dcd6,0,get_district_weather,"{'district_name': 'Quận Hoàn Kiếm', 'hours': 24}",,True,0
+2026-03-19T14:15:13.021738+07:00,eval_105_0571dcd6,0,get_district_weather,"{'district_name': 'Huyện Đông Anh', 'hours': 24}",,True,0
+2026-03-19T14:15:22.899456+07:00,eval_106_4b93b17b,0,get_district_daily_forecast,"{'days': 1, 'district_name': 'Quận Long Biên'}",,True,0
+2026-03-19T14:15:22.900468+07:00,eval_106_4b93b17b,0,get_district_daily_forecast,"{'days': 1, 'district_name': 'Quận Gia Lâm'}",,True,0
+2026-03-19T14:15:30.892242+07:00,eval_107_9e80f5c7,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:15:30.893334+07:00,eval_107_9e80f5c7,0,get_district_weather,{'district_name': 'Quận Hoàng Mai'},,True,0
+2026-03-19T14:15:38.694337+07:00,eval_108_3c6f7f9d,0,get_city_daily_forecast,{'days': 2},,True,0
+2026-03-19T14:15:38.695335+07:00,eval_108_3c6f7f9d,0,get_district_ranking,"{'order': 'cao_nhat', 'limit': 5, 'metric': 'nhiet_do'}",,True,0
+2026-03-19T14:15:50.115721+07:00,eval_109_eb0c4ab3,0,get_hourly_forecast,"{'hours': 5, 'location_hint': 'Hồ Gươm'}",,True,0
+2026-03-19T14:15:50.116722+07:00,eval_109_eb0c4ab3,0,get_comfort_index,{'location_hint': 'Hồ Gươm'},,True,0
+2026-03-19T14:15:50.116722+07:00,eval_109_eb0c4ab3,0,resolve_location,{'location_hint': 'Hồ Gươm'},,True,0
+2026-03-19T14:15:50.116722+07:00,eval_109_eb0c4ab3,0,get_district_weather,{'district_name': 'Hoàn Kiếm'},,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Mỹ Đình'}",,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_activity_advice,"{'activity': 'chay_bo', 'location_hint': 'Mỹ Đình'}",,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Mỹ Đình'}",,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_activity_advice,"{'activity': 'chay_bo', 'location_hint': 'Mỹ Đình'}",,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,resolve_location,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Quận Ba Đình'}",,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_activity_advice,"{'activity': 'chay_bo', 'location_hint': 'Quận Ba Đình'}",,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_current_weather,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:16:13.471599+07:00,eval_110_e1eae5a8,0,get_district_weather,{'district_name': 'Quận Nam Từ Liêm'},,True,0
+2026-03-19T14:16:21.625433+07:00,eval_111_b1b37005,0,get_weather_period,"{'start_date': '2023-10-14', 'end_date': '2023-10-15', 'location_hint': 'Huyện Ba Vì'}",,True,0
+2026-03-19T14:16:34.588232+07:00,eval_112_e139526e,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Long Biên'}",,True,0
+2026-03-19T14:16:34.588232+07:00,eval_112_e139526e,0,resolve_location,{'location_hint': 'Long Biên'},,True,0
+2026-03-19T14:16:34.589233+07:00,eval_112_e139526e,0,get_district_daily_forecast,"{'district_name': 'Quận Long Biên', 'days': 1}",,True,0
+2026-03-19T14:16:51.742605+07:00,eval_113_5c118047,0,get_hourly_forecast,"{'location_hint': 'Cầu Giấy', 'hours': 6}",,True,0
+2026-03-19T14:16:51.743607+07:00,eval_113_5c118047,0,get_clothing_advice,"{'hours_ahead': 6, 'location_hint': 'Cầu Giấy'}",,True,0
+2026-03-19T14:16:51.743607+07:00,eval_113_5c118047,0,resolve_location,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:16:51.743607+07:00,eval_113_5c118047,0,get_hourly_forecast,"{'district_name': 'Quận Cầu Giấy', 'hours': 6}",,True,0
+2026-03-19T14:16:51.744604+07:00,eval_113_5c118047,0,get_clothing_advice,"{'hours_ahead': 6, 'location_hint': 'Cầu Giấy'}",,True,0
+2026-03-19T14:16:51.744604+07:00,eval_113_5c118047,0,get_district_weather,{'district_name': 'Quận Cầu Giấy'},,True,0
+2026-03-19T14:17:01.476727+07:00,eval_114_ec325d5b,0,get_hourly_forecast,{'hours': 12},,True,0
+2026-03-19T14:17:01.477723+07:00,eval_114_ec325d5b,0,get_activity_advice,{'activity': 'tap_the_duc'},,True,0
+2026-03-19T14:17:01.477723+07:00,eval_114_ec325d5b,0,get_hourly_forecast,{'hours': 12},,True,0
+2026-03-19T14:17:01.479284+07:00,eval_114_ec325d5b,0,get_activity_advice,{'activity': 'tap_the_duc'},,True,0
+2026-03-19T14:17:13.089150+07:00,eval_115_7775a06a,0,get_weather_period,"{'start_date': '2023-10-14', 'end_date': '2023-10-15', 'location_hint': 'Hồ Tây'}",,True,0
+2026-03-19T14:17:13.090172+07:00,eval_115_7775a06a,0,get_city_daily_forecast,{},,True,0
+2026-03-19T14:17:22.332897+07:00,eval_116_2a1916a8,0,get_weather_period,"{'start_date': '2023-10-14', 'end_date': '2023-10-15', 'location_hint': 'Hà Nội'}",,True,0
+2026-03-19T14:17:22.332897+07:00,eval_116_2a1916a8,0,get_city_daily_forecast,{'days': 2},,True,0
+2026-03-19T14:17:28.684539+07:00,eval_117_6b2ad784,0,get_city_weather,{},,True,0
+2026-03-19T14:17:28.684539+07:00,eval_117_6b2ad784,0,get_activity_advice,{'activity': 'su_kien'},,True,0
+2026-03-19T14:17:48.945295+07:00,eval_118_2c0d0779,0,get_activity_advice,"{'location_hint': 'Đan Phượng', 'activity': 'lam_vuon'}",,True,0
+2026-03-19T14:17:48.945295+07:00,eval_118_2c0d0779,0,resolve_location,{'location_hint': 'Đan Phượng'},,True,0
+2026-03-19T14:17:48.946290+07:00,eval_118_2c0d0779,0,get_activity_advice,"{'location_hint': 'Huyện Đan Phượng', 'activity': 'lam_vuon'}",,True,0
+2026-03-19T14:17:48.946290+07:00,eval_118_2c0d0779,0,get_district_weather,{'district_name': 'Huyện Đan Phượng'},,True,0
+2026-03-19T14:17:56.270431+07:00,eval_119_105790fc,0,get_hourly_forecast,"{'location_hint': 'Hồ Gươm', 'hours': 24}",,True,0
+2026-03-19T14:17:56.274882+07:00,eval_119_105790fc,0,resolve_location,{'location_hint': 'Hồ Gươm'},,True,0
+2026-03-19T14:18:18.889774+07:00,eval_120_b0bed245,0,get_hourly_forecast,"{'location_hint': 'Mỹ Đình', 'hours': 5}",,True,0
+2026-03-19T14:18:18.891198+07:00,eval_120_b0bed245,0,get_comfort_index,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:18:18.891198+07:00,eval_120_b0bed245,0,get_hourly_forecast,"{'location_hint': 'Mỹ Đình', 'hours': 5}",,True,0
+2026-03-19T14:18:18.891198+07:00,eval_120_b0bed245,0,resolve_location,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:18:18.892300+07:00,eval_120_b0bed245,0,get_hourly_forecast,"{'location_hint': 'Quận Ba Đình', 'hours': 5}",,True,0
+2026-03-19T14:18:18.892300+07:00,eval_120_b0bed245,0,get_comfort_index,{'location_hint': 'Quận Ba Đình'},,True,0
+2026-03-19T14:18:18.892300+07:00,eval_120_b0bed245,0,get_district_weather,{'district_name': 'Quận Nam Từ Liêm'},,True,0
+2026-03-19T14:18:22.709545+07:00,eval_121_9c7ec53b,0,get_city_weather,{},,True,0
+2026-03-19T14:18:28.845162+07:00,eval_122_bee9d358,0,get_district_weather,{'district_name': 'Đống Đa'},,True,0
+2026-03-19T14:18:42.601457+07:00,eval_123_d08981fc,0,get_hourly_forecast,"{'location_hint': 'Tây Hồ', 'hours': 6}",,True,0
+2026-03-19T14:18:42.602550+07:00,eval_123_d08981fc,0,resolve_location,{'location_hint': 'Tây Hồ'},,True,0
+2026-03-19T14:18:42.602550+07:00,eval_123_d08981fc,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:18:55.675658+07:00,eval_124_263fb08d,0,get_weather_history,"{'date': '2023-10-25', 'location_hint': 'Gia Lâm'}",,True,0
+2026-03-19T14:18:55.675658+07:00,eval_124_263fb08d,0,resolve_location,{'location_hint': 'Gia Lâm'},,True,0
+2026-03-19T14:18:55.676664+07:00,eval_124_263fb08d,0,get_weather_history,"{'date': '2023-10-25', 'location_hint': 'Huyện Gia Lâm'}",,True,0
+2026-03-19T14:19:10.202067+07:00,eval_125_9c6fe032,0,get_hourly_forecast,"{'location_hint': 'Ba Đình', 'hours': 5}",,True,0
+2026-03-19T14:19:10.203109+07:00,eval_125_9c6fe032,0,resolve_location,{'location_hint': 'Ba Đình'},,True,0
+2026-03-19T14:19:10.203109+07:00,eval_125_9c6fe032,0,get_district_weather,{'district_name': 'Quận Ba Đình'},,True,0
+2026-03-19T14:19:17.451733+07:00,eval_126_a786fc88,0,get_hourly_forecast,{'hours': 6},,True,0
+2026-03-19T14:19:17.452814+07:00,eval_126_a786fc88,0,get_city_weather,{},,True,0
+2026-03-19T14:19:21.743701+07:00,eval_127_81ba34b2,0,get_weather_alerts,{},,True,0
+2026-03-19T14:19:26.291750+07:00,eval_128_56e026b5,0,get_hourly_forecast,{'hours': 6},,True,0
+2026-03-19T14:19:26.291750+07:00,eval_128_56e026b5,0,get_current_weather,{},,True,0
+2026-03-19T14:19:31.985533+07:00,eval_129_8b9ec83e,0,get_daily_summary,{'date': '2023-10-07'},,True,0
+2026-03-19T14:19:31.986615+07:00,eval_129_8b9ec83e,0,get_daily_forecast,{'days': 1},,True,0
+2026-03-19T14:19:44.725996+07:00,eval_130_5f350845,0,get_hourly_forecast,"{'hours': 6, 'location_hint': 'Hồ Tây'}",,True,0
+2026-03-19T14:19:44.725996+07:00,eval_130_5f350845,0,resolve_location,{'location_hint': 'Hồ Tây'},,True,0
+2026-03-19T14:19:44.726998+07:00,eval_130_5f350845,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:19:55.674168+07:00,eval_131_5cb5117a,0,get_hourly_forecast,{'hours': 6},,True,0
+2026-03-19T14:19:55.674168+07:00,eval_131_5cb5117a,0,get_hourly_forecast,{'hours': 2},,True,0
+2026-03-19T14:19:55.675210+07:00,eval_131_5cb5117a,0,get_city_weather,{},,True,0
+2026-03-19T14:20:30.231476+07:00,eval_132_1351872e,0,get_temperature_trend,"{'days': 7, 'location_hint': 'Bắc Từ Liêm'}",,True,0
+2026-03-19T14:20:35.450961+07:00,eval_133_215d5a5e,0,get_weather_period,"{'start_date': '2023-10-16', 'end_date': '2023-10-22'}",,True,0
+2026-03-19T14:20:42.415091+07:00,eval_135_19c2a20d,0,get_weather_alerts,{},,True,0
+2026-03-19T14:20:46.988331+07:00,eval_136_e9a3a758,0,get_weather_alerts,{},,True,0
+2026-03-19T14:20:53.112135+07:00,eval_138_4abde71b,0,get_temperature_trend,{'days': 7},,True,0
+2026-03-19T14:20:57.351864+07:00,eval_139_acc040e9,0,get_weather_alerts,{},,True,0
+2026-03-19T14:21:01.879894+07:00,eval_140_a8cbcf87,0,get_weather_period,"{'start_date': '2023-10-30', 'end_date': '2023-11-05'}",,True,0
+2026-03-19T14:21:08.684470+07:00,eval_142_57f0e72b,0,get_daily_summary,{'date': 'tomorrow'},,True,0
+2026-03-19T14:21:14.768574+07:00,eval_144_254c858a,0,get_clothing_advice,{},,True,0
+2026-03-19T14:21:20.986055+07:00,eval_146_8a98fd90,0,get_current_weather,{},,True,0
+2026-03-19T14:21:27.923509+07:00,eval_148_549d86da,0,get_seasonal_comparison,{},,True,0
+2026-03-19T14:21:32.740405+07:00,eval_149_086f1510,0,get_weather_change_alert,{'hours': 6},,True,0
+2026-03-19T14:21:38.812444+07:00,eval_150_5fa1a8fc,0,get_hourly_forecast,{'hours': 6},,True,0
+2026-03-19T14:21:38.813521+07:00,eval_150_5fa1a8fc,0,get_current_weather,{},,True,0
+2026-03-19T14:21:43.297773+07:00,eval_151_408882c2,0,get_comfort_index,{},,True,0
+2026-03-19T14:21:48.428743+07:00,eval_152_34024726,0,get_comfort_index,{'location_hint': 'Cầu Giấy'},,True,0
+2026-03-19T14:22:09.672949+07:00,eval_153_b24da5c0,0,get_hourly_forecast,"{'location_hint': 'Hồ Tây', 'hours': 5}",,True,0
+2026-03-19T14:22:09.672949+07:00,eval_153_b24da5c0,0,get_comfort_index,"{'hours_ahead': 0, 'location_hint': 'Hồ Tây'}",,True,0
+2026-03-19T14:22:09.673957+07:00,eval_153_b24da5c0,0,get_hourly_forecast,"{'location_hint': 'Hồ Tây', 'hours': 5}",,True,0
+2026-03-19T14:22:09.673957+07:00,eval_153_b24da5c0,0,resolve_location,{'location_hint': 'Hồ Tây'},,True,0
+2026-03-19T14:22:09.673957+07:00,eval_153_b24da5c0,0,get_hourly_forecast,"{'location_hint': 'Quận Tây Hồ', 'hours': 5}",,True,0
+2026-03-19T14:22:09.673957+07:00,eval_153_b24da5c0,0,get_comfort_index,{'location_hint': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:22:09.675051+07:00,eval_153_b24da5c0,0,get_district_weather,{'district_name': 'Quận Tây Hồ'},,True,0
+2026-03-19T14:22:13.824028+07:00,eval_154_ab9a0c65,0,get_weather_change_alert,{},,True,0
+2026-03-19T14:22:18.048767+07:00,eval_155_fe4e64b3,0,get_weather_change_alert,{'hours': 6},,True,0
+2026-03-19T14:22:25.020414+07:00,eval_156_9f00c33e,0,get_weather_change_alert,"{'hours': 6, 'location_hint': 'Đống Đa'}",,True,0
+2026-03-19T14:22:53.069560+07:00,eval_160_989cf0d7,0,get_weather_period,"{'location_hint': 'Ba Vì', 'start_date': '2023-10-14', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:22:53.069560+07:00,eval_160_989cf0d7,0,get_activity_advice,"{'activity': 'picnic', 'location_hint': 'Ba Vì'}",,True,0
+2026-03-19T14:22:53.069560+07:00,eval_160_989cf0d7,0,get_weather_period,"{'location_hint': 'Hà Nội', 'start_date': '2023-10-14', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:22:53.069560+07:00,eval_160_989cf0d7,0,get_activity_advice,"{'activity': 'picnic', 'location_hint': 'Ba Vì'}",,True,0
+2026-03-19T14:22:53.069560+07:00,eval_160_989cf0d7,0,get_weather_period,"{'location_hint': 'Ba Vì', 'start_date': '2023-10-14', 'end_date': '2023-10-15'}",,True,0
+2026-03-19T14:22:53.069560+07:00,eval_160_989cf0d7,0,get_activity_advice,"{'activity': 'picnic', 'location_hint': 'Ba Vì'}",,True,0
+2026-03-19T14:23:04.826058+07:00,eval_161_4fc30ef0,0,get_best_time,"{'activity': 'cau_ca', 'location_hint': 'Sóc Sơn', 'hours': 24}",,True,0
+2026-03-19T14:23:04.826058+07:00,eval_161_4fc30ef0,0,get_clothing_advice,"{'location_hint': 'Sóc Sơn', 'hours_ahead': 24}",,True,0
+2026-03-19T14:23:12.665131+07:00,eval_162_1dd6dc60,0,get_best_time,"{'activity': 'su_kien', 'location_hint': 'Mỹ Đình'}",,True,0
+2026-03-19T14:23:12.665131+07:00,eval_162_1dd6dc60,0,get_comfort_index,{'location_hint': 'Mỹ Đình'},,True,0
+2026-03-19T14:23:19.478300+07:00,eval_163_0628bcc5,0,get_rain_timeline,{'location_hint': 'Hoàng Mai'},,True,0

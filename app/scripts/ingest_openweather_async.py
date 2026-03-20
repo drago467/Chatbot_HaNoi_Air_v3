@@ -4,6 +4,8 @@ import asyncio
 import logging
 import os
 from datetime import datetime, timedelta, timezone
+
+ICT = timezone(timedelta(hours=7))
 from typing import Any, Dict, List, Optional
 
 import aiohttp
@@ -303,7 +305,7 @@ class OpenWeatherAsyncIngestor:
                     w_info = d["weather"][0] if d.get("weather") else {}
                     feels_like = d.get("feels_like", {})
                     weather_daily_records.append((
-                        ward["ward_id"], datetime.fromtimestamp(d["dt"], tz=timezone.utc).date(),
+                        ward["ward_id"], datetime.fromtimestamp(d["dt"], tz=ICT).date(),
                         # Temperature
                         d["temp"].get("min"), d["temp"].get("max"), d["temp"].get("day"),  # temp_min, temp_max, temp_avg (=day)
                         d["temp"].get("morn"), d["temp"].get("day"), d["temp"].get("eve"), d["temp"].get("night"),  # temp_morn, temp_day, temp_eve, temp_night
