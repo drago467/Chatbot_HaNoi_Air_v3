@@ -212,7 +212,7 @@ def create_weather_agent():
     global _db_connection
     _db_connection = conn
     
-    agent = create_react_agent(model=model, tools=TOOLS, prompt=_prompt_with_datetime, checkpointer=checkpointer)
+    agent = create_react_agent(model=model, tools=TOOLS, state_modifier=_prompt_with_datetime, checkpointer=checkpointer)
     
     return agent
 

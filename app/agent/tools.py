@@ -133,6 +133,13 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
     from app.agent.utils import auto_resolve_location
     from app.dal import get_hourly_forecast as dal_get_hourly_forecast
 
+    # If no location provided, default to city level
+    if not ward_id and not location_hint:
+        from app.dal.weather_aggregate_dal import get_city_hourly_forecast
+        forecasts = get_city_hourly_forecast(hours)
+        return {"forecasts": forecasts[:hours], "count": len(forecasts[:hours]),
+                "resolved_location": {"city_name": "Hà Nội"}, "source": "city_aggregated"}
+
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
@@ -182,6 +189,13 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
     """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_daily_forecast as dal_get_daily_forecast
+
+    # If no location provided, default to city level
+    if not ward_id and not location_hint:
+        from app.dal.weather_aggregate_dal import get_city_daily_forecast as dal_city_daily
+        forecasts = dal_city_daily(days)
+        return {"forecasts": forecasts[:days], "count": len(forecasts[:days]),
+                "resolved_location": {"city_name": "Hà Nội"}, "source": "city_aggregated"}
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":

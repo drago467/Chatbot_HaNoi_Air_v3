@@ -96,95 +96,95 @@ def resolve_location(location_hint: str) -> Dict[str, Any]:
 def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
     """Original database resolution logic."""
     norm = normalize_name(location_hint)
-    norm_with_underscore = norm.replace(' ', '_')
-    
+    # Keep space - DB stores district_name_norm with spaces, not underscores
+
     # STEP 1: Check for explicit WARD prefix
     ward_prefixes = ['phuong', 'xa']
     if any(norm.lower().startswith(p + ' ') for p in ward_prefixes):
         ward_result = query_one("""
         SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
             FROM dim_ward WHERE ward_name_norm = %s LIMIT 1
-        """, (norm_with_underscore,))
+        """, (norm,))
         if ward_result:
             return {"status": "exact", "level": "ward", "data": ward_result}
-    
+
     # STEP 2: Check for explicit DISTRICT prefix
     district_prefixes = ['quan', 'huyen']
     if any(norm.lower().startswith(p + ' ') for p in district_prefixes):
         district_result = query_one("""
             SELECT DISTINCT district_name_vi, district_name_norm
             FROM dim_ward WHERE district_name_norm = %s LIMIT 1
-        """, (norm_with_underscore,))
+        """, (norm,))
         if district_result:
             return {"status": "exact", "level": "district", "data": district_result}
-    
+
     # STEP 3: NO PREFIX - Check DISTRICT FIRST
     district_result = query_one("""
         SELECT DISTINCT district_name_vi, district_name_norm
-        FROM dim_ward 
+        FROM dim_ward
         WHERE district_name_norm = %s
-           OR district_name_norm LIKE CONCAT('%%_', %s)
+           OR district_name_norm LIKE CONCAT('%% ', %s)
         LIMIT 1
-    """, (norm_with_underscore, norm_with_underscore))
-    
+    """, (norm, norm))
+
     if district_result:
         return {"status": "exact", "level": "district", "data": district_result}
-    
+
     # STEP 4: Check WARD
     ward_result = query_one("""
         SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
         FROM dim_ward WHERE ward_name_norm = %s LIMIT 1
-    """, (norm_with_underscore,))
-    
+    """, (norm,))
+
     if ward_result:
         district_name_only = ward_result["district_name_vi"].replace("Quận ", "").replace("Huyện ", "").replace("Thị xã ", "")
-        district_norm = normalize_name(district_name_only).replace(' ', '_')
-        
-        if norm_with_underscore == district_norm:
+        district_norm = normalize_name(district_name_only)
+
+        if norm == district_norm:
             district_result = query_one("""
                 SELECT DISTINCT district_name_vi, district_name_norm
                 FROM dim_ward WHERE district_name_norm = %s LIMIT 1
             """, (district_norm,))
             if district_result:
                 return {"status": "exact", "level": "district", "data": district_result}
-        
+
         return {"status": "exact", "level": "ward", "data": ward_result}
-    
+
     # STEP 5: Contains match for WARD
     ward_result = query_one("""
         SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
         FROM dim_ward WHERE ward_name_norm LIKE %s LIMIT 1
-    """, (f"%{norm_with_underscore}%",))
-    
+    """, (f"%{norm}%",))
+
     if ward_result:
         return {"status": "fuzzy", "level": "ward", "data": ward_result}
-    
+
     # STEP 6: Fuzzy match DISTRICT
     fuzzy_district_results = query("""
         SELECT DISTINCT district_name_vi, district_name_norm
         FROM dim_ward WHERE district_name_norm %% %s LIMIT 5
-    """, (norm_with_underscore,))
-    
+    """, (norm,))
+
     if fuzzy_district_results:
         return {"status": "fuzzy", "level": "district", "data": fuzzy_district_results[0]}
-    
+
     # STEP 7: Fuzzy match WARD
     fuzzy_ward_results = query("""
         SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
                similarity(ward_name_norm, %s) as score
         FROM dim_ward WHERE ward_name_norm %% %s ORDER BY score DESC LIMIT 5
-    """, (norm_with_underscore, norm_with_underscore))
-    
+    """, (norm, norm))
+
     if len(fuzzy_ward_results) == 1:
         return {"status": "fuzzy", "level": "ward", "data": fuzzy_ward_results[0]}
     elif len(fuzzy_ward_results) > 1:
         return {"status": "multiple", "level": "ward", "data": fuzzy_ward_results}
-    
+
     # STEP 8: City level
-    city_keywords = ["ha_noi", "hanoi", "thanh_pho_ha_noi"]
-    if norm in city_keywords or norm_with_underscore in city_keywords:
+    city_keywords = ["ha noi", "hanoi", "thanh pho ha noi"]
+    if norm in city_keywords:
         return {"status": "exact", "level": "city", "data": {"city_name": "Hà Nội"}}
-    
+
     # Not found in database
     return {"status": "not_found", "level": "not_found"}
 
@@ -221,7 +221,7 @@ def get_wards_in_district(district_name: str) -> List[Dict[str, Any]]:
 
 
 def search_wards(keyword: str, limit: int = 10) -> List[Dict[str, Any]]:
-    norm = normalize_name(keyword).replace(' ', '_')
+    norm = normalize_name(keyword)
     return query("""
         SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
                similarity(ward_name_norm, %s) as score
