@@ -1,4 +1,3 @@
-from app.dal.weather_helpers import wind_deg_to_vietnamese
 """Weather Knowledge DAL - Detect Hanoi-specific weather phenomena."""
 
 from app.dal.timezone_utils import now_ict
@@ -30,8 +29,8 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     wind_deg = weather_data.get("wind_deg")
     wind_speed = weather_data.get("wind_speed", 0)
     weather_main = weather_data.get("weather_main", "")
-    visibility = weather_data.get("visibility", 10000)
-    clouds = weather_data.get("clouds", 0)
+    visibility = weather_data.get("visibility")
+    clouds = weather_data.get("clouds")
     
     # Calculate dew_point difference (temp - dew_point)
     # Small difference = air is close to saturation = nom am
@@ -58,14 +57,14 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     # 2. Gió Lào (Loo) - Tháng 5-8, Tây Nam + humidity < 55%
     # Gió Lào thực sự: gió Tây Nam qua Trường Sơn mất ẩm -> nóng khô
     if month in [5, 6, 7, 8]:
-        if wind_deg and 180 <= wind_deg <= 270 and wind_speed > 5 and humidity < 55:
+        if wind_deg is not None and 180 <= wind_deg <= 270 and wind_speed > 5 and humidity < 55:
             phenomena.append({
                 "type": "gio_lao",
                 "name": "Gió Lào",
                 "description": f"Gió Lào! Gió nóng từ Tây Nam, độ ẩm chỉ {humidity}% - Trời oi nóng, không khí rất khô, cần uống nhiều nước",
                 "severity": "high"
             })
-        elif wind_deg and 180 <= wind_deg <= 270 and wind_speed > 5:
+        elif wind_deg is not None and 180 <= wind_deg <= 270 and wind_speed > 5:
             phenomena.append({
                 "type": "gio_tay",
                 "name": "Gió Tây",
@@ -76,7 +75,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     # 3. Gió mùa Đông Bắc (Northeast Monsoon) - Tháng 10-3
     # Gió mùa Đông Bắc: tháng 10 đến tháng 3 năm sau
     if month in [10, 11, 12, 1, 2, 3]:
-        if wind_deg and ((wind_deg >= 315 or wind_deg <= 90)) and wind_speed > 5:
+        if wind_deg is not None and ((wind_deg >= 315 or wind_deg <= 90)) and wind_speed > 5:
             phenomena.append({
                 "type": "gio_dong_bac",
                 "name": "Gió mùa Đông Bắc",
@@ -87,7 +86,7 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     # 4. Rét đậm (Cold Spell) - KTTV: Tavg <= 15C + clouds >= 70%
     # For current weather: check temp + clouds (proxy for cloudy day)
     if month in [11, 12, 1, 2, 3]:
-        if temp is not None and temp < KTTV_THRESHOLDS["RET_DAM"] and clouds >= 70:
+        if temp is not None and temp < KTTV_THRESHOLDS["RET_DAM"] and clouds is not None and clouds >= 70:
             severity = "high" if temp < KTTV_THRESHOLDS["RET_HAI"] else "medium"
             phenomena.append({
                 "type": "ret_dam",
@@ -134,14 +133,14 @@ def detect_hanoi_weather_phenomena(weather_data: Dict[str, Any]) -> Dict[str, An
     
     # 7. Sương mù (Fog/Mist) - Year-round in early morning
     # Priority: Dense fog (visibility < 200m) = always detect (affects traffic)
-    if visibility < 200:
+    if visibility is not None and visibility < 200:
         phenomena.append({
             "type": "suong_mu",
             "name": "Sương mù dày",
             "description": f"Sương mù rất dày! Tầm nhìn chỉ {visibility}m - CẨN THẬN NGHIÊM TRỌNG khi lái xe, hai cầm",
             "severity": "high"
         })
-    elif visibility < KTTV_THRESHOLDS["SUONG_MU_VISIBILITY"]:
+    elif visibility is not None and visibility < KTTV_THRESHOLDS["SUONG_MU_VISIBILITY"]:
         # Seasonal fog (mainly Jan-Feb, or Mar with low temp)
         if month in [1, 2] or (month == 3 and temp < 20):
             phenomena.append({

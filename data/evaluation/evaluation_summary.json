@@ -1,207 +1,289 @@
 {
   "total": 163,
-  "successful": 163,
-  "success_rate": 100.0,
-  "tool_accuracy": 95.7,
-  "tool_precision_avg": 0.89,
-  "tool_recall_avg": 0.96,
-  "avg_time_ms": 8780,
-  "p50_time_ms": 8068,
-  "p90_time_ms": 12681,
-  "p95_time_ms": 16201,
-  "judge_relevance_avg": null,
-  "judge_relevance_count": 0,
-  "judge_completeness_avg": null,
-  "judge_completeness_count": 0,
-  "judge_fluency_avg": null,
-  "judge_fluency_count": 0,
-  "judge_actionability_avg": null,
-  "judge_actionability_count": 0,
-  "judge_faithfulness_avg": null,
-  "judge_faithfulness_count": 0,
+  "successful": 162,
+  "success_rate": 99.4,
+  "tool_accuracy": 93.3,
+  "tool_accuracy_ci95": [
+    88.3,
+    96.2
+  ],
+  "tool_precision_avg": 0.9,
+  "tool_recall_avg": 0.93,
+  "tool_recall_ci95": [
+    88.3,
+    96.2
+  ],
+  "avg_time_ms": 7514,
+  "p50_time_ms": 6369,
+  "p90_time_ms": 9300,
+  "p95_time_ms": 10894,
+  "error_categories": {
+    "unknown": 1
+  },
+  "judge_relevance_avg": 4.6,
+  "judge_relevance_count": 162,
+  "judge_completeness_avg": 4.17,
+  "judge_completeness_count": 162,
+  "judge_fluency_avg": 4.93,
+  "judge_fluency_count": 162,
+  "judge_actionability_avg": 4.15,
+  "judge_actionability_count": 162,
+  "judge_faithfulness_avg": 3.88,
+  "judge_faithfulness_count": 154,
   "by_intent": {
     "current_weather": {
       "total": 12,
       "success_rate": 100.0,
       "tool_accuracy": 91.7,
-      "avg_time_ms": 7840,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        64.6,
+        98.5
+      ],
+      "avg_time_ms": 5994,
+      "judge_relevance_avg": 4.83,
+      "judge_completeness_avg": 4.42,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.5,
+      "judge_faithfulness_avg": 3.83
     },
     "hourly_forecast": {
       "total": 12,
       "success_rate": 100.0,
       "tool_accuracy": 100.0,
-      "avg_time_ms": 9500,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        75.7,
+        100.0
+      ],
+      "avg_time_ms": 6396,
+      "judge_relevance_avg": 4.92,
+      "judge_completeness_avg": 4.42,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.67,
+      "judge_faithfulness_avg": 4.08
     },
     "daily_forecast": {
       "total": 13,
       "success_rate": 100.0,
-      "tool_accuracy": 92.3,
-      "avg_time_ms": 11045,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 84.6,
+      "tool_accuracy_ci95": [
+        57.8,
+        95.7
+      ],
+      "avg_time_ms": 9810,
+      "judge_relevance_avg": 4.62,
+      "judge_completeness_avg": 4.54,
+      "judge_fluency_avg": 4.92,
+      "judge_actionability_avg": 4.62,
+      "judge_faithfulness_avg": 3.67
     },
     "weather_overview": {
       "total": 10,
       "success_rate": 100.0,
-      "tool_accuracy": 100.0,
-      "avg_time_ms": 10614,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 90.0,
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 8300,
+      "judge_relevance_avg": 4.6,
+      "judge_completeness_avg": 4.5,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.3,
+      "judge_faithfulness_avg": 4.1
     },
     "rain_query": {
       "total": 13,
       "success_rate": 100.0,
       "tool_accuracy": 100.0,
-      "avg_time_ms": 9012,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        77.2,
+        100.0
+      ],
+      "avg_time_ms": 7218,
+      "judge_relevance_avg": 4.62,
+      "judge_completeness_avg": 4.15,
+      "judge_fluency_avg": 4.92,
+      "judge_actionability_avg": 4.54,
+      "judge_faithfulness_avg": 3.92
     },
     "temperature_query": {
       "total": 12,
       "success_rate": 100.0,
       "tool_accuracy": 100.0,
-      "avg_time_ms": 9440,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        75.7,
+        100.0
+      ],
+      "avg_time_ms": 6922,
+      "judge_relevance_avg": 5.0,
+      "judge_completeness_avg": 4.75,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.58,
+      "judge_faithfulness_avg": 3.08
     },
     "wind_query": {
       "total": 10,
       "success_rate": 100.0,
       "tool_accuracy": 90.0,
-      "avg_time_ms": 7953,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 5920,
+      "judge_relevance_avg": 4.6,
+      "judge_completeness_avg": 4.0,
+      "judge_fluency_avg": 4.9,
+      "judge_actionability_avg": 4.1,
+      "judge_faithfulness_avg": 4.2
     },
     "humidity_fog_query": {
       "total": 10,
       "success_rate": 100.0,
       "tool_accuracy": 90.0,
-      "avg_time_ms": 9020,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 6563,
+      "judge_relevance_avg": 4.6,
+      "judge_completeness_avg": 4.1,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.0,
+      "judge_faithfulness_avg": 3.44
     },
     "historical_weather": {
       "total": 10,
       "success_rate": 100.0,
-      "tool_accuracy": 100.0,
-      "avg_time_ms": 9856,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 90.0,
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 6427,
+      "judge_relevance_avg": 3.4,
+      "judge_completeness_avg": 2.9,
+      "judge_fluency_avg": 4.8,
+      "judge_actionability_avg": 2.3,
+      "judge_faithfulness_avg": 5.0
     },
     "location_comparison": {
       "total": 8,
       "success_rate": 100.0,
-      "tool_accuracy": 75.0,
-      "avg_time_ms": 9554,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        67.6,
+        100.0
+      ],
+      "avg_time_ms": 7744,
+      "judge_relevance_avg": 5.0,
+      "judge_completeness_avg": 4.75,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.38,
+      "judge_faithfulness_avg": 3.12
     },
     "activity_weather": {
       "total": 18,
-      "success_rate": 100.0,
-      "tool_accuracy": 100.0,
-      "avg_time_ms": 9078,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "success_rate": 94.4,
+      "tool_accuracy": 88.9,
+      "tool_accuracy_ci95": [
+        67.2,
+        96.9
+      ],
+      "avg_time_ms": 13302,
+      "judge_relevance_avg": 5.0,
+      "judge_completeness_avg": 4.94,
+      "judge_fluency_avg": 4.94,
+      "judge_actionability_avg": 4.94,
+      "judge_faithfulness_avg": 3.82
     },
     "expert_weather_param": {
       "total": 10,
       "success_rate": 100.0,
-      "tool_accuracy": 100.0,
-      "avg_time_ms": 7732,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 80.0,
+      "tool_accuracy_ci95": [
+        49.0,
+        94.3
+      ],
+      "avg_time_ms": 6375,
+      "judge_relevance_avg": 4.5,
+      "judge_completeness_avg": 3.6,
+      "judge_fluency_avg": 4.9,
+      "judge_actionability_avg": 3.7,
+      "judge_faithfulness_avg": 4.0
     },
     "weather_alert": {
       "total": 13,
       "success_rate": 100.0,
       "tool_accuracy": 100.0,
-      "avg_time_ms": 7095,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy_ci95": [
+        77.2,
+        100.0
+      ],
+      "avg_time_ms": 5603,
+      "judge_relevance_avg": 4.85,
+      "judge_completeness_avg": 3.69,
+      "judge_fluency_avg": 4.92,
+      "judge_actionability_avg": 3.54,
+      "judge_faithfulness_avg": 4.15
     },
     "smalltalk_weather": {
       "total": 12,
       "success_rate": 100.0,
-      "tool_accuracy": 91.7,
-      "avg_time_ms": 5434,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        75.7,
+        100.0
+      ],
+      "avg_time_ms": 5133,
+      "judge_relevance_avg": 3.67,
+      "judge_completeness_avg": 3.25,
+      "judge_fluency_avg": 4.67,
+      "judge_actionability_avg": 3.33,
+      "judge_faithfulness_avg": 3.86
     }
   },
   "by_difficulty": {
     "easy": {
       "total": 70,
       "success_rate": 100.0,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 95.7,
+      "tool_accuracy_ci95": [
+        88.1,
+        98.5
+      ],
+      "judge_relevance_avg": 4.66,
+      "judge_completeness_avg": 4.24,
+      "judge_fluency_avg": 4.97,
+      "judge_actionability_avg": 4.19,
+      "judge_faithfulness_avg": 3.94
     },
     "medium": {
       "total": 58,
       "success_rate": 100.0,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "tool_accuracy": 93.1,
+      "tool_accuracy_ci95": [
+        83.6,
+        97.3
+      ],
+      "judge_relevance_avg": 4.76,
+      "judge_completeness_avg": 4.38,
+      "judge_fluency_avg": 4.97,
+      "judge_actionability_avg": 4.31,
+      "judge_faithfulness_avg": 3.89
     },
     "hard": {
       "total": 35,
-      "success_rate": 100.0,
-      "judge_relevance_avg": null,
-      "judge_completeness_avg": null,
-      "judge_fluency_avg": null,
-      "judge_actionability_avg": null,
-      "judge_faithfulness_avg": null
+      "success_rate": 97.1,
+      "tool_accuracy": 88.6,
+      "tool_accuracy_ci95": [
+        74.0,
+        95.5
+      ],
+      "judge_relevance_avg": 4.24,
+      "judge_completeness_avg": 3.68,
+      "judge_fluency_avg": 4.76,
+      "judge_actionability_avg": 3.82,
+      "judge_faithfulness_avg": 3.7
     }
   }
 }

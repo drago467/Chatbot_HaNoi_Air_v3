@@ -534,7 +534,6 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
         "wind_speed": summary["wind"].get("speed"),
         "clouds": summary.get("clouds"),
         "weather_main": summary.get("weather_main"),
-        "visibility": 10000,
     }
     phenomena = detect_hanoi_weather_phenomena(phenomena_data)
     summary["phenomena"] = phenomena.get("phenomena", [])
@@ -644,10 +643,10 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     month = now_ict().month
     seasonal = get_seasonal_average(month)
     seasonal_diff = temp_avg - seasonal.get("temp_avg", temp_avg) if temp_avg else 0
-    seasonal_comp = f"Nong hon {seasonal_diff:.1f}C" if seasonal_diff > 2 else f"Lanh hon {abs(seasonal_diff):.1f}C" if seasonal_diff < -2 else "Binh thuong"
+    seasonal_comp = f"Nóng hơn {seasonal_diff:.1f}°C" if seasonal_diff > 2 else f"Lạnh hơn {abs(seasonal_diff):.1f}°C" if seasonal_diff < -2 else "Bình thường"
 
     return {
-        "period": f"{start_date} den {end_date}",
+        "period": f"{start_date} đến {end_date}",
         "days_count": len(rows),
         "resolved_location": resolved["data"],
         "aggregation": {
@@ -938,13 +937,13 @@ def get_best_time(
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved.get("status") != "ok":
-        return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
+        return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
     info = _get_ward_id_or_fallback(resolved)
     wid = info.get("ward_id")
 
     if not wid:
-        return {"error": "need_ward", "message": "Khong xac dinh duoc phuong/xa"}
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
 
     return get_best_time_for_activity(activity, wid, hours)
 
@@ -972,13 +971,13 @@ def get_clothing_advice(
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved.get("status") != "ok":
-        return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
+        return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
     info = _get_ward_id_or_fallback(resolved)
     wid = info.get("ward_id")
 
     if not wid:
-        return {"error": "need_ward", "message": "Khong xac dinh duoc phuong/xa"}
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
 
     return dal_clothing(wid, hours_ahead)
 
@@ -1006,13 +1005,13 @@ def get_temperature_trend(
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved.get("status") != "ok":
-        return {"error": "location_not_found", "message": resolved.get("message", "Khong tim thay dia diem")}
+        return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
     info = _get_ward_id_or_fallback(resolved)
     wid = info.get("ward_id")
 
     if not wid:
-        return {"error": "need_ward", "message": "Khong xac dinh duoc phuong/xa"}
+        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
 
     return dal_temp_trend(wid, days)
 

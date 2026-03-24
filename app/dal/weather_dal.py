@@ -86,7 +86,7 @@ def get_hourly_forecast(ward_id: str, hours: int = 48) -> List[Dict[str, Any]]:
     Returns:
         List of hourly forecast data
     """
-    hours = min(hours, 48)  # Max 48 hours
+    hours = max(1, min(hours, 48))  # Clamp 1-48
     
     results = query("""
         SELECT ts_utc, temp, feels_like, humidity, dew_point, pop, rain_1h,
@@ -118,7 +118,7 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
     Returns:
         List of daily forecast data
     """
-    days = min(days, 8)  # Max 8 days
+    days = max(1, min(days, 8))  # Clamp 1-8
     
     results = query("""
         SELECT date, temp_min, temp_max, temp_avg, temp_morn, temp_eve, temp_night,
@@ -135,8 +135,10 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
     for r in results:
         if r.get('sunrise'):
             r['sunrise_ict'] = format_ict(r['sunrise'])
+            r['sunrise_time'] = format_ict(r['sunrise'], fmt="%H:%M")
         if r.get('sunset'):
             r['sunset_ict'] = format_ict(r['sunset'])
+            r['sunset_time'] = format_ict(r['sunset'], fmt="%H:%M")
     
     return results
 
@@ -161,6 +163,8 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
         WHERE ward_id = %s
           AND data_kind = 'history'
           AND (ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh')::date = %s::date
+        ORDER BY ABS(EXTRACT(HOUR FROM ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh') - 12)
+        LIMIT 1
     """, (ward_id, date))
 
     if result:

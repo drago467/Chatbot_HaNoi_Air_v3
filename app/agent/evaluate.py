@@ -14,9 +14,9 @@ Features:
 """
 import csv
 import json
+import math
 import time
 import os
-from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 from typing import Optional
@@ -36,68 +36,194 @@ from app.agent.evaluation_logger import get_evaluation_logger
 reset_agent()
 
 
-# ---- Intent -> Expected Tools mapping ----
+# ---- Statistical Helpers ----
+
+def wilson_ci(successes: int, total: int, z: float = 1.96) -> tuple:
+    """Wilson score confidence interval for binomial proportion.
+
+    More accurate than normal approximation for small samples (n < 30).
+    Reference: Agresti & Coull (1998), Wilson (1927).
+
+    Args:
+        successes: Number of successes (e.g., correct tool selections)
+        total: Total number of trials
+        z: Z-score for confidence level (1.96 = 95% CI)
+
+    Returns:
+        (lower_bound, upper_bound) as percentages (0-100)
+    """
+    if total == 0:
+        return (0.0, 0.0)
+    p = successes / total
+    denom = 1 + z ** 2 / total
+    center = (p + z ** 2 / (2 * total)) / denom
+    margin = z * math.sqrt(p * (1 - p) / total + z ** 2 / (4 * total ** 2)) / denom
+    lower = round(max(0.0, center - margin) * 100, 1)
+    upper = round(min(1.0, center + margin) * 100, 1)
+    return (lower, upper)
+
+
+# ---- Intent -> Expected Tools mapping (Hierarchical by location scope) ----
+# For each (intent, location_scope), lists the acceptable tools that can
+# properly answer the question at that scope level.
+# Recall = 1.0 if agent called at least one expected tool, else 0.0.
+# This is stricter than a flat list: the agent must pick the RIGHT tool
+# for the RIGHT location level.
+#
+# Design rationale per intent (verified against all 163 test questions):
+#
+# current_weather: city→aggregated city tool, district→district/ward tool,
+#   ward/poi→ward-level tool. Agent MUST match the location granularity.
+#
+# hourly_forecast: get_hourly_forecast works at all scopes (auto-resolves
+#   location). get_rain_timeline is a valid alternative for rain-related
+#   hourly questions.
+#
+# daily_forecast: city→city aggregated daily, district→district aggregated
+#   or ward-level daily, ward/poi→ward daily. get_weather_period is a
+#   valid alternative for multi-day queries at any scope.
+#
+# weather_overview: summary tools (get_daily_summary, get_weather_period)
+#   plus scope-appropriate data tools. detect_phenomena adds context.
+#
+# rain_query: spans hourly+daily time scales. Includes rain-specific tools
+#   (get_rain_timeline) plus scope-appropriate forecast tools.
+#
+# temperature_query: scope-appropriate current/forecast tools plus
+#   get_temperature_trend for trend questions.
+#
+# wind_query / humidity_fog_query: scope-appropriate current/forecast tools
+#   plus domain-specific tools (detect_phenomena, get_weather_alerts).
+#
+# historical_weather: only get_weather_history at all scopes.
+#
+# location_comparison: needs data from multiple locations. compare_weather
+#   is the primary tool. Individual data tools also valid (called twice).
+#   city scope = comparing districts within the city.
+#
+# activity_weather: activity-specific tools (get_activity_advice, get_best_time,
+#   get_comfort_index, get_clothing_advice) plus scope-appropriate data tools.
+#
+# expert_weather_param: scope-appropriate data tools. get_weather_history
+#   valid for "hôm qua" expert queries.
+#
+# weather_alert: alert-specific tools plus supplementary data tools.
+#
+# smalltalk_weather: very diverse category (greetings, clothing advice,
+#   seasonal questions, anomaly detection). Broad expected set. Special case:
+#   no tools called is acceptable (greetings, out-of-scope).
+
 INTENT_TO_TOOLS = {
-    "current_weather": [
-        "get_current_weather", "get_district_weather", "get_city_weather",
-    ],
-    "hourly_forecast": [
-        "get_hourly_forecast", "get_district_weather", "get_rain_timeline",
-    ],
-    "daily_forecast": [
-        "get_daily_forecast", "get_daily_summary", "get_weather_period",
-        "get_district_daily_forecast", "get_city_daily_forecast",
-    ],
-    "rain_query": [
-        "get_rain_timeline", "get_hourly_forecast", "get_daily_forecast",
-        "get_current_weather", "get_district_weather", "get_weather_period",
-        "get_city_daily_forecast",
-    ],
-    "temperature_query": [
-        "get_current_weather", "get_hourly_forecast", "get_daily_forecast",
-        "get_temperature_trend", "get_district_weather", "get_district_daily_forecast",
-        "get_city_weather", "get_city_daily_forecast", "get_weather_period",
-    ],
-    "wind_query": [
-        "get_current_weather", "get_hourly_forecast", "get_district_weather",
-        "get_city_weather", "get_weather_alerts", "detect_phenomena",
-    ],
-    "humidity_fog_query": [
-        "get_current_weather", "get_hourly_forecast", "detect_phenomena",
-        "get_district_weather", "get_city_weather", "get_weather_period",
-    ],
-    "historical_weather": [
-        "get_weather_history",
-    ],
-    "location_comparison": [
-        "compare_weather", "compare_with_yesterday",
-        "get_district_weather", "get_current_weather", "get_rain_timeline",
-        "get_district_daily_forecast", "get_hourly_forecast",
-        "get_city_daily_forecast", "get_district_ranking",
-    ],
-    "activity_weather": [
-        "get_activity_advice", "get_best_time", "get_clothing_advice",
-        "get_comfort_index", "get_weather_period", "get_hourly_forecast",
-        "get_daily_forecast", "get_district_daily_forecast", "get_city_daily_forecast",
-    ],
-    "expert_weather_param": [
-        "get_current_weather", "get_hourly_forecast", "get_daily_summary",
-        "get_district_weather", "get_city_weather", "get_weather_history",
-        "get_weather_alerts",
-    ],
-    "weather_alert": [
-        "get_weather_alerts", "detect_phenomena", "get_weather_change_alert",
-        "get_hourly_forecast", "get_temperature_trend", "get_weather_period",
-    ],
-    "smalltalk_weather": [
-        "get_current_weather", "get_daily_summary", "get_clothing_advice",
-        "get_city_weather", "get_comfort_index", "get_seasonal_comparison",
-        "get_weather_change_alert",
-    ],
-    "weather_overview": [
-        "get_daily_summary", "get_weather_period", "get_city_daily_forecast",
-        "get_city_weather", "get_district_weather", "get_district_daily_forecast",
-    ],
+    "current_weather": {
+        "city": ["get_city_weather"],
+        "district": ["get_district_weather", "get_current_weather"],
+        "ward": ["get_current_weather"],
+        "poi": ["get_current_weather"],
+    },
+    "hourly_forecast": {
+        "city": ["get_hourly_forecast", "get_rain_timeline"],
+        "district": ["get_hourly_forecast", "get_rain_timeline"],
+        "ward": ["get_hourly_forecast", "get_rain_timeline"],
+        "poi": ["get_hourly_forecast", "get_rain_timeline"],
+    },
+    "daily_forecast": {
+        "city": ["get_city_daily_forecast", "get_weather_period", "get_daily_summary"],
+        "district": ["get_district_daily_forecast", "get_daily_forecast", "get_weather_period"],
+        "ward": ["get_daily_forecast", "get_weather_period"],
+        "poi": ["get_daily_forecast", "get_weather_period"],
+    },
+    "weather_overview": {
+        "city": ["get_daily_summary", "get_weather_period", "get_city_daily_forecast",
+                 "get_city_weather", "detect_phenomena"],
+        "district": ["get_daily_summary", "get_weather_period", "get_district_daily_forecast",
+                     "get_district_weather", "detect_phenomena"],
+        "ward": ["get_daily_summary", "get_weather_period", "get_daily_forecast"],
+        "poi": ["get_daily_summary", "get_weather_period", "get_daily_forecast"],
+    },
+    "rain_query": {
+        "city": ["get_rain_timeline", "get_hourly_forecast", "get_weather_period",
+                 "get_city_daily_forecast", "detect_phenomena"],
+        "district": ["get_rain_timeline", "get_hourly_forecast", "get_district_weather",
+                     "get_weather_period", "get_district_daily_forecast"],
+        "ward": ["get_rain_timeline", "get_hourly_forecast", "get_current_weather",
+                 "get_daily_forecast"],
+        "poi": ["get_rain_timeline", "get_hourly_forecast", "get_current_weather"],
+    },
+    "temperature_query": {
+        "city": ["get_city_weather", "get_hourly_forecast", "get_weather_period",
+                 "get_temperature_trend", "get_city_daily_forecast"],
+        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast",
+                     "get_district_daily_forecast", "get_weather_period"],
+        "ward": ["get_current_weather", "get_hourly_forecast", "get_daily_forecast"],
+        "poi": ["get_current_weather", "get_hourly_forecast"],
+    },
+    "wind_query": {
+        "city": ["get_city_weather", "get_hourly_forecast", "get_weather_alerts",
+                 "get_weather_period", "detect_phenomena"],
+        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast"],
+        "ward": ["get_current_weather", "get_hourly_forecast"],
+        "poi": ["get_current_weather", "get_hourly_forecast"],
+    },
+    "humidity_fog_query": {
+        "city": ["get_city_weather", "get_hourly_forecast", "detect_phenomena",
+                 "get_weather_period"],
+        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast",
+                     "detect_phenomena"],
+        "ward": ["get_current_weather", "get_hourly_forecast", "detect_phenomena"],
+        "poi": ["get_current_weather", "get_hourly_forecast"],
+    },
+    "historical_weather": {
+        "city": ["get_weather_history"],
+        "district": ["get_weather_history"],
+        "ward": ["get_weather_history"],
+        "poi": ["get_weather_history"],
+    },
+    "location_comparison": {
+        "city": ["get_district_weather", "get_district_ranking", "get_weather_period",
+                 "get_city_daily_forecast"],
+        "district": ["compare_weather", "get_district_weather", "get_current_weather",
+                     "get_rain_timeline", "get_hourly_forecast", "get_district_daily_forecast"],
+        "ward": ["compare_weather", "get_current_weather", "get_hourly_forecast"],
+        "poi": ["compare_weather", "get_current_weather", "get_hourly_forecast"],
+    },
+    "activity_weather": {
+        "city": ["get_activity_advice", "get_best_time", "get_comfort_index",
+                 "get_clothing_advice", "get_city_weather", "get_hourly_forecast"],
+        "district": ["get_activity_advice", "get_best_time", "get_comfort_index",
+                     "get_clothing_advice", "get_district_weather", "get_hourly_forecast",
+                     "get_daily_forecast", "get_district_daily_forecast"],
+        "ward": ["get_activity_advice", "get_best_time", "get_comfort_index",
+                 "get_hourly_forecast", "get_daily_forecast"],
+        "poi": ["get_activity_advice", "get_best_time", "get_comfort_index",
+                "get_clothing_advice", "get_hourly_forecast", "get_weather_period"],
+    },
+    "expert_weather_param": {
+        "city": ["get_city_weather", "get_hourly_forecast", "get_daily_summary",
+                 "get_weather_history"],
+        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast",
+                     "get_weather_history"],
+        "ward": ["get_current_weather", "get_hourly_forecast", "get_daily_summary"],
+        "poi": ["get_current_weather", "get_hourly_forecast"],
+    },
+    "weather_alert": {
+        "city": ["get_weather_alerts", "get_weather_change_alert", "detect_phenomena",
+                 "get_hourly_forecast", "get_temperature_trend", "get_weather_period"],
+        "district": ["get_weather_alerts", "get_weather_change_alert", "detect_phenomena",
+                     "get_hourly_forecast", "get_temperature_trend"],
+        "ward": ["get_weather_alerts", "get_weather_change_alert", "get_hourly_forecast"],
+        "poi": ["get_weather_alerts", "get_weather_change_alert"],
+    },
+    "smalltalk_weather": {
+        # Smalltalk is very diverse: greetings, clothing advice, seasonal,
+        # anomaly detection, rain check, stargazing, etc.
+        # Broad expected set; no-tools-called is also acceptable (greetings).
+        "city": [
+            "get_city_weather", "get_daily_summary", "get_clothing_advice",
+            "get_comfort_index", "get_seasonal_comparison", "get_weather_change_alert",
+            "get_hourly_forecast", "get_current_weather", "get_daily_forecast",
+            "get_city_daily_forecast", "detect_phenomena", "get_weather_period",
+        ],
+    },
 }
 
 
@@ -211,9 +337,28 @@ def extract_tool_outputs(result) -> str:
     return "\n---\n".join(outputs) if outputs else ""
 
 
-def check_tool_accuracy(intent: str, tools_called: list) -> bool:
-    """Check if at least one correct tool was called for the intent (legacy)."""
-    expected = INTENT_TO_TOOLS.get(intent, [])
+def _get_expected_tools(intent: str, location_scope: str = "") -> list:
+    """Get expected tools for (intent, location_scope) from hierarchical mapping.
+
+    Falls back to "city" scope if the specific scope is not defined for an intent.
+    Returns empty list for unknown intents.
+    """
+    intent_map = INTENT_TO_TOOLS.get(intent, {})
+    if not intent_map:
+        return []
+    # Look up by scope; fallback to "city" if scope not found in this intent
+    tools = intent_map.get(location_scope) or intent_map.get("city", [])
+    return tools
+
+
+def check_tool_accuracy(intent: str, tools_called: list,
+                        location_scope: str = "") -> bool:
+    """Check if at least one scope-appropriate tool was called.
+
+    Uses hierarchical INTENT_TO_TOOLS: the expected tools depend on BOTH the
+    intent AND the location scope (city/district/ward/poi).
+    """
+    expected = _get_expected_tools(intent, location_scope)
     if not expected:
         return True  # Unknown intent, skip check
     # For smalltalk: no tools called is acceptable (greeting, out-of-scope, etc.)
@@ -222,12 +367,14 @@ def check_tool_accuracy(intent: str, tools_called: list) -> bool:
     return any(t in expected for t in tools_called)
 
 
-def check_tool_precision(intent: str, tools_called: list) -> float:
-    """What fraction of called tools were relevant? (precision)
+def check_tool_precision(intent: str, tools_called: list,
+                         location_scope: str = "") -> float:
+    """What fraction of called tools were scope-appropriate? (precision)
 
-    Higher = agent doesn't call unnecessary tools.
+    Uses hierarchical INTENT_TO_TOOLS so that e.g. calling get_city_weather
+    for a ward-level question is correctly identified as irrelevant.
     """
-    expected = set(INTENT_TO_TOOLS.get(intent, []))
+    expected = set(_get_expected_tools(intent, location_scope))
     if not tools_called:
         # No tools called: for smalltalk this is fine (precision=1.0)
         return 1.0 if intent == "smalltalk_weather" else 0.0
@@ -239,19 +386,34 @@ def check_tool_precision(intent: str, tools_called: list) -> float:
     return round(relevant / len(relevant_calls), 2)
 
 
-def check_tool_recall(intent: str, tools_called: list) -> float:
-    """Did the agent call the primary tool for this intent? (recall)
+def check_tool_recall(intent: str, tools_called: list,
+                      location_scope: str = "") -> float:
+    """Scope-aware tool recall: did the agent call at least one expected tool?
 
-    Primary tool = first in the INTENT_TO_TOOLS list.
+    Returns 1.0 if any called tool is in the expected set for (intent, scope),
+    otherwise 0.0.
+
+    This is binary recall because the expected set contains ALTERNATIVES
+    (any one is sufficient), not REQUIREMENTS (all must be called).
+    Using fractional recall (|called ∩ expected| / |expected|) would penalize
+    the agent for not calling ALL alternatives, which is incorrect.
+
+    Example:
+    - intent=current_weather, scope=city
+    - expected = ["get_city_weather"]
+    - tools_called = ["get_city_weather"] → recall = 1.0
+    - tools_called = ["get_current_weather"] → recall = 0.0 (wrong scope)
     """
-    expected = INTENT_TO_TOOLS.get(intent, [])
+    expected = _get_expected_tools(intent, location_scope)
     if not expected:
         return 1.0  # Unknown intent
     # For smalltalk: no tools called is acceptable
     if intent == "smalltalk_weather" and not tools_called:
         return 1.0
-    # Check if any expected tool was called (not just primary)
-    return 1.0 if any(t in expected for t in tools_called) else 0.0
+
+    called_set = set(tools_called)
+    expected_set = set(expected)
+    return 1.0 if (called_set & expected_set) else 0.0
 
 
 def categorize_error(error_str: str) -> str:
@@ -357,7 +519,6 @@ def llm_judge(question, response, tool_output=None, client=None) -> dict:
         "judge_reasoning": quality.reasoning if quality else "",
         "faith_reasoning": faith.reasoning if faith else "",
     }
-# CONTINUE_MARKER_2
 
 
 def load_test_queries(csv_path):
@@ -370,7 +531,7 @@ def load_test_queries(csv_path):
 
 
 def evaluate_query(question, query_id, expected_tool=None, expected_location=None,
-                   judge_client=None, skip_judge=False):
+                   location_scope="", judge_client=None, skip_judge=False):
     """Evaluate a single query with unique thread_id and optional LLM judge."""
     start_time = time.time()
     thread_id = f"eval_{query_id}_{uuid4().hex[:8]}"
@@ -379,16 +540,20 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
         result = run_agent(message=question, thread_id=thread_id)
         messages = result.get("messages", [])
         response = messages[-1].content if messages else ""
+        if response is None:
+            response = ""
         elapsed_ms = (time.time() - start_time) * 1000
 
         tools_called = extract_tool_names(result)
-        tool_correct = check_tool_accuracy(expected_tool or "", tools_called)
+        intent = expected_tool or ""
+        tool_correct = check_tool_accuracy(intent, tools_called, location_scope)
         tool_output = extract_tool_outputs(result)
 
         eval_result = {
             "question": question,
             "intent": expected_tool,
             "location": expected_location,
+            "location_scope": location_scope,
             "response": response,
             "response_time_ms": round(elapsed_ms),
             "success": True,
@@ -396,8 +561,8 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "error_category": None,
             "tools_called": ",".join(tools_called),
             "tool_correct": tool_correct,
-            "tool_precision": check_tool_precision(expected_tool or "", tools_called),
-            "tool_recall": check_tool_recall(expected_tool or "", tools_called),
+            "tool_precision": check_tool_precision(intent, tools_called, location_scope),
+            "tool_recall": check_tool_recall(intent, tools_called, location_scope),
             "tool_output_raw": tool_output[:500],
         }
 
@@ -411,6 +576,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
                 "judge_actionability": judge_scores.get("actionability"),
                 "judge_faithfulness": judge_scores.get("faithfulness"),
                 "judge_reasoning": judge_scores.get("judge_reasoning", ""),
+                "faith_reasoning": judge_scores.get("faith_reasoning", ""),
             })
         else:
             eval_result.update({
@@ -420,6 +586,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
                 "judge_actionability": None,
                 "judge_faithfulness": None,
                 "judge_reasoning": "",
+                "faith_reasoning": "",
             })
 
         return eval_result
@@ -431,6 +598,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "question": question,
             "intent": expected_tool,
             "location": expected_location,
+            "location_scope": location_scope,
             "response": "",
             "response_time_ms": round(elapsed_ms),
             "success": False,
@@ -447,6 +615,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "judge_actionability": None,
             "judge_faithfulness": None,
             "judge_reasoning": "",
+            "faith_reasoning": "",
         }
 
 
@@ -456,19 +625,23 @@ def compute_metrics(results):
     successful = [r for r in results if r["success"]]
     times = sorted([r["response_time_ms"] for r in results])
 
+    # Core counts for CI calculation
+    tool_correct_count = sum(1 for r in results if r.get("tool_correct"))
+    recall_correct_count = sum(1 for r in results if r.get("tool_recall", 0) >= 1.0)
+
     metrics = {
         "total": total,
         "successful": len(successful),
         "success_rate": round(len(successful) / total * 100, 1) if total else 0,
-        "tool_accuracy": round(
-            sum(1 for r in results if r.get("tool_correct")) / total * 100, 1
-        ) if total else 0,
+        "tool_accuracy": round(tool_correct_count / total * 100, 1) if total else 0,
+        "tool_accuracy_ci95": wilson_ci(tool_correct_count, total),
         "tool_precision_avg": round(
             sum(r.get("tool_precision", 0) for r in results) / total, 2
         ) if total else 0,
         "tool_recall_avg": round(
             sum(r.get("tool_recall", 0) for r in results) / total, 2
         ) if total else 0,
+        "tool_recall_ci95": wilson_ci(recall_correct_count, total),
         "avg_time_ms": round(sum(times) / total) if total else 0,
         "p50_time_ms": round(times[total // 2]) if times else 0,
         "p90_time_ms": round(times[int(total * 0.9)]) if times else 0,
@@ -516,6 +689,7 @@ def compute_metrics(results):
             "total": v["total"],
             "success_rate": round(v["success"] / v["total"] * 100, 1),
             "tool_accuracy": round(v["tool_correct"] / v["total"] * 100, 1),
+            "tool_accuracy_ci95": wilson_ci(v["tool_correct"], v["total"]),
             "avg_time_ms": round(sum(v["times"]) / len(v["times"])),
         }
         for d in judge_dims:
@@ -529,12 +703,14 @@ def compute_metrics(results):
         diff = r.get("difficulty", "unknown")
         if diff not in by_diff:
             by_diff[diff] = {
-                "total": 0, "success": 0,
+                "total": 0, "success": 0, "tool_correct": 0,
                 "judge_scores": {d: [] for d in judge_dims},
             }
         by_diff[diff]["total"] += 1
         if r["success"]:
             by_diff[diff]["success"] += 1
+        if r.get("tool_correct"):
+            by_diff[diff]["tool_correct"] += 1
         for d in judge_dims:
             if r.get(d) is not None:
                 by_diff[diff]["judge_scores"][d].append(r[d])
@@ -544,6 +720,8 @@ def compute_metrics(results):
         entry = {
             "total": v["total"],
             "success_rate": round(v["success"] / v["total"] * 100, 1),
+            "tool_accuracy": round(v["tool_correct"] / v["total"] * 100, 1),
+            "tool_accuracy_ci95": wilson_ci(v["tool_correct"], v["total"]),
         }
         for d in judge_dims:
             vals = v["judge_scores"][d]
@@ -591,6 +769,7 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False):
             query_id=i,
             expected_tool=q.get("intent"),
             expected_location=q.get("location_name"),
+            location_scope=q.get("location_scope", ""),
             judge_client=judge_client,
             skip_judge=skip_judge,
         )
@@ -599,13 +778,14 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False):
 
         # Print judge scores inline
         if not skip_judge and result.get("judge_relevance") is not None:
-            r, c, fl, fa = (
+            r, c, fl, a, fa = (
                 result.get("judge_relevance", "-"),
                 result.get("judge_completeness", "-"),
                 result.get("judge_fluency", "-"),
+                result.get("judge_actionability", "-"),
                 result.get("judge_faithfulness", "-"),
             )
-            print(f"  -> Judge: R={r} C={c} F={fl} Faith={fa}")
+            print(f"  -> Judge: R={r} C={c} F={fl} A={a} Faith={fa}")
 
         logger.log_conversation(
             session_id=f"eval_{i}",
@@ -626,15 +806,18 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False):
     print("=" * 60)
     print(f"Total: {metrics['total']}")
     print(f"Success rate: {metrics['success_rate']}%")
-    print(f"Tool accuracy: {metrics['tool_accuracy']}%")
-    print(f"Tool precision: {metrics['tool_precision_avg']} | Tool recall: {metrics['tool_recall_avg']}")
+    ci = metrics['tool_accuracy_ci95']
+    print(f"Tool accuracy: {metrics['tool_accuracy']}% [95% CI: {ci[0]}-{ci[1]}%]")
+    rci = metrics['tool_recall_ci95']
+    print(f"Tool precision: {metrics['tool_precision_avg']} | Tool recall: {metrics['tool_recall_avg']} [95% CI: {rci[0]}-{rci[1]}%]")
     print(f"Avg time: {metrics['avg_time_ms']}ms | p50: {metrics['p50_time_ms']}ms | p90: {metrics['p90_time_ms']}ms | p95: {metrics['p95_time_ms']}ms")
 
     # Judge scores
     if not skip_judge:
         print()
         print("LLM-as-Judge Scores (1-5):")
-        for dim in ["judge_relevance", "judge_completeness", "judge_fluency", "judge_faithfulness"]:
+        for dim in ["judge_relevance", "judge_completeness", "judge_fluency",
+                     "judge_actionability", "judge_faithfulness"]:
             avg = metrics.get(dim + "_avg")
             cnt = metrics.get(dim + "_count", 0)
             label = dim.replace("judge_", "").capitalize()
@@ -643,20 +826,24 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False):
     print()
     print("By Intent:")
     for intent, data in sorted(metrics["by_intent"].items()):
+        ci = data.get("tool_accuracy_ci95", (0, 0))
         judge_str = ""
         if not skip_judge:
             r_avg = data.get("judge_relevance_avg", "-")
-            judge_str = f", judge_rel={r_avg}"
-        print(f"  {intent}: {data['success_rate']}% success, {data['tool_accuracy']}% tool acc, {data['avg_time_ms']}ms{judge_str} ({data['total']}q)")
+            f_avg = data.get("judge_faithfulness_avg", "-")
+            judge_str = f", rel={r_avg}, faith={f_avg}"
+        print(f"  {intent}: {data['tool_accuracy']}% [CI: {ci[0]}-{ci[1]}%], {data['avg_time_ms']}ms{judge_str} ({data['total']}q)")
 
     print()
     print("By Difficulty:")
     for diff, data in sorted(metrics["by_difficulty"].items()):
+        ci = data.get("tool_accuracy_ci95", (0, 0))
         judge_str = ""
         if not skip_judge:
             r_avg = data.get("judge_relevance_avg", "-")
-            judge_str = f", judge_rel={r_avg}"
-        print(f"  {diff}: {data['success_rate']}% success{judge_str} ({data['total']}q)")
+            f_avg = data.get("judge_faithfulness_avg", "-")
+            judge_str = f", rel={r_avg}, faith={f_avg}"
+        print(f"  {diff}: acc={data['tool_accuracy']}% [CI: {ci[0]}-{ci[1]}%]{judge_str} ({data['total']}q)")
 
     # Save results
     output_path = Path(output_dir)

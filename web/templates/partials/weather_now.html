@@ -1,0 +1,22 @@
+<!-- HTMX partial: current weather card -->
+{% if current and not current.get("error") %}
+<div class="bg-white rounded-xl p-6 shadow-sm">
+  <div class="text-5xl font-light text-gray-900">
+    {{ current.temp|safe_round|int }}°C
+  </div>
+  <div class="text-sm text-gray-600 mt-1">
+    {{ current.weather_description or current.weather_main }}
+  </div>
+  <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
+    <div>Độ ẩm: {{ current.humidity }}%</div>
+    <div>
+      Gió: {{ current.wind_direction_vi }} {{ ((current.wind_speed or 0) * 3.6)
+      | safe_round|int }} km/h
+    </div>
+    <div>UV: {{ current.uvi|default(0)|safe_round(1) }}</div>
+    <div>Áp suất: {{ current.pressure }} hPa</div>
+  </div>
+</div>
+{% else %}
+<div class="text-sm text-gray-500">Không có dữ liệu</div>
+{% endif %}

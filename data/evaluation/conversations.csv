@@ -1,1288 +1,1232 @@
 timestamp,session_id,turn_number,user_query,resolved_location,llm_response,response_time_ms,tool_calls,error_type,user_rating
-2026-03-20T15:19:53.941862+07:00,eval_1,1,Bây giờ thời tiết ở Hà Nội như thế nào?,,"Thời tiết hiện tại ở Hà Nội như sau:
+2026-03-23T10:16:34.792911+07:00,eval_1,1,Bây giờ thời tiết ở Hà Nội như thế nào?,,"Thời tiết hiện tại ở Hà Nội như sau:
 
-- **Nhiệt độ**: 27.4°C (cảm giác như 28.8°C)
+- **Nhiệt độ**: 24.8°C (cảm giác như 27.0°C)
 - **Trời**: Có mây
-- **Độ ẩm**: 61.2%
-- **Gió**: Đông Nam, tốc độ 5.4 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.8 (trung bình)
+- **Độ ẩm**: 80%
+- **Gió**: Đông Nam 3.4 m/s
+- **Áp suất**: 1012 hPa
+- **Chỉ số UV**: 1.5 (thấp)
 
-💡 Trời khá dễ chịu, nhưng có thể hơi oi bức. Nếu bạn ra ngoài, hãy mang theo nước để giữ ẩm nhé!",6584,,,
-2026-03-20T15:20:01.224488+07:00,eval_2,2,Hiện tại ở quận Cầu Giấy thời tiết ra sao?,,"Quận Cầu Giấy hiện tại có thời tiết như sau:
+💡 Trời có vẻ oi bức, bạn nên mang theo nước khi ra ngoài nhé!",6778,,,
+2026-03-23T10:16:46.796262+07:00,eval_2,2,Hiện tại ở quận Cầu Giấy thời tiết ra sao?,,"Quận Cầu Giấy hiện tại có thời tiết như sau:
 
-- **Nhiệt độ**: 27.5°C (cảm giác 28.7°C)
+- **Nhiệt độ**: 24.7°C (cảm giác 25.0°C)
 - **Trời**: Có mây
-- **Độ ẩm**: 60%
-- **Gió**: Đông Nam 5.7 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.7 (thấp)
+- **Độ ẩm**: 75.5%
+- **Gió**: Đông Nam, tốc độ 3.8 m/s
+- **Áp suất**: 1013 hPa
+- **Chỉ số UV**: 1.6 (thấp)
 
-💡 Thời tiết hiện tại khá dễ chịu, nhưng có thể hơi oi bức. Nếu bạn ra ngoài, hãy mang theo nước để giữ ẩm nhé!",7283,,,
-2026-03-20T15:20:14.455451+07:00,eval_3,3,Thời tiết ở phường Dịch Vọng lúc này có mưa không?,,"Hiện tại, thời tiết ở phường Dịch Vọng, quận Cầu Giấy như sau:
+💡 Thời tiết hiện tại khá oi bức, bạn nên mang theo nước khi ra ngoài nhé!",5885,,,
+2026-03-23T10:16:58.119032+07:00,eval_3,3,Thời tiết ở phường Dịch Vọng lúc này có mưa không?,,"Hiện tại, thời tiết ở phường Dịch Vọng (Quận Cầu Giấy) như sau:
 
-- **Nhiệt độ**: 27.5°C (cảm giác 28.7°C)
-- **Trời**: Có mây
-- **Độ ẩm**: 60%
-- **Gió**: Đông Nam 5.7 m/s
-- **Áp suất**: 1011 hPa
-- **UV**: 2.7 (thấp)
+- Nhiệt độ: 24.7°C (cảm giác 25°C)
+- Trời có mây, độ ẩm: 75%
+- Gió: Đông Nam 3.8 m/s
+- Áp suất: 1013 hPa
 
-💧 **Có mưa không?** Hiện tại không có mưa và xác suất mưa trong 2 giờ tới cũng là 0%. 
+💧 Hiện tại không có mưa, và trong 2 giờ tới cũng không có khả năng mưa. Bạn có thể yên tâm ra ngoài!",6570,,,
+2026-03-23T10:17:07.245060+07:00,eval_4,4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,,"Quận Hoàn Kiếm hiện tại có nhiệt độ là 24.2°C (cảm giác như 24.2°C), trời quang đãng, độ ẩm 72%. 
 
-Bạn có thể thoải mái ra ngoài mà không cần mang ô.",13230,,,
-2026-03-20T15:20:20.199674+07:00,eval_4,4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,,"Hiện tại, thời tiết ở quận Hoàn Kiếm là 27.6°C (cảm giác 28.8°C), trời có mây, độ ẩm 60%. 
+- Gió Đông Nam 5.8 m/s, áp suất 1011 hPa.
+- Chỉ số UV thấp.
 
-- Gió từ hướng Nam với tốc độ 5.9 m/s.
-- Chỉ số UV ở mức thấp.
+💡 Thời tiết dễ chịu, bạn có thể ra ngoài thoải mái!",4595,,,
+2026-03-23T10:17:18.344559+07:00,eval_5,5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",,"Hiện tại, phường Phú Diễn, quận Bắc Từ Liêm có nhiều mây với độ che phủ khoảng 48.4%. 
 
-💡 Thời tiết khá dễ chịu, nhưng nếu bạn có kế hoạch ra ngoài, hãy nhớ mang theo nước nhé!",5743,,,
-2026-03-20T15:20:27.385375+07:00,eval_5,5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",,"Hiện tại, phường Phú Diễn, Bắc Từ Liêm có nhiều mây, với nhiệt độ khoảng 27.5°C và độ ẩm 60%. 
+- Nhiệt độ: 25.0°C
+- Độ ẩm: 74%
+- Gió: Đông Nam 3.8 m/s
+- UV: 1.6 (thấp)
 
-- Gió từ hướng Nam với tốc độ 5.8 m/s.
-- Chỉ số UV ở mức thấp.
+💡 Trời có mây, bạn có thể thoải mái ra ngoài nhưng nên mang theo áo khoác nhẹ nếu cảm thấy lạnh.",6115,,,
+2026-03-23T10:17:29.931896+07:00,eval_6,6,Gió ở quận Long Biên hiện tại mạnh không?,,"Hiện tại, gió ở quận Long Biên có tốc độ trung bình khoảng 4.0 m/s, hướng Đông Nam. Gió mạnh nhất có thể đạt tới 7.85 m/s. 
 
-💡 Nếu bạn ra ngoài, hãy chú ý đến thời tiết và mang theo nước nhé!",7185,,,
-2026-03-20T15:20:33.252209+07:00,eval_6,6,Gió ở quận Long Biên hiện tại mạnh không?,,"Hiện tại, gió ở quận Long Biên có tốc độ trung bình khoảng 5.7 m/s, với hướng gió từ phía Nam. Gió có thể mạnh hơn vào một số thời điểm, với tốc độ gió giật lên đến 7.7 m/s.
+💡 Gió không quá mạnh, nhưng vẫn nên chú ý khi ra ngoài, đặc biệt là nếu bạn có kế hoạch tham gia các hoạt động ngoài trời.",5891,,,
+2026-03-23T10:17:42.192909+07:00,eval_7,7,Trời Hà Nội lúc này có nắng không?,,"Hiện tại, thời tiết Hà Nội có mây, nhiệt độ khoảng 26.1°C, độ ẩm 68.1%. Gió từ hướng Nam với tốc độ 3.6 m/s. 
 
-💡 Nếu bạn ra ngoài, hãy chú ý đến gió có thể gây khó khăn cho các hoạt động ngoài trời.",5867,,,
-2026-03-20T15:20:44.390941+07:00,eval_7,7,Trời Hà Nội lúc này có nắng không?,,"Hiện tại, thời tiết Hà Nội có nhiệt độ khoảng 26.0°C, trời nhiều mây và độ ẩm 67.4%. 
+🌥️ Trời không có nắng mạnh, nhưng có thể cảm thấy oi bức. Nếu bạn ra ngoài, hãy mang theo nước để giữ ẩm nhé!",7076,,,
+2026-03-23T10:17:54.727499+07:00,eval_8,8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,,"Hiện tại, độ ẩm ở quận Hoàng Mai là 78.2%. 
 
-- Gió từ hướng Đông Nam với tốc độ 5.3 m/s.
-- Chỉ số UV ở mức 0.9 (thấp).
-
-💡 Trời không có nắng mạnh, bạn có thể ra ngoài nhưng nên mang theo ô hoặc áo khoác nhẹ để tránh gió lạnh.",11139,,,
-2026-03-20T15:20:53.825195+07:00,eval_8,8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,,"Hiện tại, độ ẩm ở quận Hoàng Mai là 60%. 
-
-- Nhiệt độ: 27.4°C (cảm giác 28.6°C)
+- Nhiệt độ: 24.4°C
 - Trời có mây
-- Gió: 5.8 m/s, hướng Nam
-
-💡 Thời tiết khá dễ chịu, bạn có thể ra ngoài nhưng nên mang theo nước nhé!",9433,,,
-2026-03-20T15:20:59.846941+07:00,eval_9,9,Cho mình biết thời tiết hiện tại ở khu vực Mỹ Đình với.,,"Thời tiết hiện tại ở khu vực Mỹ Đình (Quận Nam Từ Liêm) như sau:
+- Gió: Đông Nam 3.5 m/s
 
-- **Nhiệt độ**: 27.4°C (cảm giác 28.7°C)
-- **Trời**: Có mây
-- **Độ ẩm**: 61.3%
-- **Gió**: Nam, tốc độ 5.7 m/s, có thể có gió giật lên đến 7.3 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.7 (thấp)
-- **Điểm sương**: 19.4°C (dễ chịu)
-
-💡 Thời tiết khá dễ chịu, nhưng nên chú ý hoạt động ngoài trời lâu có thể gây mệt mỏi.",6022,,,
-2026-03-20T15:21:07.809845+07:00,eval_10,10,Bầu trời ở khu vực Hồ Gươm bây giờ trông như thế nào?,,"Hiện tại, khu vực Hồ Gươm có thời tiết như sau:
-
-- **Nhiệt độ**: 27.6°C (cảm giác 28.8°C)
-- **Trời**: Có mây
-- **Độ ẩm**: 60%
-- **Gió**: Nam, tốc độ 5.9 m/s, có thể có gió giật lên đến 7.7 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: Thấp (2.7)
-
-💡 Bầu trời có mây, thời tiết khá dễ chịu. Nếu bạn ra ngoài, có thể cảm thấy hơi oi bức, nên mang theo nước nhé!",7963,,,
-2026-03-20T15:21:17.087568+07:00,eval_11,11,Nhiệt độ cảm giác ngoài trời ở Thanh Xuân lúc này là bao nhiêu?,,"Hiện tại, nhiệt độ cảm giác ngoài trời ở quận Thanh Xuân là 28.8°C (cảm giác 31°C). Trời có mây và độ ẩm khoảng 60%. 
-
-💡 Lưu ý: Thời tiết có thể khiến bạn cảm thấy mệt mỏi nếu hoạt động kéo dài, nên hãy chú ý giữ sức khỏe nhé!",9264,,,
-2026-03-20T15:21:21.448964+07:00,eval_12,12,Tầm nhìn hiện tại ở sân bay Nội Bài có ổn không?,,"Hiện tại, không có cảnh báo nào về thời tiết tại sân bay Nội Bài, điều này cho thấy tầm nhìn ở đây có vẻ ổn. Tuy nhiên, nếu bạn cần thông tin chi tiết hơn về thời tiết, hãy cho mình biết nhé!",4361,,,
-2026-03-20T15:21:28.597914+07:00,eval_13,13,Chiều nay ở quận Hai Bà Trưng có mưa không?,,"Chiều nay ở quận Hai Bà Trưng có khả năng mưa vào lúc 17:00 với xác suất 20%. Lượng mưa dự kiến khoảng 0.3 mm. 
-
-- **Thời gian mưa:** 17:00
-- **Thời gian tạnh:** 18:00
-
-💡 Nên mang ô khi ra ngoài vào chiều nay nhé!",7149,,,
-2026-03-20T15:21:38.009312+07:00,eval_14,14,"Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",,"Tối nay ở phường Khương Trung, Thanh Xuân, nhiệt độ sẽ giảm dần như sau:
-
-- **18:00**: 26.3°C
-- **19:00**: 26.1°C
-- **20:00**: 25.0°C
-- **21:00**: 24.8°C
-
-Trời có mây, độ ẩm tăng lên khoảng 75-83%. Gió nhẹ từ hướng Đông Nam.
-
-💡 Nên mặc áo khoác nhẹ khi ra ngoài vào buổi tối nhé!",9410,,,
-2026-03-20T15:21:44.381171+07:00,eval_15,15,Khoảng 9 giờ tối nay ở Cầu Giấy có lạnh không?,,"Khoảng 9 giờ tối nay (20/03/2026) ở quận Cầu Giấy, nhiệt độ dự kiến là khoảng 24.7°C, độ ẩm 83%. Trời có mây và gió nhẹ từ hướng Đông Nam với tốc độ khoảng 5.0 m/s.
-
-💡 Dự báo thời tiết không lạnh, nhưng có thể cảm thấy hơi ẩm. Bạn có thể mặc áo nhẹ và mang theo một chiếc áo khoác mỏng nếu cảm thấy cần thiết.",6372,,,
-2026-03-20T15:21:56.828965+07:00,eval_16,16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,,"Hiện tại, thời tiết ở Hà Nội có mây, nhiệt độ khoảng 27.4°C, độ ẩm 61.2%. Trong khoảng thời gian từ giờ đến nửa đêm, khả năng mưa không cao. Cụ thể:
-
-- **16:00**: Nhiệt độ 27.6°C, độ ẩm 65.8%, xác suất mưa 1%.
-- **17:00**: Nhiệt độ 26.8°C, độ ẩm 67.1%, xác suất mưa 5.6%.
-- **18:00**: Nhiệt độ 26.1°C, độ ẩm 70.9%, xác suất mưa 0.5%.
-- **19:00**: Nhiệt độ 25.7°C, độ ẩm 74.3%, xác suất mưa 0.3%.
-- **20:00**: Nhiệt độ 24.7°C, độ ẩm 78.3%, xác suất mưa 15.4%.
-- **21:00**: Nhiệt độ 24.4°C, độ ẩm 82.5%",12448,,,
-2026-03-20T15:22:05.999606+07:00,eval_17,17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,,"Đêm nay ở khu vực Tây Hồ, gió sẽ không quá mạnh. Dưới đây là thông tin chi tiết:
-
-- **Gió**: 
-  - 18h: 5.4 m/s (Đông Nam), gió giật tối đa 8.82 m/s
-  - 19h: 5.21 m/s (Đông Nam), gió giật tối đa 9.33 m/s
-  - 20h: 4.84 m/s (Đông Nam), gió giật tối đa 9.5 m/s
-  - 21h: 4.45 m/s (Đông Nam), gió giật tối đa 9.84 m/s
-
-- **Thời tiết**: Trời có mây, không có mưa.
-
-💡 Bạn có thể thoải mái ra ngoài, nhưng nếu có kế hoạch hoạt động ngoài trời, hãy chú ý đến gió nhẹ.",9171,,,
-2026-03-20T15:22:15.031189+07:00,eval_18,18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,,"Trong 3 giờ tới, thời tiết ở phường Xuân Đỉnh (Quận Ba Đình) như sau:
-
-- **16:00**: Nhiệt độ trung bình 27.3°C, trời có mây, độ ẩm 67%. Gió Đông Nam 6.5 m/s.
-- **17:00**: Nhiệt độ trung bình 26.6°C, trời có mây, độ ẩm 68%. Gió Đông Nam 5.8 m/s.
-- **18:00**: Nhiệt độ trung bình 25.9°C, trời có mây, độ ẩm 72%. Gió Đông Nam 5.5 m/s.
-
-💡 **Lưu ý**: Không có khả năng mưa trong 3 giờ tới, nên bạn có thể yên tâm ra ngoài mà không cần mang ô.",9032,,,
-2026-03-20T15:22:35.155798+07:00,eval_19,19,Sáng mai từ 6h đến 9h ở Long Biên trời có sương mù không?,,"Sáng mai từ 6h đến 9h ở Long Biên, thời tiết sẽ có mây, không có sương mù. Dưới đây là thông tin chi tiết:
-
-- **6h**: Nhiệt độ khoảng 27.0°C, độ ẩm 67%, gió Đông Nam 6.8 m/s.
-- **7h**: Nhiệt độ khoảng 26.5°C, độ ẩm 68%, gió Đông Nam 6.5 m/s.
-- **8h**: Nhiệt độ khoảng 26.0°C, độ ẩm 70%, gió Đông Nam 6.0 m/s.
-
-💡 Bạn có thể ra ngoài thoải mái, nhưng nên mang theo nước uống để giữ sức khỏe!",20124,,,
-2026-03-20T15:22:44.229077+07:00,eval_20,20,Mấy tiếng nữa ở Đống Đa mưa sẽ tạnh không?,,"Theo dự báo, ở quận Đống Đa, mưa sẽ tiếp tục đến khoảng 17:00 chiều nay (20/03/2026) với xác suất mưa tối đa là 20%. Sau thời điểm đó, không có thông tin về thời gian tạnh mưa.
-
-💡 Nên mang ô khi ra ngoài trong khoảng thời gian này!",9073,,,
-2026-03-20T15:22:51.266778+07:00,eval_21,21,Từ 8h tối đến nửa đêm ở Thanh Trì có mưa không?,,Từ 8h tối đến nửa đêm ở Thanh Trì không có mưa. Thời tiết sẽ khô ráo trong khoảng thời gian này. Bạn có thể yên tâm ra ngoài!,7037,,,
-2026-03-20T15:23:00.004506+07:00,eval_22,22,Lúc 2 giờ sáng mai ở nội thành Hà Nội nhiệt độ khoảng bao nhiêu?,,Hiện tại mình không thể lấy được dữ liệu dự báo thời tiết cho thời gian cụ thể. Bạn có thể thử hỏi lại sau hoặc hỏi về thời tiết trong ngày hôm nay nhé!,8737,,,
-2026-03-20T15:23:08.938466+07:00,eval_23,23,"Trưa nay ở Đông Anh nắng không, có ra ngoài được không?",,"Trưa nay ở Đông Anh, thời tiết như sau:
-
-- **Nhiệt độ**: khoảng 28.2°C
-- **Độ ẩm**: 67%
-- **Gió**: nhẹ, khoảng 5.5 m/s
-- **Trời**: có mây, không có mưa (xác suất mưa 0%)
-
-💡 **Khuyến nghị**: Thời tiết rất thoải mái, lý tưởng cho các hoạt động ngoài trời. Bạn có thể ra ngoài mà không cần lo lắng!",8933,,,
-2026-03-20T15:23:15.456270+07:00,eval_24,24,Khoảng 7 giờ sáng mai ở Hoàn Kiếm trời như thế nào?,,"Vào khoảng 7 giờ sáng mai (21/03/2026) tại quận Hoàn Kiếm, thời tiết sẽ như sau:
-
-- **Nhiệt độ**: 22.4°C
-- **Cảm giác**: 22.4°C
-- **Độ ẩm**: 85%
-- **Gió**: Đông 2.9 m/s
-- **Trời**: Có mây
-
-💡 Khuyến nghị: Thời tiết khá mát mẻ, bạn có thể mặc áo nhẹ và mang theo ô nếu có kế hoạch ra ngoài.",6518,,,
-2026-03-20T15:23:26.554472+07:00,eval_25,25,Cuối tuần này thời tiết Hà Nội như thế nào?,,"Cuối tuần này, thời tiết Hà Nội sẽ như sau:
-
-### Thứ Bảy, ngày 21/03/2026
-- **Nhiệt độ trung bình**: 26.4°C (min: 20.0°C, max: 27.5°C)
-- **Độ ẩm**: 65.9%
-- **Thời tiết**: Có mưa, tổng lượng mưa khoảng 1.35 mm.
-- **Gió**: Đông Nam, tốc độ gió tối đa 10.84 m/s.
-- **Xác suất mưa**: 94%
-
-### Chủ Nhật, ngày 22/03/2026
-- **Nhiệt độ trung bình**: 27.4°C (min: 26.7°C, max: 28.9°C)
-- **Độ ẩm**: 61.2%
-- **Thời tiết**: Có mây, không có mưa.
-- **Gió**: Nam, tốc độ gió tối đa 7.69 m/s.
-
-### Top 5 quận nóng n",11094,,,
-2026-03-20T15:23:49.361115+07:00,eval_26,26,Thứ bảy ở quận Nam Từ Liêm trời có nắng không?,,"Thứ Bảy, ngày 21/03/2026, thời tiết ở quận Nam Từ Liêm sẽ có mây, với nhiệt độ trung bình khoảng 27.4°C. Dự báo có khả năng mưa nhẹ với xác suất khoảng 21%. 
-
-- **Nhiệt độ**: 27.4°C (min: 21.7°C, max: 27.9°C)
-- **Độ ẩm**: 71.8%
-- **Gió**: Đông Nam, tốc độ 5.7 m/s
-- **Mưa**: Có khả năng mưa nhẹ
-
-💡 Nên mang ô khi ra ngoài để đề phòng mưa nhé!",22807,,,
-2026-03-20T15:23:59.101505+07:00,eval_27,27,Ba ngày tới ở Gia Lâm có mưa nhiều không?,,"Trong ba ngày tới (từ 21 đến 23 tháng 3 năm 2026) ở huyện Gia Lâm sẽ có mưa. Dưới đây là chi tiết:
-
-- **Ngày 21/03**: 
-  - Nhiệt độ trung bình: 26.96°C (khoảng 21.83 - 27.09°C)
-  - Độ ẩm: 62%
-  - Tổng lượng mưa: 0.32 mm
-  - Xác suất mưa: 48%
-
-- **Ngày 22/03**: 
-  - Nhiệt độ trung bình: 26.53°C (khoảng 20.82 - 27.57°C)
-  - Độ ẩm: 66%
-  - Tổng lượng mưa: 0.58 mm
-  - Xác suất mưa: 100%
-
-- **Ngày 23/03**: 
-  - Nhiệt độ trung bình: 28.04°C (khoảng 20.16 - 29.88°C)
-  - Độ ẩm: 54%
-  - Tổng lượng mưa: 0",9738,,,
-2026-03-20T15:24:06.603757+07:00,eval_28,28,Tuần sau nhiệt độ ban ngày ở Hoàn Kiếm khoảng bao nhiêu độ?,,"Trong tuần tới, nhiệt độ ban ngày ở quận Hoàn Kiếm dự kiến sẽ dao động như sau:
-
-- **Ngày 21/03**: Nhiệt độ trung bình 26.4°C, tối đa 27.5°C, có mưa.
-- **Ngày 22/03**: Nhiệt độ trung bình 27.2°C, tối đa 29.4°C, có mưa.
-- **Ngày 23/03**: Nhiệt độ trung bình 29.8°C, tối đa 32.8°C, trời có mây.
-- **Ngày 24/03**: Nhiệt độ trung bình 32.2°C, tối đa 33.3°C, trời có mây.
-- **Ngày 25/03**: Nhiệt độ trung bình 32.4°C, tối đa 33.6°C, trời có mây.
-- **Ngày 26/03**: Nhiệt độ trung bình 32.7°C, tối đa 34.2°C",7501,,,
-2026-03-20T15:24:12.849880+07:00,eval_29,29,"Trong 7 ngày tới, ngày nào ở Long Biên khả năng mưa lớn cao nhất?",,"Trong 7 ngày tới, khả năng mưa lớn nhất ở quận Long Biên sẽ rơi vào ngày 21 tháng 3 với xác suất mưa là 100% và tổng lượng mưa dự kiến là 0.81 mm. Dưới đây là thông tin chi tiết:
-
-- **Ngày 21/03/2026**
-  - Nhiệt độ trung bình: 26.8°C
-  - Độ ẩm trung bình: 63.2%
-  - Thời tiết: Mưa
-
-Ngoài ra, ngày 22 tháng 3 cũng có khả năng mưa với xác suất 86% và tổng lượng mưa là 0.5 mm. 
-
-💡 Bạn nên chuẩn bị ô khi ra ngoài vào những ngày này!",6246,,,
-2026-03-20T15:24:37.084569+07:00,eval_30,30,"Dự báo thời tiết cả tuần cho phường Quang Trung, Đống Đa giúp mình.",,"Dưới đây là dự báo thời tiết cho phường Quang Trung, quận Đống Đa trong tuần tới:
-
-### Dự báo thời tiết từ 20/03 đến 26/03/2026
-
-- **Ngày 20/03**: 
-  - Nhiệt độ: 26.5°C (min: 21.5°C, max: 27.9°C)
-  - Độ ẩm: 72%
-  - Thời tiết: Mưa
-  - Lượng mưa: 0.16 mm
-
-- **Ngày 21/03**: 
-  - Nhiệt độ: 26.8°C (min: 21.1°C, max: 27.2°C)
-  - Độ ẩm: 63%
-  - Thời tiết: Mưa
-  - Lượng mưa: 0.81 mm
-
-- **Ngày 22/03**: 
-  - Nhiệt độ: 26.9°C (min: 21.1°C, max: 27.9°C)
-  - Độ ẩm: 64.6%
-  - Thời tiết: Mưa
-  - Lượng mưa: 0.5",24235,,,
-2026-03-20T15:24:44.901836+07:00,eval_31,31,Ngày mai Hà Nội có nắng không?,,"Ngày mai, thời tiết Hà Nội sẽ có mây và không có nắng. Dự báo nhiệt độ trung bình khoảng 27.4°C, với độ ẩm trung bình 61.2%. 
-
-💡 Lưu ý: Có khả năng có mưa nhẹ, nên bạn hãy chuẩn bị ô khi ra ngoài nhé!",7817,,,
-2026-03-20T15:24:53.700873+07:00,eval_32,32,Thứ tư tuần này ở Hoàng Mai trời có mưa không?,,"Dự báo thời tiết cho quận Hoàng Mai vào thứ Tư tuần này (ngày 25/03/2026) cho thấy có khả năng mưa với xác suất khoảng 20%. 
-
-- Nhiệt độ trung bình: 26.3°C
-- Độ ẩm trung bình: 72.3%
-- Lượng mưa dự kiến: 0.17 mm
-
-💡 Nên mang ô khi ra ngoài để đề phòng mưa nhé!",8799,,,
-2026-03-20T15:25:02.617767+07:00,eval_33,33,Tuần này ngày nào ở Hà Nội đẹp nhất để ra ngoài?,,"Tuần này, ngày đẹp nhất để ra ngoài ở Hà Nội là **ngày 21 tháng 3** với nhiệt độ trung bình khoảng **27.1°C**. Tuy nhiên, có khả năng mưa nhẹ với tổng lượng mưa khoảng **0.53 mm**.
-
-### Thời tiết các ngày trong tuần:
-- **20/03**: Nhiệt độ trung bình 26.8°C, có mây, độ ẩm 74%.
-- **21/03**: Nhiệt độ trung bình 27.1°C, có mưa nhẹ, độ ẩm 62%.
-- **22/03**: Nhiệt độ trung bình 27.1°C, có mưa, độ ẩm 65%.
-- **23/03**: Nhiệt độ trung bình 29.2°C, có mây, độ ẩm 50%.
-- **24/03**: Nhiệt độ trung bình 32.5°C",8916,,,
-2026-03-20T15:25:09.994111+07:00,eval_34,34,Ngày mai ở huyện Đan Phượng nhiệt độ cao nhất là bao nhiêu?,,"Hiện tại, mình không thể lấy thông tin thời tiết cho huyện Đan Phượng. Bạn có thể hỏi về huyện khác hoặc thời gian khác nhé!",7374,,,
-2026-03-20T15:25:26.751066+07:00,eval_35,35,Sáng thứ sáu tuần này ở Ba Đình thời tiết thế nào?,,"Sáng thứ Sáu tuần này (21/03/2026) ở quận Ba Đình, thời tiết sẽ như sau:
-
-- **Nhiệt độ**: khoảng 21.6°C - 27.9°C
-- **Trời**: Có mưa
-- **Độ ẩm**: 74.4%
-- **Gió**: Đông Nam, tốc độ gió tối đa 10.3 m/s
-- **Xác suất mưa**: 22%
-
-💡 **Khuyến nghị**: Nên mang ô khi ra ngoài vì có khả năng mưa.",16757,,,
-2026-03-20T15:25:36.909652+07:00,eval_36,36,Năm ngày tới ở huyện Sóc Sơn mưa hay nắng?,,"Dự báo thời tiết huyện Sóc Sơn trong 5 ngày tới như sau:
-
-- **Ngày 20/03/2026**: 
-  - Nhiệt độ trung bình: 26.8°C
-  - Thời tiết: Mưa
-  - Xác suất mưa: 43%
-  - Lượng mưa: 0.11 mm
-
-- **Ngày 21/03/2026**: 
-  - Nhiệt độ trung bình: 26.5°C
-  - Thời tiết: Mưa
-  - Xác suất mưa: 96%
-  - Lượng mưa: 1.86 mm
-
-- **Ngày 22/03/2026**: 
-  - Nhiệt độ trung bình: 27.9°C
-  - Thời tiết: Mưa
-  - Xác suất mưa: 71%
-  - Lượng mưa: 0.89 mm
-
-- **Ngày 23/03/2026**: 
-  - Nhiệt độ trung bình: 29.4°C
-  - Thời tiết: Có mây
- ",10143,,,
-2026-03-20T15:25:44.293499+07:00,eval_37,37,Bạn tóm tắt giúp mình thời tiết Hà Nội hôm nay đi.,,"Thời tiết Hà Nội hôm nay, thứ Sáu, ngày 20/03/2026, như sau:
-
-- **Nhiệt độ**: 26.0°C (cảm giác 28.8°C)
-- **Thời tiết**: Có mây
-- **Độ ẩm**: 67.4%
-- **Gió**: Đông Nam, tốc độ 5.3 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.3 (trung bình)
-
-### Top 5 quận nóng nhất hôm nay:
-1. **Huyện Ba Vì**: 28.4°C
-2. **Huyện Đông Anh**: 27.6°C
-3. **Quận Tây Hồ**: 27.6°C
-4. **Huyện Sóc Sơn**: 27.6°C
-5. **Huyện Phú Xuyên**: 27.6°C
-
-💡 **Khuyến nghị**: Hôm nay trời có mây, nhiệt độ khá dễ chịu, bạn có thể ra ngoà",7383,,,
-2026-03-20T15:25:55.409688+07:00,eval_38,38,Cho mình một bản tổng quan thời tiết 3 ngày tới ở quận Long Biên.,,"Dưới đây là bản tổng quan thời tiết 3 ngày tới ở quận Long Biên:
-
-### Ngày 20/03/2026
-- **Nhiệt độ trung bình**: 26.5°C
-- **Nhiệt độ tối thiểu**: 21.5°C
-- **Nhiệt độ tối đa**: 27.9°C
-- **Độ ẩm trung bình**: 72%
-- **Thời tiết**: Có mưa
-- **Xác suất mưa**: 20%
-- **Lượng mưa**: 0.16 mm
-- **Gió**: Đông Nam, 10.0 m/s
-
-### Ngày 21/03/2026
-- **Nhiệt độ trung bình**: 26.8°C
-- **Nhiệt độ tối thiểu**: 21.1°C
-- **Nhiệt độ tối đa**: 27.2°C
-- **Độ ẩm trung bình**: 63%
-- **Thời tiết**: Có mưa
-- **Xác suất mưa",11115,,,
-2026-03-20T15:26:01.660098+07:00,eval_39,39,Mô tả ngắn gọn thời tiết tuần này ở Hà Nội để mình lên kế hoạch.,,"Thời tiết tuần này ở Hà Nội (từ 20/03 đến 26/03) có những điểm nổi bật như sau:
-
-- **Nhiệt độ trung bình**: 29.8°C, dao động từ 27°C đến 33°C.
-- **Độ ẩm trung bình**: 54%.
-- **Số ngày mưa**: 5 ngày, tổng lượng mưa khoảng 1.6 mm.
-- **Ngày tốt nhất**: 21/03 với nhiệt độ trung bình 27.1°C, có mưa.
-- **Ngày xấu nhất**: 24/03 với nhiệt độ cao nhất 32.5°C, có mưa nhẹ.
-
-**Xu hướng**: Thời tiết có xu hướng ấm lên, nóng hơn 7.8°C so với trung bình mùa.
-
-💡 Lưu ý: Nên chuẩn bị ô khi ra ngoài vào những ngày",6250,,,
-2026-03-20T15:26:13.409012+07:00,eval_40,40,Tình hình thời tiết chung ở Tây Hồ trong vài ngày tới thế nào?,,"Trong vài ngày tới, thời tiết ở quận Tây Hồ sẽ có những diễn biến như sau:
-
-- **Nhiệt độ trung bình**: 29.7°C, với khoảng nhiệt độ từ 27°C đến 34°C.
-- **Độ ẩm trung bình**: 53%.
-- **Tổng lượng mưa**: 1.1 mm, với 3 ngày có mưa.
-- **Chỉ số UV cao nhất**: 11.0 (cực kỳ cao).
-- **Xu hướng**: Nhiệt độ có xu hướng ấm lên.
-
-### Dự báo chi tiết từng ngày:
-- **20/03**: Nhiệt độ trung bình 26.8°C, có mưa nhẹ (0.12 mm), độ ẩm 72%.
-- **21/03**: Nhiệt độ trung bình 27.1°C, có mưa (0.5 mm), độ ẩm 62%.
-- **22/0",11744,,,
-2026-03-20T15:26:21.715802+07:00,eval_41,41,Cho mình biết tổng quan thời tiết ngày mai ở Hà Nội với.,,"Dự báo thời tiết ngày mai (21/03/2026) ở Hà Nội như sau:
-
-- **Nhiệt độ trung bình**: 27.4°C
-- **Nhiệt độ tối thiểu**: 26.7°C
-- **Nhiệt độ tối đa**: 28.9°C
-- **Độ ẩm trung bình**: 61.2%
-- **Gió**: 5.4 m/s, hướng Nam
-- **Trời**: Có mây
-- **Chỉ số UV**: Trung bình (2.8)
-- **Khả năng mưa**: 5.3% (mưa nhẹ có thể xảy ra)
-
-💡 **Khuyến nghị**: Thời tiết khá dễ chịu, bạn có thể ra ngoài mà không cần mang ô. Tuy nhiên, nếu có kế hoạch hoạt động ngoài trời, hãy chú ý đến chỉ số UV.",8307,,,
-2026-03-20T15:26:31.682317+07:00,eval_42,42,Nhận xét tổng thể về thời tiết Hà Nội cuối tuần này đi bạn.,,"Dự báo thời tiết Hà Nội cuối tuần này (21-22/03/2026) như sau:
-
-### Thứ Bảy, 21/03/2026
-- **Nhiệt độ trung bình**: 26.4°C (min: 20.0°C, max: 27.5°C)
-- **Độ ẩm trung bình**: 65.9%
-- **Thời tiết**: Có mưa, tổng lượng mưa khoảng 1.35 mm.
-- **Gió**: Đông Nam, tốc độ gió tối đa 10.8 m/s.
-- **Chỉ số UV**: 6.0 (cao)
-
-### Chủ Nhật, 22/03/2026
-- **Nhiệt độ trung bình**: 27.4°C (min: 26.7°C, max: 28.9°C)
-- **Độ ẩm trung bình**: 61.2%
-- **Thời tiết**: Có mây, ít khả năng mưa.
-- **Gió**: Nam, tốc độ gió tối",9966,,,
-2026-03-20T15:26:40.921762+07:00,eval_43,43,"Thời tiết tuần tới ở Hà Nội nói chung thế nào, có gì đặc biệt không?",,"Thời tiết Hà Nội trong tuần tới (từ 20/03 đến 27/03/2026) sẽ có những đặc điểm như sau:
-
-### Tổng quan
-- **Nhiệt độ trung bình**: 29.5°C
-- **Nhiệt độ dao động**: 27 - 33°C
-- **Độ ẩm trung bình**: 55%
-- **Tổng lượng mưa**: 1.8 mm
-- **Số ngày mưa**: 6 ngày
-- **Chỉ số UV cao nhất**: 11.0 (nguy hiểm)
-
-### Dự báo theo ngày
-- **20/03**: Nhiệt độ trung bình 26.8°C, trời nhiều mây.
-- **21/03**: Nhiệt độ trung bình 27.1°C, có mưa (0.53 mm).
-- **22/03**: Nhiệt độ trung bình 27.1°C, có mưa (0.63 mm).
-- **2",9239,,,
-2026-03-20T15:26:52.126149+07:00,eval_44,44,Tóm tắt tình hình thời tiết ở Sóc Sơn trong 5 ngày tới.,,"Dưới đây là tóm tắt tình hình thời tiết ở huyện Sóc Sơn trong 5 ngày tới:
-
-- **Nhiệt độ trung bình**: 29.2°C, dao động từ 27°C đến 32°C.
-- **Tổng lượng mưa**: 3.5 mm, với 4 ngày có mưa.
-- **Độ ẩm trung bình**: 57%.
-- **Chỉ số UV cao nhất**: 11.0 (nguy hiểm).
-- **Xu hướng**: Nhiệt độ có xu hướng ấm lên.
-
-### Dự báo chi tiết từng ngày:
-1. **Ngày 20/03**: 
-   - Nhiệt độ trung bình: 27.5°C (21.8 - 28.5°C)
-   - Độ ẩm: 69%
-   - Mưa: 0.1 mm (58% xác suất)
-   - Thời tiết: Có mưa.
-
-2. **Ngày 21/03**: 
-  ",11204,,,
-2026-03-20T15:27:10.229254+07:00,eval_45,45,Đánh giá tổng quan thời tiết ở Gia Lâm tuần này đi.,,"### Tổng quan thời tiết huyện Gia Lâm tuần này (20/03 - 26/03/2026)
-
-- **Nhiệt độ trung bình**: 29.4°C
-- **Nhiệt độ dao động**: 27 - 33°C
-- **Độ ẩm trung bình**: 55%
-- **Tổng lượng mưa**: 1.2 mm
-- **Số ngày mưa**: 4 ngày
-- **Chỉ số UV cao nhất**: 11.0 (rất cao)
-- **Xu hướng**: Nóng lên
-
-#### Dự báo chi tiết theo ngày:
-- **20/03**: 
-  - Nhiệt độ trung bình: 26.74°C (21.06 - 27.61°C)
-  - Độ ẩm: 76%
-  - Thời tiết: Có mây
-
-- **21/03**: 
-  - Nhiệt độ trung bình: 26.96°C (21.83 - 27.09°C)
-  - Độ ẩm: 6",18102,,,
-2026-03-20T15:27:23.058005+07:00,eval_46,46,Khái quát thời tiết khu vực Ba Vì tháng này cho mình biết với.,,"Thời tiết huyện Ba Vì trong tháng này có những đặc điểm nổi bật như sau:
-
-- **Nhiệt độ trung bình**: Khoảng 27.0°C, với mức tối thiểu là 26.0°C và tối đa lên đến 28.5°C.
-- **Độ ẩm trung bình**: Khoảng 66%, cho thấy không khí khá ẩm.
-- **Gió**: Gió chủ yếu từ hướng Đông Nam, với tốc độ trung bình khoảng 4.5 m/s.
-- **Thời tiết**: Tháng này có nhiều mây và có khả năng mưa, đặc biệt là vào các buổi chiều tối.
-- **Chỉ số UV**: Thấp, khoảng 2.67, không cần quá lo lắng về tác động của ánh nắng mặt trời",12828,,,
-2026-03-20T15:27:32.028642+07:00,eval_47,47,Chiều nay ở Thanh Xuân có mưa không?,,"Theo dự báo, chiều nay (13h-18h) ở Thanh Xuân có khả năng mưa. Cụ thể:
-
-- **Mưa bắt đầu**: 10:00 ngày 21/03/2026
-- **Mưa kéo dài đến**: 13:00 ngày 21/03/2026
-- **Xác suất mưa cao nhất**: 96%
-- **Lượng mưa tối đa trong 1 giờ**: 0.17 mm
-
-Mưa sẽ tạnh vào khoảng 14:00. Nên mang ô khi ra ngoài nhé!",8970,,,
-2026-03-20T15:27:42.829662+07:00,eval_48,48,"Tối nay phường Nhật Tân, Tây Hồ có mưa rào hay giông không?",,"Tối nay (20/03/2026), thời tiết tại phường Nhật Tân, quận Tây Hồ như sau:
-
-- **Nhiệt độ**: 24.5°C (cảm giác 25.5°C)
-- **Độ ẩm**: 84%
-- **Gió**: Đông Nam 4.5 m/s
-- **Trời**: Có mây
-
-Dự báo trong khoảng thời gian từ 18h đến 21h:
-- **18h**: Nhiệt độ 25.9°C, độ ẩm 72%, xác suất mưa 0%.
-- **19h**: Nhiệt độ 25.7°C, độ ẩm 74%, xác suất mưa 0%.
-- **20h**: Nhiệt độ 24.8°C, độ ẩm 79%, xác suất mưa 0.5%.
-- **21h**: Nhiệt độ 24.5°C, độ ẩm 84%, xác suất mưa 0%.
-
-💡 **Khuyến nghị**: Tối nay không có mưa rào ha",10800,,,
-2026-03-20T15:27:50.976600+07:00,eval_49,49,Trong 2 tiếng tới ở Hoàng Mai xác suất mưa là bao nhiêu phần trăm?,,"Trong 2 tiếng tới ở quận Hoàng Mai, xác suất mưa như sau:
-
-- **16:00**: 0%
-- **17:00**: 6.7%
-
-Tóm lại, khả năng mưa trong 2 giờ tới là rất thấp. Bạn có thể yên tâm ra ngoài mà không cần mang ô!",8147,,,
-2026-03-20T15:28:02.284697+07:00,eval_50,50,Hôm nay ở Hà Đông có mưa to kéo dài không?,,"Hiện tại, thời tiết ở quận Hà Đông như sau:
-
-- **Nhiệt độ**: 27.4°C (cảm giác 29.5°C)
-- **Trời**: Có mây
+💡 Trời oi bức, bạn nên mang nước khi ra ngoài nhé!",6991,,,
+2026-03-23T10:18:05.186920+07:00,eval_9,9,Cho mình biết thời tiết hiện tại ở khu vực Mỹ Đình với.,,"Thời tiết hiện tại ở khu vực Mỹ Đình (Quận Nam Từ Liêm) như sau:
+
+- Nhiệt độ: 25.0°C (cảm giác oi bức)
+- Trời có mây
+- Độ ẩm: 74%
+- Gió: Đông Nam 3.7 m/s, gió giật tối đa 6.3 m/s
+- Áp suất: 1013 hPa
+- Chỉ số UV: 1.6 (thấp)
+
+💡 Trời có vẻ oi bức, bạn nên mang nước khi ra ngoài nhé!",5789,,,
+2026-03-23T10:18:15.798640+07:00,eval_10,10,Bầu trời ở khu vực Hồ Gươm bây giờ trông như thế nào?,,"Hiện tại, khu vực Hồ Gươm (Quận Hoàn Kiếm) có thời tiết như sau:
+
+- Nhiệt độ: 24.2°C (cảm giác dễ chịu)
+- Trời quang đãng, không có mây
+- Độ ẩm: 72%
+- Gió: Đông Nam 5.8 m/s, có thể có gió giật lên đến 10.8 m/s
+- Áp suất: 1011 hPa
+- Chỉ số UV: Thấp
+
+💡 Thời tiết rất dễ chịu, bạn có thể thoải mái ra ngoài để tận hưởng không khí trong lành!",6010,,,
+2026-03-23T10:18:25.619469+07:00,eval_11,11,Nhiệt độ cảm giác ngoài trời ở Thanh Xuân lúc này là bao nhiêu?,,"Hiện tại, nhiệt độ cảm giác ngoài trời ở quận Thanh Xuân là khoảng 24.6°C (cảm giác 27°C). Trời có mây, độ ẩm 76.5%, gió Đông Nam 3.7 m/s.
+
+💡 Trời oi bức, bạn nên mang nước khi ra ngoài nhé!",5925,,,
+2026-03-23T10:18:33.831871+07:00,eval_12,12,Tầm nhìn hiện tại ở sân bay Nội Bài có ổn không?,,"Hiện tại, không có cảnh báo nào về thời tiết tại sân bay Nội Bài, cho thấy tầm nhìn ở đây đang ổn. Bạn có thể yên tâm khi di chuyển!",4302,,,
+2026-03-23T10:18:43.665991+07:00,eval_13,13,Chiều nay ở quận Hai Bà Trưng có mưa không?,,"Chiều nay ở quận Hai Bà Trưng không có mưa dự báo. Thời tiết sẽ khô ráo, bạn có thể thoải mái ra ngoài mà không cần mang ô. Chúc bạn có một buổi chiều vui vẻ!",5723,,,
+2026-03-23T10:18:57.490536+07:00,eval_14,14,"Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",,"Tối nay (23/03/2026) ở phường Khương Trung, Thanh Xuân, nhiệt độ sẽ giảm dần như sau:
+
+- **19h**: 24.6°C, độ ẩm 69.7%
+- **20h**: 23.9°C, độ ẩm 74.7%
+- **21h**: 23.4°C, độ ẩm 81.0%
+- **22h**: 23.1°C, độ ẩm 85.5%
+
+Trời sẽ có mây và có thể quang đãng vào buổi tối. 💡 Bạn nên mặc áo khoác nhẹ khi ra ngoài vì trời có thể hơi lạnh.",8244,,,
+2026-03-23T10:19:09.285490+07:00,eval_15,15,Khoảng 9 giờ tối nay ở Cầu Giấy có lạnh không?,,"Khoảng 9 giờ tối nay (21h) ở quận Cầu Giấy, nhiệt độ dự kiến là khoảng 23.4°C, trời sẽ trong xanh và không có mưa. Độ ẩm khoảng 81% và gió nhẹ với tốc độ 4.8 m/s từ hướng Đông Nam.
+
+💡 Mặc dù không lạnh, nhưng bạn có thể cảm thấy hơi ẩm. Nếu ra ngoài, có thể mang theo một chiếc áo khoác nhẹ để thoải mái hơn.",6150,,,
+2026-03-23T10:19:18.796909+07:00,eval_16,16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,,"Từ giờ đến nửa đêm, thời tiết Hà Nội sẽ như sau:
+
+- **11h-20h**: Trời có mây, nhiệt độ từ 25.7°C đến 29.5°C, độ ẩm khoảng 54-71%. Không có khả năng mưa lớn, xác suất mưa rất thấp (dưới 1%).
+- **21h**: Có mưa nhẹ, nhiệt độ khoảng 23.4°C, độ ẩm 80.6%, xác suất mưa 6.4%, lượng mưa 0.27 mm.
+- **22h**: Trời quang, nhiệt độ giảm xuống 23.0°C, độ ẩm 84.9%.
+
+💡 **Khuyến nghị**: Bạn có thể ra ngoài trong khoảng thời gian từ 11h đến 20h mà không cần mang ô. Tuy nhiên, sau 21h có thể có mưa nhẹ, nên chuẩn b",5045,,,
+2026-03-23T10:19:31.041197+07:00,eval_17,17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,,"Đêm nay ở quận Tây Hồ, gió sẽ có tốc độ trung bình khoảng 5.4 m/s, với hướng gió từ Đông Nam. Gió mạnh nhất có thể đạt tới 7.7 m/s.
+
+💡 Lưu ý: Gió không quá mạnh, nhưng nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho những cơn gió nhẹ.",7630,,,
+2026-03-23T10:19:42.845589+07:00,eval_18,18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,,"Trong 3 giờ tới, thời tiết ở phường Xuân Đỉnh (Quận Bắc Từ Liêm) như sau:
+
+- **11:00**: Nhiệt độ 24.5°C, độ ẩm 84.6%, trời nhiều mây.
+- **12:00**: Nhiệt độ 25.4°C, độ ẩm 79.4%, trời nhiều mây.
+- **13:00**: Nhiệt độ 26.7°C, độ ẩm 73.0%, trời nhiều mây.
+
+🌧️ **Không có khả năng mưa** hay giông trong 3 giờ tới (xác suất mưa 0%). 
+
+💡 Bạn có thể thoải mái ra ngoài mà không cần mang ô.",7145,,,
+2026-03-23T10:19:53.621401+07:00,eval_19,19,Sáng mai từ 6h đến 9h ở Long Biên trời có sương mù không?,,"Sáng mai (24/03/2026) từ 6h đến 9h ở quận Long Biên sẽ có thời tiết như sau:
+
+- **6h**: Nhiệt độ khoảng 24.5°C, độ ẩm 76.5%, trời có mây.
+- **7h**: Nhiệt độ khoảng 25.5°C, độ ẩm 73%, trời có mây.
+- **8h**: Nhiệt độ khoảng 26.5°C, độ ẩm 68.8%, trời có mây.
+
+🌫️ **Không có sương mù** trong khoảng thời gian này. Trời sẽ có mây nhưng tầm nhìn vẫn tốt. Bạn có thể yên tâm ra ngoài!",5156,,,
+2026-03-23T10:20:03.841713+07:00,eval_20,20,Mấy tiếng nữa ở Đống Đa mưa sẽ tạnh không?,,"Hiện tại, ở quận Đống Đa không có mưa và không có dự báo mưa trong thời gian tới. Bạn có thể yên tâm ra ngoài mà không lo bị ướt!",5742,,,
+2026-03-23T10:20:14.181028+07:00,eval_21,21,Từ 8h tối đến nửa đêm ở Thanh Trì có mưa không?,,"Theo dự báo, từ 8h tối đến nửa đêm ở Thanh Trì sẽ không có mưa. Thời tiết sẽ khô ráo trong khoảng thời gian này. Bạn có thể yên tâm ra ngoài!",6062,,,
+2026-03-23T10:20:24.216152+07:00,eval_22,22,Lúc 2 giờ sáng mai ở nội thành Hà Nội nhiệt độ khoảng bao nhiêu?,,"Lúc 2 giờ sáng mai (24/03/2026), nhiệt độ ở nội thành Hà Nội khoảng 22.1°C, độ ẩm 91.6%. 
+
+- Gió nhẹ, tốc độ khoảng 2.8 m/s, hướng Đông Nam.
+- Trời có mây.
+
+💡 Bạn nên mặc áo ấm khi ra ngoài vào thời điểm này.",5341,,,
+2026-03-23T10:20:37.039463+07:00,eval_23,23,"Trưa nay ở Đông Anh nắng không, có ra ngoài được không?",,"Trưa nay ở Đông Anh, thời tiết như sau:
+
+- **Nhiệt độ**: 26.8°C (cảm giác 28.5°C)
+- **Trời**: Mây nhiều
 - **Độ ẩm**: 66%
-- **Gió**: Đông Nam 6.7 m/s
-- **Áp suất**: 1009 hPa
+- **Gió**: 4.9 m/s, hướng Nam
 - **Xác suất mưa**: 0%
 
-Dự báo trong 2 giờ tới (từ 15:00 đến 17:00):
-- **15:00**: Nhiệt độ 26.2°C, có mây, xác suất mưa 1.8%
-- **16:00**: Nhiệt độ 27.6°C, có mây, xác suất mưa 0%
-- **17:00**: Nhiệt độ 26.7°C, có mây, xác suất mưa 6.7%
+💡 **Khuyến nghị**: Thời tiết thuận lợi cho hoạt động ngoài trời, bạn có thể ra ngoài và tham gia các hoạt động như đi dạo hoặc picnic. Hãy nhớ mang theo nước để giữ sức khỏe nhé!",8337,,,
+2026-03-23T10:20:48.624054+07:00,eval_24,24,Khoảng 7 giờ sáng mai ở Hoàn Kiếm trời như thế nào?,,"Vào khoảng 7 giờ sáng mai (24/03/2026) ở quận Hoàn Kiếm, thời tiết sẽ như sau:
 
-💡 **Kết luận**: Hiện tại không có mưa và trong 2 giờ tới cũng không có khả năng mưa lớn. B",11306,,,
-2026-03-20T15:28:06.448346+07:00,eval_51,51,Đêm nay ở nội thành Hà Nội có nguy cơ mưa lớn gây ngập không?,,"Hiện tại không có cảnh báo nào về thời tiết nguy hiểm ở Hà Nội. Tuy nhiên, mình không thể lấy được thông tin dự báo theo giờ cho đêm nay. Bạn có thể theo dõi thời tiết thường xuyên để cập nhật tình hình. Nếu có mưa lớn, hãy chuẩn bị sẵn sàng để tránh ngập nhé!",4164,,,
-2026-03-20T15:28:16.781998+07:00,eval_52,52,Từ giờ đến sáng mai ở Gia Lâm có mưa phùn không?,,"Hiện tại, thời tiết ở Gia Lâm như sau:
+- **Nhiệt độ**: 27.9°C
+- **Cảm giác**: 27.9°C
+- **Thời tiết**: Có mây
+- **Độ ẩm**: 54%
+- **Gió**: 4.7 m/s, hướng Nam
+- **Áp suất**: 1013 hPa
+- **Tầm nhìn**: 10 km
 
-- **Nhiệt độ**: 27.6°C (cảm giác 29.0°C)
-- **Độ ẩm**: 60%
-- **Trời**: Có mây
-- **Gió**: Nam 5.9 m/s
-- **Áp suất**: 1011 hPa
-- **Điểm sương**: 19.2°C
+💡 **Khuyến nghị**: Thời tiết khá dễ chịu, bạn có thể ra ngoài mà không cần mang ô hay áo khoác.",6173,,,
+2026-03-23T10:20:58.777699+07:00,eval_25,25,Cuối tuần này thời tiết Hà Nội như thế nào?,,"Cuối tuần này (28-29/03/2026), thời tiết Hà Nội sẽ như sau:
 
-Dự báo từ giờ đến sáng mai (đến 6h sáng 21/03) cho thấy:
+- **Thứ Bảy (28/03)**:
+  - Nhiệt độ trung bình: 25.8°C (biên độ 22.5 - 25.8°C)
+  - Độ ẩm: 73%
+  - Có mưa, tổng lượng mưa khoảng 2.3 mm
+  - Xác suất mưa: 100%
+  - Chỉ số UV cao nhất: 5.0 (trung bình)
 
-- **Xác suất mưa**: Rất thấp, không có mưa dự báo trong khoảng thời gian này.
-- **Nhiệt độ**: Sẽ giảm dần, khoảng 21.4°C vào 3h sáng và 22.6°C vào 6h sáng.
-- **Độ ẩm**: Tăng lên khoảng 90% vào sáng sớm.
+- **Chủ Nhật (29/03)**:
+  - Dự báo thời tiết ổn định, nhưng chưa có thông tin cụ thể.
 
-💡 **Khuyến nghị**: Bạn có thể thoải mái ra ngoài",10334,,,
-2026-03-20T15:28:26.116092+07:00,eval_53,53,Tuần này Hà Nội có mưa nhiều không?,,"Trong tuần này, Hà Nội có khả năng mưa vào một số ngày. Cụ thể như sau:
+💡 **Khuyến nghị**: Nên mang ô khi ra ngoài vào thứ Bảy vì có khả năng mưa. Thời tiết có thể hơi ẩm ướt, hãy chuẩn bị trang phục thoải mái.",6079,,,
+2026-03-23T10:21:22.714688+07:00,eval_26,26,Thứ bảy ở quận Nam Từ Liêm trời có nắng không?,,"Thứ Bảy tuần này (ngày 28/03/2026) ở quận Nam Từ Liêm dự báo có mưa. Cụ thể:
 
-- **Ngày 20/03**: Mưa nhẹ, tổng lượng mưa 0.27 mm.
-- **Ngày 21/03**: Mưa nhiều hơn, tổng lượng mưa 1.35 mm.
-- **Ngày 22/03**: Mưa tiếp tục, tổng lượng mưa 0.62 mm.
-- **Ngày 23/03**: Khả năng mưa rất thấp, chỉ 0.13 mm.
-- **Ngày 24/03**: Mưa nhẹ, tổng lượng mưa 0.33 mm.
-- **Ngày 25/03**: Mưa nhẹ, tổng lượng mưa 0.39 mm.
-- **Ngày 26/03**: Khả năng mưa rất thấp, chỉ 0.17 mm.
+- **Nhiệt độ trung bình**: 25.4°C
+- **Nhiệt độ tối thiểu**: 22.1°C
+- **Nhiệt độ tối đa**: 29.4°C
+- **Độ ẩm trung bình**: 73.5%
+- **Xác suất mưa**: 20%
+- **Thời tiết chính**: Có mưa
 
-💡 Tổng kết: Mưa sẽ xuất hiện chủ yếu vào đầu tuần, đ",9334,,,
-2026-03-20T15:28:39.725820+07:00,eval_54,54,Lượng mưa dự kiến hôm nay ở Đông Anh là bao nhiêu mm?,,"Huyện Đông Anh hôm nay dự kiến không có mưa lớn. Tuy nhiên, có một số thời điểm có khả năng mưa nhẹ với lượng mưa khoảng 0.32 mm vào lúc 17:00. 
+💡 Nên chuẩn bị ô khi ra ngoài vào thứ Bảy nhé!",19389,,,
+2026-03-23T10:21:35.720983+07:00,eval_27,27,Ba ngày tới ở Gia Lâm có mưa nhiều không?,,"Trong ba ngày tới (từ 24 đến 26 tháng 3) ở huyện Gia Lâm, thời tiết sẽ như sau:
 
-Dưới đây là một số thông tin thời tiết hôm nay:
-- Nhiệt độ trung bình: 28.3°C
-- Độ ẩm: 63%
-- Gió: Đông Nam 5.3 m/s
+- **Ngày 24/03**: 
+  - Nhiệt độ trung bình: 31.5°C (dao động từ 21.0°C đến 31.7°C)
+  - Độ ẩm: 44%
+  - Trời nhiều mây, không có mưa (xác suất mưa 0%).
 
-💡 Bạn nên mang theo ô nếu ra ngoài vào buổi chiều để đề phòng mưa nhẹ.",13610,,,
-2026-03-20T15:28:48.269917+07:00,eval_55,55,Ngày mai ở quận Hoàng Mai mưa vào khoảng mấy giờ?,,"Theo dự báo, ngày mai (21/03/2026) ở quận Hoàng Mai sẽ có mưa vào khoảng các giờ sau:
+- **Ngày 25/03**: 
+  - Nhiệt độ trung bình: 30.4°C (dao động từ 21.2°C đến 30.6°C)
+  - Độ ẩm: 47%
+  - Có mưa nhẹ (xác suất mưa 20%), tổng lượng mưa dự kiến khoảng 0.14 mm.
 
-- **05:00**: Mưa nhẹ
-- **09:00**: Mưa
-- **10:00**: Mưa
-- **11:00**: Mưa
-- **12:00**: Mưa
-- **13:00**: Mưa
+- **Ngày 26/03**: 
+  - Nhiệt độ trung bình: 32.4°C (dao động từ 21.3°C đến 32.4°C)
+  - Độ ẩm: 4",8009,,,
+2026-03-23T10:21:49.377922+07:00,eval_28,28,Tuần sau nhiệt độ ban ngày ở Hoàn Kiếm khoảng bao nhiêu độ?,,"Dự báo nhiệt độ ban ngày ở Quận Hoàn Kiếm trong tuần tới như sau:
 
-💡 Nên mang ô khi ra ngoài vào buổi sáng và trưa để tránh ướt.",8544,,,
-2026-03-20T15:28:58.511703+07:00,eval_56,56,Mưa ở Hà Nội hôm nay kéo dài đến bao giờ?,,"Hiện tại, Hà Nội có mưa nhẹ và dự báo sẽ tiếp tục có mưa trong khoảng thời gian tới. Cụ thể:
+- **23/03**: Nhiệt độ trung bình 30.0°C (min 20.6°C, max 31.5°C), trời có mây.
+- **24/03**: Nhiệt độ trung bình 32.1°C (min 21.1°C, max 32.6°C), trời có mây.
+- **25/03**: Nhiệt độ trung bình 31.4°C (min 21.4°C, max 32.9°C), trời có mây.
+- **26/03**: Nhiệt độ trung bình 32.7°C (min 21.6°C, max 33.5°C), trời có mây.
+- **27/03**: Nhiệt độ trung bình 27.2°C (min 22.1°C, max 27.9°C), có khả năng mưa.
+- **28/03**: Nhiệt độ trung bình 2",8611,,,
+2026-03-23T10:22:02.774154+07:00,eval_29,29,"Trong 7 ngày tới, ngày nào ở Long Biên khả năng mưa lớn cao nhất?",,"Trong 7 ngày tới, khả năng mưa lớn nhất ở Quận Long Biên sẽ rơi vào ngày 29/03/2026, với tổng lượng mưa dự báo là 6.26 mm và xác suất mưa đạt 100%.
 
-- **Mưa có thể kéo dài đến khoảng 18h** hôm nay (20/03/2026).
-- Xác suất mưa sẽ giảm dần sau 18h, nhưng vẫn có khả năng có mưa nhẹ.
+Dưới đây là thông tin chi tiết về thời tiết trong 7 ngày tới ở Long Biên:
 
-💡 Nên mang ô khi ra ngoài để tránh ướt.",10242,,,
-2026-03-20T15:29:05.411444+07:00,eval_57,57,Cuối tuần ở Hà Nội xác suất mưa là bao nhiêu?,,"Cuối tuần này (21-22/03/2026) ở Hà Nội có khả năng mưa cao:
+- **23/03**: Nhiệt độ trung bình 25.5°C, mưa nhẹ (0.11 mm), xác suất mưa 15%.
+- **24/03**: Nhiệt độ trung bình 26.98°C, không có mưa.
+- **25/03**: Nhiệt độ trung bình 29.66°C, không có mưa.
+- **26/03**: Nhiệt độ trung bình 33.02°C, mưa nhẹ (0.13 mm), xác suất mưa 18%.
+- **27/",8888,,,
+2026-03-23T10:22:25.029447+07:00,eval_30,30,"Dự báo thời tiết cả tuần cho phường Quang Trung, Đống Đa giúp mình.",,"Dưới đây là dự báo thời tiết cho phường Quang Trung, quận Đống Đa trong tuần này:
 
-- **Thứ Bảy (21/03)**: 
-  - Xác suất mưa: 94%
-  - Dự báo tổng lượng mưa: 1.35 mm
+### Thời tiết từ 23/03 đến 29/03/2026
 
-- **Chủ Nhật (22/03)**: 
-  - Dự báo hiện tại không có mưa.
+- **23/03 (Thứ Hai)**: 
+  - Nhiệt độ: 21.9°C - 29.2°C
+  - Độ ẩm: 72%
+  - Thời tiết: Có mưa
+  - Lượng mưa: 0.12 mm
 
-💡 Nên chuẩn bị ô khi ra ngoài vào thứ Bảy nhé!",6900,,,
-2026-03-20T15:29:12.469749+07:00,eval_58,58,"Hà Nội mùa này hay có mưa phùn không, dự báo mấy ngày tới thế nào?",,Hiện tại mình không thể lấy được thông tin về hiện tượng thời tiết đặc biệt và dự báo thời tiết trong vài ngày tới. Bạn có thể thử hỏi lại sau hoặc hỏi về một khu vực cụ thể khác nhé!,7058,,,
-2026-03-20T15:29:17.202704+07:00,eval_59,59,Bây giờ nhiệt độ ở Hoàn Kiếm là bao nhiêu độ?,,"Quận Hoàn Kiếm hiện tại có nhiệt độ khoảng 27.6°C, trời có mây. 
+- **24/03 (Thứ Ba)**: 
+  - Nhiệt độ: 21.7°C - 30.5°C
+  - Độ ẩm: 62%
+  - Thời tiết: Có mây
 
-- Độ ẩm: 60%
-- Gió: 5.9 m/s từ hướng Nam
-- Chỉ số UV: 2.7 (thấp)
+- **25/03 (Thứ Tư)**: 
+  - Nhiệt độ: 21.8°C - 32.2°C
+  - Độ ẩm: 53%
+  - Thời tiết: Có mây
 
-💡 Thời tiết khá dễ chịu, bạn có thể ra ngoài nhưng nên chú ý giữ nước nhé!",4733,,,
-2026-03-20T15:29:28.233516+07:00,eval_60,60,Ngoài trời ở Cầu Giấy cảm giác có rét lắm không?,,"Hiện tại, thời tiết ở quận Cầu Giấy như sau:
+- **26/03 (Thứ Năm)**: 
+  - Nhiệt độ: 21.6°C - 33.1°C
+  - Độ ẩm: 43%
+  - Thời tiế",17403,,,
+2026-03-23T10:22:34.136279+07:00,eval_31,31,Ngày mai Hà Nội có nắng không?,,"Ngày mai, Hà Nội có thời tiết chủ yếu là mây, với nhiệt độ dao động từ 20.3°C đến 32.5°C. Xác suất mưa rất thấp (14%), nên khả năng có nắng là cao.
 
-- **Nhiệt độ**: 27.5°C (cảm giác 28.7°C)
-- **Độ ẩm**: 60%
-- **Gió**: 5.7 m/s, hướng Nam
-- **Trời**: Có mây
+💡 Bạn có thể thoải mái ra ngoài, nhưng nhớ mang theo nước nhé!",4404,,,
+2026-03-23T10:22:52.156602+07:00,eval_32,32,Thứ tư tuần này ở Hoàng Mai trời có mưa không?,,"Thứ Tư tuần này (ngày 25/03/2026) ở quận Hoàng Mai có thời tiết như sau:
 
-Mặc dù nhiệt độ không quá thấp, nhưng với độ ẩm 60% và gió nhẹ, cảm giác có thể hơi lạnh một chút. Tuy nhiên, không có hiện tượng rét đậm hay lạnh bất thường nào.
+- Nhiệt độ trung bình: 27.3°C (thấp nhất 20.7°C, cao nhất 31.8°C)
+- Độ ẩm trung bình: 64.4%
+- Thời tiết: Có mây
+- Xác suất mưa: 14% (dự báo có thể có mưa nhẹ với tổng lượng mưa khoảng 0.1 mm)
 
-💡 **Khuyến nghị**: Nếu bạn ra ngoài, có thể mặc áo khoác nhẹ để cảm thấy thoải mái hơn.",11030,,,
-2026-03-20T15:29:55.103781+07:00,eval_61,61,Chiều mai ở Thanh Xuân nhiệt độ cao nhất là bao nhiêu?,,"Chiều mai (21/03/2026) ở quận Thanh Xuân, nhiệt độ cao nhất dự kiến là 27.6°C. 
+💡 Nên chuẩn bị ô nếu bạn có kế hoạch ra ngoài, mặc dù khả năng mưa không cao.",14616,,,
+2026-03-23T10:23:03.573380+07:00,eval_33,33,Tuần này ngày nào ở Hà Nội đẹp nhất để ra ngoài?,,"Tuần này, ngày đẹp nhất để ra ngoài ở Hà Nội là **ngày 25 tháng 3** với nhiệt độ trung bình khoảng **29.95°C**. Dự báo có thể có chút mưa nhẹ nhưng không đáng kể.
+
+### Thời tiết các ngày trong tuần:
+- **23/03**: Nhiệt độ trung bình 28.6°C, trời có mây, độ ẩm 51%.
+- **24/03**: Nhiệt độ trung bình 31.5°C, trời có mây, độ ẩm 44%.
+- **25/03**: Nhiệt độ trung bình 29.9°C, có khả năng mưa nhẹ, độ ẩm 49%.
+- **26/03**: Nhiệt độ trung bình 31.9°C, trời có mây, độ ẩm 47%.
+- **27/03**: Nhiệt độ trung bình ",6554,,,
+2026-03-23T10:23:14.383155+07:00,eval_34,34,Ngày mai ở huyện Đan Phượng nhiệt độ cao nhất là bao nhiêu?,,"Ngày mai (24/03/2026) ở huyện Đan Phượng, nhiệt độ cao nhất dự kiến là 31.1°C. 
 
 - Thời tiết: Có mây
-- Độ ẩm trung bình: 74%
-- Gió: Đông Nam, tốc độ 5.6 m/s
+- Độ ẩm trung bình: 59.3%
+- Hướng gió: Đông Nam, tốc độ gió tối đa 11.5 m/s
 
-💡 Nên mang theo nước và mặc đồ thoải mái khi ra ngoài nhé!",26868,,,
-2026-03-20T15:30:02.127389+07:00,eval_62,62,Đêm nay ở Đông Anh nhiệt độ thấp nhất khoảng bao nhiêu độ?,,"Đêm nay ở Đông Anh, nhiệt độ thấp nhất dự kiến khoảng 22.0°C. 
+💡 Nên chuẩn bị nước uống và bảo vệ da khi ra ngoài, vì chỉ số UV có thể cao.",6298,,,
+2026-03-23T10:23:35.204767+07:00,eval_35,35,Sáng thứ sáu tuần này ở Ba Đình thời tiết thế nào?,,"Sáng thứ Sáu (ngày 25/03/2026) tại quận Ba Đình, thời tiết sẽ như sau:
 
-💡 Trời có mây, nên bạn có thể cảm thấy hơi ẩm. Nếu ra ngoài, hãy mặc áo khoác nhẹ để giữ ấm nhé!",7024,,,
-2026-03-20T15:30:11.039604+07:00,eval_63,63,"Trong tuần này, ngày nào ở Hà Nội nóng nhất?",,"Trong tuần này, ngày nóng nhất ở Hà Nội sẽ là:
+- **Nhiệt độ trung bình**: 31.2°C (cảm giác 33°C)
+- **Độ ẩm**: 47.3%
+- **Trời**: Có mây
+- **Gió**: Đông Nam, tốc độ 11.1 km/h
+- **Áp suất**: 1009 hPa
+- **Chỉ số UV**: 11.0 (cao)
 
-- **Ngày 26/03/2026**: Nhiệt độ trung bình 32.65°C, với nhiệt độ tối đa lên tới 34.16°C.
+💡 **Khuyến nghị**: Thời tiết khá nóng, bạn nên mặc trang phục thoáng mát và mang theo nước khi ra ngoài.",14936,,,
+2026-03-23T10:23:49.498539+07:00,eval_36,36,Năm ngày tới ở huyện Sóc Sơn mưa hay nắng?,,"Dự báo thời tiết huyện Sóc Sơn trong 5 ngày tới như sau:
 
-Dự báo thời tiết cho ngày này:
-- Độ ẩm: 44.7%
-- Thời tiết: Có mây
-- Xác suất mưa: 3%
+- **Ngày 23/03/2026**: 
+  - Nhiệt độ: 25.5°C (min: 20.3°C, max: 29.7°C)
+  - Thời tiết: Mưa
+  - Xác suất mưa: 30%
+  - Lượng mưa: 0.23 mm
 
-💡 Bạn nên chuẩn bị nước uống và bảo vệ da khi ra ngoài vào ngày này nhé!",8911,,,
-2026-03-20T15:30:16.671311+07:00,eval_64,64,Chênh lệch nhiệt độ ngày và đêm ở Hà Nội hôm nay là bao nhiêu?,,"Hiện tại, mình không thể lấy được dữ liệu dự báo thời tiết cho Hà Nội. Tuy nhiên, mình có thể cung cấp thông tin về nhiệt độ hiện tại.
+- **Ngày 24/03/2026**: 
+  - Nhiệt độ: 26.8°C (min: 20.3°C, max: 30.4°C)
+  - Thời tiết: Có mây
+  - Xác suất mưa: 16%
+  - Lượng mưa: 0.11 mm
 
-- Nhiệt độ hiện tại ở Hà Nội là khoảng 27.4°C.
-- Dự báo nhiệt độ tối nay sẽ giảm xuống khoảng 24°C.
+- **Ngày 25/03/2026**: 
+  - Nhiệt độ: 28.1°C (min: 20.1°C, max: 31.7°C)
+  - Thời tiết: Mưa
+  - Xác suất mưa: 4%
+  - Lượng mưa: 0.19 mm
 
-Chênh lệch nhiệt độ giữa ngày và đêm hôm nay ước tính khoảng 3.4°C. Nếu bạn cần thêm thông tin, hãy cho mình biết nhé!",5628,,,
-2026-03-20T15:30:27.826926+07:00,eval_65,65,Nhiệt độ buổi sáng sớm mai ở Ba Đình khoảng bao nhiêu?,,"Dự báo nhiệt độ buổi sáng sớm mai (21/03/2026) ở quận Ba Đình sẽ khoảng từ 22.0°C đến 23.0°C. 
-
-- **Thời tiết**: Có mây
-- **Độ ẩm**: Khoảng 87%
-- **Gió**: Đông, tốc độ khoảng 3.0 m/s
-
-💡 Bạn nên mặc áo khoác nhẹ khi ra ngoài vào buổi sáng.",11155,,,
-2026-03-20T15:30:35.894637+07:00,eval_66,66,"Trưa nay ở Hà Nội có nắng nóng gay gắt không, nhiệt độ bao nhiêu?",,"Trưa nay (20/03/2026) ở Hà Nội, nhiệt độ khoảng 26.7°C, trời có mây. Độ ẩm trung bình là 64.6%. 
-
-- **Nhiệt độ**: 26.7°C (cảm giác 29°C)
-- **Gió**: Đông Nam 5.3 m/s
-- **UV**: 2.4 (trung bình)
-
-💡 Trời có nắng nhẹ, nhưng không quá gay gắt. Bạn có thể ra ngoài, nhưng nhớ mang theo nước để giữ sức nhé!",8068,,,
-2026-03-20T15:30:43.438120+07:00,eval_67,67,Khi nào thì Hà Nội ấm dần lên trong vài ngày tới?,,"Trong vài ngày tới, Hà Nội sẽ ấm dần lên. Dưới đây là xu hướng nhiệt độ:
-
-- **Ngày 21/03**: Nhiệt độ trung bình khoảng 26.0°C, có thể tăng nhẹ vào buổi chiều.
-- **Ngày 22/03**: Dự báo nhiệt độ sẽ đạt khoảng 27.4°C, cảm giác ấm hơn.
-- **Ngày 23/03**: Nhiệt độ có thể lên tới 28.0°C, thời tiết sẽ dễ chịu hơn.
-
-💡 Khuyến nghị: Bạn nên chuẩn bị trang phục thoải mái và có thể ra ngoài vào buổi chiều khi thời tiết ấm áp hơn.",7541,,,
-2026-03-20T15:30:49.609930+07:00,eval_68,68,Nhiệt độ tối nay ở khu vực Mỹ Đình có xuống dưới 15 độ không?,,"Nhiệt độ tối nay ở khu vực Mỹ Đình sẽ không xuống dưới 15°C. Cụ thể, nhiệt độ sẽ dao động như sau:
-
-- **16:00**: 27.5°C
-- **17:00**: 26.7°C
-- **18:00**: 26.1°C
-- **19:00**: 25.9°C
-- **20:00**: 24.9°C
-- **21:00**: 24.7°C
-
-Trời có mây và độ ẩm tăng dần, nhưng không có khả năng mưa. Bạn có thể thoải mái ra ngoài mà không cần lo lắng về thời tiết lạnh.",6171,,,
-2026-03-20T15:30:57.010401+07:00,eval_69,69,Ngày mai ở huyện Ba Vì nhiệt độ cao nhất và thấp nhất là bao nhiêu?,,"Ngày mai ở huyện Ba Vì, nhiệt độ cao nhất dự kiến là 28.6°C và thấp nhất là 21.6°C. 
-
-- Thời tiết: Có mưa
-- Độ ẩm trung bình: 70.4%
-
-💡 Bạn nên mang ô khi ra ngoài để tránh mưa nhé!",7400,,,
-2026-03-20T15:31:05.759988+07:00,eval_70,70,"Hà Nội mấy ngày tới có rét đậm không, nhiệt độ khoảng bao nhiêu?",,"Trong những ngày tới, Hà Nội không có dấu hiệu của rét đậm. Dự báo nhiệt độ sẽ dao động trong khoảng từ 21°C đến 28°C. Cụ thể:
-
-- **Ngày 21/03**: Nhiệt độ từ 21°C đến 28°C, có mưa nhẹ.
-- **Ngày 22/03**: Nhiệt độ từ 22°C đến 29°C, trời nhiều mây.
-- **Ngày 23/03**: Nhiệt độ từ 23°C đến 30°C, có thể có mưa.
-
-💡 Bạn có thể thoải mái ra ngoài, nhưng nên mang theo ô vì có khả năng mưa nhẹ.",8750,,,
-2026-03-20T15:31:13.908219+07:00,eval_71,71,"Hiện tại gió ở Sóc Sơn mạnh không, hướng nào?",,"Hiện tại, gió ở Sóc Sơn có tốc độ trung bình khoảng 4.98 m/s, hướng Đông Nam. 
-
-💡 Lưu ý: Trời đang có mưa, nên bạn hãy cẩn thận khi ra ngoài!",8148,,,
-2026-03-20T15:31:30.109184+07:00,eval_72,72,Tối nay ở quận Bắc Từ Liêm có gió to không?,,"Tối nay ở quận Bắc Từ Liêm, gió sẽ không quá mạnh. Dự báo như sau:
-
-- **19:00**: Gió Đông Nam, tốc độ 5.1 m/s, gió giật tối đa 9.3 m/s.
-- **20:00**: Gió Đông Nam, tốc độ 4.9 m/s, gió giật tối đa 9.6 m/s.
-- **21:00**: Gió Đông Nam, tốc độ 4.5 m/s, gió giật tối đa 9.9 m/s.
-
-💡 Gió có thể hơi mạnh vào lúc 21:00, nhưng nhìn chung vẫn ở mức chấp nhận được. Bạn có thể thoải mái ra ngoài!",16201,,,
-2026-03-20T15:31:35.375127+07:00,eval_73,73,Trong vài giờ tới ở Hà Nội có khả năng giông mạnh không?,,"Hiện tại, không có cảnh báo giông mạnh nào cho Hà Nội trong vài giờ tới. Thời tiết có vẻ ổn định. Nếu bạn có kế hoạch ra ngoài, hãy yên tâm nhé!",5265,,,
-2026-03-20T15:31:40.533630+07:00,eval_74,74,Ngày mai gió mùa về ở Hà Nội thì cảm giác lạnh sẽ như thế nào?,,"Ngày mai, gió mùa sẽ về Hà Nội, và cảm giác lạnh sẽ tăng lên. Dự báo nhiệt độ tối thiểu khoảng 22.0°C và tối đa khoảng 27.1°C, với thời tiết có mưa.
-
-- **Nhiệt độ**: Tối thiểu 22.0°C, tối đa 27.1°C
-- **Thời tiết**: Có mưa
-
-💡 Bạn nên chuẩn bị áo khoác nhẹ và mang ô khi ra ngoài để tránh ướt.",5158,,,
-2026-03-20T15:31:45.263878+07:00,eval_75,75,Gió giật tối nay ở Hà Nội mạnh nhất khoảng bao nhiêu m/s?,,"Hiện tại không có cảnh báo về gió giật mạnh ở Hà Nội tối nay. Nếu bạn cần thông tin chi tiết hơn về thời tiết tối nay, hãy cho mình biết nhé!",4730,,,
-2026-03-20T15:31:52.844573+07:00,eval_76,76,Tuần này có đợt gió lạnh mạnh nào ở Hà Nội không?,,"Hiện tại không có cảnh báo nào về gió lạnh mạnh ở Hà Nội trong tuần này. Thời tiết có vẻ ổn định, bạn có thể yên tâm ra ngoài!",7581,,,
-2026-03-20T15:31:59.162634+07:00,eval_77,77,Hướng gió hiện tại ở Gia Lâm là hướng nào?,,"Huyện Gia Lâm hiện tại có gió từ hướng Nam với tốc độ trung bình 5.95 m/s. 
-
-💡 Lưu ý: Thời tiết có mây, nhiệt độ khoảng 27.6°C, độ ẩm 60%.",6318,,,
-2026-03-20T15:32:03.018943+07:00,eval_78,78,Chiều nay đi xe máy ở Hà Nội có bị ảnh hưởng bởi gió mạnh không?,,"Hiện tại không có cảnh báo về gió mạnh ở Hà Nội. Bạn có thể yên tâm đi xe máy chiều nay. Tuy nhiên, hãy chú ý đến thời tiết và an toàn khi tham gia giao thông nhé!",3855,,,
-2026-03-20T15:32:18.812169+07:00,eval_79,79,Sáng mai ở Đông Anh gió đông bắc có mạnh không?,,"Sáng mai ở Đông Anh, gió sẽ thổi từ hướng Đông Bắc với tốc độ trung bình khoảng 5.3 m/s. Gió không quá mạnh, nhưng có thể có những cơn gió giật mạnh lên đến 9.6 m/s.
-
-- **Nhiệt độ**: Khoảng 25-27°C
-- **Độ ẩm**: 70-80%
-- **Thời tiết**: Có mây
-
-💡 Bạn có thể thoải mái ra ngoài, nhưng nếu có kế hoạch hoạt động lâu, hãy chuẩn bị nước uống nhé!",15792,,,
-2026-03-20T15:32:25.292291+07:00,eval_80,80,Tốc độ gió trung bình hôm nay ở Hà Nội là bao nhiêu?,,"Tốc độ gió trung bình hôm nay ở Hà Nội là 5.4 m/s, hướng gió từ phía Nam. 
-
-💡 Nếu bạn ra ngoài, hãy chú ý đến gió có thể làm cho thời tiết cảm giác mát hơn.",6480,,,
-2026-03-20T15:32:33.125144+07:00,eval_81,81,Sáng mai ở Quốc Oai có sương mù dày không?,,"Sáng mai (21/03/2026) ở Quốc Oai có khả năng có sương mù. Dự báo thời tiết cho thấy:
-
-- **Nhiệt độ**: khoảng 22.0°C
-- **Độ ẩm**: khoảng 90.8%
-- **Trời**: có mây
-
-Mặc dù không có thông tin cụ thể về sương mù, nhưng với độ ẩm cao như vậy, có khả năng sẽ có sương mù vào buổi sáng. 
-
-💡 Bạn nên cẩn thận khi di chuyển vào sáng mai, đặc biệt là nếu có sương mù dày.",7832,,,
-2026-03-20T15:32:45.807859+07:00,eval_82,82,Hiện tại ở Hà Đông độ ẩm khoảng bao nhiêu phần trăm?,,"Hiện tại, độ ẩm ở quận Hà Đông khoảng 60%. 
-
-- Nhiệt độ: 27.4°C (cảm giác 28.6°C)
-- Trời có mây
-- Gió: 5.7 m/s, hướng Nam
-
-💡 Trời khá oi bức, bạn nên mang nước khi ra ngoài nhé!",12681,,,
-2026-03-20T15:32:55.638120+07:00,eval_83,83,"Chiều nay ở Tây Hồ trời có nhiều mây không, có đẹp để chụp ảnh hoàng hôn không?",,"Chiều nay ở quận Tây Hồ, thời tiết sẽ có nhiều mây. Cụ thể:
-
-- **16:00**: Nhiệt độ khoảng 27.6°C, độ ẩm 64%, gió Đông Nam 6.7 m/s.
-- **17:00**: Nhiệt độ giảm xuống 26.4°C, độ ẩm 68%, gió Đông Nam 5.5 m/s.
-- **18:00**: Nhiệt độ khoảng 25.9°C, độ ẩm 72%, gió Đông Nam 5.4 m/s.
-- **19:00**: Nhiệt độ 25.7°C, độ ẩm 74%, gió Đông Nam 5.2 m/s.
-- **20:00**: Nhiệt độ 24.8°C, độ ẩm 79%, gió Đông Nam 4.8 m/s.
-
-🌅 Với nhiều mây như vậy, bạn có thể chụp ảnh hoàng hôn rất đẹp. Tuy nhiên, hãy chuẩn bị cho độ ẩm ",9830,,,
-2026-03-20T15:33:01.341706+07:00,eval_84,84,Đêm nay ở nội thành Hà Nội tầm nhìn xa có bị hạn chế vì sương mù không?,,"Hiện tại không có cảnh báo thời tiết nào cho Hà Nội. Tuy nhiên, mình không thể xác định được có hiện tượng sương mù hay không. Bạn có thể chú ý khi ra ngoài vào đêm nay, đặc biệt nếu tầm nhìn hạn chế.",5696,,,
-2026-03-20T15:33:16.612086+07:00,eval_85,85,Sáng sớm mai ở khu vực ngoại thành Hà Nội có sương mù lái xe nguy hiểm không?,,"Sáng sớm mai (21/03/2026) ở khu vực ngoại thành Hà Nội, thời tiết sẽ có mây, nhiệt độ dao động từ 21.6°C đến 23.7°C, độ ẩm cao khoảng 88-90%. 
-
-- **Tầm nhìn**: 10 km, không có sương mù đáng kể.
-- **Gió**: Đông với tốc độ khoảng 3.0 m/s.
-
-💡 **Khuyến nghị**: Thời tiết không có sương mù, lái xe sẽ an toàn. Tuy nhiên, bạn vẫn nên cẩn thận vì độ ẩm cao có thể làm đường trơn trượt.",15270,,,
-2026-03-20T15:33:25.398803+07:00,eval_86,86,"Tối nay ở Thanh Xuân độ ẩm cao không, cảm giác ngột ngạt không?",,"Tối nay ở quận Thanh Xuân, thời tiết như sau:
+- **Ngày 26/03/2026**: 
+  - N",9836,,,
+2026-03-23T10:24:02.849296+07:00,eval_37,37,Bạn tóm tắt giúp mình thời tiết Hà Nội hôm nay đi.,,"Thời tiết Hà Nội hôm nay, ngày 23/03/2026, như sau:
 
 - **Nhiệt độ**: 
-  - 18h: 26.3°C (cảm giác 27.5°C)
-  - 19h: 26.1°C (cảm giác 27.3°C)
-  - 20h: 25.0°C (cảm giác 26.5°C)
-  - 21h: 24.8°C (cảm giác 26.2°C)
+  - Trung bình: 25.7°C
+  - Tối thiểu: 24.1°C
+  - Tối đa: 30.1°C
+- **Độ ẩm**: 71.5%
+- **Gió**: 
+  - Hướng: Nam
+  - Tốc độ: 4.9 m/s
+- **Trời**: Có mây
+- **Chỉ số UV**: 3.58 (trung bình)
 
-- **Độ ẩm**:
-  - 18h: 72%
-  - 19h: 75%
-  - 20h: 78%
-  - 21h: 83%
+### Top 5 quận nóng nhất Hà Nội:
+1. Huyện Mỹ Đức: 25.4°C
+2. Huyện Chương Mỹ: 25.2°C
+3. Huyện Mê Linh: 25.1°C
+4. Huyện Đan Phượng: 25.1°C
+5. Huyện Phúc Thọ: 25.1°C
 
-- **Gió**: Gió Đông Nam, tốc độ khoảng 5-6 m/s.
+💡 **Khuyến nghị**: Hôm nay trời có mây, nhiệt độ khá ấm, bạn có thể ra ngoài nhưn",7419,,,
+2026-03-23T10:24:16.458375+07:00,eval_38,38,Cho mình một bản tổng quan thời tiết 3 ngày tới ở quận Long Biên.,,"Dưới đây là bản tổng quan thời tiết 3 ngày tới ở quận Long Biên:
 
-💡 **Nhận xét**: Độ ẩm tăng cao vào buổi tối, đặc biệt là lúc 21h (83%), có thể khiến không khí cảm giác ngột ngạt. Nếu bạn ra ngoài, hãy chuẩn bị tinh thần cho thời tiết ẩm ướt và có t",8787,,,
-2026-03-20T15:33:38.042546+07:00,eval_87,87,Bầu trời Hà Nội tuần này có hay bị mây che nhiều không?,,"Trong tuần này, bầu trời Hà Nội có nhiều mây che phủ. Dưới đây là tóm tắt thời tiết cho từng ngày:
+### Thời tiết từ 24 đến 26 tháng 3 năm 2026
+- **Nhiệt độ trung bình**: 29.8°C
+- **Biên độ nhiệt**: 27 - 33°C
+- **Độ ẩm trung bình**: 53%
+- **Tổng lượng mưa**: 0 mm (không có ngày mưa)
+- **Chỉ số UV cao nhất**: 5.18
+- **Xu hướng**: Nóng lên
 
-- **Ngày 20/03**: Trời có mưa, mây che phủ 95.2%, nhiệt độ trung bình 26.6°C.
-- **Ngày 21/03**: Trời có mưa, mây che phủ 99.2%, nhiệt độ trung bình 26.4°C.
-- **Ngày 22/03**: Trời có mưa, mây che phủ 98.2%, nhiệt độ trung bình 27.2°C.
-- **Ngày 23/03**: Trời có mây, mây che phủ 63.1%, nhiệt độ trung bình 29.8°C.
-- **Ngày 24/03**: Trời có mây, mây che phủ 30.8%, nhiệt độ trung bình 32.2°C.
-- **Ngày 2",12642,,,
-2026-03-20T15:33:44.877347+07:00,eval_88,88,Hôm nay không khí ở Hà Nội khô hay ẩm?,,"Hiện tại, không khí ở Hà Nội có độ ẩm trung bình khoảng 61.2%. Điều này cho thấy không khí hơi khô hơn bình thường một chút. 
+### Chi tiết từng ngày:
+- **Ngày 24/03**:
+  - Nhiệt độ trung bình: 27.0°C
+  - Biên độ nhiệt: 21.54 - 30.08°C
+  - Độ ẩm: 63%
+  - Thời tiết: Có mây
+  
+- **Ngày 25/03**:
+  - Nhiệt độ trung bình: 2",9119,,,
+2026-03-23T10:24:29.865530+07:00,eval_39,39,Mô tả ngắn gọn thời tiết tuần này ở Hà Nội để mình lên kế hoạch.,,"Dưới đây là dự báo thời tiết cho tuần này ở Hà Nội:
 
-- Nhiệt độ: 27.4°C
-- Độ ẩm: 61.2%
-- Gió: 5.4 m/s từ hướng Nam
+- **Thứ Hai (23/03)**: 
+  - Nhiệt độ: 20.3°C - 32.5°C
+  - Thời tiết: Có mây
+  - Độ ẩm: 64.7%
+  
+- **Thứ Ba (24/03)**: 
+  - Nhiệt độ: 20.3°C - 33.3°C
+  - Thời tiết: Có mây
+  - Độ ẩm: 55.6%
 
-💡 Nếu bạn ra ngoài, có thể cảm thấy dễ chịu, nhưng vẫn nên mang theo nước để giữ ẩm cho cơ thể.",6834,,,
-2026-03-20T15:33:52.040569+07:00,eval_89,89,"Mấy ngày nay Hà Nội hay nồm ẩm, hôm nay độ ẩm có cao không?",,"Hà Nội hiện tại có độ ẩm khoảng 67.4%. Thời tiết có mây, nhiệt độ là 26.0°C (cảm giác như 28.0°C).
+- **Thứ Tư (25/03)**: 
+  - Nhiệt độ: 20.1°C - 33.5°C
+  - Thời tiết: Có mây
+  - Độ ẩm: 50.8%
 
-💡 Độ ẩm cao như vậy có thể gây cảm giác nồm ẩm, bạn nên chú ý khi ra ngoài nhé!",7163,,,
-2026-03-20T15:33:55.503354+07:00,eval_90,90,Tầm nhìn trên đường cao tốc Pháp Vân sáng mai thế nào?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn có thể hỏi về thời tiết ở một quận/huyện cụ thể trong Hà Nội nhé!,3463,,,
-2026-03-20T15:34:02.553223+07:00,eval_91,91,Hôm qua ở Hà Nội nhiệt độ cao nhất là bao nhiêu độ?,,Hiện chưa có dữ liệu thời tiết cho hôm qua ở Hà Nội. Bạn có thể hỏi về thời tiết hôm nay hoặc thời gian khác nhé!,7050,,,
-2026-03-20T15:34:10.267835+07:00,eval_92,92,Ngày 28/2 vừa rồi ở quận Đống Đa có mưa không?,,"Ngày 28/2 vừa rồi, quận Đống Đa có thời tiết trong xanh với nhiệt độ trung bình 24.2°C, độ ẩm 85%. Không có mưa xảy ra trong ngày này (lượng mưa tổng là 0.0 mm). 
+- **Thứ Năm (26/03)**: 
+  - Nhiệt độ: 20.1°C - 33.8°C
+  - Thời tiết: Có mây
+  - Độ ẩm: 48.2%
 
-Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",7709,,,
-2026-03-20T15:34:19.678352+07:00,eval_93,93,Ba ngày trước ở Gia Lâm trời có rét đậm không?,,"Ba ngày trước, ngày 17/03/2026, thời tiết ở Gia Lâm không có rét đậm. Cụ thể:
+- **Thứ Sáu (27/03)**: 
+  - Nhiệt độ: 21.1°C - 29.1°C
+  - Thời tiết: Có",9670,,,
+2026-03-23T10:24:42.042953+07:00,eval_40,40,Tình hình thời tiết chung ở Tây Hồ trong vài ngày tới thế nào?,,"Dưới đây là tình hình thời tiết chung ở quận Tây Hồ trong vài ngày tới (từ 23 đến 26 tháng 3 năm 2026):
 
-- Nhiệt độ: 25.0°C (cảm giác 25.5°C)
-- Độ ẩm: 73%
+- **Nhiệt độ trung bình**: 28.4°C
+- **Biên độ nhiệt**: 25 - 33°C
+- **Độ ẩm trung bình**: 61%
+- **Tổng lượng mưa**: 0.1 mm (có 1 ngày có mưa)
+- **Chỉ số UV cao nhất**: 5.18
+- **Xu hướng**: Nóng lên
+
+### Dự báo chi tiết từng ngày:
+- **23/03**: 
+  - Nhiệt độ trung bình: 25.39°C (21.94 - 29.14°C)
+  - Độ ẩm: 80%
+  - Có mưa nhẹ (0.14 mm), xác suất mưa 20%
+  
+- **24/03**: 
+  - Nhiệt độ trung bình: 2",7815,,,
+2026-03-23T10:24:52.165034+07:00,eval_41,41,Cho mình biết tổng quan thời tiết ngày mai ở Hà Nội với.,,"Dự báo thời tiết ngày mai (24/03/2026) ở Hà Nội như sau:
+
+- **Nhiệt độ**: 
+  - Tối thiểu: 20.3°C
+  - Tối đa: 32.5°C
+  - Trung bình: 27.2°C
+
+- **Độ ẩm**: 64.7%
+
+- **Thời tiết**: Có mây
+
+- **Gió**: 
+  - Hướng: Đông Nam
+  - Tốc độ gió tối đa: 11.8 m/s
+
+- **Áp suất**: 1012 hPa
+
+- **Chỉ số UV tối đa**: 11.0 (cực kỳ cao)
+
+- **Xác suất mưa**: 14% (dự kiến lượng mưa khoảng 0.19 mm)
+
+💡 Lưu ý: Ngày mai có thể khá oi bức, bạn nên chuẩn bị nước uống và bảo vệ da khi ra ngoài.",6110,,,
+2026-03-23T10:25:02.662785+07:00,eval_42,42,Nhận xét tổng thể về thời tiết Hà Nội cuối tuần này đi bạn.,,"Cuối tuần này (28-29/03/2026), thời tiết Hà Nội có những điểm nổi bật như sau:
+
+- **Nhiệt độ**: Trung bình khoảng 25.8°C, với mức nhiệt dao động từ 22.5°C đến 25.8°C.
+- **Độ ẩm**: Trung bình 73%, tạo cảm giác hơi ẩm ướt.
+- **Mưa**: Có khả năng mưa vào ngày 28/03, tổng lượng mưa dự kiến khoảng 2.3 mm.
+- **Chỉ số UV**: Tối đa đạt 5.0, nên cần chú ý bảo vệ da khi ra ngoài.
+- **Xu hướng**: Thời tiết ổn định, không có biến động lớn.
+
+**Ngày tốt nhất**: 28/03 với nhiệt độ trung bình 25.75°C, nhưng có ",5853,,,
+2026-03-23T10:25:12.441822+07:00,eval_43,43,"Thời tiết tuần tới ở Hà Nội nói chung thế nào, có gì đặc biệt không?",,Hiện tại mình không thể lấy thông tin thời tiết cho tuần tới ở Hà Nội. Bạn có thể thử hỏi lại sau hoặc hỏi về thời tiết trong thời gian gần hơn nhé!,5529,,,
+2026-03-23T10:25:27.133335+07:00,eval_44,44,Tóm tắt tình hình thời tiết ở Sóc Sơn trong 5 ngày tới.,,"Dưới đây là tóm tắt tình hình thời tiết ở Huyện Sóc Sơn trong 5 ngày tới:
+
+- **Ngày 23/03/2026**:
+  - Nhiệt độ trung bình: 25.5°C (min: 20.3°C, max: 29.7°C)
+  - Độ ẩm: 75.6%
+  - Thời tiết: Mưa nhẹ
+  - Xác suất mưa: 30%
+  - Gió: Đông Nam, tốc độ 10.2 m/s
+
+- **Ngày 24/03/2026**:
+  - Nhiệt độ trung bình: 26.8°C (min: 20.3°C, max: 30.4°C)
+  - Độ ẩm: 63.2%
+  - Thời tiết: Có mây
+  - Xác suất mưa: 16%
+  - Gió: Đông Nam, tốc độ 9.4 m/s
+
+- **Ngày 25/03/2026**:
+  - Nhiệt độ trung bình: 28.1°C (min: 20.1°C",10734,,,
+2026-03-23T10:25:42.549416+07:00,eval_45,45,Đánh giá tổng quan thời tiết ở Gia Lâm tuần này đi.,,"### Tổng quan thời tiết huyện Gia Lâm tuần này (23/03 - 29/03/2026)
+
+- **Nhiệt độ trung bình**: 29.4°C
+- **Nhiệt độ dao động**: 26 - 32°C
+- **Độ ẩm trung bình**: 54%
+- **Tổng lượng mưa**: 2.9 mm
+- **Số ngày mưa**: 3 ngày
+- **Chỉ số UV cao nhất**: 8.11
+- **Xu hướng**: Ổn định
+
+#### Dự báo thời tiết từng ngày:
+- **23/03**: 
+  - Nhiệt độ trung bình: 28.83°C (20.55 - 30.81°C)
+  - Độ ẩm: 50%
+  - Thời tiết: Có mây
+
+- **24/03**: 
+  - Nhiệt độ trung bình: 31.45°C (21.01 - 31.74°C)
+  - Độ ẩm: 44%
+  - Thờ",11282,,,
+2026-03-23T10:25:57.764200+07:00,eval_46,46,Khái quát thời tiết khu vực Ba Vì tháng này cho mình biết với.,,"Thời tiết huyện Ba Vì trong tháng này có những đặc điểm như sau:
+
+- **Nhiệt độ trung bình**: 24.97°C
+- **Nhiệt độ tối thiểu**: 24.89°C
+- **Nhiệt độ tối đa**: 25.1°C
+- **Độ ẩm trung bình**: 75%
+- **Tốc độ gió trung bình**: 2.55 m/s (hướng Đông Nam)
+- **Áp suất trung bình**: 1012.3 hPa
+- **Chỉ số UV**: Thấp (0.45)
+
+### Dự báo thời tiết gần đây:
+- **Ngày 23/03**: Nhiệt độ trung bình 26.31°C, độ ẩm 68.7%, trời có mây.
+- **Ngày 24/03**: Nhiệt độ trung bình 24.03°C, độ ẩm 79.7%, trời có mây.
+
+### Khuy",9469,,,
+2026-03-23T10:26:10.179762+07:00,eval_47,47,Chiều nay ở Thanh Xuân có mưa không?,,"Chiều nay ở quận Thanh Xuân không có mưa. Thời tiết có vẻ ổn định, bạn có thể thoải mái ra ngoài mà không cần mang ô. Chúc bạn có một buổi chiều vui vẻ!",6801,,,
+2026-03-23T10:26:22.876342+07:00,eval_48,48,"Tối nay phường Nhật Tân, Tây Hồ có mưa rào hay giông không?",,"Tối nay (23/03/2026) tại phường Nhật Tân, quận Tây Hồ, thời tiết như sau:
+
+- **Nhiệt độ**: 24.5°C - 29.1°C
+- **Độ ẩm**: 56% - 84%
+- **Gió**: Đông Nam, tốc độ 5.5 - 5.7 m/s
+- **Trời**: Có mây, không có mưa rào hay giông.
+
+Dự báo trong khoảng thời gian từ 18h đến 22h tối nay, xác suất mưa là 0%, nên bạn có thể yên tâm ra ngoài mà không cần mang ô.
+
+💡 **Khuyến nghị**: Thời tiết khá dễ chịu, bạn có thể thoải mái đi dạo hoặc tham gia các hoạt động ngoài trời.",8193,,,
+2026-03-23T10:26:34.037266+07:00,eval_49,49,Trong 2 tiếng tới ở Hoàng Mai xác suất mưa là bao nhiêu phần trăm?,,"Trong 2 tiếng tới ở quận Hoàng Mai, xác suất mưa là 0%. 
+
+- **11:00**: Nhiệt độ trung bình 24.9°C, trời có mây.
+- **12:00**: Nhiệt độ trung bình 25.7°C, trời có mây.
+
+💡 Thời tiết khá dễ chịu, bạn có thể thoải mái ra ngoài mà không cần mang ô.",8011,,,
+2026-03-23T10:26:48.946721+07:00,eval_50,50,Hôm nay ở Hà Đông có mưa to kéo dài không?,,"Hiện tại, thời tiết ở quận Hà Đông như sau:
+- Nhiệt độ: 24.9°C (cảm giác 25.0°C)
+- Trời có mây, độ ẩm 74.6%
+- Gió Đông Nam 3.6 m/s
+
+Dự báo trong 2 giờ tới:
+- **11:00**: Nhiệt độ 24.98°C, độ ẩm 75.6%, trời có mây.
+- **12:00**: Nhiệt độ 25.8°C, độ ẩm 72.8%, trời có mây.
+
+Hiện tại không có mưa và dự báo cũng không có khả năng mưa trong thời gian tới. Bạn có thể yên tâm ra ngoài mà không cần mang ô.",8574,,,
+2026-03-23T10:27:00.996245+07:00,eval_51,51,Đêm nay ở nội thành Hà Nội có nguy cơ mưa lớn gây ngập không?,,"Hiện tại, Hà Nội không có cảnh báo thời tiết nguy hiểm nào, bao gồm cả nguy cơ mưa lớn gây ngập. 
+
+Dự báo cho đêm nay (từ 18h đến 24h) như sau:
+- **18h**: Nhiệt độ 29.5°C, độ ẩm 54%, trời có mây.
+- **19h**: Nhiệt độ 28.5°C, độ ẩm 60%, trời có mây.
+- **20h**: Nhiệt độ 27.5°C, độ ẩm 65%, trời có mây.
+- **21h**: Nhiệt độ 26.5°C, độ ẩm 70%, trời có mây.
+- **22h**: Nhiệt độ 25.5°C, độ ẩm 75%, trời có mây.
+- **23h**: Nhiệt độ 25.0°C, độ ẩm 78%, trời có mây.
+
+💡 Bạn có thể yên tâm ra ngoài, nhưng vẫn nê",7300,,,
+2026-03-23T10:27:13.091370+07:00,eval_52,52,Từ giờ đến sáng mai ở Gia Lâm có mưa phùn không?,,"Trong khoảng thời gian từ giờ đến sáng mai, khu vực Gia Lâm không có mưa phùn. Dự báo thời tiết hiện tại cho thấy:
+
+- Nhiệt độ: 23.9°C
+- Độ ẩm: 80%
 - Trời có mây, không có mưa.
 
-Thời tiết khá ấm áp và dễ chịu. Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",9411,,,
-2026-03-20T15:34:25.809868+07:00,eval_94,94,"Bạn tóm tắt thời tiết hôm qua ở Long Biên giúp mình (mưa, nhiệt độ, gió).",,"Hôm qua (19/03/2026) ở Long Biên có thời tiết như sau:
+💡 Bạn có thể yên tâm ra ngoài mà không cần mang ô.",7753,,,
+2026-03-23T10:27:26.854362+07:00,eval_53,53,Tuần này Hà Nội có mưa nhiều không?,,"Trong tuần này, thời tiết Hà Nội có một số ngày có mưa. Cụ thể như sau:
 
-- **Nhiệt độ**: 24.1°C (cảm giác 24.5°C)
-- **Trời**: Quang đãng, không có mưa (lượng mưa 0.0 mm)
-- **Gió**: Gió Đông Nam với tốc độ 5.6 m/s
+- **Hôm nay (23/03)**: Nhiệt độ trung bình 27.2°C, có mây, tổng lượng mưa 0.19 mm.
+- **Ngày mai (24/03)**: Nhiệt độ trung bình 28.9°C, có mây, tổng lượng mưa 0.21 mm.
+- **Ngày 25/03**: Nhiệt độ trung bình 30.0°C, có mây, tổng lượng mưa 0.24 mm.
+- **Ngày 26/03**: Nhiệt độ trung bình 31.8°C, có mây, tổng lượng mưa 0.28 mm.
+- **Ngày 27/03**: Nhiệt độ trung bình 26.8°C, có mây, tổng lượng mưa 0.41 mm.
+- **Ngày 28/03**: Nhiệt độ",9231,,,
+2026-03-23T10:27:38.235543+07:00,eval_54,54,Lượng mưa dự kiến hôm nay ở Đông Anh là bao nhiêu mm?,,"Huyện Đông Anh hôm nay không có dự báo mưa, với xác suất mưa là 0%. 
 
-💡 Thời tiết khá dễ chịu, không có mưa, rất thích hợp cho các hoạt động ngoài trời!",6132,,,
-2026-03-20T15:34:36.747003+07:00,eval_95,95,Tuần trước Hà Nội có ngày nào nắng đẹp không?,,Hiện tại mình không thể truy cập dữ liệu thời tiết của tuần trước. Bạn có thể thử hỏi về thời tiết trong tuần này hoặc các ngày cụ thể khác nhé!,10936,,,
-2026-03-20T15:34:41.712333+07:00,eval_96,96,Hôm qua lượng mưa ở Hà Nội là bao nhiêu mm?,,Hiện chưa có dữ liệu về lượng mưa ở Hà Nội hôm qua. Bạn có thể hỏi về khu vực hoặc thời gian khác nhé!,4965,,,
-2026-03-20T15:35:16.162229+07:00,eval_97,97,"Tháng 2 vừa rồi Hà Nội ngày nào rét nhất, bao nhiêu độ?",,Hiện tại mình không thể truy cập dữ liệu thời tiết lịch sử cho tháng 2 vừa rồi. Bạn có thể thử hỏi về thời tiết trong khoảng thời gian khác hoặc một câu hỏi khác nhé!,34450,,,
-2026-03-20T15:35:20.775969+07:00,eval_98,98,"Hôm kia gió ở Hà Nội mạnh không, hướng nào?",,Hiện chưa có dữ liệu thời tiết cho ngày hôm kia (18/03/2026). Bạn có thể hỏi về thời tiết ở thời gian khác hoặc khu vực khác nhé!,4614,,,
-2026-03-20T15:35:27.112289+07:00,eval_99,99,Thứ 7 tuần trước ở quận Cầu Giấy trời thế nào?,,"Vào thứ 7 tuần trước (14/03/2026), thời tiết tại quận Cầu Giấy như sau:
+- Nhiệt độ trung bình: 25.9°C
+- Độ ẩm trung bình: 70.5%
+- Thời tiết chủ yếu là có mây.
+
+💡 Bạn có thể thoải mái ra ngoài mà không cần mang ô.",6385,,,
+2026-03-23T10:27:49.705458+07:00,eval_55,55,Ngày mai ở quận Hoàng Mai mưa vào khoảng mấy giờ?,,"Ngày mai (24/03/2026) ở quận Hoàng Mai, dự báo không có mưa. Thời tiết chủ yếu có mây, nhiệt độ dao động từ 21.5°C đến 26.7°C.
+
+💡 Bạn có thể yên tâm ra ngoài mà không cần mang ô.",7208,,,
+2026-03-23T10:28:01.256927+07:00,eval_56,56,Mưa ở Hà Nội hôm nay kéo dài đến bao giờ?,,"Hiện tại, Hà Nội không có mưa. Tuy nhiên, theo dự báo, có khả năng mưa sẽ xuất hiện vào khoảng 21h tối nay (23/03/2026) và có thể kéo dài đến khoảng 23h. 
+
+💡 Nên mang ô khi ra ngoài vào buổi tối để tránh bị ướt.",7191,,,
+2026-03-23T10:28:13.241143+07:00,eval_57,57,Cuối tuần ở Hà Nội xác suất mưa là bao nhiêu?,,"Cuối tuần này (Thứ 7 và Chủ nhật), thời tiết Hà Nội như sau:
+
+- **Thứ 7 (28/03/2026)**:
+  - Nhiệt độ: 26.7°C
+  - Xác suất mưa: 32%
+  - Dự báo có mưa nhẹ, tổng lượng mưa khoảng 0.77 mm.
+
+- **Chủ nhật (29/03/2026)**:
+  - Nhiệt độ: 29.9°C
+  - Xác suất mưa: 97%
+  - Dự báo có mưa lớn, tổng lượng mưa khoảng 4.53 mm.
+
+💡 Nên chuẩn bị ô khi ra ngoài vào cuối tuần này, đặc biệt là vào Chủ nhật!",7093,,,
+2026-03-23T10:28:22.711936+07:00,eval_58,58,"Hà Nội mùa này hay có mưa phùn không, dự báo mấy ngày tới thế nào?",,Hiện tại mình không thể lấy được thông tin về hiện tượng thời tiết đặc biệt và dự báo thời tiết trong vài ngày tới. Bạn có thể thử hỏi lại sau hoặc hỏi về một khu vực cụ thể nào đó trong Hà Nội nhé!,4466,,,
+2026-03-23T10:28:31.845711+07:00,eval_59,59,Bây giờ nhiệt độ ở Hoàn Kiếm là bao nhiêu độ?,,"Quận Hoàn Kiếm hiện tại có nhiệt độ là 24.2°C (cảm giác 24.2°C), trời quang đãng, độ ẩm 72%. 
+
+- Gió Đông Nam 5.8 m/s.
+- Áp suất 1011 hPa, chỉ số UV thấp.
+
+💡 Thời tiết dễ chịu, bạn có thể ra ngoài thoải mái!",4666,,,
+2026-03-23T10:28:45.633985+07:00,eval_60,60,Ngoài trời ở Cầu Giấy cảm giác có rét lắm không?,,"Hiện tại, thời tiết ở quận Cầu Giấy như sau:
+
+- **Nhiệt độ**: 24.7°C (cảm giác như 25°C)
+- **Độ ẩm**: 75.5%
+- **Gió**: Đông Nam 3.8 m/s
+- **Trời**: Có mây
+
+💡 Thời tiết hiện tại không lạnh, nhưng độ ẩm cao có thể khiến bạn cảm thấy hơi oi bức. Nếu bạn ra ngoài, có thể mặc đồ thoải mái và mang theo nước nhé!",9347,,,
+2026-03-23T10:28:56.523178+07:00,eval_61,61,Chiều mai ở Thanh Xuân nhiệt độ cao nhất là bao nhiêu?,,"Chiều mai (24/03/2026) ở quận Thanh Xuân, nhiệt độ cao nhất dự kiến đạt khoảng **30.6°C**. 
+
+- Thời tiết có mây, độ ẩm trung bình khoảng 60%.
+- Gió từ hướng Nam với tốc độ khoảng 5.4 m/s.
+
+💡 Nên chuẩn bị nước uống và mặc trang phục thoải mái khi ra ngoài nhé!",6626,,,
+2026-03-23T10:29:07.066935+07:00,eval_62,62,Đêm nay ở Đông Anh nhiệt độ thấp nhất khoảng bao nhiêu độ?,,"Đêm nay ở huyện Đông Anh, nhiệt độ thấp nhất dự kiến khoảng 22.9°C. 
+
+- **Thời tiết**: Trời quang.
+- **Độ ẩm**: 86%.
+- **Gió**: 4.15 m/s, hướng Đông Nam.
+
+💡 Bạn nên mặc áo khoác nhẹ khi ra ngoài vào đêm nay nhé!",6047,,,
+2026-03-23T10:29:21.239416+07:00,eval_63,63,"Trong tuần này, ngày nào ở Hà Nội nóng nhất?",,"Trong tuần này, ngày nóng nhất ở Hà Nội là **ngày 26 tháng 3** với nhiệt độ trung bình đạt **31.8°C** (nhiệt độ tối đa 33.8°C). 
+
+Dưới đây là một số thông tin thời tiết trong tuần:
+
+- **23/03**: Nhiệt độ trung bình 27.2°C, tối đa 32.5°C
+- **24/03**: Nhiệt độ trung bình 29.0°C, tối đa 33.3°C
+- **25/03**: Nhiệt độ trung bình 30.0°C, tối đa 33.5°C
+- **26/03**: Nhiệt độ trung bình 31.8°C, tối đa 33.8°C
+- **27/03**: Nhiệt độ trung bình 26.8°C, tối đa 29.1°C
+- **28/03**: Nhiệt độ trung bình 26.7°C, tố",9744,,,
+2026-03-23T10:29:31.753948+07:00,eval_64,64,Chênh lệch nhiệt độ ngày và đêm ở Hà Nội hôm nay là bao nhiêu?,,"Hôm nay, chênh lệch nhiệt độ giữa ngày và đêm ở Hà Nội như sau:
+
+- **Nhiệt độ cao nhất trong ngày**: 29.5°C (vào khoảng 16:00)
+- **Nhiệt độ thấp nhất trong đêm**: 22.6°C (vào khoảng 00:00)
+
+**Chênh lệch nhiệt độ**: 29.5°C - 22.6°C = **6.9°C**
+
+💡 Bạn nên chuẩn bị áo khoác nhẹ cho buổi tối, vì nhiệt độ sẽ giảm xuống khá thấp.",6263,,,
+2026-03-23T10:29:44.635053+07:00,eval_65,65,Nhiệt độ buổi sáng sớm mai ở Ba Đình khoảng bao nhiêu?,,"Buổi sáng sớm mai (24/03/2026) ở quận Ba Đình, nhiệt độ dự kiến khoảng 21.7°C đến 24.2°C. 
+
+- **6h sáng**: 22.1°C, độ ẩm 92%
+- **7h sáng**: 22.8°C, độ ẩm 88%
+- **8h sáng**: 24.2°C, độ ẩm 79%
+  
+💡 Khuyến nghị: Nên mặc áo khoác nhẹ khi ra ngoài vào buổi sáng.",7676,,,
+2026-03-23T10:29:54.070439+07:00,eval_66,66,"Trưa nay ở Hà Nội có nắng nóng gay gắt không, nhiệt độ bao nhiêu?",,"Trưa nay ở Hà Nội, thời tiết sẽ có nắng nóng nhưng không gay gắt. Cụ thể như sau:
+
+- **12h**: Nhiệt độ khoảng 26.5°C, độ ẩm 68.2%.
+- **13h**: Nhiệt độ khoảng 27.5°C, độ ẩm 64.3%.
+- **14h**: Nhiệt độ khoảng 28.1°C, độ ẩm 61.4%.
+- **15h**: Nhiệt độ cao nhất khoảng 29.4°C, độ ẩm 55.0%.
+
+💡 Lưu ý: Nên mang theo nước và bảo vệ da khi ra ngoài vào trưa nay.",5621,,,
+2026-03-23T10:30:06.337199+07:00,eval_67,67,Khi nào thì Hà Nội ấm dần lên trong vài ngày tới?,,"Trong vài ngày tới, Hà Nội sẽ ấm dần lên. Dưới đây là xu hướng nhiệt độ:
+
+- **Ngày 24/03**: Nhiệt độ trung bình khoảng 22-26°C, có thể tăng lên 26.1°C vào buổi sáng.
+- **Ngày 25/03**: Nhiệt độ sẽ tiếp tục tăng, đạt khoảng 24-28°C.
+- **Ngày 26/03**: Dự báo nhiệt độ có thể lên tới 29°C.
+
+💡 Khuyến nghị: Bạn nên chuẩn bị trang phục thoải mái và có thể mang theo nước khi ra ngoài, vì thời tiết sẽ ấm hơn.",7776,,,
+2026-03-23T10:30:16.787951+07:00,eval_68,68,Nhiệt độ tối nay ở khu vực Mỹ Đình có xuống dưới 15 độ không?,,"Nhiệt độ tối nay ở khu vực Mỹ Đình sẽ không xuống dưới 15 độ. Cụ thể, nhiệt độ sẽ dao động như sau:
+
+- **18:00**: 25.6°C
+- **19:00**: 24.65°C
+- **20:00**: 23.92°C
+- **21:00**: 23.58°C
+- **22:00**: 23.19°C
+
+💡 Trời có mây, nên bạn có thể thoải mái ra ngoài mà không cần lo lắng về thời tiết lạnh.",4776,,,
+2026-03-23T10:30:28.588544+07:00,eval_69,69,Ngày mai ở huyện Ba Vì nhiệt độ cao nhất và thấp nhất là bao nhiêu?,,"Ngày mai (24/03/2026) ở huyện Ba Vì, nhiệt độ cao nhất dự kiến là 32.5°C và thấp nhất là 20.9°C. 
+
+- Thời tiết: Có mây
+- Độ ẩm trung bình: 62%
+- Hướng gió: Đông Nam
+
+💡 Bạn nên chuẩn bị đồ nhẹ nhàng và thoải mái khi ra ngoài!",6365,,,
+2026-03-23T10:30:41.724671+07:00,eval_70,70,"Hà Nội mấy ngày tới có rét đậm không, nhiệt độ khoảng bao nhiêu?",,"Trong những ngày tới, Hà Nội sẽ không có rét đậm. Thời tiết sẽ lạnh dần với nhiệt độ như sau:
+
+- **Hôm nay (23/03)**: Nhiệt độ thấp nhất 20.7°C, cao nhất 30.9°C, trời có mây.
+- **Ngày mai (24/03)**: Nhiệt độ thấp nhất 21.1°C, cao nhất 31.9°C, trời có mây.
+- **Ngày 25/03**: Nhiệt độ thấp nhất 21.4°C, cao nhất 31.2°C, có khả năng mưa.
+- **Ngày 26/03**: Nhiệt độ thấp nhất 21.6°C, cao nhất 31.9°C, trời có mây.
+- **Ngày 27/03**: Nhiệt độ thấp nhất 22.1°C, cao nhất 27.9°C, có khả năng mưa.
+- **Ngày 28",8154,,,
+2026-03-23T10:30:51.995306+07:00,eval_71,71,"Hiện tại gió ở Sóc Sơn mạnh không, hướng nào?",,"Hiện tại, gió ở huyện Sóc Sơn có tốc độ trung bình 3.4 m/s, hướng Đông Nam. Thời tiết có mây và nhiệt độ khoảng 24.3°C. 
+
+💡 Nếu bạn ra ngoài, có thể cảm thấy dễ chịu với thời tiết này!",5918,,,
+2026-03-23T10:31:05.081495+07:00,eval_72,72,Tối nay ở quận Bắc Từ Liêm có gió to không?,,"Tối nay ở quận Bắc Từ Liêm, gió sẽ có tốc độ trung bình khoảng 5.2 - 6.2 m/s, với gió mạnh nhất có thể lên đến 10.2 m/s. Dưới đây là một số thông tin chi tiết:
+
+- **Thời gian**: Từ 18:00 đến 22:00
+- **Nhiệt độ**: Giảm dần từ 25.6°C xuống 23.2°C
+- **Độ ẩm**: Khoảng 66% - 83%
+- **Thời tiết**: Có mây, trời trong
+
+💡 **Khuyến nghị**: Gió có thể hơi mạnh, bạn nên mặc áo khoác nhẹ và cẩn thận khi ra ngoài, đặc biệt là ở những khu vực có cây cối cao.",6685,,,
+2026-03-23T10:31:14.304523+07:00,eval_73,73,Trong vài giờ tới ở Hà Nội có khả năng giông mạnh không?,,"Hiện tại, ở Hà Nội không có cảnh báo giông mạnh nào. Dự báo trong vài giờ tới như sau:
+
+- **11:00**: Nhiệt độ trung bình 25.7°C, độ ẩm 71.5%, trời có mây.
+- **12:00**: Nhiệt độ trung bình 26.5°C, độ ẩm 68.2%, trời có mây.
+
+💡 Trời có thể oi bức, bạn nên chuẩn bị nước uống khi ra ngoài.",5225,,,
+2026-03-23T10:31:27.221291+07:00,eval_74,74,Ngày mai gió mùa về ở Hà Nội thì cảm giác lạnh sẽ như thế nào?,,"Ngày mai, gió mùa sẽ về Hà Nội, mang theo không khí lạnh hơn. Dự báo nhiệt độ sẽ giảm xuống khoảng 22-24°C, với độ ẩm tăng cao, có thể lên đến 90%. 
+
+### Cảm giác lạnh sẽ như sau:
+- **Nhiệt độ**: Khoảng 22-24°C, cảm giác lạnh hơn do độ ẩm cao.
+- **Gió**: Gió nhẹ từ Đông Nam, có thể làm tăng cảm giác lạnh.
+- **Khuyến nghị**: Nên mặc áo ấm khi ra ngoài, đặc biệt là vào buổi sáng và tối.
+
+Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị trang phục phù hợp để giữ ấm nhé!",8647,,,
+2026-03-23T10:31:36.670614+07:00,eval_75,75,Gió giật tối nay ở Hà Nội mạnh nhất khoảng bao nhiêu m/s?,,"Tối nay, gió giật mạnh nhất ở Hà Nội có thể đạt khoảng 7.7 m/s. 
+
+💡 Nếu bạn ra ngoài, hãy chú ý đến gió mạnh và có thể mang theo đồ vật nhẹ để tránh bị thổi bay.",5120,,,
+2026-03-23T10:31:47.221891+07:00,eval_76,76,Tuần này có đợt gió lạnh mạnh nào ở Hà Nội không?,,Mình không tìm thấy thông tin về đợt gió lạnh mạnh nào ở Hà Nội trong tuần này. Bạn có thể hỏi về thời tiết cụ thể hơn hoặc một khu vực nào đó trong Hà Nội không?,5697,,,
+2026-03-23T10:31:57.206196+07:00,eval_77,77,Hướng gió hiện tại ở Gia Lâm là hướng nào?,,"Huyện Gia Lâm hiện tại có gió từ hướng Đông Nam với tốc độ 3.24 m/s. 
+
+💡 Thời tiết có mây, độ ẩm 80%, nhiệt độ khoảng 23.9°C.",6119,,,
+2026-03-23T10:32:06.079826+07:00,eval_78,78,Chiều nay đi xe máy ở Hà Nội có bị ảnh hưởng bởi gió mạnh không?,,"Chiều nay, thời tiết ở Hà Nội không có cảnh báo về gió mạnh. Bạn có thể yên tâm đi xe máy mà không lo bị ảnh hưởng bởi gió. Chúc bạn có một chuyến đi an toàn!",4037,,,
+2026-03-23T10:32:18.207397+07:00,eval_79,79,Sáng mai ở Đông Anh gió đông bắc có mạnh không?,,"Sáng mai (24/03/2026) ở Đông Anh, gió sẽ có hướng Đông Nam với tốc độ trung bình khoảng 5.0 m/s. Gió có thể mạnh hơn vào một số thời điểm, với gió giật lên tới 11.0 m/s.
+
+### Thông tin chi tiết:
+- **Nhiệt độ**: 24.5°C - 27.2°C
+- **Độ ẩm**: 66%
+- **Trời**: Có mây
+
+💡 **Khuyến nghị**: Nếu bạn ra ngoài, có thể cảm thấy hơi oi bức, nên mặc đồ thoải mái và mang theo nước.",6123,,,
+2026-03-23T10:32:28.891789+07:00,eval_80,80,Tốc độ gió trung bình hôm nay ở Hà Nội là bao nhiêu?,,"Tốc độ gió trung bình hôm nay ở Hà Nội là khoảng 3.4 m/s, với hướng gió chủ yếu từ Đông Nam. 
+
+💡 Nếu bạn ra ngoài, hãy chú ý đến gió nhẹ và có thể mang theo áo khoác mỏng nhé!",5624,,,
+2026-03-23T10:32:41.108679+07:00,eval_81,81,Sáng mai ở Quốc Oai có sương mù dày không?,,"Sáng mai (24/03/2026) ở huyện Quốc Oai có khả năng có sương mù nhẹ. Dưới đây là một số thông tin chi tiết:
+
+- **Thời gian**: Từ 6h đến 9h sáng
+- **Nhiệt độ**: Khoảng 21.6°C đến 24.1°C
+- **Độ ẩm**: Từ 90% đến 84%
+- **Thời tiết**: Có mây, có thể có sương mù nhẹ
+- **Tầm nhìn**: 10 km
+
+💡 **Khuyến nghị**: Nếu bạn ra ngoài vào sáng mai, nên cẩn thận khi di chuyển và có thể mang theo áo khoác nhẹ.",7268,,,
+2026-03-23T10:32:52.196750+07:00,eval_82,82,Hiện tại ở Hà Đông độ ẩm khoảng bao nhiêu phần trăm?,,"Hiện tại, độ ẩm ở quận Hà Đông khoảng 74.6%. 
+
+💡 Thời tiết có mây, nên bạn có thể cảm thấy hơi oi bức.",6508,,,
+2026-03-23T10:33:05.191150+07:00,eval_83,83,"Chiều nay ở Tây Hồ trời có nhiều mây không, có đẹp để chụp ảnh hoàng hôn không?",,"Chiều nay ở quận Tây Hồ, thời tiết sẽ có nhiều mây với nhiệt độ dao động từ 26.5°C đến 29.1°C. Dưới đây là một số thông tin chi tiết:
+
+- **Thời gian 15h**: 
+  - Nhiệt độ: 28.7°C
+  - Độ ẩm: 59%
+  - Mây: 94%
+  - Gió: Đông Nam 5.2 m/s
+
+- **Thời gian 16h**: 
+  - Nhiệt độ: 29.1°C
+  - Độ ẩm: 56%
+  - Mây: 86%
+  - Gió: Đông Nam 5.4 m/s
+
+💡 Với thời tiết nhiều mây như vậy, bạn có thể chụp ảnh hoàng hôn, nhưng ánh sáng có thể không rực rỡ như những ngày trời quang. Tuy nhiên, vẫn có thể tạo ra những bức ản",8117,,,
+2026-03-23T10:33:16.446460+07:00,eval_84,84,Đêm nay ở nội thành Hà Nội tầm nhìn xa có bị hạn chế vì sương mù không?,,"Hiện tại, thời tiết ở Hà Nội có tầm nhìn xa tốt, khoảng 10 km. Tuy nhiên, mình không thể xác định chính xác có sương mù hay không do gặp lỗi trong việc kiểm tra hiện tượng thời tiết đặc biệt.
+
+Nếu bạn có kế hoạch ra ngoài đêm nay, hãy chú ý đến độ ẩm cao (khoảng 88.2%) có thể gây cảm giác ẩm ướt. Nếu có sương mù, tầm nhìn có thể bị hạn chế, nhưng hiện tại tầm nhìn vẫn ổn.
+
+Nếu cần thêm thông tin, bạn có thể hỏi thêm nhé!",7004,,,
+2026-03-23T10:33:30.865482+07:00,eval_85,85,Sáng sớm mai ở khu vực ngoại thành Hà Nội có sương mù lái xe nguy hiểm không?,,"Sáng sớm mai (24/03/2026), thời tiết ở khu vực ngoại thành Hà Nội có thể có sương mù. Tuy nhiên, hiện tại không có thông tin cụ thể về độ dày của sương mù, nhưng độ ẩm cao có thể gây khó khăn cho việc lái xe.
+
+- **Nhiệt độ**: khoảng 23-24°C
+- **Độ ẩm**: cao, khoảng 75-80%
+- **Tầm nhìn**: có thể bị hạn chế do sương mù
+
+💡 **Khuyến nghị**: Nếu bạn phải lái xe, hãy cẩn thận và giảm tốc độ để đảm bảo an toàn.",7503,,,
+2026-03-23T10:33:44.232025+07:00,eval_86,86,"Tối nay ở Thanh Xuân độ ẩm cao không, cảm giác ngột ngạt không?",,"Hiện tại, quận Thanh Xuân có nhiệt độ khoảng 24.6°C, độ ẩm trung bình là 76.5%. Trời có mây, gió Đông Nam với tốc độ 3.7 m/s.
+
+### Dự báo tối nay (từ 18h đến 22h):
+- **18h**: Nhiệt độ 29.5°C, độ ẩm 52.7%
+- **19h**: Nhiệt độ 29.5°C, độ ẩm 52.7%
+- **20h**: Nhiệt độ 29.5°C, độ ẩm 52.7%
+- **21h**: Nhiệt độ 29.5°C, độ ẩm 52.7%
+- **22h**: Nhiệt độ 29.5°C, độ ẩm 52.7%
+
+### Nhận xét:
+- Độ ẩm hiện tại khá cao, có thể gây cảm giác ngột ngạt.
+- Tối nay trời sẽ ấm lên, nhưng độ ẩm sẽ giảm dần, giúp cảm giác",8647,,,
+2026-03-23T10:33:56.952590+07:00,eval_87,87,Bầu trời Hà Nội tuần này có hay bị mây che nhiều không?,,"Trong tuần này, bầu trời Hà Nội sẽ có nhiều mây che phủ. Dưới đây là một số thông tin cụ thể:
+
+- **Mây che phủ trung bình**: Khoảng 80-90% trong các ngày.
+- **Nhiệt độ**: Dao động từ 22°C đến 30°C.
+- **Độ ẩm**: Thường xuyên ở mức cao, khoảng 70-90%.
+
+💡 **Khuyến nghị**: Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị sẵn ô hoặc áo mưa, vì có thể có mưa rải rác trong tuần.",7258,,,
+2026-03-23T10:34:07.275257+07:00,eval_88,88,Hôm nay không khí ở Hà Nội khô hay ẩm?,,"Hiện tại, không khí ở Hà Nội có độ ẩm trung bình khoảng 75.4%. Điều này cho thấy không khí đang ở mức ẩm, khá oi bức. 
+
+💡 Nếu bạn ra ngoài, hãy nhớ mang theo nước để giữ cơ thể luôn đủ nước nhé!",5338,,,
+2026-03-23T10:34:18.242491+07:00,eval_89,89,"Mấy ngày nay Hà Nội hay nồm ẩm, hôm nay độ ẩm có cao không?",,"Hà Nội hiện tại đang có độ ẩm cao, khoảng 75.4%. Thời tiết có mây, nhiệt độ trung bình là 24.8°C. 
+
+- **Độ ẩm**: 75.4%
+- **Nhiệt độ**: 24.8°C
+- **Gió**: Đông Nam 3.4 m/s
+
+💡 Với độ ẩm cao như vậy, bạn nên chú ý đến cảm giác oi bức khi ra ngoài.",6136,,,
+2026-03-23T10:34:21.757691+07:00,eval_90,90,Tầm nhìn trên đường cao tốc Pháp Vân sáng mai thế nào?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn có thể hỏi về thời tiết ở một quận/huyện cụ thể trong Hà Nội nhé!,1854,,,
+2026-03-23T10:34:30.101046+07:00,eval_91,91,Hôm qua ở Hà Nội nhiệt độ cao nhất là bao nhiêu độ?,,Hiện chưa có dữ liệu thời tiết cho hôm qua. Bạn có thể hỏi về thời tiết hôm nay hoặc thời gian khác nhé!,4472,,,
+2026-03-23T10:34:41.709568+07:00,eval_92,92,Ngày 28/2 vừa rồi ở quận Đống Đa có mưa không?,,"Ngày 28/2 vừa rồi, quận Đống Đa có thời tiết trong xanh với nhiệt độ trung bình là 24.2°C, độ ẩm 85%. Không có mưa xảy ra trong ngày này (lượng mưa là 0.0 mm). 
+
+Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",6369,,,
+2026-03-23T10:34:53.296005+07:00,eval_93,93,Ba ngày trước ở Gia Lâm trời có rét đậm không?,,"Ba ngày trước, ngày 20/03/2026, thời tiết ở Gia Lâm như sau:
+
+- Nhiệt độ: 24.1°C (cảm giác 24.7°C)
+- Độ ẩm: 81%
+- Gió: 4.8 m/s, hướng Đông Nam
+- Trời có mây (broken clouds)
+- Không có mưa
+
+Với nhiệt độ 24.1°C, thời tiết không có hiện tượng rét đậm. Rét đậm thường xảy ra khi nhiệt độ dưới 15°C, do đó không có rét đậm vào ngày này.",6995,,,
+2026-03-23T10:35:03.269522+07:00,eval_94,94,"Bạn tóm tắt thời tiết hôm qua ở Long Biên giúp mình (mưa, nhiệt độ, gió).",,"Thời tiết hôm qua (22/03/2026) ở quận Long Biên như sau:
+
+- **Nhiệt độ**: 24.9°C (cảm giác 25.3°C)
+- **Độ ẩm**: 71%
+- **Gió**: 5.4 m/s, hướng Đông Nam
+- **Trời**: Mây che phủ (overcast clouds)
+- **Lượng mưa**: 0.0 mm (không có mưa)
+
+Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",5454,,,
+2026-03-23T10:35:25.432936+07:00,eval_95,95,Tuần trước Hà Nội có ngày nào nắng đẹp không?,,Hiện tại mình không thể truy cập dữ liệu thời tiết của tuần trước. Bạn có thể thử hỏi về thời tiết hiện tại hoặc dự báo trong những ngày tới nhé!,18125,,,
+2026-03-23T10:35:33.634561+07:00,eval_96,96,Hôm qua lượng mưa ở Hà Nội là bao nhiêu mm?,,Hiện chưa có dữ liệu về lượng mưa ở Hà Nội hôm qua. Bạn có thể hỏi về thời tiết ở khu vực khác hoặc thời gian khác nhé!,5015,,,
+2026-03-23T10:35:38.627555+07:00,eval_97,97,"Tháng 2 vừa rồi Hà Nội ngày nào rét nhất, bao nhiêu độ?",,Mình chỉ có dữ liệu thời tiết trong 14 ngày gần nhất. Bạn có thể hỏi về thời tiết trong khoảng thời gian đó nhé!,2370,,,
+2026-03-23T10:35:46.981764+07:00,eval_98,98,"Hôm kia gió ở Hà Nội mạnh không, hướng nào?",,Hiện chưa có dữ liệu thời tiết cho ngày 21/03/2026. Bạn có thể hỏi về thời tiết ở thời gian khác hoặc khu vực khác nhé!,4491,,,
+2026-03-23T10:35:57.740600+07:00,eval_99,99,Thứ 7 tuần trước ở quận Cầu Giấy trời thế nào?,,"Vào thứ 7 tuần trước (14/03/2026), thời tiết tại quận Cầu Giấy như sau:
 
 - Nhiệt độ: 22.0°C (cảm giác 21.8°C)
 - Độ ẩm: 59%
+- Trời có mây, mô tả: mây rải rác
 - Gió: 3.95 m/s, hướng Đông Nam
-- Trời có mây, mô tả là ""mây rải rác""
 - Không có mưa
 
-🌞 Thời tiết khá dễ chịu, thích hợp cho các hoạt động ngoài trời!",6330,,,
-2026-03-20T15:35:34.074711+07:00,eval_100,100,Hôm qua nhiệt độ thấp nhất ở Sóc Sơn là bao nhiêu?,,"Hôm qua (19/03/2026), nhiệt độ thấp nhất ở Sóc Sơn là 25.2°C. Thời tiết có mây rải rác và độ ẩm là 69%. 
+🌅 Mặt trời mọc lúc 6:06 và lặn lúc 18:05. 
 
-Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",6962,,,
-2026-03-20T15:35:40.741867+07:00,eval_101,101,Hiện tại giữa Cầu Giấy và Hoàn Kiếm nơi nào mát hơn?,,"Hiện tại, thời tiết giữa Cầu Giấy và Hoàn Kiếm như sau:
+Thời tiết khá dễ chịu, không có mưa, rất thích hợp cho các hoạt động ngoài trời!",5640,,,
+2026-03-23T10:36:07.258524+07:00,eval_100,100,Hôm qua nhiệt độ thấp nhất ở Sóc Sơn là bao nhiêu?,,"Hôm qua, nhiệt độ thấp nhất ở huyện Sóc Sơn là 24.7°C. Thời tiết chủ yếu có mây, không có mưa. 
 
-- **Cầu Giấy**: 27.0°C, độ ẩm 71%, trời nhiều mây.
-- **Hoàn Kiếm**: 27.0°C, độ ẩm 74%, trời có mây rải rác.
+Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",5335,,,
+2026-03-23T10:36:18.469413+07:00,eval_101,101,Hiện tại giữa Cầu Giấy và Hoàn Kiếm nơi nào mát hơn?,,"Hiện tại, thời tiết giữa Cầu Giấy và Hoàn Kiếm như sau:
 
-Nhiệt độ giữa hai khu vực này tương tự nhau, chỉ chênh lệch rất nhỏ. Tuy nhiên, Cầu Giấy có độ ẩm thấp hơn một chút, nên có thể cảm thấy mát hơn một chút so với Hoàn Kiếm.",6667,,,
-2026-03-20T15:35:53.344597+07:00,eval_102,102,Chiều nay mưa ở Hà Đông có nặng hơn so với Thanh Xuân không?,,"Dự báo chiều nay, thời tiết ở Hà Đông và Thanh Xuân như sau:
+- **Cầu Giấy**: 
+  - Nhiệt độ: 24.7°C
+  - Độ ẩm: 75.5%
+  - Trời có mây
 
-### Hà Đông
-- **16:00**: Nhiệt độ 27.6°C, độ ẩm 66.8%, xác suất mưa 0%.
-- **17:00**: Nhiệt độ 26.7°C, độ ẩm 68.5%, xác suất mưa 6.7%, lượng mưa 0.3 mm.
-- **18:00**: Nhiệt độ 26.0°C, độ ẩm 72.3%, xác suất mưa 0%.
-- **19:00**: Nhiệt độ 25.7°C, độ ẩm 75.0%, xác suất mưa 0%.
-- **20:00**: Nhiệt độ 24.7°C, độ ẩm 79.5%, xác suất mưa 0%.
-- **21:00**: Nhiệt độ 24.5°C, độ ẩm 84.5%, xác suất mưa 0%.
+- **Hoàn Kiếm**: 
+  - Nhiệt độ: 24.2°C
+  - Độ ẩm: 72.0%
+  - Trời quang
 
-### Thanh Xuân
-- **16:00**: Nhiệt độ 27.3°C, ",12603,,,
-2026-03-20T15:36:04.411638+07:00,eval_103,103,Tối nay gió ở Sóc Sơn với Bắc Từ Liêm nơi nào mạnh hơn?,,"Tối nay, gió ở hai khu vực Sóc Sơn và Bắc Từ Liêm có sự khác biệt như sau:
+💡 **Kết luận**: Cầu Giấy hiện tại mát hơn một chút so với Hoàn Kiếm.",5471,,,
+2026-03-23T10:36:31.927752+07:00,eval_102,102,Chiều nay mưa ở Hà Đông có nặng hơn so với Thanh Xuân không?,,"Dự báo thời tiết chiều nay (23/03/2026) cho hai quận Hà Đông và Thanh Xuân như sau:
+
+### Quận Hà Đông
+- **Thời gian 15:00**: 
+  - Nhiệt độ: 29.0°C
+  - Độ ẩm: 58%
+  - Xác suất mưa: 0%
+- **Thời gian 16:00**: 
+  - Nhiệt độ: 29.4°C
+  - Độ ẩm: 55%
+  - Xác suất mưa: 0%
+
+### Quận Thanh Xuân
+- **Thời gian 15:00**: 
+  - Nhiệt độ: 29.6°C
+  - Độ ẩm: 53.7%
+  - Xác suất mưa: 0%
+- **Thời gian 16:00**: 
+  - Nhiệt độ: 29.5°C
+  - Độ ẩm: 52.7%
+  - Xác suất mưa: 0%
+
+### Kết luận
+- Cả hai quận đều không có mưa dự b",8514,,,
+2026-03-23T10:36:44.514332+07:00,eval_103,103,Tối nay gió ở Sóc Sơn với Bắc Từ Liêm nơi nào mạnh hơn?,,"Tối nay, gió ở hai khu vực Sóc Sơn và Bắc Từ Liêm có sự khác biệt như sau:
 
 ### Sóc Sơn
-- **Tốc độ gió trung bình**: 5.79 m/s
-- **Gió mạnh nhất**: 7.66 m/s
+- **Gió trung bình**: 5.88 m/s
 - **Hướng gió**: Đông Nam
+- **Gió giật mạnh nhất**: 10.07 m/s
 
 ### Bắc Từ Liêm
-- **Tốc độ gió trung bình**: 5.48 m/s
-- **Gió mạnh nhất**: 7.63 m/s
+- **Gió trung bình**: 6.36 m/s
 - **Hướng gió**: Đông Nam
+- **Gió giật mạnh nhất**: 9.77 m/s
 
 ### Kết luận
-- **Sóc Sơn** có gió mạnh hơn một chút so với **Bắc Từ Liêm**. 
-- Nếu bạn có kế hoạch ra ngoài, hãy chú ý đến gió và thời tiết nhé!",11061,,,
-2026-03-20T15:36:14.742651+07:00,eval_104,104,So sánh thời tiết hiện tại ở Mỹ Đình và Times City giúp mình.,,"Dưới đây là so sánh thời tiết hiện tại giữa Mỹ Đình và Times City:
+- **Bắc Từ Liêm** có gió mạnh hơn với tốc độ trung bình là 6.36 m/s so với 5.88 m/s ở Sóc Sơn. 
+
+💡 Nếu bạn có kế hoạch ra ngoài tối nay, hãy chú ý đến gió mạnh hơn ở Bắc Từ Liêm nhé!",8520,,,
+2026-03-23T10:36:56.930184+07:00,eval_104,104,So sánh thời tiết hiện tại ở Mỹ Đình và Times City giúp mình.,,"Dưới đây là so sánh thời tiết hiện tại giữa Mỹ Đình và Times City:
 
 ### Mỹ Đình
-- **Nhiệt độ**: 27.4°C (cảm giác 28.7°C)
-- **Độ ẩm**: 61.3%
-- **Gió**: 5.7 m/s, hướng Nam
+- **Nhiệt độ**: 25.0°C
+- **Độ ẩm**: 74%
 - **Trời**: Có mây
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.7 (thấp)
-- **Hiện tượng đặc biệt**: Nóng hơn bình thường 5.4°C
+- **Gió**: Đông Nam 3.7 m/s
+- **Áp suất**: 1013 hPa
+- **Điểm sương**: 20.0°C
+- **Chỉ số UV**: 1.6 (Thấp)
 
 ### Times City
-- **Nhiệt độ**: 27.4°C (cảm giác 28.6°C)
-- **Độ ẩm**: 60.0%
-- **Gió**: 5.7 m/s, hướng Nam
+- **Nhiệt độ**: 24.4°C
+- **Độ ẩm**: 78%
 - **Trời**: Có mây
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.6 (thấp)
-- **Hiện tượng đặc biệt**: N",10330,,,
-2026-03-20T15:36:23.520226+07:00,eval_105,105,Nội thành và ngoại thành Hà Nội tối nay nhiệt độ chênh nhau bao nhiêu?,,"Hiện tại, nhiệt độ tối nay ở hai khu vực nội thành và ngoại thành Hà Nội như sau:
+- **Gió**: Đông Nam 3.6 m/s
+- **Áp suất**: 1013 hPa
+- **Điểm sương**: 20.2°C
+- **Chỉ số UV**: 1.6 (Thấp)
 
-### Nội thành (Quận Ba Đình)
-- Nhiệt độ: 27.4°C
-- Thời tiết: Có mây
+### Nhận xét
+- **Mỹ Đình** hiện tại ấm hơn một chút so với **Times City** (",6878,,,
+2026-03-23T10:37:10.170140+07:00,eval_105,105,Nội thành và ngoại thành Hà Nội tối nay nhiệt độ chênh nhau bao nhiêu?,,"Hiện tại, nhiệt độ tối nay ở hai khu vực Hà Nội như sau:
 
-### Ngoại thành (Huyện Thạch Thất)
-- Nhiệt độ: 27.0°C
-- Thời tiết: Có mây
+- **Nội thành (Quận Ba Đình)**: 
+  - Nhiệt độ khoảng 23.0°C
+  - Thời tiết: Trời quang
 
-### Chênh lệch nhiệt độ
-- **Chênh lệch:** 0.4°C (Nội thành 27.4°C, Ngoại thành 27.0°C)
+- **Ngoại thành (Huyện Sóc Sơn)**: 
+  - Nhiệt độ khoảng 22.5°C
+  - Thời tiết: Trời quang
 
-💡 Thời tiết khá dễ chịu, bạn có thể ra ngoài mà không cần lo lắng về nhiệt độ.",8778,,,
-2026-03-20T15:36:31.171940+07:00,eval_106,106,Ngày mai ở Long Biên và Gia Lâm nơi nào có nhiều mưa hơn?,,"Ngày mai, thời tiết ở Long Biên và Gia Lâm như sau:
+### Chênh lệch nhiệt độ:
+- **Nội thành** nóng hơn **Ngoại thành** khoảng **0.5°C**.
 
-### Long Biên
-- **Nhiệt độ trung bình**: 26.5°C
-- **Tổng lượng mưa**: 0.16 mm
-- **Thời tiết**: Có mưa
+💡 Bạn có thể thoải mái ra ngoài tối nay, nhưng vẫn nên mang theo áo khoác nhẹ để tránh lạnh về đêm.",8387,,,
+2026-03-23T10:37:23.797474+07:00,eval_106,106,Ngày mai ở Long Biên và Gia Lâm nơi nào có nhiều mưa hơn?,,"Dự báo thời tiết ngày mai (24/03/2026) cho hai quận Long Biên và Gia Lâm như sau:
 
-### Gia Lâm
-- **Nhiệt độ trung bình**: 25.8°C
-- **Tổng lượng mưa**: 0.14 mm
+### Quận Long Biên
+- **Nhiệt độ trung bình**: 25.5°C
+- **Độ ẩm trung bình**: 73%
+- **Xác suất mưa**: 15% (tổng lượng mưa 0.11 mm)
+- **Thời tiết**: Có mây
+
+### Huyện Gia Lâm
+- **Nhiệt độ trung bình**: 26.8°C
+- **Độ ẩm trung bình**: 62.5%
+- **Xác suất mưa**: 5% (tổng lượng mưa 0.12 mm)
 - **Thời tiết**: Có mây
 
 ### Kết luận
-- **Long Biên** có tổng lượng mưa nhiều hơn Gia Lâm (0.16 mm so với 0.14 mm). 
+- **Long Biên** có xác suất mưa cao hơn (15%) so với **Gia Lâm** (5%). 
+- Nên chuẩn bị ô nếu b",7356,,,
+2026-03-23T10:37:36.197569+07:00,eval_107,107,Hôm nay ở Tây Hồ và Hoàng Mai nơi nào ẩm hơn?,,"Hiện tại, độ ẩm ở hai quận Tây Hồ và Hoàng Mai như sau:
 
-💡 Nên chuẩn bị ô khi ra ngoài ở Long Biên nhé!",7651,,,
-2026-03-20T15:36:40.831818+07:00,eval_107,107,Hôm nay ở Tây Hồ và Hoàng Mai nơi nào ẩm hơn?,,"Hiện tại, độ ẩm ở hai quận Tây Hồ và Hoàng Mai như sau:
+- **Quận Tây Hồ**: 
+  - Độ ẩm trung bình: 75.5%
+  - Độ ẩm cao nhất: 84.5%
 
-- **Tây Hồ**: Độ ẩm trung bình 60.0%
-- **Hoàng Mai**: Độ ẩm trung bình 60.0%
+- **Quận Hoàng Mai**: 
+  - Độ ẩm trung bình: 78.2%
+  - Độ ẩm cao nhất: 87.0%
 
-Cả hai quận đều có độ ẩm tương đương nhau. Nếu bạn có kế hoạch ra ngoài, thời tiết khá dễ chịu!",9660,,,
-2026-03-20T15:36:50.516166+07:00,eval_108,108,Cuối tuần này thời tiết ở nội thành khác ngoại thành Hà Nội như thế nào?,,"Cuối tuần này (20-22/03/2026), thời tiết ở Hà Nội sẽ có sự khác biệt giữa nội thành và ngoại thành như sau:
+💧 **Kết luận**: Quận Hoàng Mai hiện đang ẩm hơn so với quận Tây Hồ. Nếu bạn có kế hoạch ra ngoài, hãy chuẩn bị cho thời tiết ẩm ướt nhé!",8205,,,
+2026-03-23T10:37:50.517030+07:00,eval_108,108,Cuối tuần này thời tiết ở nội thành khác ngoại thành Hà Nội như thế nào?,,"Cuối tuần này (28-29/03/2026), thời tiết ở Hà Nội sẽ có những điểm khác biệt giữa nội thành và ngoại thành như sau:
 
-### Nội thành
-- **Thời tiết**: Chủ yếu có mây, có mưa vào ngày 21 và 22.
-- **Nhiệt độ trung bình**: 26.8 - 27.1°C.
-- **Độ ẩm trung bình**: 67%.
-- **Tổng lượng mưa**: 1.2 mm.
-- **Ngày tốt nhất**: 21/03 với nhiệt độ 27.1°C.
-- **Ngày xấu nhất**: 20/03 với nhiệt độ 26.8°C.
+### Nội thành (Quận Hoàn Kiếm)
+- **Nhiệt độ trung bình**: 25.8°C
+- **Nhiệt độ dao động**: 22.5 - 25.8°C
+- **Độ ẩm trung bình**: 73%
+- **Tổng lượng mưa**: 2.3 mm (có mưa)
+- **Ngày có mưa**: 28/03
+- **Chỉ số UV tối đa**: 5.0 (trung bình)
 
 ### Ngoại thành
-- **Thời tiết**: Tương tự, có mưa vào ngày 21 và 22.
-- **Nhiệt độ trung bình**: 26.8 - 27.1°C.
-- **Độ ẩm",9679,,,
-2026-03-20T15:36:57.321914+07:00,eval_109,109,Chiều nay ở Hồ Gươm thời tiết có phù hợp để đi dạo không?,,"Chiều nay tại Hồ Gươm, thời tiết rất thuận lợi để đi dạo:
+- **Nhiệt độ trung bình**: 25.8°C
+- **Nhiệt độ dao động**: 22.5 - 25.8°C
+- **Độ ẩm trung bình**: 73%
+- **Tổng lượng mưa**: 2.3 mm ",8617,,,
+2026-03-23T10:38:00.824128+07:00,eval_109,109,Chiều nay ở Hồ Gươm thời tiết có phù hợp để đi dạo không?,,"Chiều nay tại Hồ Gươm, thời tiết rất thuận lợi để đi dạo:
 
-- **Nhiệt độ**: Khoảng 26.3°C - 27.3°C
-- **Độ ẩm**: 71% - 75%
-- **Gió**: Nhẹ, khoảng 5.1 - 6.8 m/s, hướng Đông Nam
-- **Trời**: Có mây, không có mưa
+- **Nhiệt độ**: Khoảng 30.5°C lúc 14h và 30.97°C lúc 15h.
+- **Độ ẩm**: Khoảng 45-47%, khá dễ chịu.
+- **Gió**: Gió nhẹ từ Đông Nam với tốc độ 5.4 - 6.0 m/s.
+- **Thời tiết**: Trời có mây, không có mưa.
 
-💡 **Chỉ số thoải mái**: 99/100 (Rất thoải mái) - Thời tiết lý tưởng cho mọi hoạt động ngoài trời.
+💡 **Chỉ số thoải mái**: 98/100 - Rất thoải mái, thời tiết lý tưởng cho các hoạt động ngoài trời.
 
-Bạn có thể thoải mái ra ngoài và tận hưởng không khí trong lành!",6804,,,
-2026-03-20T15:37:03.825920+07:00,eval_110,110,"Tối nay ở Mỹ Đình mình chạy bộ có ổn không, có mưa hay gió to không?",,"Tối nay ở Mỹ Đình, bạn có thể chạy bộ vì thời tiết khá thuận lợi:
+Bạn có thể thoải mái đi dạo và tận hưởng không khí trong lành!",5840,,,
+2026-03-23T10:38:11.787600+07:00,eval_110,110,"Tối nay ở Mỹ Đình mình chạy bộ có ổn không, có mưa hay gió to không?",,"Tối nay ở Mỹ Đình, thời tiết rất thuận lợi cho việc chạy bộ:
 
-- **Nhiệt độ**: Khoảng 25.9°C (cảm giác 26°C)
-- **Độ ẩm**: 74%
-- **Gió**: Đông Nam, tốc độ 5.8 m/s, có thể có gió giật lên đến 10.1 m/s
-- **Trời**: Có mây, không có mưa (xác suất mưa rất thấp)
+- **Thời gian tốt nhất để chạy bộ**:
+  - **22:00**: 23.2°C, gió 4.5 m/s, không có mưa.
+  - **23:00**: 22.9°C, gió 4.4 m/s, không có mưa.
+  - **00:00**: 22.8°C, gió 3.8 m/s, không có mưa.
 
-💡 **Khuyến nghị**: Nên chạy bộ, nhưng hãy chú ý đến gió có thể hơi mạnh. Chúc bạn có một buổi tập luyện vui vẻ!",6504,,,
-2026-03-20T15:37:13.420485+07:00,eval_111,111,Cuối tuần này thời tiết ở Ba Vì có thuận lợi để đi trekking không?,,"Cuối tuần này (21-22/03/2026) thời tiết ở Ba Vì như sau:
+- **Dự báo gió**: Gió nhẹ, không có gió to.
 
-### Thời tiết:
-- **Thứ Bảy (21/03)**: 
-  - Nhiệt độ trung bình: 26.8°C (dao động từ 22.3°C đến 27.1°C)
-  - Độ ẩm: 65%
-  - Có mưa, tổng lượng mưa khoảng 1.6 mm
-  - Xác suất mưa: 95%
-  
-- **Chủ Nhật (22/03)**: 
-  - Nhiệt độ trung bình: 28.0°C (dao động từ 21.8°C đến 28.0°C)
-  - Độ ẩm: 64%
-  - Có mưa, tổng lượng mưa khoảng 1.2 mm
-  - Xác suất mưa: 99%
+- **Dự báo mưa**: Không có khả năng mưa trong tối nay.
 
-### Khuyến nghị cho hoạt động trekking:
-- **Khuyến nghị**: Nên đi trekking vào cuối tuần n",9595,,,
-2026-03-20T15:37:19.476954+07:00,eval_112,112,Ngày mai ở Long Biên có nắng đủ để phơi quần áo ngoài trời không?,,"Ngày mai (21/03/2026) ở quận Long Biên có thời tiết như sau:
+💡 **Khuyến nghị**: Bạn có thể thoải mái chạy bộ mà không cần lo lắng về thời tiết. Chúc bạn có một buổi tập luyện vui vẻ!",6376,,,
+2026-03-23T10:38:23.841349+07:00,eval_111,111,Cuối tuần này thời tiết ở Ba Vì có thuận lợi để đi trekking không?,,"Cuối tuần này, thời tiết ở huyện Ba Vì sẽ thuận lợi cho hoạt động trekking. Dưới đây là thông tin chi tiết:
 
-- Nhiệt độ trung bình: 26.5°C (tối đa 27.9°C, tối thiểu 21.5°C)
-- Độ ẩm trung bình: 72%
-- Trời có mưa nhẹ với tổng lượng mưa khoảng 0.16 mm.
-- Xác suất mưa: 20%
+- **Thời tiết**: Trời nhiều mây, không có mưa.
+- **Nhiệt độ**: Khoảng 26.8°C.
+- **Độ ẩm**: 71%.
+- **Gió**: Tốc độ gió khoảng 2.18 m/s.
 
-💡 Với thời tiết như vậy, có thể có mưa nhẹ, nên bạn nên cân nhắc việc phơi quần áo ngoài trời. Nếu có thể, hãy kiểm tra thời tiết thường xuyên để đảm bảo không bị ướt.",6055,,,
-2026-03-20T15:37:26.920066+07:00,eval_113,113,Tối nay đưa trẻ con đi chơi ở công viên Cầu Giấy có lạnh quá không?,,"Tối nay ở công viên Cầu Giấy, thời tiết sẽ khá dễ chịu với các thông số như sau:
+💡 **Khuyến nghị**: Nên đi trekking vì thời tiết thuận lợi cho hoạt động ngoài trời. Hãy chuẩn bị đầy đủ nước và đồ ăn nhẹ để có một chuyến đi thú vị!",6970,,,
+2026-03-23T10:38:33.945698+07:00,eval_112,112,Ngày mai ở Long Biên có nắng đủ để phơi quần áo ngoài trời không?,,"Ngày mai (24/03/2026) ở quận Long Biên có thời tiết như sau:
 
-- **Nhiệt độ**: Khoảng 24.7°C - 26.0°C
-- **Độ ẩm**: 74% - 83%
-- **Gió**: Nhẹ, khoảng 5.0 - 6.8 m/s, hướng Đông Nam
-- **Trời**: Có mây, không có mưa
+- Nhiệt độ trung bình: 25.5°C (tối đa 28.9°C, tối thiểu 21.8°C)
+- Độ ẩm trung bình: 73%
+- Thời tiết chủ yếu có mây, xác suất mưa thấp (15%), tổng lượng mưa dự kiến 0.11 mm.
 
-Chỉ số thoải mái hiện tại là **100**, được đánh giá là ""Rất thoải mái"". 
+💡 Với thời tiết như vậy, bạn có thể phơi quần áo ngoài trời, nhưng nên chú ý đến độ ẩm cao có thể làm khô chậm hơn.",5398,,,
+2026-03-23T10:38:44.331162+07:00,eval_113,113,Tối nay đưa trẻ con đi chơi ở công viên Cầu Giấy có lạnh quá không?,,"Tối nay ở công viên Cầu Giấy, thời tiết sẽ khá dễ chịu với nhiệt độ khoảng 23.1°C (cảm giác 23.4°C), trời có mây và độ ẩm khoảng 85%. Gió nhẹ từ hướng Đông Nam với tốc độ khoảng 4.3 m/s.
 
-💡 **Khuyến nghị**: Thời tiết lý tưởng cho mọi hoạt động ngoài trời, bạn có thể thoải mái đưa trẻ con đi chơi mà không cần lo lắng về cái lạnh. Hãy tận hưởng thời gian vui vẻ cùng gia đình nhé!",7443,,,
-2026-03-20T15:37:39.278188+07:00,eval_114,114,Sáng mai ở Hà Nội tập thể dục ngoài trời được không?,,"Sáng mai (21/03/2026) ở Hà Nội, thời tiết sẽ như sau:
+💡 **Khuyến nghị**: 
+- Thời tiết rất thoải mái, bạn có thể đưa trẻ con đi chơi mà không cần lo lắng về cái lạnh.
+- Tuy nhiên, có thể mang theo áo khoác nhẹ để phòng trường hợp trời trở lạnh hơn vào buổi tối.
 
-- **Nhiệt độ**: Khoảng 21.9°C - 24.0°C
-- **Độ ẩm**: Khoảng 87% - 90%
-- **Gió**: Gió nhẹ, khoảng 2.7 m/s, hướng Đông
-- **Trời**: Có mây, có khả năng có mưa nhẹ
+Chúc bạn và trẻ có một buổi đi chơi vui vẻ!",5497,,,
+2026-03-23T10:38:57.612474+07:00,eval_114,114,Sáng mai ở Hà Nội tập thể dục ngoài trời được không?,,"Sáng mai (24/03/2026) ở Hà Nội, thời tiết sẽ khá dễ chịu để tập thể dục ngoài trời. Dưới đây là thông tin chi tiết:
 
-💡 **Khuyến nghị**:
-- **Tập thể dục ngoài trời**: Có thể thực hiện, nhưng nên chú ý đến khả năng có mưa nhẹ và độ ẩm cao.
-- **Trang phục**: Nên mặc đồ thoáng mát, có thể mang theo áo mưa hoặc ô để phòng trường hợp mưa.
+- **Nhiệt độ**: Khoảng 22.0°C - 24.0°C
+- **Độ ẩm**: Khoảng 80.5%
+- **Gió**: Đông Nam, tốc độ khoảng 3.3 m/s
+- **Thời tiết**: Có mây, không có mưa
 
-Chúc bạn có một buổi tập thể dục vui vẻ!",12357,,,
-2026-03-20T15:37:49.603507+07:00,eval_115,115,Cuối tuần này đi chụp ảnh ở Hồ Tây thì thời tiết có đẹp không?,,"Cuối tuần này (21-22/03/2026) thời tiết ở Hồ Tây sẽ có một số điểm cần lưu ý:
+💡 **Khuyến nghị**: Bạn có thể thoải mái tập thể dục ngoài trời. Tuy nhiên, nên mang theo nước để giữ ẩm và tránh ra ngoài quá lâu vào giữa trưa khi nhiệt độ có thể tăng cao hơn.",8883,,,
+2026-03-23T10:39:08.857483+07:00,eval_115,115,Cuối tuần này đi chụp ảnh ở Hồ Tây thì thời tiết có đẹp không?,,"Cuối tuần này (28-29/03/2026) thời tiết ở Hồ Tây sẽ như sau:
 
 ### Thời tiết:
-- **Thứ Bảy (21/03)**: 
-  - Nhiệt độ trung bình: 27.1°C (dao động từ 21.9 - 27.2°C)
-  - Độ ẩm: 62%
-  - Có mưa, xác suất mưa 100%, tổng lượng mưa khoảng 0.5 mm.
+- **Thứ Bảy (28/03)**: 
+  - Nhiệt độ trung bình: 26.3°C (dao động từ 22.7°C đến 29.6°C)
+  - Độ ẩm: 75%
+  - Trời có mây, không có mưa (xác suất mưa 0%).
   
-- **Chủ Nhật (22/03)**: 
-  - Nhiệt độ trung bình: 26.7°C (dao động từ 21.0 - 27.9°C)
-  - Độ ẩm: 65%
-  - Có mưa, xác suất mưa 100%, tổng lượng mưa khoảng 0.47 mm.
+- **Chủ Nhật (29/03)**: 
+  - Nhiệt độ trung bình: 29.8°C (dao động từ 23.0°C đến 29.8°C)
+  - Độ ẩm: 63%
+  - Có khả năng mưa nhẹ (xác suất mưa 1%, tổng lượng mưa 6.9mm).
 
 ### Khuyến nghị chụp ảnh:
-- **Thời điểm tốt nhất**: 
-  - 16:00 - 20:00 ngày 20/0",10320,,,
-2026-03-20T15:37:58.040712+07:00,eval_116,116,Thứ bảy này đi xe máy từ Hà Nội về Hòa Bình có gặp mưa không?,,"Thứ Bảy này (21/03/2026), thời tiết Hà Nội dự báo có mưa với xác suất cao. Cụ thể:
+- **Ngày đẹp nhất**: Thứ Bảy (28/03) sẽ là ngày lý tưởng để chụp ảnh với",6810,,,
+2026-03-23T10:39:18.158718+07:00,eval_116,116,Thứ bảy này đi xe máy từ Hà Nội về Hòa Bình có gặp mưa không?,,"Thứ Bảy này (ngày 28/03/2026), thời tiết Hà Nội có thể có mưa. Dự báo có xác suất mưa khoảng 32% với tổng lượng mưa dự kiến là 0.77 mm. 
 
-- **Nhiệt độ trung bình**: 26.4°C
-- **Mưa**: Tổng lượng mưa dự kiến khoảng 1.35 mm
-- **Độ ẩm**: 65.9%
+- **Nhiệt độ trung bình**: 26.7°C
+- **Độ ẩm**: 72.4%
+- **Gió**: Đông Nam
 
-💡 **Khuyến nghị**: Nên mang ô khi đi xe máy từ Hà Nội về Hòa Bình để tránh bị ướt. Hãy cẩn thận khi di chuyển trong thời tiết mưa!",8437,,,
-2026-03-20T15:38:15.818355+07:00,eval_117,117,Hôm nay thời tiết Hà Nội có thích hợp để tổ chức sự kiện ngoài trời không?,,"Thời tiết Hà Nội hôm nay khá thích hợp để tổ chức sự kiện ngoài trời. Cụ thể như sau:
+💡 Nên chuẩn bị ô khi đi xe máy để tránh bị ướt nhé!",5146,,,
+2026-03-23T10:41:15.541498+07:00,eval_117,117,Hôm nay thời tiết Hà Nội có thích hợp để tổ chức sự kiện ngoài trời không?,,,117383,,"Recursion limit of 25 reached without hitting a stop condition. You can increase the limit by setting the `recursion_limit` config key.
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/GRAPH_RECURSION_LIMIT",
+2026-03-23T10:41:27.566758+07:00,eval_118,118,Ngày mai ở Đan Phượng có thuận lợi để làm nông ngoài trời không?,,"Ngày mai (24/03/2026) ở huyện Đan Phượng có thời tiết thuận lợi cho hoạt động làm nông ngoài trời:
 
-- **Nhiệt độ**: 27.4°C (cảm giác 28.8°C)
+- **Nhiệt độ**: 20.6°C - 31.1°C
+- **Độ ẩm**: 59.3%
 - **Thời tiết**: Có mây
-- **Độ ẩm**: 61.2%
-- **Gió**: Đông Nam 5.4 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.8 (trung bình)
+- **Gió**: Đông Nam, tốc độ 4.9 m/s
+- **Xác suất mưa**: 7% (rất thấp)
 
-💡 **Khuyến nghị**:
-- Nên tổ chức sự kiện vào buổi chiều, thời tiết sẽ dễ chịu hơn.
-- Mang theo nước uống để giữ sức khỏe.
-- Nếu có hoạt động ngoài trời kéo dài, hãy chuẩn bị các biện pháp chống nắng.
+💡 **Khuyến nghị**: Nên làm nông ngoài trời vì thời tiết thuận lợi cho hoạt động này. Chúc bạn có một ngày làm việc hiệu quả!",8397,,,
+2026-03-23T10:41:36.724998+07:00,eval_119,119,Sáng chủ nhật ở Hồ Gươm đi bộ có bị ướt mưa không?,,"Sáng Chủ nhật (ngày 26/03/2026) tại Hồ Gươm, thời tiết sẽ như sau:
 
-Chúc bạn có một sự kiện thành công!",17778,,,
-2026-03-20T15:38:24.772887+07:00,eval_118,118,Ngày mai ở Đan Phượng có thuận lợi để làm nông ngoài trời không?,,"Ngày mai (21/03/2026) ở Đan Phượng có thời tiết thuận lợi cho hoạt động làm nông ngoài trời:
+- **Nhiệt độ**: Khoảng 27.9°C lúc 11h.
+- **Trời**: Có mây, không có mưa.
+- **Độ ẩm**: 54%.
+- **Gió**: Từ hướng Nam, tốc độ 4.7 m/s.
 
-- **Nhiệt độ**: 26.9°C
-- **Độ ẩm**: 68%
-- **Thời tiết**: Có mây che phủ
-- **Xác suất mưa**: 0% (không có mưa)
-- **Gió**: 7.76 m/s (Đông Nam)
+💡 **Kết luận**: Bạn có thể thoải mái đi bộ ở Hồ Gươm mà không lo bị ướt mưa. Chúc bạn có một buổi sáng vui vẻ!",5337,,,
+2026-03-23T10:41:48.770400+07:00,eval_120,120,Chiều nay ở sân Mỹ Đình thời tiết có ổn để xem bóng đá ngoài trời không?,,"Chiều nay tại sân Mỹ Đình, thời tiết sẽ như sau:
 
-💡 **Khuyến nghị**: Nên làm nông ngoài trời vì thời tiết thuận lợi cho hoạt động này.",8954,,,
-2026-03-20T15:38:31.328486+07:00,eval_119,119,Sáng chủ nhật ở Hồ Gươm đi bộ có bị ướt mưa không?,,"Sáng Chủ nhật (ngày 21/03/2026) ở Hồ Gươm, thời tiết sẽ như sau:
+- **Thời gian**: Từ 13h đến 16h
+- **Nhiệt độ**: 
+  - 13h: 26.7°C
+  - 14h: 27.0°C
+  - 15h: 29.1°C
+  - 16h: 29.4°C
+- **Độ ẩm**: Khoảng 56-69%
+- **Trời**: Có mây, không có mưa (xác suất mưa 0%)
+- **Gió**: Tốc độ gió khoảng 5.4 m/s, hướng Đông Nam
 
-- **Thời gian**: Từ 6h đến 12h
-- **Nhiệt độ**: Khoảng 22.0°C - 27.1°C
-- **Thời tiết**: Có mây, nhưng sẽ có mưa vào khoảng 10h đến 13h.
-- **Xác suất mưa**: Từ 68% đến 98% trong khoảng thời gian này.
-- **Gió**: Đông Nam, tốc độ khoảng 3-6 m/s.
+💡 **Khuyến nghị**: Thời tiết thuận lợi cho hoạt động ngoài trời, bạn có thể thoải mái xem bóng đá mà không lo mưa. Hãy chuẩn bị nước uống để giữ sức nhé!",7303,,,
+2026-03-23T10:41:57.592120+07:00,eval_121,121,Hiện tại ở Hà Nội áp suất khí quyển là bao nhiêu hPa?,,"Hiện tại, áp suất khí quyển ở Hà Nội là 1012.9 hPa. 
 
-💡 **Khuyến nghị**: Nên mang ô khi đi bộ vào sáng Chủ nhật, đặc biệt là từ 10h trở đi, vì có khả năng mưa cao.",6556,,,
-2026-03-20T15:38:38.475854+07:00,eval_120,120,Chiều nay ở sân Mỹ Đình thời tiết có ổn để xem bóng đá ngoài trời không?,,"Chiều nay tại sân Mỹ Đình, thời tiết sẽ như sau:
+Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",5092,,,
+2026-03-23T10:42:07.096832+07:00,eval_122,122,Điểm sương (dew point) ở quận Đống Đa bây giờ là bao nhiêu?,,"Hiện tại, điểm sương (dew point) ở quận Đống Đa là 20.1°C. 
 
-- **16:00**: Nhiệt độ 27.5°C, độ ẩm 66%, trời nhiều mây.
-- **17:00**: Nhiệt độ 26.7°C, độ ẩm 68%, trời nhiều mây.
-- **18:00**: Nhiệt độ 26.1°C, độ ẩm 71%, trời nhiều mây.
-- **19:00**: Nhiệt độ 25.9°C, độ ẩm 74%, trời nhiều mây.
-- **20:00**: Nhiệt độ 24.9°C, độ ẩm 77%, trời nhiều mây.
+💡 Thời tiết đang oi bức, bạn nên chú ý giữ nước và tránh ra ngoài quá lâu nhé!",5740,,,
+2026-03-23T10:42:20.223717+07:00,eval_123,123,"Chỉ số UV trưa nay ở Tây Hồ khoảng mức nào, có cần chống nắng mạnh không?",,"Trưa nay tại quận Tây Hồ, chỉ số UV sẽ đạt mức cao nhất là 4.09 vào khoảng 12h. Đây là mức UV trung bình, nhưng vẫn có thể gây hại cho da nếu bạn ở ngoài trời lâu mà không có biện pháp bảo vệ.
 
-💡 **Khuyến nghị**: Thời tiết thuận lợi cho hoạt động ngoài trời, bạn có thể thoải mái xem bóng đá. Tuy nhiên, nên mang theo nước uống để giữ sức khỏe nhé!",7146,,,
-2026-03-20T15:38:43.941511+07:00,eval_121,121,Hiện tại ở Hà Nội áp suất khí quyển là bao nhiêu hPa?,,"Hiện tại, áp suất khí quyển ở Hà Nội là 1011 hPa. 
+💡 Khuyến nghị:
+- Nên sử dụng kem chống nắng và đội mũ khi ra ngoài.
+- Mang theo kính râm để bảo vệ mắt. 
 
-Nếu bạn có thêm câu hỏi nào khác về thời tiết, hãy cho mình biết nhé!",5464,,,
-2026-03-20T15:38:52.358416+07:00,eval_122,122,Điểm sương (dew point) ở quận Đống Đa bây giờ là bao nhiêu?,,"Hiện tại, điểm sương (dew point) ở quận Đống Đa là 19.1°C. 
+Chúc bạn có một ngày vui vẻ và an toàn!",7936,,,
+2026-03-23T10:42:30.383447+07:00,eval_124,124,Tổng lượng mưa trong ngày hôm qua ở Gia Lâm là bao nhiêu mm?,,"Trong ngày hôm qua (22/03/2026), tổng lượng mưa ở Gia Lâm là **0.0 mm**. Thời tiết chủ yếu là nhiều mây. Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",5841,,,
+2026-03-23T10:42:42.471054+07:00,eval_125,125,Độ che phủ mây chiều nay ở Ba Đình khoảng bao nhiêu phần trăm?,,"Chiều nay ở quận Ba Đình, độ che phủ mây sẽ dao động từ 87% đến 98%. Cụ thể:
 
-- Nhiệt độ trung bình: 27.5°C
-- Độ ẩm trung bình: 60%
-- Gió: Đông Nam 5.7 m/s
+- 14:00: 98% mây
+- 15:00: 93% mây
+- 16:00: 87% mây
 
-💡 Thời tiết khá dễ chịu, bạn có thể ra ngoài nhưng nên mang theo nước nhé!",8416,,,
-2026-03-20T15:39:01.128208+07:00,eval_123,123,"Chỉ số UV trưa nay ở Tây Hồ khoảng mức nào, có cần chống nắng mạnh không?",,"Hiện tại, chỉ số UV ở quận Tây Hồ khoảng 2.67, được đánh giá là ""Thấp"". 
+💡 Nên chuẩn bị sẵn ô nếu bạn có kế hoạch ra ngoài nhé!",6170,,,
+2026-03-23T10:43:01.691354+07:00,eval_126,126,Chỉ số cảm giác lạnh do gió (wind chill) tối nay ở Hà Nội là bao nhiêu?,,"Tối nay, chỉ số cảm giác lạnh do gió (wind chill) ở Hà Nội sẽ không được tính toán cụ thể, nhưng với nhiệt độ trung bình khoảng 30.0°C và gió nhẹ khoảng 6.3 m/s, cảm giác sẽ khá dễ chịu. 
 
-### Khuyến nghị:
-- Bạn không cần phải chống nắng mạnh, nhưng vẫn nên sử dụng kem chống nắng nếu ra ngoài lâu.
-- Hãy nhớ mang theo nước để giữ cơ thể luôn đủ nước nhé!",8770,,,
-2026-03-20T15:39:08.342870+07:00,eval_124,124,Tổng lượng mưa trong ngày hôm qua ở Gia Lâm là bao nhiêu mm?,,"Trong ngày hôm qua (19/03/2026), tổng lượng mưa ở Gia Lâm là 0.0 mm. Thời tiết chủ yếu có mây, không có mưa.",7215,,,
-2026-03-20T15:39:17.526900+07:00,eval_125,125,Độ che phủ mây chiều nay ở Ba Đình khoảng bao nhiêu phần trăm?,,"Chiều nay, độ che phủ mây ở quận Ba Đình khoảng từ 82% đến 85%. 
+💡 Tuy nhiên, nếu bạn ra ngoài, hãy mặc đồ thoải mái và có thể mang theo nước để giữ ẩm.",14413,,,
+2026-03-23T10:43:09.579279+07:00,eval_127,127,Gió giật mạnh nhất hôm nay ở Hà Nội là bao nhiêu m/s?,,"Hiện tại không có cảnh báo về gió giật mạnh ở Hà Nội. Nếu bạn cần thông tin chi tiết hơn về thời tiết, hãy cho mình biết nhé!",3450,,,
+2026-03-23T10:43:20.823767+07:00,eval_128,128,Áp suất khí quyển tối nay ở Hà Nội tăng hay giảm so với chiều?,,"Áp suất khí quyển ở Hà Nội tối nay có sự thay đổi như sau:
 
-- **16:00**: 82.4%
-- **17:00**: 84.0%
-- **18:00**: 85.0%
-- **19:00**: 85.0%
-- **20:00**: 72.6%
+- **Chiều (15h)**: 1008.1 hPa
+- **Tối (21h)**: 1011.0 hPa
 
-💡 Bạn nên chuẩn bị sẵn ô nếu có kế hoạch ra ngoài nhé!",9163,,,
-2026-03-20T15:39:26.520052+07:00,eval_126,126,Chỉ số cảm giác lạnh do gió (wind chill) tối nay ở Hà Nội là bao nhiêu?,,"Hiện tại, mình không thể cung cấp chỉ số cảm giác lạnh do gió (wind chill) cho tối nay ở Hà Nội. Tuy nhiên, mình có thể cho bạn biết một số thông tin thời tiết hiện tại:
+Như vậy, áp suất khí quyển tối nay tăng so với chiều. 
 
-- Nhiệt độ: 27.4°C
-- Độ ẩm: 61.2%
-- Gió: 5.4 m/s (hướng Đông Nam)
+💡 Bạn nên chú ý thời tiết và có thể mang theo ô vì có khả năng mưa vào buổi tối.",5916,,,
+2026-03-23T10:43:29.642987+07:00,eval_129,129,Điểm sương sáng mai ở Hà Nội có ngưỡng gây sương mù không?,,"Sáng mai, điểm sương ở Hà Nội dự kiến là 19.6°C. Với mức điểm sương này, có khả năng gây ra sương mù, đặc biệt là khi nhiệt độ không khí giảm xuống gần mức điểm sương.
 
-Nếu bạn cần thêm thông tin khác hoặc có câu hỏi nào khác, hãy cho mình biết nhé!",8993,,,
-2026-03-20T15:39:32.699242+07:00,eval_127,127,Gió giật mạnh nhất hôm nay ở Hà Nội là bao nhiêu m/s?,,"Gió giật mạnh nhất hôm nay ở Hà Nội đạt 11.53 m/s. 
+💡 Nếu bạn ra ngoài sáng mai, hãy chú ý đến tình trạng sương mù có thể xảy ra.",4504,,,
+2026-03-23T10:43:39.027759+07:00,eval_130,130,Độ che phủ mây lúc hoàng hôn ở Hồ Tây chiều nay là bao nhiêu?,,"Chiều nay, độ che phủ mây tại Hồ Tây sẽ như sau:
 
-Nếu bạn có kế hoạch ra ngoài, hãy chú ý đến gió mạnh nhé!",6179,,,
-2026-03-20T15:39:40.291202+07:00,eval_128,128,Áp suất khí quyển tối nay ở Hà Nội tăng hay giảm so với chiều?,,"Hiện tại, mình không thể lấy được dữ liệu áp suất khí quyển cho Hà Nội tối nay. Tuy nhiên, theo thông tin có sẵn, áp suất khí quyển chiều nay (16h) là 1010 hPa và có thể tăng lên 1013 hPa vào lúc 20h. 
+- **15:00**: 94% mây
+- **16:00**: 86.5% mây
 
-Điều này cho thấy áp suất khí quyển tối nay sẽ tăng so với chiều. Nếu bạn cần thêm thông tin gì khác, hãy cho mình biết nhé!",7592,,,
-2026-03-20T15:39:47.223914+07:00,eval_129,129,Điểm sương sáng mai ở Hà Nội có ngưỡng gây sương mù không?,,"Hiện tại mình không thể lấy được dữ liệu thời tiết cho sáng mai. Tuy nhiên, để có sương mù, điểm sương thường cần phải ở mức gần bằng hoặc thấp hơn nhiệt độ không khí. Nếu bạn có thêm thông tin cụ thể về thời tiết hiện tại, mình có thể giúp bạn phân tích thêm!",6932,,,
-2026-03-20T15:39:55.821433+07:00,eval_130,130,Độ che phủ mây lúc hoàng hôn ở Hồ Tây chiều nay là bao nhiêu?,,"Chiều nay, độ che phủ mây tại Hồ Tây như sau:
+💡 Nên chuẩn bị cho một buổi chiều có nhiều mây, có thể không có ánh nắng mạnh.",4688,,,
+2026-03-23T10:43:49.224350+07:00,eval_131,131,Chiều nay ở Hà Nội có khả năng xảy ra mưa dông mạnh không?,,"Chiều nay ở Hà Nội không có cảnh báo mưa dông mạnh. Dự báo thời tiết cho chiều nay như sau:
 
-- **16:00**: 93%
-- **17:00**: 93%
-- **18:00**: 91.5%
-- **19:00**: 89%
-- **20:00**: 61%
-- **21:00**: 60%
+- **13h**: Nhiệt độ 27.5°C, độ ẩm 64.3%, trời có mây.
+- **14h**: Nhiệt độ 28.1°C, độ ẩm 61.4%, trời có mây.
+- **15h**: Nhiệt độ 29.4°C, độ ẩm 55.0%, trời có mây.
+- **16h**: Nhiệt độ 29.5°C, độ ẩm 54.0%, trời có mây.
 
-💡 Lưu ý: Trời có nhiều mây, bạn có thể chuẩn bị cho một buổi chiều mát mẻ và thoải mái khi ra ngoài!",8597,,,
-2026-03-20T15:40:01.051073+07:00,eval_131,131,Chiều nay ở Hà Nội có khả năng xảy ra mưa dông mạnh không?,,"Hiện tại không có cảnh báo thời tiết nguy hiểm nào cho Hà Nội. Tuy nhiên, mình không thể lấy được thông tin dự báo thời tiết theo giờ cho chiều nay. Bạn có thể thử hỏi lại sau hoặc kiểm tra thời tiết gần hơn nhé!",5230,,,
-2026-03-20T15:40:12.920823+07:00,eval_132,132,Mấy ngày tới ở Bắc Từ Liêm có đợt rét đậm rét hại nào không?,,"Trong những ngày tới ở Bắc Từ Liêm, không có đợt rét đậm hay rét hại nào. Thời tiết sẽ ấm dần lên với nhiệt độ tối thiểu khoảng 20.65°C vào ngày 23/03 và tối đa lên đến 33.55°C vào ngày 26/03. 
+💡 Trời có thể oi bức, bạn nên mang nước và tránh ra ngoài trong khoảng thời gian nắng gắt.",5383,,,
+2026-03-23T10:44:00.991108+07:00,eval_132,132,Mấy ngày tới ở Bắc Từ Liêm có đợt rét đậm rét hại nào không?,,"Trong những ngày tới ở Bắc Từ Liêm, không có đợt rét đậm hay rét hại nào. Thời tiết sẽ ấm dần lên với nhiệt độ tối đa có thể đạt tới 32.5°C vào ngày 26/03. Dưới đây là dự báo chi tiết:
 
-Dưới đây là tóm tắt thời tiết trong 7 ngày tới:
+- **23/03**: Nhiệt độ từ 22.1°C đến 29.3°C, có mưa.
+- **24/03**: Nhiệt độ từ 21.7°C đến 30.6°C, có mây.
+- **25/03**: Nhiệt độ từ 21.8°C đến 32.2°C, có mây.
+- **26/03**: Nhiệt độ từ 21.6°C đến 32.5°C, có mây.
+- **27/03**: Nhiệt độ từ 22.3°C đến 27.1°C, có mưa.
+- **28/03**: Nhiệt độ từ 22.8°C đến 29.9°C, có mây.
+- ",7515,,,
+2026-03-23T10:44:08.720908+07:00,eval_133,133,Tuần này Hà Nội có đợt nắng nóng gay gắt nào không?,,"Hiện tại, Hà Nội không có cảnh báo nào về nắng nóng gay gắt trong tuần này. Thời tiết có vẻ ổn định và dễ chịu. Nếu bạn cần thêm thông tin, hãy cho mình biết nhé!",3579,,,
+2026-03-23T10:44:17.646709+07:00,eval_134,134,Tối nay ở Sóc Sơn có cảnh báo giông lốc nguy hiểm không?,,Tối nay ở Sóc Sơn không có cảnh báo giông lốc nguy hiểm. Bạn có thể yên tâm ra ngoài!,4182,,,
+2026-03-23T10:44:25.043811+07:00,eval_135,135,Cuối tuần này có bão hay áp thấp nhiệt đới ảnh hưởng đến Hà Nội không?,,"Hiện tại không có cảnh báo bão hay áp thấp nhiệt đới nào ảnh hưởng đến Hà Nội trong cuối tuần này. Tuy nhiên, mình không thể kiểm tra các hiện tượng thời tiết đặc biệt. Bạn có thể theo dõi thông tin thời tiết thường xuyên để cập nhật tình hình nhé!",3765,,,
+2026-03-23T10:44:33.859880+07:00,eval_136,136,Ngày mai có cảnh báo thời tiết nguy hiểm nào ở Hà Nội không?,,Hiện tại không có cảnh báo thời tiết nguy hiểm nào ở Hà Nội cho ngày mai. Bạn có thể yên tâm ra ngoài!,4173,,,
+2026-03-23T10:44:45.398029+07:00,eval_137,137,Mưa lớn tối nay ở Hà Nội có thể gây ngập ở khu vực nào không?,,"Hiện tại, không có cảnh báo thời tiết nào cho Hà Nội, nhưng dự báo cho thấy có khả năng mưa lớn tối nay. 
 
-- **20/03**: Nhiệt độ từ 21.54°C đến 27.57°C, có mưa.
-- **21/03**: Nhiệt độ từ 21.97°C đến 27.20°C, có mưa.
-- **22/03**: Nhiệt độ từ 21.12°C đến 27.91°C, có mưa.
-- **23/03**: Nhiệt độ từ 20.65°C đến 30.13°C, có mây.
-- **24/03**: Nhiệt độ từ 21.41°C đến 32.",11870,,,
-2026-03-20T15:40:18.261010+07:00,eval_133,133,Tuần này Hà Nội có đợt nắng nóng gay gắt nào không?,,"Hiện tại không có cảnh báo nào về nắng nóng gay gắt cho tuần này tại Hà Nội. Thời tiết có thể sẽ ổn định và không có đợt nắng nóng đặc biệt nào. Nếu bạn cần thông tin chi tiết hơn về thời tiết trong tuần, hãy cho mình biết nhé!",5340,,,
-2026-03-20T15:40:23.235072+07:00,eval_134,134,Tối nay ở Sóc Sơn có cảnh báo giông lốc nguy hiểm không?,,"Hiện tại, ở Sóc Sơn không có cảnh báo giông lốc nguy hiểm nào. Bạn có thể yên tâm ra ngoài tối nay!",4974,,,
-2026-03-20T15:40:29.469902+07:00,eval_135,135,Cuối tuần này có bão hay áp thấp nhiệt đới ảnh hưởng đến Hà Nội không?,,"Hiện tại không có cảnh báo bão hay áp thấp nhiệt đới nào ảnh hưởng đến Hà Nội trong cuối tuần này. Tuy nhiên, mình không thể kiểm tra được các hiện tượng thời tiết đặc biệt. Bạn có thể theo dõi thông tin thời tiết thường xuyên để cập nhật tình hình nhé!",6235,,,
-2026-03-20T15:40:34.590528+07:00,eval_136,136,Ngày mai có cảnh báo thời tiết nguy hiểm nào ở Hà Nội không?,,"Ngày mai, Hà Nội không có cảnh báo thời tiết nguy hiểm nào. Bạn có thể yên tâm ra ngoài!",5121,,,
-2026-03-20T15:40:40.293458+07:00,eval_137,137,Mưa lớn tối nay ở Hà Nội có thể gây ngập ở khu vực nào không?,,"Hiện tại không có cảnh báo thời tiết nguy hiểm nào cho Hà Nội. Tuy nhiên, mình không thể lấy được thông tin dự báo thời tiết theo giờ cho tối nay. Bạn có thể theo dõi thời tiết thường xuyên để cập nhật tình hình mưa. Nếu có mưa lớn, các khu vực trũng thấp có thể bị ngập. Hãy cẩn thận khi di chuyển nhé!",5703,,,
-2026-03-20T15:40:53.142679+07:00,eval_138,138,Đợt lạnh sắp tới ở Hà Nội nhiệt độ có thể xuống bao thấp?,,"Hiện tại, mình không thể xác định được thông tin cụ thể về đợt lạnh sắp tới ở Hà Nội. Tuy nhiên, theo dự báo, nhiệt độ có thể giảm xuống khoảng 20°C trong những ngày tới. 
+Dưới đây là thông tin dự báo thời tiết cho tối nay (từ 18h đến 22h):
+- **18h**: Nhiệt độ khoảng 29.5°C, độ ẩm 54%, trời có mây.
+- **19h**: Nhiệt độ khoảng 29.0°C, độ ẩm 56%, trời có mây.
+- **20h**: Nhiệt độ khoảng 28.5°C, độ ẩm 58%, trời có mây.
+- **21h**: Nhiệt độ khoảng 27.8°C, độ ẩm 60%, trời có mây.
+- **22h**: Nhiệt độ khoảng 27.0°C, độ ẩm 62%, trời có mây.
 
-Nếu bạn cần thêm thông tin chi tiết hơn, hãy cho mình biết nhé!",12847,,,
-2026-03-20T15:40:59.070652+07:00,eval_139,139,Hà Nội hôm nay có cảnh báo nắng nóng cực đoan không?,,"Hiện tại, Hà Nội không có cảnh báo nắng nóng cực đoan nào. Thời tiết vẫn trong mức bình thường. Nếu bạn cần thêm thông tin gì, hãy cho mình biết nhé!",5927,,,
-2026-03-20T15:41:03.136279+07:00,eval_140,140,Tuần tới ở Hà Nội có nguy cơ mưa giông kèm lốc xoáy không?,,Hiện tại không có cảnh báo nào về nguy cơ mưa giông kèm lốc xoáy ở Hà Nội trong tuần tới. Bạn có thể yên tâm về thời tiết trong thời gian này!,4066,,,
-2026-03-20T15:41:05.794238+07:00,eval_141,141,Trời Hà Nội dạo này khó chịu quá nhỉ?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn muốn biết cụ thể về thời tiết hiện tại hay dự báo trong thời gian tới không?,2653,,,
-2026-03-20T15:41:12.719281+07:00,eval_142,142,Không biết mai có mưa không nhỉ?,,"Ngày mai (21/03/2026), thời tiết Hà Nội dự báo có mưa với xác suất khoảng 5.3%. 
+Mặc dù không có cảnh báo cụ ",5557,,,
+2026-03-23T10:44:57.014264+07:00,eval_138,138,Đợt lạnh sắp tới ở Hà Nội nhiệt độ có thể xuống bao thấp?,,"Hiện tại, Hà Nội đang có nhiệt độ khoảng 24.8°C với độ ẩm 75%. Dự báo trong những ngày tới, nhiệt độ có thể giảm xuống mức thấp nhất khoảng 21°C vào ban đêm. 
 
-- Nhiệt độ trung bình: 27.4°C
-- Độ ẩm trung bình: 61.2%
-- Gió: 5.4 m/s, hướng Nam
+Nếu có đợt lạnh sắp tới, nhiệt độ có thể xuống dưới 20°C, nhưng hiện tại chưa có thông tin cụ thể về mức thấp nhất. Bạn nên theo dõi thường xuyên để cập nhật thông tin mới nhất nhé!",6554,,,
+2026-03-23T10:45:06.217389+07:00,eval_139,139,Hà Nội hôm nay có cảnh báo nắng nóng cực đoan không?,,"Hiện tại, Hà Nội không có cảnh báo nắng nóng cực đoan nào. Thời tiết vẫn ổn định. Nếu bạn cần thêm thông tin gì, hãy cho mình biết nhé!",4124,,,
+2026-03-23T10:45:15.607031+07:00,eval_140,140,Tuần tới ở Hà Nội có nguy cơ mưa giông kèm lốc xoáy không?,,"Hiện tại, không có cảnh báo nào về nguy cơ mưa giông kèm lốc xoáy ở Hà Nội trong tuần tới. Bạn có thể yên tâm về thời tiết trong thời gian này!",4811,,,
+2026-03-23T10:45:20.205004+07:00,eval_141,141,Trời Hà Nội dạo này khó chịu quá nhỉ?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn muốn biết cụ thể về thời tiết hiện tại hay dự báo trong thời gian tới không?,2500,,,
+2026-03-23T10:45:28.896980+07:00,eval_142,142,Không biết mai có mưa không nhỉ?,,"Ngày mai (24/03/2026) thời tiết Hà Nội sẽ có mây, nhiệt độ dao động từ 20.3°C đến 32.5°C, độ ẩm trung bình khoảng 64.7%. 
 
-💡 Nên mang ô khi ra ngoài để đề phòng mưa nhé!",6923,,,
-2026-03-20T15:41:21.396627+07:00,eval_143,143,"Ngoài trời lạnh quá, có nên mặc áo phao không?",,"Hiện tại, thời tiết Hà Nội đang ở mức 27.4°C, có mây và độ ẩm khoảng 61%. Trời không quá lạnh, nhưng nếu bạn cảm thấy lạnh và có ý định ra ngoài, việc mặc áo phao là một lựa chọn tốt để giữ ấm.
+- **Xác suất mưa**: 14% (khá thấp)
+- **Lượng mưa dự kiến**: 0.19 mm
 
-💡 Khuyến nghị: Nếu bạn dễ bị lạnh, hãy mặc áo phao hoặc áo khoác ấm khi ra ngoài nhé!",8676,,,
-2026-03-20T15:41:29.720750+07:00,eval_144,144,Bạn có thể tư vấn hôm nay nên mặc gì không?,,"Hôm nay, thời tiết Hà Nội khá dễ chịu với nhiệt độ khoảng 27.4°C, độ ẩm 61.2%. Trời có mây và gió nhẹ từ hướng Đông Nam.
+Có thể sẽ không có mưa lớn, nhưng bạn vẫn nên chuẩn bị sẵn ô nếu ra ngoài nhé!",4959,,,
+2026-03-23T10:45:44.299884+07:00,eval_143,143,"Ngoài trời lạnh quá, có nên mặc áo phao không?",,"Hiện tại, thời tiết Hà Nội đang ở mức 24.8°C với độ ẩm 75%. Trời có mây và gió nhẹ từ hướng Đông Nam. 
+
+Với nhiệt độ này, bạn không cần mặc áo phao, nhưng có thể mặc áo khoác nhẹ để cảm thấy thoải mái hơn khi ra ngoài. Nếu bạn cảm thấy lạnh, hãy mang theo một chiếc khăn hoặc áo khoác mỏng nhé!",10275,,,
+2026-03-23T10:45:57.184052+07:00,eval_144,144,Bạn có thể tư vấn hôm nay nên mặc gì không?,,"Hôm nay, thời tiết Hà Nội khá dễ chịu với nhiệt độ khoảng 25-29°C, có mây và độ ẩm khoảng 70-75%. 
 
 ### Khuyến nghị trang phục:
 - **Áo phông hoặc áo sơ mi nhẹ**: Thích hợp cho thời tiết ấm áp.
 - **Quần dài hoặc quần short**: Tùy thuộc vào sở thích cá nhân.
 - **Giày thể thao hoặc dép**: Thoải mái khi di chuyển.
+- **Mang theo áo khoác nhẹ**: Để phòng trường hợp trời trở lạnh vào buổi tối.
 
-💡 **Lưu ý**: Nếu bạn ra ngoài vào buổi chiều, có thể mang theo ô vì có khả năng mưa nhẹ.",8323,,,
-2026-03-20T15:41:31.733348+07:00,eval_145,145,Sao Hà Nội hôm nay nắng đẹp thế?,,"Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Nếu bạn cần biết thêm chi tiết về thời tiết hôm nay, hãy cho mình biết nhé!",2013,,,
-2026-03-20T15:41:39.950613+07:00,eval_146,146,Mình cần mang ô đi làm hôm nay không?,,"Hiện tại, thời tiết Hà Nội có mây, nhiệt độ khoảng 27.4°C, độ ẩm 61.2%. Tuy nhiên, có khả năng mưa nhẹ trong khoảng thời gian tới.
+💡 Nên mang theo nước uống để giữ cơ thể luôn đủ nước trong thời tiết ấm áp này!",8396,,,
+2026-03-23T10:46:02.081031+07:00,eval_145,145,Sao Hà Nội hôm nay nắng đẹp thế?,,"Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Nếu bạn cần biết thời tiết cụ thể hôm nay, mình có thể cung cấp thông tin chi tiết hơn!",2543,,,
+2026-03-23T10:46:12.886047+07:00,eval_146,146,Mình cần mang ô đi làm hôm nay không?,,"Hiện tại, thời tiết Hà Nội có mây, nhiệt độ khoảng 24.8°C, độ ẩm 75%. Dự báo trong vài giờ tới không có khả năng mưa (xác suất mưa 0%).
 
-💡 Để an toàn, bạn nên mang ô khi ra ngoài làm việc hôm nay nhé!",8217,,,
-2026-03-20T15:41:42.216887+07:00,eval_147,147,Thời tiết mấy hôm nay hay thay đổi quá bạn nhỉ?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn muốn hỏi về thời tiết ở đâu cụ thể?,2266,,,
-2026-03-20T15:41:46.507085+07:00,eval_148,148,Hà Nội năm nay rét muộn không bạn?,,"Hiện tại mình không thể cung cấp thông tin về sự so sánh thời tiết mùa này. Tuy nhiên, nếu bạn cần thông tin cụ thể về thời tiết hiện tại hoặc dự báo trong những ngày tới, mình rất sẵn lòng hỗ trợ!",4290,,,
-2026-03-20T15:41:54.423492+07:00,eval_149,149,Thời tiết hôm nay có gì bất thường không?,,"Hiện tại, thời tiết Hà Nội có một số điểm đáng chú ý:
+💡 Bạn không cần mang ô khi đi làm hôm nay. Tuy nhiên, hãy chuẩn bị nước uống vì thời tiết có thể oi bức.",5565,,,
+2026-03-23T10:46:18.189559+07:00,eval_147,147,Thời tiết mấy hôm nay hay thay đổi quá bạn nhỉ?,,"Mình là trợ lý thời tiết Hà Nội, có thể giúp bạn thông tin cụ thể về thời tiết khu vực này. Bạn muốn biết về thời tiết hôm nay hay trong những ngày tới?",3061,,,
+2026-03-23T10:46:26.293088+07:00,eval_148,148,Hà Nội năm nay rét muộn không bạn?,,"Hiện tại mình không thể cung cấp thông tin về sự so sánh mùa này. Tuy nhiên, nếu bạn cần thông tin cụ thể về thời tiết Hà Nội trong thời gian tới, mình có thể giúp bạn! Bạn muốn biết thêm điều gì?",3994,,,
+2026-03-23T10:46:39.559784+07:00,eval_149,149,Thời tiết hôm nay có gì bất thường không?,,"Hiện tại, thời tiết Hà Nội có một số điểm đáng chú ý:
 
-- **Nhiệt độ**: 27.4°C (cảm giác như 31°C), trời có mây.
-- **Độ ẩm**: 61.2%, khá dễ chịu.
-- **Gió**: Đông Nam 5.4 m/s, có thể có gió giật mạnh.
-- **Chỉ số UV**: 2.8 (trung bình), nên chú ý khi ra ngoài.
+- **Nhiệt độ**: 24.8°C (cảm giác 27°C)
+- **Độ ẩm**: 75%
+- **Gió**: Đông Nam 3.4 m/s
+- **Trời**: Có mây
 
-### Điểm bất thường:
-- Nhiệt độ hiện tại cao hơn bình thường khoảng 5.4°C, cho thấy thời tiết có phần nóng hơn so với mức trung bình mùa này.
-- Độ ẩm thấp hơn bình thường, tạo cảm giác thoải mái hơn.
+### Điểm đặc biệt:
+- **Nhiệt độ** hiện tại nằm trong khoảng bình thường theo mùa.
+- **Độ ẩm** khá cao, có thể gây cảm giác oi bức.
 
-💡 **Khuyến nghị**: Nên mang theo nước kh",7914,,,
-2026-03-20T15:42:03.900470+07:00,eval_150,150,Tối nay trời có đẹp để ngắm sao không?,,"Tối nay, thời tiết Hà Nội sẽ có nhiều mây và nhiệt độ giảm dần. Cụ thể:
+💡 **Khuyến nghị**: Nếu bạn ra ngoài, hãy mang theo nước và mặc đồ thoáng mát để cảm thấy dễ chịu hơn.",8718,,,
+2026-03-23T10:46:51.042712+07:00,eval_150,150,Tối nay trời có đẹp để ngắm sao không?,,"Tối nay, thời tiết Hà Nội sẽ có những thay đổi như sau:
 
-- **Thời gian**: Từ 18h đến 22h
-- **Nhiệt độ**: 
-  - 18h: 26.1°C
-  - 19h: 25.7°C
-  - 20h: 24.7°C
-  - 21h: 24.4°C
-  - 22h: 24.2°C
-- **Độ ẩm**: Tăng dần từ 70% lên 85%
-- **Gió**: Đông Nam, tốc độ khoảng 5 m/s
+- **19h**: Nhiệt độ khoảng 24.7°C, độ ẩm 70.2%, trời có mây.
+- **20h**: Nhiệt độ giảm xuống 23.9°C, độ ẩm 75%, trời có mây.
+- **21h**: Nhiệt độ khoảng 23.4°C, độ ẩm 80.6%, có mưa nhẹ.
+- **22h**: Nhiệt độ khoảng 23.0°C, độ ẩm 84.9%, trời quang.
+
+💡 **Khuyến nghị**: Từ 21h trở đi có khả năng mưa nhẹ, nên nếu bạn muốn ngắm sao, hãy chuẩn bị ô hoặc tìm chỗ trú. Thời tiết sẽ đẹp hơn vào khoảng 22h khi trời quang.",6775,,,
+2026-03-23T10:47:04.441230+07:00,eval_151,151,Bây giờ ra ngoài có thoải mái không?,,"Hiện tại, thời tiết ở Hà Nội như sau:
+
+- **Nhiệt độ**: 24.8°C (cảm giác như 27.0°C)
+- **Độ ẩm**: 75%
+- **Gió**: Đông Nam 3.4 m/s
+- **Trời**: Có mây
+
+Chỉ số thoải mái hiện tại là **70/100**, cho thấy thời tiết khá dễ chịu. Tuy nhiên, độ ẩm cao có thể khiến bạn cảm thấy hơi oi bức.
+
+💡 **Khuyến nghị**: Nếu ra ngoài, bạn nên mang theo nước và có thể mặc trang phục thoải mái.",9300,,,
+2026-03-23T10:47:19.926693+07:00,eval_152,152,Thời tiết ở Cầu Giấy có dễ chịu không?,,"Thời tiết hiện tại ở Quận Cầu Giấy rất dễ chịu với chỉ số thoải mái đạt 98/100, được đánh giá là ""Rất thoải mái"". 
+
+- **Nhiệt độ**: 24.0°C (Lý tưởng)
+- **Độ ẩm**: 78% (Hơi ẩm)
+- **Gió**: Nhẹ, 5.2 m/s
+- **UV**: 1.47 (thấp)
+
+💡 Thời tiết lý tưởng cho mọi hoạt động ngoài trời, bạn có thể thoải mái ra ngoài!",10894,,,
+2026-03-23T10:47:32.497783+07:00,eval_153,153,Chiều nay ở Hồ Tây ra ngoài có ổn không?,,"Chiều nay ở Hồ Tây, thời tiết sẽ như sau:
+
+- **Nhiệt độ**: Khoảng 28.7°C (cảm giác 31°C)
+- **Độ ẩm**: 59%
+- **Gió**: Đông Nam, tốc độ 5.2 m/s
 - **Trời**: Có mây, không có mưa
 
-💡 **Khuyến nghị**: Thời tiết có thể không lý tưởng để ngắm sao do có nhiều mây. Tuy nhiên, nếu bạn vẫn muốn ra ngoài, hãy chuẩn bị một chiếc áo khoác nhẹ vì trời có thể hơi lạnh về đêm.",9476,,,
-2026-03-20T15:42:12.641607+07:00,eval_151,151,Bây giờ ra ngoài có thoải mái không?,,"Hiện tại, thời tiết ở Hà Nội như sau:
+**Chỉ số thoải mái**: 91/100 (Rất thoải mái)
 
-- Nhiệt độ: 27.4°C (cảm giác 28.8°C)
-- Độ ẩm: 61.2%
-- Gió: Đông Nam 5.4 m/s
-- Trời có mây
+💡 **Khuyến nghị**: Thời tiết lý tưởng cho mọi hoạt động ngoài trời. Bạn có thể thoải mái ra ngoài mà không cần lo lắng về mưa hay thời tiết khó chịu. Hãy tận hưởng buổi chiều nhé!",5969,,,
+2026-03-23T10:47:45.261857+07:00,eval_154,154,Trời có chuyển mưa không?,,"Hiện tại, thời tiết Hà Nội đang có mây, nhiệt độ khoảng 24.8°C, độ ẩm 75%. 
 
-Chỉ số thoải mái hiện tại là **Thận trọng**. Bạn có thể cảm thấy mệt mỏi nếu hoạt động kéo dài. 
+Dự báo trong vài giờ tới, khả năng mưa là rất thấp (0%). Tuy nhiên, có thể có mưa nhẹ vào tối nay, với xác suất mưa tăng lên khoảng 6% vào lúc 21h. 
 
-💡 Khuyến nghị: Nếu ra ngoài, hãy mang theo nước và tránh hoạt động quá sức.",8741,,,
-2026-03-20T15:42:18.040185+07:00,eval_152,152,Thời tiết ở Cầu Giấy có dễ chịu không?,,"Thời tiết hiện tại ở quận Cầu Giấy rất dễ chịu với các thông số như sau:
+💡 Nếu bạn có kế hoạch ra ngoài, có thể không cần mang ô, nhưng hãy theo dõi thời tiết thường xuyên nhé!",7707,,,
+2026-03-23T10:47:57.769493+07:00,eval_155,155,Thời tiết sắp có thay đổi gì không?,,"Hiện tại, thời tiết Hà Nội đang có những thay đổi nhẹ. Dưới đây là thông tin chi tiết:
 
-- Nhiệt độ: 27.0°C (cảm giác lý tưởng)
-- Độ ẩm: 71% (hơi ẩm)
-- Gió: nhẹ (5.4 m/s)
-- Trời có mây
+- **Nhiệt độ**: 24.8°C (cảm giác 27°C)
+- **Độ ẩm**: 75%
+- **Gió**: Đông Nam 3.4 m/s
+- **Trời**: Có mây
 
-💡 Thời tiết lý tưởng cho mọi hoạt động ngoài trời, bạn có thể thoải mái ra ngoài!",5398,,,
-2026-03-20T15:42:25.642521+07:00,eval_153,153,Chiều nay ở Hồ Tây ra ngoài có ổn không?,,"Chiều nay ở Hồ Tây, thời tiết khá dễ chịu với các thông số như sau:
-
-- **Nhiệt độ**: Khoảng 26.9°C
-- **Độ ẩm**: 71%
-- **Gió**: Nhẹ, khoảng 5.7 m/s từ hướng Đông Nam
-- **Trời**: Có mây, không có mưa
-
-💡 **Khuyến nghị**: Thời tiết rất thoải mái, lý tưởng cho các hoạt động ngoài trời. Bạn có thể thoải mái ra ngoài mà không cần lo lắng về mưa. Hãy tận hưởng thời gian ở Hồ Tây nhé!",7601,,,
-2026-03-20T15:42:34.221799+07:00,eval_154,154,Trời có chuyển mưa không?,,"Hiện tại, thời tiết Hà Nội có mây, nhiệt độ khoảng 27.4°C, độ ẩm 61.2%. 
-
-Dự báo trong vài giờ tới, có khả năng mưa nhẹ với xác suất mưa khoảng 23% vào lúc 15h. 
-
-💡 Nên mang ô khi ra ngoài để đề phòng mưa nhé!",8578,,,
-2026-03-20T15:42:42.883217+07:00,eval_155,155,Thời tiết sắp có thay đổi gì không?,,"Hiện tại, thời tiết Hà Nội đang có những thay đổi đáng chú ý:
-
-- **Nhiệt độ**: 27.4°C (cảm giác 31°C), trời có mây.
-- **Độ ẩm**: 61.2%.
-- **Gió**: Đông Nam 5.4 m/s.
-- **Áp suất**: 1011 hPa.
-- **Dự báo**: Trong 6 giờ tới, thời tiết sẽ có mưa nhẹ vào buổi sáng và chiều, với xác suất mưa tăng lên.
-
-💡 **Khuyến nghị**: Nên mang ô khi ra ngoài, đặc biệt là vào buổi sáng và chiều.",8660,,,
-2026-03-20T15:42:50.562158+07:00,eval_156,156,Vài giờ tới ở Đống Đa thời tiết có biến động không?,,"Trong vài giờ tới, thời tiết ở quận Đống Đa sẽ có biến động. Cụ thể:
-
-- **Thời gian**: 17:00 ICT ngày 20/03/2026
-- **Biến động**: Trời sẽ chuyển từ có mây sang mưa (Clouds → Rain).
-
-Hiện tại, nhiệt độ là 27.0°C với gió 5.6 m/s. Bạn nên chuẩn bị ô khi ra ngoài vào khoảng thời gian này!",7679,,,
-2026-03-20T15:42:52.972487+07:00,eval_157,157,Xin chào bạn!,,Xin chào! Mình là trợ lý thời tiết chuyên về Hà Nội. Bạn cần thông tin thời tiết gì hôm nay?,2410,,,
-2026-03-20T15:42:55.017480+07:00,eval_158,158,Thời tiết ở Đà Nẵng hôm nay thế nào?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn có muốn hỏi về thời tiết Hà Nội không?,2045,,,
-2026-03-20T15:42:57.176832+07:00,eval_159,159,Dự báo thời tiết Hà Nội tháng sau?,,Mình chỉ có thể cung cấp dự báo thời tiết cho tối đa 8 ngày tới. Bạn có muốn biết thời tiết Hà Nội trong tuần này hoặc trong 3 ngày tới không?,2159,,,
-2026-03-20T15:43:09.215395+07:00,eval_160,160,Cuối tuần này đi cắm trại ở Ba Vì có được không?,,"Cuối tuần này (21-22/03/2026) ở Ba Vì có thời tiết như sau:
-
-- **Thứ Bảy (21/03)**: 
-  - Nhiệt độ trung bình: 26.8°C (dao động từ 22.3°C đến 27.1°C)
-  - Độ ẩm: 65%
-  - Có khả năng mưa (xác suất 95%), tổng lượng mưa khoảng 1.6 mm.
-
-- **Chủ Nhật (22/03)**: 
-  - Nhiệt độ trung bình: 28.0°C (dao động từ 21.8°C đến 28.0°C)
-  - Độ ẩm: 64%
-  - Có khả năng mưa (xác suất 99%), tổng lượng mưa khoảng 1.2 mm.
-
-### Khuyến nghị cho hoạt động cắm trại:
-- **Nên đi**: Thời tiết thuận lợi cho hoạt động ngoài trời",12038,,,
-2026-03-20T15:43:22.951415+07:00,eval_161,161,Ngày mai có nên đi câu cá ở Sóc Sơn không?,,"Ngày mai, thời tiết ở Sóc Sơn rất thuận lợi cho việc câu cá. Dưới đây là một số thông tin chi tiết:
-
-### Thời tiết tổng quan
-- **Nhiệt độ**: 27.8°C
-- **Độ ẩm**: 65%
-- **Gió**: 7.82 m/s
-- **Trời**: Có mây rải rác
-- **Xác suất mưa**: 0%
-
-### Thời điểm tốt nhất để câu cá
-- **16:00**: Nhiệt độ 28.5°C, gió 7.06 m/s
-- **17:00**: Nhiệt độ 27.9°C, gió 7.05 m/s
-- **21:00**: Nhiệt độ 24.7°C, gió 4.84 m/s (có khả năng mưa nhẹ 27%)
-- **22:00**: Nhiệt độ 24.5°C, gió 3.95 m/s (có khả năng mưa nhẹ 14%)
-- **23:",13736,,,
-2026-03-20T15:43:30.891312+07:00,eval_162,162,Hôm nay thời tiết có phù hợp để tổ chức sự kiện ngoài trời ở Mỹ Đình không?,,"Thời tiết ở Mỹ Đình hôm nay rất phù hợp để tổ chức sự kiện ngoài trời! Dưới đây là thông tin chi tiết:
-
-### Thời tiết hiện tại:
-- **Nhiệt độ**: 27.0°C
-- **Độ ẩm**: 70%
-- **Gió**: Nhẹ (5.3 m/s)
-- **Tình trạng thời tiết**: Có mây
+### Dự báo trong vài giờ tới:
+- **11h**: 25.7°C, độ ẩm 71.5%
+- **12h**: 26.5°C, độ ẩm 68.2%
+- **13h**: 27.5°C, độ ẩm 64.3%
+- **14h**: 28.1°C, độ ẩm 61.4%
+- **15h**: 29.4°C, độ ẩm 55.0%
 
 ### Khuyến nghị:
-- **Chỉ số thoải mái**: 100 (Rất thoải mái)
-- **Thời tiết lý tưởng cho hoạt động ngoài trời**.
+- Trời có thể oi bức, nên mang nước khi ra ngoài.
+- Nếu có kế hoạch hoạt động ngoài trời, hãy chú ý đến t",8537,,,
+2026-03-23T10:48:08.523827+07:00,eval_156,156,Vài giờ tới ở Đống Đa thời tiết có biến động không?,,"Trong vài giờ tới, thời tiết ở quận Đống Đa sẽ có biến động. Cụ thể:
 
-### Thời điểm tốt nhất:
-- **20:00**: Nhiệt độ 24.8°C, không có mưa.
-- **21:00**: Nhiệt độ 24.5°C, không có mưa.
-- **22:00**: Nhiệt độ 24.2°C, không có mưa.
+- **Nhiệt độ** sẽ tăng từ 24.0°C lên 29.0°C vào lúc **16:00 ICT** hôm nay (23/03/2026).
+- Hiện tại, nhiệt độ là **23.99°C**, trời có mây, gió nhẹ với tốc độ **5.36 m/s**.
 
-#",7940,,,
-2026-03-20T15:43:38.632891+07:00,eval_163,163,Mưa ở Hoàng Mai kéo dài đến mấy giờ?,,"Mưa ở quận Hoàng Mai sẽ kéo dài đến 13:00 ngày 21/03/2026. Cụ thể:
+💡 Bạn nên chuẩn bị cho sự tăng nhiệt này nếu có kế hoạch ra ngoài!",6951,,,
+2026-03-23T10:48:13.270150+07:00,eval_157,157,Xin chào bạn!,,Chào bạn! Mình là trợ lý thời tiết chuyên về Hà Nội. Bạn cần thông tin thời tiết gì hôm nay?,2349,,,
+2026-03-23T10:48:18.271120+07:00,eval_158,158,Thời tiết ở Đà Nẵng hôm nay thế nào?,,Mình chỉ hỗ trợ thông tin thời tiết khu vực Hà Nội. Bạn có muốn biết thời tiết ở Hà Nội không?,2466,,,
+2026-03-23T10:48:23.274675+07:00,eval_159,159,Dự báo thời tiết Hà Nội tháng sau?,,Mình chỉ có thể cung cấp dự báo thời tiết cho tối đa 8 ngày tới. Bạn có muốn biết thời tiết Hà Nội trong tuần này hoặc trong 3 ngày tới không?,2506,,,
+2026-03-23T10:48:35.590134+07:00,eval_160,160,Cuối tuần này đi cắm trại ở Ba Vì có được không?,,"Cuối tuần này (28-29/03/2026) thời tiết ở Ba Vì như sau:
 
-- Mưa bắt đầu lúc 05:00 và có thể kéo dài đến 06:00.
-- Sau đó, mưa sẽ tiếp tục từ 09:00 đến 13:00 với xác suất mưa cao nhất là 100%.
+- **Thứ Bảy (28/03)**: 
+  - Nhiệt độ trung bình: 30.15°C (dao động từ 23.09 - 30.15°C)
+  - Độ ẩm: 58%
+  - Trời nhiều mây, không có mưa (xác suất mưa 0%).
 
-💡 Nên mang ô khi ra ngoài trong khoảng thời gian này!",7741,,,
-2026-03-20T15:46:14.091347+07:00,eval_1,1,Bây giờ thời tiết ở Hà Nội như thế nào?,,"Thời tiết hiện tại ở Hà Nội như sau:
+- **Chủ Nhật (29/03)**: 
+  - Nhiệt độ trung bình: 30.67°C (dao động từ 23.59 - 30.67°C)
+  - Độ ẩm: 57%
+  - Có khả năng mưa nhẹ (xác suất mưa 86%, tổng lượng mưa 1.14 mm).
 
-- **Nhiệt độ**: 26.0°C (cảm giác như 28.8°C)
-- **Thời tiết**: Có mây
-- **Độ ẩm**: 67.4%
-- **Gió**: Đông Nam, tốc độ 5.3 m/s
-- **Áp suất**: 1011 hPa
-- **UV**: 2.7 (trung bình)
+### Khuyến nghị cho hoạt động cắm trại:
+- **Nên đi**: Thời tiết thuận lợi cho hoạt động ngoài trời, đặc biệt là vào",8497,,,
+2026-03-23T10:48:49.503382+07:00,eval_161,161,Ngày mai có nên đi câu cá ở Sóc Sơn không?,,"Ngày mai, thời tiết ở Sóc Sơn rất thuận lợi cho việc câu cá. Dưới đây là một số thông tin chi tiết:
 
-💡 Trời có vẻ oi bức, bạn nên mang nước khi ra ngoài và có thể cần mặc đồ thoải mái.",10474,,,
-2026-03-20T15:46:29.913473+07:00,eval_2,2,Hiện tại ở quận Cầu Giấy thời tiết ra sao?,,"Quận Cầu Giấy hiện tại có thời tiết như sau:
+### Thời điểm tốt nhất để câu cá:
+- **11:00**: 24.5°C, gió 5.4 m/s, không có mưa.
+- **12:00**: 25.2°C, gió 5.3 m/s, không có mưa.
+- **13:00**: 26.3°C, gió 5.3 m/s, không có mưa.
+- **14:00**: 26.7°C, gió 4.8 m/s, không có mưa.
+- **15:00**: 28.1°C, gió 4.9 m/s, không có mưa.
 
-- **Nhiệt độ**: 27.5°C (cảm giác như 28.7°C)
-- **Thời tiết**: Có mây
-- **Độ ẩm**: 60%
-- **Gió**: 5.7 m/s, hướng Nam
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: 2.7 (thấp)
+### Thời điểm không nên đi câu cá:
+- **08:00**: 24.3°C, gió 3.3 m/s, không có mưa.
+- **09:00**: 25.5°C, gió 3.8 m/s, không c",9105,,,
+2026-03-23T10:49:00.493791+07:00,eval_162,162,Hôm nay thời tiết có phù hợp để tổ chức sự kiện ngoài trời ở Mỹ Đình không?,,"Thời tiết ở Mỹ Đình hôm nay rất phù hợp để tổ chức sự kiện ngoài trời. Cụ thể:
 
-💡 Thời tiết khá dễ chịu, nhưng có thể hơi oi bức. Nếu bạn ra ngoài, hãy mang theo nước để giữ ẩm nhé!",8275,,,
-2026-03-20T15:46:49.424033+07:00,eval_3,3,Thời tiết ở phường Dịch Vọng lúc này có mưa không?,,"Hiện tại, thời tiết ở phường Dịch Vọng (Quận Cầu Giấy) như sau:
+- **Thời tiết hiện tại**: 25.6°C, độ ẩm 73%, trời nhiều mây.
+- **Gió**: 5.44 m/s, không có mưa (xác suất 0%).
 
-- **Nhiệt độ**: 27.5°C (cảm giác như 28.7°C)
-- **Trời**: Có mây
-- **Độ ẩm**: 60%
-- **Gió**: Đông Nam 5.7 m/s
-- **Áp suất**: 1011 hPa
-- **UV**: 2.7 (thấp)
-
-Về khả năng mưa, trong 2 giờ tới (từ 15h đến 17h), xác suất mưa là 0%, nên không có mưa dự báo trong thời gian này.
-
-💡 **Khuyến nghị**: Thời tiết hiện tại khá dễ chịu, bạn có thể ra ngoài mà không cần mang ô.",10153,,,
-2026-03-20T15:47:01.628940+07:00,eval_4,4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,,"Quận Hoàn Kiếm hiện tại có nhiệt độ khoảng 27.6°C, trời có mây. Độ ẩm là 60%, gió từ hướng Nam với tốc độ 5.9 m/s.
-
-💡 Thời tiết khá dễ chịu, nhưng nếu bạn ra ngoài, hãy nhớ mang theo nước nhé!",5650,,,
-2026-03-20T15:47:15.903705+07:00,eval_5,5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",,"Hiện tại, phường Phú Diễn, Bắc Từ Liêm có nhiều mây, với độ che phủ mây đạt 100%. 
-
-- Nhiệt độ: 27.5°C (cảm giác 28.7°C)
-- Độ ẩm: 60%
-- Gió: Nam 5.8 m/s
-- Áp suất: 1011 hPa
-- Chỉ số UV: Thấp
-
-💡 Nếu bạn ra ngoài, hãy chuẩn bị sẵn nước uống để tránh mệt mỏi nhé!",9629,,,
-2026-03-20T15:47:29.062823+07:00,eval_6,6,Gió ở quận Long Biên hiện tại mạnh không?,,"Hiện tại, gió ở quận Long Biên có tốc độ trung bình khoảng 5.7 m/s, với hướng gió từ phía Nam. Gió có thể mạnh hơn vào một số thời điểm, với tốc độ gió giật lên tới 7.7 m/s.
-
-💡 Nếu bạn ra ngoài, hãy chú ý đến gió và có thể mang theo một chiếc áo khoác nhẹ để giữ ấm.",6799,,,
-2026-03-20T15:47:42.759834+07:00,eval_7,7,Trời Hà Nội lúc này có nắng không?,,"Hiện tại, thời tiết Hà Nội có nhiệt độ khoảng 26.0°C, trời nhiều mây và độ ẩm 67.4%. 
-
-- Gió từ hướng Đông Nam với tốc độ 5.3 m/s.
-- Chỉ số UV là 0.9 (thấp).
-
-💡 Trời không có nắng mạnh, bạn có thể ra ngoài nhưng nên mang theo ô hoặc áo khoác nhẹ để tránh gió lạnh.",9270,,,
-2026-03-20T15:47:56.407000+07:00,eval_8,8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,,"Quận Hoàng Mai hiện tại có độ ẩm khoảng 60%. 
-
-- Nhiệt độ: 27.4°C
-- Trời có mây
-- Gió: 5.8 m/s từ hướng Nam
-
-💡 Thời tiết khá dễ chịu, bạn có thể ra ngoài nhưng nên mang theo nước nhé!",8201,,,
-2026-03-20T15:48:08.249885+07:00,eval_9,9,Cho mình biết thời tiết hiện tại ở khu vực Mỹ Đình với.,,"Thời tiết hiện tại ở khu vực Mỹ Đình (Quận Nam Từ Liêm) như sau:
-
-- **Nhiệt độ**: 27.4°C (cảm giác 28.7°C)
-- **Trời**: Có mây
-- **Độ ẩm**: 61.3%
-- **Gió**: Nam, tốc độ 5.7 m/s, có thể có gió giật lên đến 7.3 m/s
-- **Áp suất**: 1011 hPa
-- **Chỉ số UV**: Thấp (2.7)
-
-💡 Lưu ý: Thời tiết hiện tại có thể gây mệt mỏi nếu hoạt động kéo dài. Bạn nên giữ nước và tránh hoạt động quá sức.",6636,,,
+### Khuyến nghị:
+- **Nên tổ chức sự kiện**: Thời tiết thuận lợi cho hoạt động ngoài trời.
+- **Thời điểm tốt nhất**: 
+  - Từ 22:00 đến 02:00 sáng ngày 24/03, nhiệt độ dễ chịu và không có mưa.
+- **Thời điểm cần lưu ý**: 
+  - 17:00 và 18:00 hôm nay có gió mạnh (6.23 m/s và 6.29 m/s), có thể gây khó khăn cho một",6323,,,
+2026-03-23T10:49:10.765696+07:00,eval_163,163,Mưa ở Hoàng Mai kéo dài đến mấy giờ?,,"Hiện tại, không có thông tin về mưa ở quận Hoàng Mai. Dự báo không có mưa trong 24 giờ tới. Bạn có thể yên tâm ra ngoài mà không cần mang ô.",5624,,,

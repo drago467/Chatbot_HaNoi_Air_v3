@@ -1,0 +1,22 @@
+<!-- HTMX partial: hourly forecast table rows -->
+{% for h in hourly %}
+<tr class="border-b border-gray-50 hover:bg-gray-50">
+  <td class="px-4 py-3 font-medium text-gray-900">{{ h.time_ict or '' }}</td>
+  <td class="px-4 py-3 text-gray-600">
+    {{ h.weather_description or h.weather_main or '' }}
+  </td>
+  <td class="px-4 py-3 text-right font-medium">{{ h.temp|safe_round|int }}°</td>
+  <td class="px-4 py-3 text-right text-gray-500">
+    {{ h.feels_like|safe_round|int }}°
+  </td>
+  <td class="px-4 py-3 text-right text-blue-500">
+    {% if h.get('pop') %}{{ (h['pop'] * 100)|safe_round|int }}%{% else %}0%{%
+    endif %}
+  </td>
+  <td class="px-4 py-3 text-right text-gray-500">{{ h.humidity }}%</td>
+  <td class="px-4 py-3 text-right text-gray-500">
+    {{ h.wind_direction_vi or '' }} {{ ((h.wind_speed or 0) * 3.6) |
+    safe_round|int }} km/h
+  </td>
+</tr>
+{% endfor %}

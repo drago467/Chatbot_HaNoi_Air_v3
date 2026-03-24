@@ -1,0 +1,20 @@
+<!-- HTMX partial: daily forecast list -->
+{% for day in daily %}
+<div
+  class="flex items-center px-6 py-3 border-b border-gray-50 hover:bg-gray-50"
+>
+  <div class="w-24 text-sm text-gray-600">
+    {% if day.date %}{{ day.date.strftime('%a %d/%m') if day.date.strftime else
+    day.date }}{% endif %}
+  </div>
+  <div class="w-24 text-sm font-medium text-gray-900">
+    {{ day.temp_max|safe_round|int }}° / {{ day.temp_min|safe_round|int }}°
+  </div>
+  <div class="flex-1 text-sm text-gray-600">
+    {{ day.weather_description or day.weather_main or '' }}
+  </div>
+  <div class="w-16 text-right text-sm text-blue-500">
+    💧 {{ ((day.get('pop') or 0) * 100) | safe_round|int }}%
+  </div>
+</div>
+{% endfor %}

@@ -1,0 +1,17 @@
+<!-- HTMX partial: chat message -->
+<div class="flex gap-3" data-thread-id="{{ thread_id }}">
+    {% if role == "assistant" %}
+    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shrink-0">
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79z"/>
+        </svg>
+    </div>
+    <div class="bg-white rounded-xl px-4 py-3 shadow-sm max-w-lg">
+        <div class="text-sm text-gray-700 whitespace-pre-wrap" data-content>{{ content }}</div>
+    </div>
+    {% else %}
+    <div class="ml-auto bg-blue-500 text-white rounded-xl px-4 py-3 max-w-lg">
+        <div class="text-sm whitespace-pre-wrap" data-content>{{ content }}</div>
+    </div>
+    {% endif %}
+</div>
