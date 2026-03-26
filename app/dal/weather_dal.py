@@ -122,8 +122,9 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
     
     results = query("""
         SELECT date, temp_min, temp_max, temp_avg, temp_morn, temp_eve, temp_night,
-               humidity, pop, rain_total, uvi, weather_main, weather_description, 
-               summary, sunrise, sunset
+               humidity, pop, rain_total, uvi, weather_main, weather_description,
+               summary, sunrise, sunset,
+               wind_speed, wind_deg, wind_gust
         FROM fact_weather_daily
         WHERE ward_id = %s
           AND date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
@@ -131,7 +132,8 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
         LIMIT %s
     """, (ward_id, days))
     
-    # Add ICT times
+    # Add ICT times + wind direction
+    from app.dal.weather_helpers import wind_deg_to_vietnamese
     for r in results:
         if r.get('sunrise'):
             r['sunrise_ict'] = format_ict(r['sunrise'])
@@ -139,6 +141,8 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
         if r.get('sunset'):
             r['sunset_ict'] = format_ict(r['sunset'])
             r['sunset_time'] = format_ict(r['sunset'], fmt="%H:%M")
+        if r.get('wind_deg') is not None:
+            r['wind_direction_vi'] = wind_deg_to_vietnamese(r['wind_deg'])
     
     return results
 
@@ -208,8 +212,51 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
     return {
         "error": "no_data",
         "message": f"Không có dữ liệu thời tiết ngày {date}",
-        "note": "Chỉ có dữ liệu 14 ngày gần nhất"
+        "note": "Dữ liệu lịch sử chỉ lưu trữ 14 ngày gần nhất",
+        "suggestion": "Thử hỏi ngày gần hơn hoặc dùng dự báo cho ngày tới"
     }
+
+
+def get_city_weather_history(date: str) -> Dict[str, Any]:
+    """Get historical weather from fact_weather_city_daily."""
+    row = query_one("""
+        SELECT avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
+               weather_main, avg_dew_point, avg_pressure, avg_clouds,
+               max_uvi, avg_wind_deg, max_wind_gust, ward_count
+        FROM fact_weather_city_daily
+        WHERE date = %s::date
+    """, (date,))
+    if not row:
+        return {"error": "no_data",
+                "message": f"Không có dữ liệu lịch sử thành phố ngày {date}",
+                "note": "Dữ liệu lịch sử chỉ lưu trữ 14 ngày gần nhất",
+                "suggestion": "Thử hỏi ngày gần hơn hoặc dùng dự báo cho ngày tới"}
+    row["level"] = "city"
+    row["date"] = date
+    row["data_coverage"] = f"Dữ liệu ngày {date} (tổng hợp toàn Hà Nội)"
+    row["wind_direction_vi"] = wind_deg_to_vietnamese(row.get("avg_wind_deg"))
+    return row
+
+
+def get_district_weather_history(district_name: str, date: str) -> Dict[str, Any]:
+    """Get historical weather from fact_weather_district_daily."""
+    row = query_one("""
+        SELECT district_name_vi, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
+               weather_main, avg_dew_point, avg_pressure, avg_clouds,
+               max_uvi, avg_wind_deg, max_wind_gust, ward_count
+        FROM fact_weather_district_daily
+        WHERE district_name_vi = %s AND date = %s::date
+    """, (district_name, date))
+    if not row:
+        return {"error": "no_data",
+                "message": f"Không có dữ liệu lịch sử quận {district_name} ngày {date}",
+                "note": "Dữ liệu lịch sử chỉ lưu trữ 14 ngày gần nhất",
+                "suggestion": "Thử hỏi ngày gần hơn hoặc dùng dự báo cho ngày tới"}
+    row["level"] = "district"
+    row["date"] = date
+    row["data_coverage"] = f"Dữ liệu ngày {date} (quận/huyện {district_name})"
+    row["wind_direction_vi"] = wind_deg_to_vietnamese(row.get("avg_wind_deg"))
+    return row
 
 
 def get_weather_range(ward_id: str, start_date: str, end_date: str) -> List[Dict[str, Any]]:
@@ -355,32 +402,33 @@ def get_daily_summary_data(ward_id: str, query_date) -> Dict[str, Any]:
     }
 
 
-def get_rain_timeline(ward_id: str, hours: int = 24) -> Dict[str, Any]:
-    """Scan hourly forecast to detect rain start/stop transitions.
+def analyze_rain_from_forecasts(rows: list, hours: int = 24, source_note: str = "") -> Dict[str, Any]:
+    """Analyze rain periods from forecast data (reusable for ward/district/city).
 
-    Returns rain periods, next rain time, next clear time.
+    Supports both ward-level (pop, rain_1h) and aggregate (avg_pop, avg_rain_1h) keys.
+
+    Args:
+        rows: List of forecast dicts with ts_utc + pop/avg_pop + rain_1h/avg_rain_1h + weather_main
+        hours: Number of hours scanned (for metadata)
+        source_note: Optional note about data source level
+
+    Returns:
+        Dict with rain_periods, next_rain, next_clear, hours_scanned, data_coverage
     """
-    rows = query("""
-        SELECT ts_utc, pop, rain_1h, weather_main
-        FROM fact_weather_hourly
-        WHERE ward_id = %s
-          AND data_kind = 'forecast'
-          AND ts_utc > NOW()
-        ORDER BY ts_utc
-        LIMIT %s
-    """, (ward_id, min(hours, 48)))
-
     if not rows:
-        return {"error": "no_data", "message": "Không có dữ liệu dự báo"}
+        return {"error": "no_data", "message": "Không có dữ liệu dự báo",
+                "suggestion": "Thử hỏi thời tiết hiện tại hoặc dự báo ngắn hạn"}
 
-    # Detect rain periods (pop >= 0.3 or weather_main contains Rain/Drizzle/Thunderstorm)
+    from app.dal.timezone_utils import format_ict
+
     rain_keywords = {"Rain", "Drizzle", "Thunderstorm"}
     periods = []
     current_period = None
 
     for row in rows:
-        pop = row.get("pop") or 0
-        rain_1h = row.get("rain_1h") or 0
+        # Support both ward-level keys (pop, rain_1h) and aggregate keys (avg_pop, avg_rain_1h)
+        pop = row.get("pop") or row.get("avg_pop") or 0
+        rain_1h = row.get("rain_1h") or row.get("avg_rain_1h") or 0
         wm = row.get("weather_main", "")
         is_rain = pop >= 0.3 or wm in rain_keywords or rain_1h > 0
 
@@ -399,37 +447,57 @@ def get_rain_timeline(ward_id: str, hours: int = 24) -> Dict[str, Any]:
         periods.append(current_period)
 
     # Format periods
-    from app.dal.timezone_utils import format_ict
     formatted = []
     for p in periods:
         formatted.append({
             "start": format_ict(p["start"]),
             "end": format_ict(p["end"]),
             "max_pop": round(p["max_pop"] * 100),
-            "max_rain_1h": p["max_rain_1h"],
+            "max_rain_1h": round(p["max_rain_1h"], 1),
         })
 
     # Next rain / next clear
     first_rain = format_ict(periods[0]["start"]) if periods else None
-    # Find first clear after first rain
     first_clear = None
     if periods:
         last_rain_end = periods[0]["end"]
         for row in rows:
             if row["ts_utc"] > last_rain_end:
-                pop = row.get("pop") or 0
+                pop = row.get("pop") or row.get("avg_pop") or 0
                 wm = row.get("weather_main", "")
                 if pop < 0.3 and wm not in rain_keywords:
                     first_clear = format_ict(row["ts_utc"])
                     break
 
-    return {
+    result = {
         "rain_periods": formatted,
         "total_rain_periods": len(formatted),
         "next_rain": first_rain,
         "next_clear": first_clear,
         "hours_scanned": len(rows),
+        "data_coverage": f"Dự báo {len(rows)} giờ tới",
     }
+    if source_note:
+        result["source_note"] = source_note
+    return result
+
+
+def get_rain_timeline(ward_id: str, hours: int = 24) -> Dict[str, Any]:
+    """Scan hourly forecast to detect rain start/stop transitions.
+
+    Returns rain periods, next rain time, next clear time.
+    """
+    rows = query("""
+        SELECT ts_utc, pop, rain_1h, weather_main
+        FROM fact_weather_hourly
+        WHERE ward_id = %s
+          AND data_kind = 'forecast'
+          AND ts_utc > NOW()
+        ORDER BY ts_utc
+        LIMIT %s
+    """, (ward_id, min(hours, 48)))
+
+    return analyze_rain_from_forecasts(rows, hours)
 
 
 def get_temperature_trend(ward_id: str, days: int = 7) -> Dict[str, Any]:
@@ -506,7 +574,7 @@ def get_weather_period_data(ward_id: str, start_date: str, end_date: str) -> Lis
     """
     return query(
         "SELECT date, temp_min, temp_max, temp_avg, humidity, pop, rain_total, "
-        "uvi, wind_speed, weather_main "
+        "uvi, wind_speed, wind_deg, wind_gust, weather_main "
         "FROM fact_weather_daily "
         "WHERE ward_id = %s AND date BETWEEN %s AND %s "
         "AND data_kind IN ('forecast', 'history') ORDER BY date",

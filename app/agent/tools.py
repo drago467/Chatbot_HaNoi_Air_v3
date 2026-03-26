@@ -41,6 +41,49 @@ def _get_ward_id_or_fallback(resolved: dict) -> dict:
     return {"level": level, "error": "unknown_level"}
 
 
+def _build_daily_data_note(forecasts: list) -> str:
+    """Build a data boundary note for daily forecast outputs.
+
+    Tells the LLM exactly which dates have data, preventing fabrication
+    of forecasts for dates not present in the database.
+    """
+    dates = [str(f.get("date", "")) for f in forecasts if f.get("date")]
+    if not dates:
+        return "Không có dữ liệu dự báo."
+    return (
+        f"⚠️ CHỈ CÓ dữ liệu {len(dates)} ngày: {', '.join(dates)}. "
+        "TUYỆT ĐỐI KHÔNG bịa thêm ngày khác ngoài danh sách trên."
+    )
+
+
+def _build_hourly_data_note(forecasts: list) -> str:
+    """Build a data boundary note for hourly forecast outputs.
+
+    Tells the LLM exactly which hours have data, preventing fabrication
+    of forecasts for hours not present in the database.
+    """
+    if not forecasts:
+        return "Không có dữ liệu dự báo theo giờ."
+
+    # Extract time_ict or ts_utc from forecasts
+    times = []
+    for f in forecasts:
+        t = f.get("time_ict") or f.get("ts_utc")
+        if t:
+            times.append(str(t))
+
+    if not times:
+        return "Không có dữ liệu dự báo theo giờ."
+
+    first = times[0]
+    last = times[-1]
+    return (
+        f"⚠️ CHỈ CÓ dữ liệu {len(times)} giờ: từ {first} đến {last}. "
+        "TUYỆT ĐỐI KHÔNG bịa thêm giờ khác ngoài phạm vi trên. "
+        "Nếu user hỏi giờ không có trong data → NÓI RÕ 'không có dữ liệu cho giờ đó'."
+    )
+
+
 # ============== Tool 1: resolve_location ==============
 
 class ResolveLocationInput(BaseModel):
@@ -51,7 +94,13 @@ class ResolveLocationInput(BaseModel):
 
 @tool(args_schema=ResolveLocationInput)
 def resolve_location(location_hint: str) -> dict:
-    """Giải quyết địa điểm mơ hồ (tìm phường/xã từ tên)."""
+    """Tìm phường/xã hoặc quận/huyện từ tên gần đúng.
+
+    DÙNG KHI: cần xác định chính xác ward_id trước khi gọi tool khác,
+    hoặc khi user nhập tên địa điểm không chính xác.
+    KHÔNG DÙNG KHI: các tool khác đã có tham số location_hint (tự resolve bên trong).
+    Trả về: ward_id, ward_name_vi, district_name_vi hoặc thông báo lỗi.
+    """
     from app.dal.location_dal import resolve_location as dal_resolve
     return dal_resolve(location_hint)
 
@@ -116,8 +165,8 @@ def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
 # ============== Tool 3: get_hourly_forecast ==============
 
 class GetHourlyForecastInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
     hours: int = Field(default=24, description="Số giờ dự báo (1-48)")
 
 
@@ -137,8 +186,11 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
     if not ward_id and not location_hint:
         from app.dal.weather_aggregate_dal import get_city_hourly_forecast
         forecasts = get_city_hourly_forecast(hours)
-        return {"forecasts": forecasts[:hours], "count": len(forecasts[:hours]),
-                "resolved_location": {"city_name": "Hà Nội"}, "source": "city_aggregated"}
+        fc = forecasts[:hours]
+        return {"forecasts": fc, "count": len(fc),
+                "resolved_location": {"city_name": "Hà Nội"}, "source": "city_aggregated",
+                "data_coverage": f"Dự báo {len(fc)} giờ tới (toàn Hà Nội)",
+                "data_note": _build_hourly_data_note(fc)}
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":
@@ -148,19 +200,31 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
 
     # District level → redirect to district hourly forecast
     if info["level"] == "district" and not info.get("ward_id"):
-        return {"error": "no_wards", "message": f"Không tìm thấy phường/xã trong {info.get('district_name', '')}"}
+        from app.dal.weather_aggregate_dal import get_district_hourly_forecast
+        forecasts = get_district_hourly_forecast(info["district_name"], hours)
+        fc = forecasts[:hours]
+        return {"forecasts": fc, "count": len(fc),
+                "resolved_location": resolved["data"], "source": "aggregated",
+                "data_coverage": f"Dự báo {len(fc)} giờ tới (quận {info['district_name']})",
+                "data_note": _build_hourly_data_note(fc)}
     if info["level"] == "district":
         from app.dal.weather_aggregate_dal import get_district_hourly_forecast
         forecasts = get_district_hourly_forecast(info["district_name"], hours)
-        return {"forecasts": forecasts[:hours], "count": len(forecasts[:hours]),
-                "resolved_location": resolved["data"], "source": "aggregated"}
+        fc = forecasts[:hours]
+        return {"forecasts": fc, "count": len(fc),
+                "resolved_location": resolved["data"], "source": "aggregated",
+                "data_coverage": f"Dự báo {len(fc)} giờ tới (quận {info['district_name']})",
+                "data_note": _build_hourly_data_note(fc)}
 
     # City level → redirect to city hourly forecast
     if info["level"] == "city":
         from app.dal.weather_aggregate_dal import get_city_hourly_forecast
         forecasts = get_city_hourly_forecast(hours)
-        return {"forecasts": forecasts[:hours], "count": len(forecasts[:hours]),
-                "resolved_location": resolved["data"], "source": "aggregated"}
+        fc = forecasts[:hours]
+        return {"forecasts": fc, "count": len(fc),
+                "resolved_location": resolved["data"], "source": "aggregated",
+                "data_coverage": f"Dự báo {len(fc)} giờ tới (toàn Hà Nội)",
+                "data_note": _build_hourly_data_note(fc)}
 
     data = dal_get_hourly_forecast(info["ward_id"], hours)
 
@@ -168,14 +232,16 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
     if isinstance(data, dict) and "error" in data:
         return data
 
-    return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"]}
+    return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"],
+            "data_coverage": f"Dự báo {len(data)} giờ tới",
+            "data_note": _build_hourly_data_note(data)}
 
 
 # ============== Tool 4: get_daily_forecast ==============
 
 class GetDailyForecastInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
     days: int = Field(default=7, description="Số ngày dự báo (1-8)")
 
 
@@ -195,7 +261,8 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
         from app.dal.weather_aggregate_dal import get_city_daily_forecast as dal_city_daily
         forecasts = dal_city_daily(days)
         return {"forecasts": forecasts[:days], "count": len(forecasts[:days]),
-                "resolved_location": {"city_name": "Hà Nội"}, "source": "city_aggregated"}
+                "resolved_location": {"city_name": "Hà Nội"}, "source": "city_aggregated",
+                "data_note": _build_daily_data_note(forecasts[:days])}
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":
@@ -208,14 +275,16 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
         from app.dal.weather_aggregate_dal import get_district_daily_forecast as dal_district_daily
         forecasts = dal_district_daily(info["district_name"], days)
         return {"forecasts": forecasts[:days], "count": len(forecasts[:days]),
-                "resolved_location": resolved["data"], "source": "aggregated"}
+                "resolved_location": resolved["data"], "source": "aggregated",
+                "data_note": _build_daily_data_note(forecasts[:days])}
 
     # City level → redirect to city daily forecast
     if info["level"] == "city":
         from app.dal.weather_aggregate_dal import get_city_daily_forecast as dal_city_daily
         forecasts = dal_city_daily(days)
         return {"forecasts": forecasts[:days], "count": len(forecasts[:days]),
-                "resolved_location": resolved["data"], "source": "aggregated"}
+                "resolved_location": resolved["data"], "source": "aggregated",
+                "data_note": _build_daily_data_note(forecasts[:days])}
 
     data = dal_get_daily_forecast(info["ward_id"], days)
 
@@ -223,14 +292,15 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
     if isinstance(data, dict) and "error" in data:
         return data
 
-    return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"]}
+    return {"forecasts": data, "count": len(data), "resolved_location": resolved["data"],
+            "data_note": _build_daily_data_note(data)}
 
 
 # ============== Tool 5: get_weather_history ==============
 
 class GetWeatherHistoryInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
     date: str = Field(description="Ngay (YYYY-MM-DD)")
 
 
@@ -239,10 +309,16 @@ def get_weather_history(ward_id: str = None, location_hint: str = None, date: st
     """Lấy thời tiết của một NGÀY trong QUÁ KHỨ.
 
     DÙNG KHI: user hỏi "hôm qua", "tuần trước", "ngày 15/3".
-    Lưu ý: dữ liệu lịch sử THIẾU visibility và UV - không hứa trả các thông số này.
+    Hỗ trợ: phường, quận, toàn Hà Nội.
+    Lưu ý: dữ liệu lịch sử chỉ có 14 ngày gần nhất, THIẾU visibility.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal import get_weather_history as dal_get_weather_history
+    from app.dal.weather_dal import get_city_weather_history, get_district_weather_history
+
+    # City-level default khi không có location
+    if not ward_id and not location_hint:
+        return get_city_weather_history(date)
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":
@@ -250,14 +326,22 @@ def get_weather_history(ward_id: str = None, location_hint: str = None, date: st
 
     info = _get_ward_id_or_fallback(resolved)
 
-    # Need a ward_id for historical data
+    # City level → city aggregate history
+    if info["level"] == "city":
+        return get_city_weather_history(date)
+
+    # District level without ward_id → district aggregate history
+    if info["level"] == "district" and not info.get("ward_id"):
+        return get_district_weather_history(info["district_name"], date)
+
+    # Ward level → existing logic
     wid = info.get("ward_id")
     if not wid:
-        return {"error": "need_ward", "message": "Không xác định được phường/xã để tra cứu lịch sử"}
+        return {"error": "need_ward", "message": "Không xác định được phường/xã để tra cứu lịch sử",
+                "suggestion": "Hãy nêu tên quận/huyện hoặc phường/xã cụ thể"}
 
     history = dal_get_weather_history(wid, date)
 
-    # Guard: if history has error, return early
     if "error" in history:
         return history
 
@@ -270,10 +354,10 @@ def get_weather_history(ward_id: str = None, location_hint: str = None, date: st
 # ============== Tool 6: compare_weather ==============
 
 class CompareWeatherInput(BaseModel):
-    ward_id1: Optional[str] = Field(default=None)
-    location_hint1: Optional[str] = Field(default=None)
-    ward_id2: Optional[str] = Field(default=None)
-    location_hint2: Optional[str] = Field(default=None)
+    ward_id1: Optional[str] = Field(default=None, description="Ward ID địa điểm 1")
+    location_hint1: Optional[str] = Field(default=None, description="Tên địa điểm 1. Ví dụ: 'Cầu Giấy', 'Hoàn Kiếm'")
+    ward_id2: Optional[str] = Field(default=None, description="Ward ID địa điểm 2")
+    location_hint2: Optional[str] = Field(default=None, description="Tên địa điểm 2. Ví dụ: 'Đống Đa', 'Tây Hồ'")
 
 
 @tool(args_schema=CompareWeatherInput)
@@ -313,8 +397,8 @@ def compare_weather(ward_id1: str = None, location_hint1: str = None, ward_id2: 
 # ============== Tool 7: compare_with_yesterday ==============
 
 class CompareWithYesterdayInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
 
 
 @tool(args_schema=CompareWithYesterdayInput)
@@ -323,21 +407,39 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
 
     DÙNG KHI: "hôm nay nóng hơn hôm qua không?", "so với hôm qua thế nào?".
     KHÔNG DÙNG KHI: so sánh 2 địa điểm (dùng compare_weather).
+    Hỗ trợ: phường, quận, toàn Hà Nội.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal import compare_with_yesterday as dal_compare_with_yesterday
+    from app.dal.comparison_dal import compare_city_with_previous_day, compare_district_with_previous_day
+
+    # City-level default khi không có location
+    if not ward_id and not location_hint:
+        return compare_city_with_previous_day()
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved["status"] != "ok":
         return {"error": resolved["status"]}
 
     info = _get_ward_id_or_fallback(resolved)
+
+    # City level → city comparison
+    if info["level"] == "city":
+        return compare_city_with_previous_day()
+
+    # District level without ward_id → district comparison
+    if info["level"] == "district" and not info.get("ward_id"):
+        return compare_district_with_previous_day(info["district_name"])
+
+    # Ward level → existing logic
     wid = info.get("ward_id")
     if not wid:
-        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+        return {"error": "need_ward", "message": "Không xác định được phường/xã",
+                "suggestion": "Hãy nêu tên quận/huyện hoặc phường/xã cụ thể"}
 
     result = dal_compare_with_yesterday(wid)
-    result["resolved_location"] = resolved["data"]
+    if "error" not in result:
+        result["resolved_location"] = resolved["data"]
     return result
 
 
@@ -345,8 +447,8 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
 
 class GetActivityAdviceInput(BaseModel):
     activity: str = Field(description="Hoạt động: chay_bo, dua_dieu, picnic, bike, chup_anh, tap_the_duc, phoi_do, du_lich, cam_trai, cau_ca, lam_vuon, boi_loi, leo_nui, di_dao, su_kien")
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
 
 
 @tool(args_schema=GetActivityAdviceInput)
@@ -402,8 +504,8 @@ def get_weather_alerts(ward_id: str = "all") -> dict:
 # ============== Tool 10: detect_phenomena ==============
 
 class DetectPhenomenaInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
 
 
 @tool(args_schema=DetectPhenomenaInput)
@@ -442,8 +544,8 @@ def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
 # ============== Tool 11: get_seasonal_comparison ==============
 
 class GetSeasonalComparisonInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169). Bỏ trống nếu dùng location_hint")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy', 'Đống Đa'")
 
 
 @tool(args_schema=GetSeasonalComparisonInput)
@@ -474,8 +576,10 @@ def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> d
     else:
         weather = dal_get_current_weather(info["ward_id"])
 
-    if weather.get("error"):
-        return {"error": weather.get("error"), "message": weather.get("message", "")}
+    if not weather or weather.get("error"):
+        return {"error": "no_weather_data",
+                "message": "Không lấy được dữ liệu thời tiết hiện tại để so sánh với mùa",
+                "suggestion": "Thử hỏi thời tiết hiện tại trước"}
 
     seasonal = compare_with_seasonal(weather)
 
@@ -491,14 +595,21 @@ def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> d
 # ============== Tool 12: get_daily_summary ==============
 
 class GetDailySummaryInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
-    date: str = Field(default="today", description="YYYY-MM-DD hoac 'today'")
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Ba Đình'")
+    date: str = Field(default="today", description="Ngày cần tổng hợp, định dạng YYYY-MM-DD hoặc 'today'. Ví dụ: '2026-03-26'")
 
 
 @tool(args_schema=GetDailySummaryInput)
 def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str = "today") -> dict:
-    """Tổng hợp thời tiết 1 NGÀY: temp_range, feels_like_gap, daylight, hiện tượng."""
+    """Tổng hợp thời tiết MỘT NGÀY cho một phường/xã: min/max nhiệt, chênh lệch cảm giác, hiện tượng.
+
+    DÙNG KHI: user hỏi "hôm nay thời tiết thế nào?" cho 1 phường cụ thể,
+    "tổng quan ngày mai ở Dịch Vọng", "nhiệt độ cao nhất hôm nay".
+    KHÔNG DÙNG KHI: hỏi nhiều ngày (dùng get_weather_period hoặc get_daily_forecast),
+    hỏi theo giờ (dùng get_hourly_forecast), hỏi quận/TP (dùng get_district_weather/get_city_weather).
+    Trả về: temp_range (min-max), feels_like_gap, daylight hours, hiện tượng đặc biệt, so sánh mùa.
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_dal import get_daily_summary_data
     from app.dal.weather_knowledge_dal import compare_with_seasonal, detect_hanoi_weather_phenomena
@@ -545,15 +656,23 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
 # ============== Tool 13: get_weather_period ==============
 
 class GetWeatherPeriodInput(BaseModel):
-    ward_id: Optional[str] = Field(default=None)
-    location_hint: Optional[str] = Field(default=None)
-    start_date: str = Field(description="YYYY-MM-DD")
-    end_date: str = Field(description="YYYY-MM-DD")
+    ward_id: Optional[str] = Field(default=None, description="Ward ID (ví dụ: ID_00169)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện. Ví dụ: 'Dịch Vọng', 'Cầu Giấy'")
+    start_date: str = Field(description="Ngày bắt đầu, định dạng YYYY-MM-DD. Ví dụ: '2026-03-26'")
+    end_date: str = Field(description="Ngày kết thúc, định dạng YYYY-MM-DD. Ví dụ: '2026-03-30'")
 
 
 @tool(args_schema=GetWeatherPeriodInput)
 def get_weather_period(ward_id: str = None, location_hint: str = None, start_date: str = None, end_date: str = None) -> dict:
-    """Tổng hợp thời tiết nhiều NGÀY: trend, best/worst day, extremes."""
+    """Tổng hợp thời tiết NHIỀU NGÀY liên tiếp: xu hướng, ngày tốt/xấu nhất, cực trị.
+
+    DÙNG KHI: user hỏi "tuần này thời tiết thế nào?", "3 ngày tới",
+    "cuối tuần có mưa không?", "từ thứ 2 đến thứ 6".
+    KHÔNG DÙNG KHI: hỏi 1 ngày cụ thể (dùng get_daily_summary),
+    hỏi theo giờ (dùng get_hourly_forecast), hỏi lịch sử (dùng get_weather_history).
+    Trả về: tổng hợp (min/max/avg), xu hướng nhiệt (warming/cooling/stable),
+    ngày tốt nhất/xấu nhất, gió, so sánh mùa.
+    """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_dal import get_weather_period_data
     from app.dal.weather_knowledge_dal import get_seasonal_average
@@ -583,6 +702,11 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     total_rain = sum(r.get("rain_total") or 0 for r in rows)
     avg_humidity = sum(r.get("humidity") or 0 for r in rows) / len(rows) if rows else 0
     max_uvi = max((r.get("uvi") or 0) for r in rows) if rows else 0
+
+    # Wind aggregation
+    wind_speeds = [r["wind_speed"] for r in rows if r.get("wind_speed") is not None]
+    avg_wind_speed = round(sum(wind_speeds) / len(wind_speeds), 1) if wind_speeds else None
+    max_wind_gust = max((r.get("wind_gust") or 0) for r in rows) if rows else None
 
     # Trend detection
     trend = "stable"
@@ -626,6 +750,7 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
     worst_day = min(scored, key=lambda x: x[1])[0] if scored else None
 
     # Days list
+    from app.dal.weather_helpers import wind_deg_to_vietnamese
     days = [
         {
             "date": str(r["date"]),
@@ -634,6 +759,9 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
             "humidity": r.get("humidity"),
             "pop": r.get("pop"),
             "rain_total": r.get("rain_total"),
+            "wind_speed": r.get("wind_speed"),
+            "wind_gust": r.get("wind_gust"),
+            "wind_direction_vi": wind_deg_to_vietnamese(r.get("wind_deg")) if r.get("wind_deg") is not None else None,
             "weather_main": r.get("weather_main")
         }
         for r in rows
@@ -656,12 +784,15 @@ def get_weather_period(ward_id: str = None, location_hint: str = None, start_dat
             "rainy_days": rainy_days,
             "avg_humidity": round(avg_humidity, 0),
             "max_uvi": max_uvi,
+            "avg_wind_speed": avg_wind_speed,
+            "max_wind_gust": round(max_wind_gust, 1) if max_wind_gust else None,
             "trend": trend
         },
         "best_day": {"date": str(best_day["date"]), "temp": best_day.get("temp_avg")} if best_day else None,
         "worst_day": {"date": str(worst_day["date"]), "temp": worst_day.get("temp_avg")} if worst_day else None,
         "days": days,
-        "seasonal_comparison": seasonal_comp
+        "seasonal_comparison": seasonal_comp,
+        "data_note": _build_daily_data_note(rows)
     }
 
 
@@ -709,7 +840,9 @@ def get_district_weather(district_name: str, hours: int = 24) -> dict:
         "current": current,
         "forecasts": forecasts[:hours],
         "count": len(forecasts[:hours]),
-        "source": "aggregated"
+        "source": "aggregated",
+        "data_coverage": f"Hiện tại + dự báo {len(forecasts[:hours])} giờ tới (quận {district_name})",
+        "data_note": _build_hourly_data_note(forecasts[:hours])
     }
 
 
@@ -745,7 +878,9 @@ def get_city_weather(hours: int = 24) -> dict:
         "current": current,
         "forecasts": forecasts[:hours],
         "count": len(forecasts[:hours]),
-        "source": "aggregated"
+        "source": "aggregated",
+        "data_coverage": f"Hiện tại + dự báo {len(forecasts[:hours])} giờ tới (toàn Hà Nội)",
+        "data_note": _build_hourly_data_note(forecasts[:hours])
     }
 
 
@@ -760,7 +895,14 @@ class GetDistrictDailyForecastInput(BaseModel):
 
 @tool(args_schema=GetDistrictDailyForecastInput)
 def get_district_daily_forecast(district_name: str, days: int = 7) -> dict:
-    """Lấy dự báo thời tiết theo NGÀY cho một quận/huyện."""
+    """Lấy dự báo thời tiết THEO NGÀY (1-8 ngày) cho một quận/huyện.
+
+    DÙNG KHI: user hỏi "ngày mai quận Cầu Giấy thế nào?", "tuần này Đống Đa có mưa?",
+    "dự báo 3 ngày tới Hoàn Kiếm".
+    KHÔNG DÙNG KHI: hỏi theo giờ (dùng get_district_weather hoặc get_hourly_forecast),
+    hỏi hiện tại (dùng get_district_weather), hỏi phường cụ thể (dùng get_daily_forecast).
+    Dữ liệu tổng hợp từ tất cả phường/xã trong quận. Tối đa 8 ngày.
+    """
     from app.dal.weather_aggregate_dal import (
         get_district_current_weather,
         get_district_daily_forecast
@@ -787,7 +929,8 @@ def get_district_daily_forecast(district_name: str, days: int = 7) -> dict:
         "current": current,
         "forecasts": forecasts[:days],
         "count": len(forecasts[:days]),
-        "source": "aggregated"
+        "source": "aggregated",
+        "data_note": _build_daily_data_note(forecasts[:days])
     }
 
 
@@ -799,7 +942,14 @@ class GetCityDailyForecastInput(BaseModel):
 
 @tool(args_schema=GetCityDailyForecastInput)
 def get_city_daily_forecast(days: int = 7) -> dict:
-    """Lấy dự báo thời tiết theo NGÀY cho toàn TP Hà Nội."""
+    """Lấy dự báo thời tiết THEO NGÀY (1-8 ngày) cho toàn TP Hà Nội.
+
+    DÙNG KHI: user hỏi "tuần này Hà Nội thế nào?", "dự báo 5 ngày tới",
+    "cuối tuần Hà Nội có mưa không?".
+    KHÔNG DÙNG KHI: hỏi theo giờ (dùng get_city_weather hoặc get_hourly_forecast),
+    hỏi quận cụ thể (dùng get_district_daily_forecast).
+    Dữ liệu tổng hợp từ 126 phường/xã toàn Hà Nội. Tối đa 8 ngày.
+    """
     from app.dal.weather_aggregate_dal import (
         get_city_current_weather,
         get_city_daily_forecast
@@ -818,7 +968,8 @@ def get_city_daily_forecast(days: int = 7) -> dict:
         "current": current,
         "forecasts": forecasts[:days],
         "count": len(forecasts[:days]),
-        "source": "aggregated"
+        "source": "aggregated",
+        "data_note": _build_daily_data_note(forecasts[:days])
     }
 
 
@@ -890,19 +1041,45 @@ def get_rain_timeline(
     DÙNG KHI: user hỏi "mưa đến bao giờ?", "mấy giờ tạnh?",
     "khi nào mưa?", "ngày mai mưa vào khoảng mấy giờ?".
     Trả về: các khoảng thời gian mưa, thời điểm mưa tiếp theo, thời điểm tạnh.
+    Hỗ trợ: phường, quận, toàn Hà Nội.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_dal import get_rain_timeline as dal_rain_timeline
+    from app.dal.weather_dal import analyze_rain_from_forecasts
+
+    # City-level default khi không có location
+    if not ward_id and not location_hint:
+        from app.dal.weather_aggregate_dal import get_city_hourly_forecast
+        forecasts = get_city_hourly_forecast(hours)
+        return analyze_rain_from_forecasts(
+            forecasts, hours, source_note="Tổng hợp toàn Hà Nội")
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
     info = _get_ward_id_or_fallback(resolved)
-    wid = info.get("ward_id")
 
+    # City level → city aggregate
+    if info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_hourly_forecast
+        forecasts = get_city_hourly_forecast(hours)
+        return analyze_rain_from_forecasts(
+            forecasts, hours, source_note="Tổng hợp toàn Hà Nội")
+
+    # District level without ward_id → district aggregate
+    if info["level"] == "district" and not info.get("ward_id"):
+        from app.dal.weather_aggregate_dal import get_district_hourly_forecast
+        district_name = info["district_name"]
+        forecasts = get_district_hourly_forecast(district_name, hours)
+        return analyze_rain_from_forecasts(
+            forecasts, hours, source_note=f"Tổng hợp quận/huyện {district_name}")
+
+    # Ward level → existing logic
+    wid = info.get("ward_id")
     if not wid:
-        return {"error": "need_ward", "message": "Cần chỉ định phường/xã cụ thể để xem timeline mưa"}
+        return {"error": "need_ward", "message": "Cần chỉ định phường/xã cụ thể để xem timeline mưa",
+                "suggestion": "Hãy nêu tên quận/huyện hoặc phường/xã cụ thể"}
 
     result = dal_rain_timeline(wid, hours)
     if info.get("fallback_ward"):
@@ -931,19 +1108,47 @@ def get_best_time(
     DÙNG KHI: user hỏi "mấy giờ chạy bộ tốt nhất?", "lúc nào chụp ảnh đẹp nhất?",
     "khi nào phơi đồ tốt?", "giờ nào nên đi picnic?".
     Trả về: top 5 giờ tốt nhất và 3 giờ xấu nhất với điểm số.
+    Hỗ trợ: phường, quận, toàn Hà Nội.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.activity_dal import get_best_time_for_activity
+
+    # City-level default khi không có location
+    if not ward_id and not location_hint:
+        from app.dal.weather_aggregate_dal import get_city_hourly_forecast
+        forecasts = get_city_hourly_forecast(hours)
+        result = get_best_time_for_activity(activity, forecasts=forecasts, hours=hours)
+        result["source_note"] = "Dữ liệu tổng hợp toàn Hà Nội"
+        return result
 
     resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
     if resolved.get("status") != "ok":
         return {"error": "location_not_found", "message": resolved.get("message", "Không tìm thấy địa điểm")}
 
     info = _get_ward_id_or_fallback(resolved)
-    wid = info.get("ward_id")
 
+    # City level → city aggregate
+    if info["level"] == "city":
+        from app.dal.weather_aggregate_dal import get_city_hourly_forecast
+        forecasts = get_city_hourly_forecast(hours)
+        result = get_best_time_for_activity(activity, forecasts=forecasts, hours=hours)
+        result["source_note"] = "Dữ liệu tổng hợp toàn Hà Nội"
+        return result
+
+    # District level without ward_id → district aggregate
+    if info["level"] == "district" and not info.get("ward_id"):
+        from app.dal.weather_aggregate_dal import get_district_hourly_forecast
+        district_name = info["district_name"]
+        forecasts = get_district_hourly_forecast(district_name, hours)
+        result = get_best_time_for_activity(activity, forecasts=forecasts, hours=hours)
+        result["source_note"] = f"Dữ liệu quận/huyện {district_name}"
+        return result
+
+    # Ward level → existing logic
+    wid = info.get("ward_id")
     if not wid:
-        return {"error": "need_ward", "message": "Không xác định được phường/xã"}
+        return {"error": "need_ward", "message": "Không xác định được phường/xã",
+                "suggestion": "Hãy nêu tên quận/huyện hoặc phường/xã cụ thể"}
 
     return get_best_time_for_activity(activity, wid, hours)
 

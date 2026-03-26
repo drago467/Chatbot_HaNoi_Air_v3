@@ -88,9 +88,9 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
         "ward": [get_activity_advice],
     },
     "expert_weather_param": {
-        "city": [get_city_weather],
-        "district": [get_district_weather],
-        "ward": [get_current_weather],
+        "city": [get_city_weather, get_comfort_index],
+        "district": [get_district_weather, get_comfort_index],
+        "ward": [get_current_weather, get_comfort_index],
     },
     "weather_alert": {
         "city": [get_weather_alerts, get_weather_change_alert],

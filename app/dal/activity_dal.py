@@ -309,13 +309,16 @@ _ACTIVITY_SCORING = {
 
 
 def get_best_time_for_activity(
-    activity: str, ward_id: str, hours: int = 24
+    activity: str, ward_id: str = None, hours: int = 24,
+    forecasts: List[Dict] = None
 ) -> Dict[str, Any]:
     """Scan hourly forecast and score each hour for an activity.
 
+    Accepts ward_id (fetches forecasts) OR pre-fetched forecasts (for city/district).
     Returns best hours sorted by score (highest first).
     """
-    forecasts = get_hourly_forecast(ward_id, hours=min(hours, 48))
+    if forecasts is None:
+        forecasts = get_hourly_forecast(ward_id, hours=min(hours, 48))
     if not forecasts:
         return {"error": "no_data", "message": "Không có dữ liệu dự báo"}
 
@@ -326,11 +329,12 @@ def get_best_time_for_activity(
 
     scored = []
     for f in forecasts:
-        temp = f.get("temp")
-        pop = f.get("pop") or 0
-        uvi = f.get("uvi") or 0
-        wind = f.get("wind_speed") or 0
-        humidity = f.get("humidity") or 50
+        # Support both ward-level (temp, pop) and aggregate (avg_temp, avg_pop) keys
+        temp = f.get("temp") or f.get("avg_temp")
+        pop = f.get("pop") or f.get("avg_pop") or 0
+        uvi = f.get("uvi") or f.get("avg_uvi") or f.get("max_uvi") or 0
+        wind = f.get("wind_speed") or f.get("avg_wind_speed") or 0
+        humidity = f.get("humidity") or f.get("avg_humidity") or 50
 
         if temp is None:
             continue

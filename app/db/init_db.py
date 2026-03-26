@@ -349,6 +349,7 @@ def init_db() -> None:
                     ("max_uvi", "DOUBLE PRECISION"),
                     ("avg_wind_deg", "DOUBLE PRECISION"),
                     ("max_wind_gust", "DOUBLE PRECISION"),
+                    ("avg_wind_speed", "DOUBLE PRECISION"),
                 ]
 
                 cur.execute("SAVEPOINT sp_daily")

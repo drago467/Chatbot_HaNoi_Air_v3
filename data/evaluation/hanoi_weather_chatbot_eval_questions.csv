@@ -15,7 +15,7 @@
 14,"Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",hourly_forecast,Dự báo theo giờ,ward,Khương Trung (Thanh Xuân),tối nay,temperature,onecall/hourly,"temp,feels_like",easy,
 15,Khoảng 9 giờ tối nay ở Cầu Giấy có lạnh không?,hourly_forecast,Dự báo theo giờ,district,Cầu Giấy,21:00 hôm nay,temperature,onecall/hourly,"temp,feels_like",medium,Giờ cụ thể
 16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,hourly_forecast,Dự báo theo giờ,city,Hà Nội,tối nay – 00:00,rain,onecall/hourly,"pop,rain.1h",medium,Khoảng thời gian
-17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,hourly_forecast,Dự báo theo giờ,district,Tây Hồ,đêm nay,wind,onecall/hourly,"wind_speed,wind_gust",easy,
+17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,wind_query,Truy vấn gió,district,Tây Hồ,đêm nay,wind,onecall/hourly,"wind_speed,wind_gust",easy,Hỏi gió mạnh không → wind_query
 18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,hourly_forecast,Dự báo theo giờ,ward,Xuân Đỉnh (Bắc Từ Liêm),3 giờ tới,rain,onecall/hourly,"pop,weather,rain.1h",medium,
 19,Sáng mai từ 6h đến 9h ở Long Biên trời có sương mù không?,hourly_forecast,Dự báo theo giờ,district,Long Biên,06:00–09:00 ngày mai,fog,onecall/hourly,"weather,visibility,humidity,dew_point",medium,Khoảng giờ cụ thể
 20,Mấy tiếng nữa ở Đống Đa mưa sẽ tạnh không?,hourly_forecast,Dự báo theo giờ,district,Đống Đa,vài giờ tới,rain_duration,onecall/hourly,"pop,rain.1h,weather",hard,Câu hỏi ngầm định đang mưa
@@ -71,7 +71,7 @@
 70,"Hà Nội mấy ngày tới có rét đậm không, nhiệt độ khoảng bao nhiêu?",temperature_query,Truy vấn nhiệt độ,city,Hà Nội,vài ngày tới,temp_cold,onecall/daily,"temp.min,temp.night",hard,Ngữ cảnh rét đậm (<15°C)
 71,"Hiện tại gió ở Sóc Sơn mạnh không, hướng nào?",wind_query,Truy vấn gió,district,Sóc Sơn,hiện tại,wind,onecall/current,"wind_speed,wind_deg,wind_gust",easy,
 72,Tối nay ở quận Bắc Từ Liêm có gió to không?,wind_query,Truy vấn gió,district,Bắc Từ Liêm,tối nay,wind,onecall/hourly,"wind_speed,wind_gust",easy,
-73,Trong vài giờ tới ở Hà Nội có khả năng giông mạnh không?,wind_query,Truy vấn gió,city,Hà Nội,vài giờ tới,wind_storm,onecall/hourly,"wind_speed,weather,pop",medium,
+73,Trong vài giờ tới ở Hà Nội có khả năng giông mạnh không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,vài giờ tới,wind_storm,onecall/hourly,"wind_speed,weather,pop",medium,Giông mạnh = hiện tượng thời tiết nguy hiểm
 74,Ngày mai gió mùa về ở Hà Nội thì cảm giác lạnh sẽ như thế nào?,wind_query,Truy vấn gió,city,Hà Nội,ngày mai,wind_chill,onecall/daily,"wind_speed,wind_deg,feels_like",hard,Kết hợp cảm giác lạnh do gió
 75,Gió giật tối nay ở Hà Nội mạnh nhất khoảng bao nhiêu m/s?,wind_query,Truy vấn gió,city,Hà Nội,tối nay,wind_gust,onecall/hourly,wind_gust,easy,
 76,Tuần này có đợt gió lạnh mạnh nào ở Hà Nội không?,wind_query,Truy vấn gió,city,Hà Nội,tuần này,wind_cold,onecall/daily,"wind_speed,wind_gust,temp",medium,
@@ -140,7 +140,7 @@
 139,Hà Nội hôm nay có cảnh báo nắng nóng cực đoan không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,hôm nay,heat_alert,onecall/current+alerts,"temp,uvi,alerts",easy,
 140,Tuần tới ở Hà Nội có nguy cơ mưa giông kèm lốc xoáy không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,tuần tới,tornado_risk,onecall/daily+alerts,"weather,wind_gust,alerts",hard,
 141,Trời Hà Nội dạo này khó chịu quá nhỉ?,seasonal_context,Ngữ cảnh thời vụ,city,Hà Nội,gần đây,general,onecall/current,"temp,humidity,weather",hard,Xu hướng gần đây + cảm nhận mùa
-142,Không biết mai có mưa không nhỉ?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,ngày mai,rain,onecall/daily,"pop,rain",easy,Câu nói vô định → gợi dự báo
+142,Không biết mai có mưa không nhỉ?,rain_query,Truy vấn mưa,city,Hà Nội,ngày mai,rain,onecall/daily,"pop,rain",easy,Câu nói casual nhưng bản chất hỏi mưa ngày mai
 143,"Ngoài trời lạnh quá, có nên mặc áo phao không?",smalltalk_weather,Small talk khí tượng,city,Hà Nội,hiện tại,temperature,onecall/current,"temp,feels_like,wind_speed",medium,Tư vấn trang phục
 144,Bạn có thể tư vấn hôm nay nên mặc gì không?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,outfit_advice,onecall/current+daily,"temp,feels_like,pop",hard,Ứng dụng thực tế cao
 145,Sao Hà Nội hôm nay nắng đẹp thế?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,sun,onecall/current,"weather,clouds,uvi",easy,Câu cảm thán → xác nhận + thông tin thêm

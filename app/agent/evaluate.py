@@ -334,7 +334,20 @@ JUDGE_PROMPT_FAITHFULNESS = """Bạn là chuyên gia kiểm tra tính chính xá
 
 ## Nhiệm vụ:
 Kiểm tra xem câu trả lời có chứa thông tin SAI hoặc BỊA ĐẶT không có trong dữ liệu thực tế không.
-Lưu ý: chatbot có thể làm tròn số hoặc diễn giải dữ liệu, điều đó là chấp nhận được.
+
+## Quy tắc chấm điểm:
+CÁC TRƯỜNG HỢP CHẤP NHẬN ĐƯỢC (KHÔNG trừ điểm):
+- Làm tròn số: 28.14°C → 28.1°C, 86.5% → 87% (sai lệch ≤ 0.5 đơn vị)
+- Diễn giải weather_main sang tiếng Việt: "Clouds" → "nhiều mây", "Rain" → "mưa"
+- Diễn giải mức gió: "2.5 m/s" → "gió nhẹ" (theo Beaufort)
+- Đánh giá chung dựa trên số liệu: "trời mát" khi temp 22-26°C
+- Trích xuất giá trị đúng từ forecast array cho đúng ngày/giờ được hỏi
+
+CÁC TRƯỜNG HỢP SAI (PHẢI trừ điểm):
+- Số liệu khác hẳn: tool nói 2.1 m/s nhưng chatbot nói 4.5 m/s (>100% sai lệch)
+- Bịa ngày không có trong data: tool chỉ có 3 ngày nhưng chatbot trình bày 5 ngày
+- Nhầm lẫn giá trị: dùng wind_gust thay cho wind_speed, hay avg_temp thay cho temp_max
+- Tạo thông tin không có cơ sở: UV index, áp suất khi tool không trả về
 
 **FAITHFULNESS (Độ trung thực):**
 - 5: Tất cả thông tin đều chính xác, không có gì bịa đặt
@@ -366,7 +379,7 @@ def extract_tool_outputs(result) -> str:
         if msg_type == "tool":
             content = getattr(msg, "content", str(msg))
             if content:
-                outputs.append(str(content)[:1000])
+                outputs.append(str(content)[:4000])
     return "\n---\n".join(outputs) if outputs else ""
 
 
@@ -412,6 +425,9 @@ def _get_expected_tools(intent: str, location_scope: str = "") -> list:
     """Get expected tools for (intent, location_scope) from hierarchical mapping.
 
     Falls back to "city" scope if the specific scope is not defined for an intent.
+    For "poi" scope: also accepts district-level tools, because the SLM router
+    maps POI locations to "district" scope (no separate "poi" class), so the
+    agent legitimately receives district tools for POI queries.
     Returns empty list for unknown intents.
     """
     intent_map = INTENT_TO_TOOLS.get(intent, {})
@@ -419,6 +435,10 @@ def _get_expected_tools(intent: str, location_scope: str = "") -> list:
         return []
     # Look up by scope; fallback to "city" if scope not found in this intent
     tools = intent_map.get(location_scope) or intent_map.get("city", [])
+    # POI queries: also accept district-level tools (router maps POI → district)
+    if location_scope == "poi":
+        district_tools = intent_map.get("district", [])
+        tools = list(set(tools) | set(district_tools))
     return tools
 
 
@@ -578,7 +598,7 @@ def llm_judge(question, response, tool_output=None, client=None) -> dict:
     if tool_output and len(tool_output.strip()) > 10:
         faith = call_judge_faithfulness(client, JUDGE_PROMPT_FAITHFULNESS.format(
             question=question, response=response,
-            tool_output=tool_output[:2000],
+            tool_output=tool_output[:8000],
         ))
 
     return {
@@ -659,7 +679,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
             "tool_correct": tool_correct,
             "tool_precision": check_tool_precision(intent, tools_called, location_scope),
             "tool_recall": check_tool_recall(intent, tools_called, location_scope),
-            "tool_output_raw": tool_output[:500],
+            "tool_output_raw": tool_output[:2000],
         }
 
         # Router metadata

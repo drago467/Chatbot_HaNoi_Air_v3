@@ -181,7 +181,8 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         avg_humidity, avg_pop, total_rain,
                         weather_main, ward_count,
                         avg_dew_point, avg_pressure, avg_clouds,
-                        max_uvi, avg_wind_deg, max_wind_gust
+                        max_uvi, avg_wind_deg, max_wind_gust,
+                        avg_wind_speed
                     )
                     SELECT
                         d.district_name_vi,
@@ -205,7 +206,8 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         ROUND(AVG(w.clouds)::numeric, 1),
                         MAX(w.uvi),
                         {_WIND_DEG_CIRCULAR_MEAN},
-                        MAX(w.wind_gust)
+                        MAX(w.wind_gust),
+                        ROUND(AVG(w.wind_speed)::numeric, 2)
                     FROM fact_weather_daily w
                     INNER JOIN dim_ward d ON w.ward_id = d.ward_id
                     WHERE w.data_kind = %s
@@ -225,7 +227,8 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         avg_clouds = EXCLUDED.avg_clouds,
                         max_uvi = EXCLUDED.max_uvi,
                         avg_wind_deg = EXCLUDED.avg_wind_deg,
-                        max_wind_gust = EXCLUDED.max_wind_gust
+                        max_wind_gust = EXCLUDED.max_wind_gust,
+                        avg_wind_speed = EXCLUDED.avg_wind_speed
                 """
                 cur.execute(sql, (data_kind,))
                 cur.execute("SELECT COUNT(*) FROM fact_weather_district_daily")
@@ -251,7 +254,8 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         avg_humidity, avg_pop, total_rain,
                         weather_main, ward_count,
                         avg_dew_point, avg_pressure, avg_clouds,
-                        max_uvi, avg_wind_deg, max_wind_gust
+                        max_uvi, avg_wind_deg, max_wind_gust,
+                        avg_wind_speed
                     )
                     SELECT
                         w.date,
@@ -272,7 +276,8 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         ROUND(AVG(w.clouds)::numeric, 1),
                         MAX(w.uvi),
                         {_WIND_DEG_CIRCULAR_MEAN},
-                        MAX(w.wind_gust)
+                        MAX(w.wind_gust),
+                        ROUND(AVG(w.wind_speed)::numeric, 2)
                     FROM fact_weather_daily w
                     WHERE w.data_kind = %s
                     GROUP BY w.date
@@ -290,7 +295,8 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         avg_clouds = EXCLUDED.avg_clouds,
                         max_uvi = EXCLUDED.max_uvi,
                         avg_wind_deg = EXCLUDED.avg_wind_deg,
-                        max_wind_gust = EXCLUDED.max_wind_gust
+                        max_wind_gust = EXCLUDED.max_wind_gust,
+                        avg_wind_speed = EXCLUDED.avg_wind_speed
                 """
                 cur.execute(sql, (data_kind,))
                 cur.execute("SELECT COUNT(*) FROM fact_weather_city_daily")

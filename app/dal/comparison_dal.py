@@ -80,40 +80,24 @@ def compare_weather(ward_id1: str, ward_id2: str) -> Dict[str, Any]:
     }
 
 
-def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
-    """Compare today's weather with the previous available day.
-    
-    Note: If data is missing for yesterday, compares with the most recent
-    available previous day. Use compare_with_yesterday() for strict yesterday.
-    
+def _build_comparison(today: dict, previous: dict, level: str = "ward", location_name: str = "") -> Dict[str, Any]:
+    """Build comparison result from two daily weather dicts (reusable for ward/district/city).
+
     Args:
-        ward_id: Ward ID
-        
-    Returns:
-        Dictionary with comparison data
+        today: Most recent day data (must have temp_avg or avg_temp)
+        previous: Previous day data
+        level: "ward", "district", or "city"
+        location_name: Human-readable name for context
     """
-    # Query 2 most recent days (both history and forecast)
-    # Prioritize history if available for the same date
-    results = query("""
-        SELECT DISTINCT ON (date) date, temp_avg, temp_min, temp_max, humidity, 
-               rain_total, weather_main, data_kind
-        FROM fact_weather_daily
-        WHERE ward_id = %s
-        ORDER BY date DESC, 
-                 CASE WHEN data_kind = 'history' THEN 0 ELSE 1 END
-        LIMIT 2
-    """, (ward_id,))
-    
-    if len(results) < 2:
-        return {
-            "error": "not_enough_data",
-            "message": "Cần có dữ liệu ít nhất 2 ngày"
-        }
-    
-    today, previous = results[0], results[1]  # results[0] is newest (ORDER BY DESC)
-    
+    # Normalize temp key (ward uses temp_avg, aggregate uses avg_temp)
+    today_temp = today.get("temp_avg") or today.get("avg_temp")
+    prev_temp = previous.get("temp_avg") or previous.get("avg_temp")
+
+    if today_temp is None or prev_temp is None:
+        return {"error": "missing_data", "message": "Thiếu dữ liệu nhiệt độ cho một hoặc cả hai ngày",
+                "suggestion": "Thử hỏi thời tiết hiện tại"}
+
     # Calculate days between
-    from datetime import datetime
     today_date = today.get("date")
     prev_date = previous.get("date")
     if hasattr(today_date, 'date'):
@@ -122,32 +106,89 @@ def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
         prev_date = prev_date.date()
     days_diff = (today_date - prev_date).days if today_date and prev_date else 1
     day_label = f"{days_diff} ngày trước" if days_diff > 1 else "hôm qua"
-    
-    # Calculate changes
-    if today.get("temp_avg") is None or previous.get("temp_avg") is None:
-        return {"error": "missing_data", "message": "Thiếu dữ liệu nhiệt độ cho một hoặc cả hai ngày"}
-    temp_diff = today.get("temp_avg", 0) - previous.get("temp_avg", 0)
-    rain_diff = (today.get("rain_total") or 0) - (previous.get("rain_total") or 0)
-    
+
+    temp_diff = today_temp - prev_temp
+    today_rain = today.get("rain_total") or today.get("total_rain") or 0
+    prev_rain = previous.get("rain_total") or previous.get("total_rain") or 0
+    rain_diff = today_rain - prev_rain
+
     changes = []
-    
     if temp_diff > 2:
         changes.append(f"Nhiệt độ tăng {temp_diff:.1f}°C so với {day_label}")
     elif temp_diff < -2:
         changes.append(f"Nhiệt độ giảm {abs(temp_diff):.1f}°C so với {day_label}")
-
     if rain_diff > 5:
         changes.append(f"Mưa nhiều hơn {day_label}")
     elif rain_diff < -5:
         changes.append(f"Mưa ít hơn {day_label}")
-    
-    return {
+
+    result = {
         "today": today,
         "previous": previous,
         "changes": changes,
-        "temp_diff": temp_diff,
-        "rain_diff": rain_diff
+        "temp_diff": round(temp_diff, 1),
+        "rain_diff": round(rain_diff, 1),
+        "level": level,
     }
+    if location_name:
+        result["location_name"] = location_name
+    return result
+
+
+def compare_with_previous_day(ward_id: str) -> Dict[str, Any]:
+    """Compare today's weather with the previous available day (ward level)."""
+    results = query("""
+        SELECT DISTINCT ON (date) date, temp_avg, temp_min, temp_max, humidity,
+               rain_total, weather_main, data_kind
+        FROM fact_weather_daily
+        WHERE ward_id = %s
+        ORDER BY date DESC,
+                 CASE WHEN data_kind = 'history' THEN 0 ELSE 1 END
+        LIMIT 2
+    """, (ward_id,))
+
+    if len(results) < 2:
+        return {
+            "error": "not_enough_data",
+            "message": "Cần có dữ liệu ít nhất 2 ngày",
+            "note": "Hệ thống cần dữ liệu cả hôm nay và hôm qua",
+            "suggestion": "Thử hỏi thời tiết hiện tại thay vì so sánh"
+        }
+
+    return _build_comparison(results[0], results[1], level="ward")
+
+
+def compare_city_with_previous_day() -> Dict[str, Any]:
+    """Compare today vs yesterday from fact_weather_city_daily."""
+    results = query("""
+        SELECT date, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
+               weather_main, ward_count
+        FROM fact_weather_city_daily
+        ORDER BY date DESC LIMIT 2
+    """)
+    if len(results) < 2:
+        return {"error": "not_enough_data",
+                "message": "Cần dữ liệu ít nhất 2 ngày để so sánh",
+                "note": "Hệ thống cần dữ liệu cả hôm nay và hôm qua",
+                "suggestion": "Thử hỏi thời tiết hiện tại"}
+    return _build_comparison(results[0], results[1], level="city", location_name="Hà Nội")
+
+
+def compare_district_with_previous_day(district_name: str) -> Dict[str, Any]:
+    """Compare today vs yesterday from fact_weather_district_daily."""
+    results = query("""
+        SELECT date, district_name_vi, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
+               weather_main, ward_count
+        FROM fact_weather_district_daily
+        WHERE district_name_vi = %s
+        ORDER BY date DESC LIMIT 2
+    """, (district_name,))
+    if len(results) < 2:
+        return {"error": "not_enough_data",
+                "message": f"Cần dữ liệu ít nhất 2 ngày cho quận {district_name}",
+                "suggestion": "Thử hỏi thời tiết hiện tại"}
+    return _build_comparison(results[0], results[1], level="district", location_name=district_name)
+
 
 # Alias for backward compatibility
 compare_with_yesterday = compare_with_previous_day

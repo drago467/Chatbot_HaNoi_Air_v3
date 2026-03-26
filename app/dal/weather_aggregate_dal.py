@@ -36,7 +36,7 @@ _DISTRICT_DAILY_COLS = """
     avg_humidity, avg_pop, total_rain,
     weather_main, ward_count,
     avg_dew_point, avg_pressure, avg_clouds,
-    max_uvi, avg_wind_deg, max_wind_gust
+    max_uvi, avg_wind_deg, max_wind_gust, avg_wind_speed
 """
 
 _CITY_DAILY_COLS = """
@@ -45,7 +45,7 @@ _CITY_DAILY_COLS = """
     avg_humidity, avg_pop, total_rain,
     weather_main, ward_count,
     avg_dew_point, avg_pressure, avg_clouds,
-    max_uvi, avg_wind_deg, max_wind_gust
+    max_uvi, avg_wind_deg, max_wind_gust, avg_wind_speed
 """
 
 
