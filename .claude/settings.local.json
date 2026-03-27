@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "WebSearch",
       "Bash(python3:*)",
@@ -9,7 +8,12 @@
       "Bash(PYTHONUTF8=1 python << 'EOFPYTHON':*)",
       "Bash(python -c \":*)",
       "Bash(/tmp/db_summary.md:*)",
-      "Read(//tmp/**)"
-    ]
-  }
+      "Read(//tmp/**)",
+      "Bash('/c/Users/X1 gen:*)",
+      "Read(//c/Users/X1 gen 9/**)",
+      "Bash(wc -l \"/c/Users/X1 gen 9/Downloads/Chatbot_HanoiAir/app/dal\"/*.py)"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "skipDangerousModePermissionPrompt": true
 }

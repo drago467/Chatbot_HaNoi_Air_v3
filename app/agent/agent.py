@@ -105,25 +105,20 @@ Hỗ trợ: Hồ Gươm, Mỹ Đình, Hồ Tây, Sân bay Nội Bài, Times City
 
 # ── Tool-specific rules: chỉ gửi cho focused agent khi tool đó được chọn ──
 TOOL_RULES = {
-    "get_current_weather": """- "bây giờ", "hiện tại", "đang" → get_current_weather (phường cụ thể)""",
-
-    "get_district_weather": """- Thời tiết hiện tại level quận, bao gồm tổng hợp các phường
-- Cho quận: tổng quan + top phường nóng/lạnh nhất + hiện tượng đặc biệt""",
-
-    "get_city_weather": """- Thời tiết hiện tại toàn Hà Nội (aggregated)
-- Chú ý data_coverage trong output để biết phạm vi dữ liệu""",
+    "get_current_weather": """- "bây giờ", "hiện tại", "đang" → get_current_weather
+- Hỗ trợ mọi cấp: phường, quận, toàn Hà Nội (tự dispatch theo location)
+- Cho quận: tổng quan + nổi bật + hiện tượng đặc biệt
+- Cho toàn Hà Nội: dữ liệu aggregated từ tất cả quận""",
 
     "get_hourly_forecast": """- "chiều nay", "tối nay", "3 giờ nữa", "sáng mai" → dự báo theo giờ
 - Tối đa 48h. Xa hơn → thông báo giới hạn, gợi ý dùng dự báo theo ngày""",
 
     "get_daily_forecast": """- "ngày mai", "hôm nay" cả ngày, "tuần này", "3 ngày tới" → dự báo theo ngày
+- Hỗ trợ mọi cấp: phường, quận, toàn Hà Nội
 - Tối đa 8 ngày. Xa hơn → thông báo giới hạn, cung cấp data có sẵn""",
 
-    "get_city_daily_forecast": """- Dự báo theo ngày toàn Hà Nội. Tối đa 8 ngày.""",
-
-    "get_district_daily_forecast": """- Dự báo theo ngày cho quận. Tối đa 8 ngày.""",
-
-    "get_daily_summary": """- Tổng hợp 1 ngày cho 1 phường: min/max/avg các thông số""",
+    "get_daily_summary": """- Tổng hợp 1 ngày: min/max/avg các thông số
+- Hỗ trợ mọi cấp: phường (chi tiết nhất), quận, toàn Hà Nội""",
 
     "get_weather_history": """- "hôm qua", "tuần trước" → lịch sử thời tiết
 - Giới hạn: chỉ có 14 ngày gần nhất. Xa hơn → thông báo giới hạn.
@@ -136,9 +131,11 @@ TOOL_RULES = {
     "get_best_time": """- "mấy giờ tốt nhất", "lúc nào nên đi" → thời điểm tốt nhất cho hoạt động
 - Hỗ trợ: phường, quận, toàn Hà Nội""",
 
-    "get_clothing_advice": """- "mặc gì", "cần áo khoác không", "mang ô không" → tư vấn trang phục""",
+    "get_clothing_advice": """- "mặc gì", "cần áo khoác không", "mang ô không" → tư vấn trang phục
+- Hỗ trợ mọi cấp: phường, quận, toàn Hà Nội""",
 
-    "get_temperature_trend": """- "ấm lên khi nào", "xu hướng nhiệt", "bao giờ hết rét" → xu hướng nhiệt độ""",
+    "get_temperature_trend": """- "ấm lên khi nào", "xu hướng nhiệt", "bao giờ hết rét" → xu hướng nhiệt độ
+- Hỗ trợ mọi cấp: phường, quận, toàn Hà Nội""",
 
     "get_seasonal_comparison": """- "nóng hơn bình thường không", "dạo này", "mùa này" → so sánh với trung bình mùa
 - LUÔN gọi tool ngay cả khi câu hỏi mang tính chuyện phiếm ("nhỉ?", "quá!", "thật không?")
@@ -173,22 +170,52 @@ TOOL_RULES = {
     "get_ward_ranking_in_district": """- "phường nào trong quận X nóng nhất" → xếp hạng phường trong quận""",
 
     "get_weather_period": """- "tuần này", "3 ngày tới", "cuối tuần" → thời tiết theo khoảng thời gian""",
+
+    # ── 6 NEW insight tools ──
+    "get_uv_safe_windows": """- "lúc nào ra ngoài an toàn?", "UV thấp lúc mấy giờ?", "giờ nào nên đi bộ?"
+- Trả về: khung giờ UV < ngưỡng, peak_uv_time, summary
+- Hỗ trợ: phường, quận, toàn Hà Nội""",
+
+    "get_pressure_trend": """- "áp suất thay đổi?", "có front thời tiết?", "áp suất giảm mạnh?"
+- Phát hiện: front lạnh (áp suất giảm >3 hPa/3h), khí áp thấp
+- Hỗ trợ: phường, quận, toàn Hà Nội""",
+
+    "get_daily_rhythm": """- "sáng nay mấy độ?", "chiều nay nóng không?", "tối mát chưa?"
+- Chia ngày thành 4 khung: sáng (6-10h), trưa (10-14h), chiều (14-18h), tối (18-22h)
+- Hỗ trợ: phường, quận, toàn Hà Nội""",
+
+    "get_humidity_timeline": """- "độ ẩm thay đổi?", "khi nào hết nồm?", "điểm sương?"
+- Phát hiện: nom ẩm (humidity ≥85% AND temp-dew_point ≤2°C)
+- Hỗ trợ: phường, quận, toàn Hà Nội""",
+
+    "get_sunny_periods": """- "khi nào có nắng?", "lúc nào trời quang?", "có nắng phơi đồ?"
+- Nắng = mây <40%, pop <30%, không mưa
+- Hỗ trợ: phường, quận, toàn Hà Nội""",
+
+    "get_district_multi_compare": """- "tổng hợp thời tiết các quận", "quận nào thoải mái nhất?"
+- So sánh nhiều chỉ số cùng lúc: nhiệt độ, độ ẩm, UV, gió, mưa, áp suất""",
 }
 
 # ── Full prompt cho fallback agent (25 tools) — giữ tool selection rules ──
 SYSTEM_PROMPT_TEMPLATE = BASE_PROMPT_TEMPLATE + """
-## Quy tắc chọn tool
-- "bây giờ", "hiện tại", "đang" → get_current_weather (phường) hoặc get_district_weather / get_city_weather
+## Quy tắc chọn tool (tất cả tool đều hỗ trợ 3 cấp: phường/quận/toàn Hà Nội)
+- "bây giờ", "hiện tại", "đang" → get_current_weather (tự dispatch theo cấp)
 - "chiều nay", "tối nay", "3 giờ nữa", "sáng mai" → get_hourly_forecast
+- "sáng nay mấy độ", "chiều nóng không" → get_daily_rhythm
 - "ngày mai", "hôm nay" (cả ngày) → get_daily_summary
 - "tuần này", "3 ngày tới", "cuối tuần" → get_weather_period
 - "hôm qua", "tuần trước" → get_weather_history
 - "quận nào nóng nhất", "top", "xếp hạng" → get_district_ranking
 - "phường nào trong quận X" → get_ward_ranking_in_district
+- "so sánh tổng hợp các quận" → get_district_multi_compare
 - "mưa đến bao giờ", "mấy giờ tạnh", "khi nào mưa" → get_rain_timeline
+- "khi nào có nắng", "trời quang lúc nào" → get_sunny_periods
 - "mấy giờ tốt nhất", "lúc nào nên" → get_best_time
+- "UV an toàn lúc nào", "giờ nào ra ngoài" → get_uv_safe_windows
 - "mặc gì", "cần áo khoác không", "mang ô không" → get_clothing_advice
 - "ấm lên khi nào", "xu hướng nhiệt", "bao giờ hết rét" → get_temperature_trend
+- "áp suất thay đổi?", "có front thời tiết?" → get_pressure_trend
+- "khi nào hết nồm", "độ ẩm thay đổi" → get_humidity_timeline
 - "nóng hơn bình thường không" → get_seasonal_comparison
 - "đi chơi được không", "chạy bộ được không" → get_activity_advice
 - "thoải mái không", "dễ chịu không", "ra ngoài được không" → get_comfort_index
@@ -196,18 +223,27 @@ SYSTEM_PROMPT_TEMPLATE = BASE_PROMPT_TEMPLATE + """
 
 ### So sánh hai địa điểm → BẮT BUỘC dùng compare_weather
 - "A và B nơi nào nóng/lạnh/ẩm hơn?" → compare_weather(location_hint1="A", location_hint2="B")
-- KHÔNG gọi get_district_weather 2 lần riêng lẻ khi so sánh. PHẢI dùng compare_weather.
+- KHÔNG gọi get_current_weather 2 lần riêng lẻ khi so sánh. PHẢI dùng compare_weather.
 
-### Cảnh báo thời tiết → get_weather_alerts + detect_phenomena
+### Cảnh báo thời tiết → get_weather_alerts + detect_phenomena + get_pressure_trend
 - "cảnh báo", "nguy hiểm", "giông lốc", "bão", "lũ", "ngập" → get_weather_alerts
-- "nồm ẩm", "gió mùa", "sương mù" → detect_phenomena
-- "trời có thay đổi gì", "sắp mưa" → get_weather_change_alert
+- "nồm ẩm", "gió mùa", "sương mù" → detect_phenomena + get_humidity_timeline
+- "trời có thay đổi gì", "sắp mưa" → get_weather_change_alert + get_pressure_trend
+
+### Insight tools mới (hỗ trợ 3 cấp: phường/quận/TP)
+- "UV an toàn lúc nào", "giờ nào ra ngoài an toàn" → get_uv_safe_windows
+- "áp suất thay đổi", "có front thời tiết" → get_pressure_trend
+- "sáng nay mấy độ", "chiều nóng không", "nhịp nhiệt trong ngày" → get_daily_rhythm
+- "khi nào hết nồm", "độ ẩm thay đổi thế nào", "điểm sương" → get_humidity_timeline
+- "khi nào có nắng", "trời quang lúc nào" → get_sunny_periods
+- "tổng hợp so sánh các quận", "quận nào thoải mái nhất" → get_district_multi_compare
 
 ## Khi cần gọi nhiều tool
-- "Thời tiết Hà Nội hôm nay" → get_city_weather + get_district_ranking(nhiet_do)
-- "Có nên đi chơi không" → get_best_time + get_clothing_advice
-- "Quận Cầu Giấy thời tiết thế nào" → get_district_weather + get_ward_ranking_in_district
-- "Ra ngoài có ổn không" → get_comfort_index + get_clothing_advice
+- "Thời tiết Hà Nội hôm nay" → get_current_weather + get_district_ranking(nhiet_do)
+- "Có nên đi chơi không" → get_best_time + get_clothing_advice + get_uv_safe_windows
+- "Quận Cầu Giấy thời tiết thế nào" → get_current_weather + get_ward_ranking_in_district
+- "Ra ngoài có ổn không" → get_comfort_index + get_clothing_advice + get_uv_safe_windows
+- "Có nồm ẩm không" → detect_phenomena + get_humidity_timeline
 
 ## Ví dụ câu trả lời tốt
 
