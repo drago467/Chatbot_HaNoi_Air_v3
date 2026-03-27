@@ -8,7 +8,7 @@ Chia theo domain:
 - ranking.py: district_ranking, ward_ranking
 - insight.py: temperature_trend, comfort_index, weather_change_alert,
               detect_phenomena, clothing_advice, activity_advice
-- insight_new.py: 6 tool moi (UV safe, pressure trend, daily rhythm,
+- insight_new.py: 6 tool mới (UV safe, pressure trend, daily rhythm,
                   humidity timeline, sunny periods, multi-metric comparison)
 """
 
@@ -55,7 +55,7 @@ from app.agent.tools.insight_new import (
 )
 
 
-# TOOLS list — tat ca tools de dang ky voi LangGraph agent
+# TOOLS list — tất cả tools để đăng ký với LangGraph agent
 TOOLS = [
     # Core (3)
     resolve_location,

@@ -157,7 +157,7 @@ TOOL_RULES = {
 - Hỗ trợ mọi level: phường/quận/thành phố""",
 
     "compare_weather": """- "A và B nơi nào nóng/lạnh/ẩm hơn?" → compare_weather(location_hint1="A", location_hint2="B")
-- BẮT BUỘC dùng compare_weather. KHÔNG gọi get_district_weather 2 lần riêng lẻ.""",
+- BẮT BUỘC dùng compare_weather. KHÔNG gọi get_current_weather 2 lần riêng lẻ.""",
 
     "compare_with_yesterday": """- "hôm nay so với hôm qua", "thay đổi so với hôm qua", "mấy hôm nay hay thay đổi" → so sánh với hôm qua
 - LUÔN gọi tool khi user nhận xét về thay đổi thời tiết gần đây
@@ -248,7 +248,7 @@ SYSTEM_PROMPT_TEMPLATE = BASE_PROMPT_TEMPLATE + """
 ## Ví dụ câu trả lời tốt
 
 Câu hỏi: "Bây giờ thời tiết Cầu Giấy thế nào?"
-→ Gọi get_district_weather, trả lời:
+→ Gọi get_current_weather, trả lời:
 "Quận Cầu Giấy hiện tại: 28.5°C (cảm giác 31°C), trời có mây, độ ẩm 75%.
 Gió Đông Nam 2.3 m/s, UV 5.2 (trung bình).
 💡 Trời oi bức, nên mang nước khi ra ngoài."

@@ -1,11 +1,11 @@
-"""New Insight tools — 6 tool moi tan dung data san co trong DB.
+"""New Insight tools — 6 tool mới tận dụng data sẵn có trong DB.
 
-1. get_uv_safe_windows — Tim khung gio UV an toan de ra ngoai
-2. get_pressure_trend — Xu huong ap suat (front thoi tiet)
-3. get_daily_rhythm — Nhip nhiet do trong ngay (sang/trua/chieu/toi)
-4. get_humidity_timeline — Timeline do am + diem suong
-5. get_sunny_periods — Tim khung gio nang dep (may ít, UV vua)
-6. get_district_multi_compare — So sanh nhieu chi so cung luc giua cac quan
+1. get_uv_safe_windows — Tìm khung giờ UV an toàn để ra ngoài
+2. get_pressure_trend — Xu hướng áp suất (front thời tiết)
+3. get_daily_rhythm — Nhịp nhiệt độ trong ngày (sáng/trưa/chiều/tối)
+4. get_humidity_timeline — Timeline độ ẩm + điểm sương
+5. get_sunny_periods — Tìm khung giờ nắng đẹp (mây ít, UV vừa)
+6. get_district_multi_compare — So sánh nhiều chỉ số cùng lúc giữa các quận
 """
 
 from typing import Optional
@@ -17,20 +17,20 @@ from langchain_core.tools import tool
 
 class GetUvSafeWindowsInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    hours: int = Field(default=24, description="So gio quet (1-48)")
-    max_uvi: float = Field(default=5.0, description="Nguong UV an toan (mac dinh 5 = trung binh)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    hours: int = Field(default=24, description="Số giờ quét (1-48)")
+    max_uvi: float = Field(default=5.0, description="Ngưỡng UV an toàn (mặc định 5 = trung bình)")
 
 
 @tool(args_schema=GetUvSafeWindowsInput)
 def get_uv_safe_windows(ward_id: str = None, location_hint: str = None,
                         hours: int = 24, max_uvi: float = 5.0) -> dict:
-    """Tim KHUNG GIO UV AN TOAN de hoat dong ngoai troi.
+    """Tìm KHUNG GIỜ UV AN TOÀN để hoạt động ngoài trời.
 
-    DUNG KHI: "luc nao ra ngoai an toan?", "UV thap luc may gio?",
-    "gio nao nen di bo?", "bao gio het nang gat?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: safe_windows (khung gio UV < nguong), peak_uv_time, summary.
+    DÙNG KHI: "lúc nào ra ngoài an toàn?", "UV thấp lúc mấy giờ?",
+    "giờ nào nên đi bộ?", "bao giờ hết nắng gắt?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: safe_windows (khung giờ UV < ngưỡng), peak_uv_time, summary.
     """
     from app.agent.dispatch import dispatch_forecast, normalize_rows
     from app.dal.weather_dal import get_hourly_forecast as dal_ward
@@ -98,12 +98,12 @@ def get_uv_safe_windows(ward_id: str = None, location_hint: str = None,
 
     # Summary
     if not danger_windows:
-        summary = f"UV an toan suot {hours} gio toi (< {max_uvi})"
+        summary = f"UV an toàn suốt {hours} giờ tới (< {max_uvi})"
     elif not safe_windows:
-        summary = f"UV cao suot {hours} gio toi — han che ra ngoai"
+        summary = f"UV cao suốt {hours} giờ tới — hạn chế ra ngoài"
     else:
         best = max(safe_windows, key=lambda w: w["end"])
-        summary = f"Gio an toan nhat: {best['start']} - {best['end']} (UV {best['max_uvi']})"
+        summary = f"Giờ an toàn nhất: {best['start']} - {best['end']} (UV {best['max_uvi']})"
 
     return {
         "safe_windows": safe_windows,
@@ -120,19 +120,19 @@ def get_uv_safe_windows(ward_id: str = None, location_hint: str = None,
 
 class GetPressureTrendInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    hours: int = Field(default=24, description="So gio phan tich (1-48)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    hours: int = Field(default=24, description="Số giờ phân tích (1-48)")
 
 
 @tool(args_schema=GetPressureTrendInput)
 def get_pressure_trend(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Phan tich XU HUONG AP SUAT — phat hien front thoi tiet.
+    """Phân tích XU HƯỚNG ÁP SUẤT — phát hiện front thời tiết.
 
-    DUNG KHI: "ap suat thay doi the nao?", "co front thoi tiet khong?",
-    "co khi ap thap khong?", "ap suat giam/tang manh khong?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: trend (rising/falling/stable), drop_rate, front_warning, hourly_data.
-    Y nghia: ap suat giam nhanh (>3 hPa/3h) = front lanh/bao den.
+    DÙNG KHI: "áp suất thay đổi thế nào?", "có front thời tiết không?",
+    "có khí áp thấp không?", "áp suất giảm/tăng mạnh không?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: trend (rising/falling/stable), drop_rate, front_warning, hourly_data.
+    Ý nghĩa: áp suất giảm nhanh (>3 hPa/3h) = front lạnh/bão đến.
     """
     from app.agent.dispatch import dispatch_forecast
     from app.dal.weather_dal import get_hourly_forecast as dal_ward
@@ -167,7 +167,7 @@ def get_pressure_trend(ward_id: str = None, location_hint: str = None, hours: in
             pressures.append({"pressure": p, "time": str(t) if t else ""})
 
     if len(pressures) < 2:
-        return {"error": "no_data", "message": "Khong du du lieu ap suat"}
+        return {"error": "no_data", "message": "Không đủ dữ liệu áp suất"}
 
     # Trend analysis
     p_first = pressures[0]["pressure"]
@@ -175,11 +175,11 @@ def get_pressure_trend(ward_id: str = None, location_hint: str = None, hours: in
     total_change = p_last - p_first
 
     if total_change > 3:
-        trend, trend_vi = "rising", "Tang"
+        trend, trend_vi = "rising", "Tăng"
     elif total_change < -3:
-        trend, trend_vi = "falling", "Giam"
+        trend, trend_vi = "falling", "Giảm"
     else:
-        trend, trend_vi = "stable", "On dinh"
+        trend, trend_vi = "stable", "Ổn định"
 
     # 3-hour drop detection (front warning)
     max_3h_drop = 0
@@ -192,9 +192,9 @@ def get_pressure_trend(ward_id: str = None, location_hint: str = None, hours: in
 
     front_warning = None
     if max_3h_drop >= 6:
-        front_warning = f"CANH BAO: Ap suat giam rat manh ({max_3h_drop:.1f} hPa/3h) — co the co bao"
+        front_warning = f"CẢNH BÁO: Áp suất giảm rất mạnh ({max_3h_drop:.1f} hPa/3h) — có thể có bão"
     elif max_3h_drop >= 3:
-        front_warning = f"Luu y: Ap suat giam ({max_3h_drop:.1f} hPa/3h) — co the co front lanh"
+        front_warning = f"Lưu ý: Áp suất giảm ({max_3h_drop:.1f} hPa/3h) — có thể có front lạnh"
 
     return {
         "trend": trend, "trend_vi": trend_vi,
@@ -212,20 +212,20 @@ def get_pressure_trend(ward_id: str = None, location_hint: str = None, hours: in
 
 class GetDailyRhythmInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    date: Optional[str] = Field(default=None, description="Ngay (YYYY-MM-DD), mac dinh hom nay")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    date: Optional[str] = Field(default=None, description="Ngày (YYYY-MM-DD), mặc định hôm nay")
 
 
 @tool(args_schema=GetDailyRhythmInput)
 def get_daily_rhythm(ward_id: str = None, location_hint: str = None, date: str = None) -> dict:
-    """Nhip nhiet do TRONG NGAY: sang/trua/chieu/toi, sunrise/sunset.
+    """Nhịp nhiệt độ TRONG NGÀY: sáng/trưa/chiều/tối, sunrise/sunset.
 
-    DUNG KHI: "sang nay may do?", "chieu nay nong khong?", "toi mat chua?",
-    "nhiet do thay doi trong ngay nhu the nao?".
-    Ho tro: phuong/xa (chi tiet nhat voi temp_morn/day/eve/night),
-    quan/huyen va toan Ha Noi (tu hourly forecast).
-    Tra ve: 4 khung gio (sang 6-10, trua 10-14, chieu 14-18, toi 18-22)
-    voi temp, humidity, UV, wind trung binh.
+    DÙNG KHI: "sáng nay mấy độ?", "chiều nay nóng không?", "tối mát chưa?",
+    "nhiệt độ thay đổi trong ngày như thế nào?".
+    Hỗ trợ: phường/xã (chi tiết nhất với temp_morn/day/eve/night),
+    quận/huyện và toàn Hà Nội (từ hourly forecast).
+    Trả về: 4 khung giờ (sáng 6-10, trưa 10-14, chiều 14-18, tối 18-22)
+    với temp, humidity, UV, wind trung bình.
     """
     from app.agent.dispatch import dispatch_forecast
     from app.dal.weather_dal import get_hourly_forecast as dal_ward
@@ -256,10 +256,10 @@ def get_daily_rhythm(ward_id: str = None, location_hint: str = None, date: str =
 
     # Parse hourly into time-of-day buckets
     buckets = {
-        "sang": {"label": "Sang (6h-10h)", "hours": range(6, 10), "data": []},
-        "trua": {"label": "Trua (10h-14h)", "hours": range(10, 14), "data": []},
-        "chieu": {"label": "Chieu (14h-18h)", "hours": range(14, 18), "data": []},
-        "toi": {"label": "Toi (18h-22h)", "hours": range(18, 22), "data": []},
+        "sang": {"label": "Sáng (6h-10h)", "hours": range(6, 10), "data": []},
+        "trua": {"label": "Trưa (10h-14h)", "hours": range(10, 14), "data": []},
+        "chieu": {"label": "Chiều (14h-18h)", "hours": range(14, 18), "data": []},
+        "toi": {"label": "Tối (18h-22h)", "hours": range(18, 22), "data": []},
     }
 
     for f in forecasts:
@@ -336,18 +336,18 @@ def get_daily_rhythm(ward_id: str = None, location_hint: str = None, date: str =
 
 class GetHumidityTimelineInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    hours: int = Field(default=24, description="So gio (1-48)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    hours: int = Field(default=24, description="Số giờ (1-48)")
 
 
 @tool(args_schema=GetHumidityTimelineInput)
 def get_humidity_timeline(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Timeline DO AM + DIEM SUONG: khi nao kho rao, khi nao oi buc.
+    """Timeline ĐỘ ẨM + ĐIỂM SƯƠNG: khi nào khô ráo, khi nào oi bức.
 
-    DUNG KHI: "do am thay doi the nao?", "khi nao het nom am?",
-    "diem suong bao nhieu?", "luc nao thoai mai nhat (do am)?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: hourly humidity + dew_point, comfort_zones, nom_am_periods.
+    DÙNG KHI: "độ ẩm thay đổi thế nào?", "khi nào hết nồm ẩm?",
+    "điểm sương bao nhiêu?", "lúc nào thoải mái nhất (độ ẩm)?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: hourly humidity + dew_point, comfort_zones, nom_am_periods.
     """
     from app.agent.dispatch import dispatch_forecast
     from app.dal.weather_dal import get_hourly_forecast as dal_ward
@@ -389,15 +389,15 @@ def get_humidity_timeline(ward_id: str = None, location_hint: str = None, hours:
         # Comfort level based on dew point
         if dp is not None:
             if dp > 24:
-                comfort = "Rat oi buc"
+                comfort = "Rất oi bức"
             elif dp > 20:
-                comfort = "Oi buc"
+                comfort = "Oi bức"
             elif dp > 16:
-                comfort = "De chiu"
+                comfort = "Dễ chịu"
             elif dp > 10:
-                comfort = "Kho rao"
+                comfort = "Khô ráo"
             else:
-                comfort = "Rat kho"
+                comfort = "Rất khô"
         else:
             comfort = None
 
@@ -455,18 +455,18 @@ def get_humidity_timeline(ward_id: str = None, location_hint: str = None, hours:
 
 class GetSunnyPeriodsInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    hours: int = Field(default=24, description="So gio (1-48)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    hours: int = Field(default=24, description="Số giờ (1-48)")
 
 
 @tool(args_schema=GetSunnyPeriodsInput)
 def get_sunny_periods(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Tim khung gio NANG DEP (it may, khong mua, UV vua phai).
+    """Tìm khung giờ NẮNG ĐẸP (ít mây, không mưa, UV vừa phải).
 
-    DUNG KHI: "khi nao co nang?", "luc nao troi quang?", "co nang de phoi do khong?",
-    "khi nao troi dep nhat?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: sunny_windows, cloudy_windows, best_sunny_time.
+    DÙNG KHI: "khi nào có nắng?", "lúc nào trời quang?", "có nắng để phơi đồ không?",
+    "khi nào trời đẹp nhất?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: sunny_windows, cloudy_windows, best_sunny_time.
     """
     from app.agent.dispatch import dispatch_forecast
     from app.dal.weather_dal import get_hourly_forecast as dal_ward
@@ -537,24 +537,21 @@ def get_sunny_periods(ward_id: str = None, location_hint: str = None, hours: int
     if current_window:
         (sunny_windows if current_window["type"] == "sunny" else cloudy_windows).append(current_window)
 
+    # Best sunny: longest with moderate UV (must be before cleanup)
+    if sunny_windows:
+        best_sunny = max(sunny_windows, key=lambda w: w.get("_count", 1) if "_count" in w else 1)
+
     # Clean internal keys
     for w in sunny_windows + cloudy_windows:
         for k in list(w.keys()):
             if k.startswith("_"):
                 del w[k]
-
-    # Best sunny: longest with moderate UV
-    if sunny_windows:
-        best_sunny = max(sunny_windows, key=lambda w: w.get("_count", 1) if "_count" in w else 1)
-
-    # Summary
-    total_sunny_hours = sum(len(range(1)) for w in sunny_windows)  # approximate
     if not sunny_windows:
-        summary = f"Khong co khung gio nang dep trong {hours} gio toi"
+        summary = f"Không có khung giờ nắng đẹp trong {hours} giờ tới"
     else:
-        summary = f"Co {len(sunny_windows)} khung gio nang dep"
+        summary = f"Có {len(sunny_windows)} khung giờ nắng đẹp"
         if best_sunny:
-            summary += f", tot nhat: {best_sunny['start']} - {best_sunny['end']}"
+            summary += f", tốt nhất: {best_sunny['start']} - {best_sunny['end']}"
 
     return {
         "sunny_windows": sunny_windows,
@@ -571,20 +568,20 @@ def get_sunny_periods(ward_id: str = None, location_hint: str = None, hours: int
 class GetDistrictMultiCompareInput(BaseModel):
     metrics: str = Field(
         default="nhiet_do,do_am,uvi",
-        description="Cac chi so can so sanh, cach nhau boi dau phay. "
-                    "Vi du: 'nhiet_do,do_am,uvi,gio,mua,ap_suat'"
+        description="Các chỉ số cần so sánh, cách nhau bởi dấu phẩy. "
+                    "Ví dụ: 'nhiet_do,do_am,uvi,gio,mua,ap_suat'"
     )
-    limit: int = Field(default=5, description="So quan/huyen top (1-30)")
+    limit: int = Field(default=5, description="Số quận/huyện top (1-30)")
 
 
 @tool(args_schema=GetDistrictMultiCompareInput)
 def get_district_multi_compare(metrics: str = "nhiet_do,do_am,uvi", limit: int = 5) -> dict:
-    """So sanh NHIEU CHI SO cung luc giua cac quan/huyen.
+    """So sánh NHIỀU CHỈ SỐ cùng lúc giữa các quận/huyện.
 
-    DUNG KHI: "tong hop thoi tiet cac quan", "so sanh toan dien cac quan",
-    "quan nao thoai mai nhat?" (can nhieu chi so).
-    Chi so ho tro: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may.
-    Tra ve: cho moi chi so, top N quan nong/lanh/am/... nhat.
+    DÙNG KHI: "tổng hợp thời tiết các quận", "so sánh toàn diện các quận",
+    "quận nào thoải mái nhất?" (cần nhiều chỉ số).
+    Chỉ số hỗ trợ: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may.
+    Trả về: cho mỗi chỉ số, top N quận nóng/lạnh/ẩm/... nhất.
     """
     from app.dal.weather_aggregate_dal import get_district_rankings
 
@@ -594,7 +591,7 @@ def get_district_multi_compare(metrics: str = "nhiet_do,do_am,uvi", limit: int =
 
     if not metric_list:
         return {"error": "invalid_metrics",
-                "message": "Khong co chi so hop le. Chon tu: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may"}
+                "message": "Không có chỉ số hợp lệ. Chọn từ: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may"}
 
     result = {}
     for metric in metric_list:

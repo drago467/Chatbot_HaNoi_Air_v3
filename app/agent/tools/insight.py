@@ -1,7 +1,7 @@
 """Insight tools — phenomena, temperature_trend, comfort_index,
 weather_change_alert, clothing_advice, activity_advice.
 
-Tat ca deu ho tro 3 tier nhat quan.
+Tất cả đều hỗ trợ 3 tier nhất quán.
 """
 
 from typing import Optional
@@ -13,17 +13,17 @@ from langchain_core.tools import tool
 
 class DetectPhenomenaInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=DetectPhenomenaInput)
 def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
-    """Phat hien cac HIEN TUONG THOI TIET DAC BIET tai Ha Noi.
+    """Phát hiện các HIỆN TƯỢNG THỜI TIẾT ĐẶC BIỆT tại Hà Nội.
 
-    DUNG KHI: "co hien tuong gi dac biet khong?", "co nom am khong?",
-    "co gio mua dong bac khong?", "co ret dam khong?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: danh sach hien tuong (nom am, gio Lao, gio mua DB, ret dam, suong mu, mua dong).
+    DÙNG KHI: "có hiện tượng gì đặc biệt không?", "có nồm ẩm không?",
+    "có gió mùa đông bắc không?", "có rét đậm không?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: danh sách hiện tượng (nồm ẩm, gió Lào, gió mùa ĐB, rét đậm, sương mù, mưa đông).
     """
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
     from app.dal.weather_knowledge_dal import detect_hanoi_weather_phenomena
@@ -68,7 +68,7 @@ def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
         district_fn=_detect_district,
         city_fn=_detect_city,
         normalize=False,
-        label="hien tuong thoi tiet",
+        label="hiện tượng thời tiết",
     )
 
 
@@ -76,42 +76,33 @@ def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
 
 class GetTemperatureTrendInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    days: int = Field(default=7, description="So ngay phan tich (2-8)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    days: int = Field(default=7, description="Số ngày phân tích (2-8)")
 
 
 @tool(args_schema=GetTemperatureTrendInput)
 def get_temperature_trend(ward_id: str = None, location_hint: str = None, days: int = 7) -> dict:
-    """Phan tich XU HUONG NHIET DO (am dan len / lanh dan / on dinh).
+    """Phân tích XU HƯỚNG NHIỆT ĐỘ (ấm dần lên / lạnh dần / ổn định).
 
-    DUNG KHI: "nhiet do thay doi the nao?", "co lanh dan khong?",
-    "xu huong nhiet do tuan nay?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: trend (warming/cooling/stable), slope, inflection_date, hottest/coldest day.
+    DÙNG KHI: "nhiệt độ thay đổi thế nào?", "có lạnh dần không?",
+    "xu hướng nhiệt độ tuần này?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: trend (warming/cooling/stable), slope, inflection_date, hottest/coldest day.
     """
     from app.dal.weather_dal import get_temperature_trend as dal_ward_trend
+    from app.dal.weather_aggregate_dal import (
+        get_district_temperature_trend_data,
+        get_city_temperature_trend_data,
+    )
 
     days = max(2, min(days, 8))
 
     def _district_trend(district_name):
-        from app.db.dal import query
-        rows = query("""
-            SELECT date, temp_min, temp_max, avg_temp AS temp_avg, weather_main
-            FROM fact_weather_district_daily
-            WHERE district_name_vi = %s
-              AND date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
-            ORDER BY date LIMIT %s
-        """, (district_name, days))
+        rows = get_district_temperature_trend_data(district_name, days)
         return _analyze_trend(rows)
 
     def _city_trend():
-        from app.db.dal import query
-        rows = query("""
-            SELECT date, temp_min, temp_max, avg_temp AS temp_avg, weather_main
-            FROM fact_weather_city_daily
-            WHERE date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
-            ORDER BY date LIMIT %s
-        """, (days,))
+        rows = get_city_temperature_trend_data(days)
         return _analyze_trend(rows)
 
     from app.agent.dispatch import resolve_and_dispatch
@@ -123,26 +114,26 @@ def get_temperature_trend(ward_id: str = None, location_hint: str = None, days: 
         district_fn=_district_trend,
         city_fn=_city_trend,
         normalize=False,
-        label="xu huong nhiet do",
+        label="xu hướng nhiệt độ",
     )
 
 
 def _analyze_trend(rows: list) -> dict:
     """Reusable trend analysis cho district/city daily data."""
     if len(rows) < 2:
-        return {"error": "no_data", "message": "Khong du du lieu de phan tich xu huong"}
+        return {"error": "no_data", "message": "Không đủ dữ liệu để phân tích xu hướng"}
 
     temps = [r["temp_avg"] for r in rows if r.get("temp_avg") is not None]
     if len(temps) < 2:
-        return {"error": "no_data", "message": "Khong du du lieu nhiet do"}
+        return {"error": "no_data", "message": "Không đủ dữ liệu nhiệt độ"}
 
     slope = (temps[-1] - temps[0]) / (len(temps) - 1)
     if slope > 0.5:
-        trend, trend_vi = "warming", "Am dan len"
+        trend, trend_vi = "warming", "Ấm dần lên"
     elif slope < -0.5:
-        trend, trend_vi = "cooling", "Lanh dan"
+        trend, trend_vi = "cooling", "Lạnh dần"
     else:
-        trend, trend_vi = "stable", "On dinh"
+        trend, trend_vi = "stable", "Ổn định"
 
     # Find inflection
     inflection = None
@@ -175,17 +166,17 @@ def _analyze_trend(rows: list) -> dict:
 
 class GetComfortIndexInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=GetComfortIndexInput)
 def get_comfort_index(ward_id: str = None, location_hint: str = None) -> dict:
-    """Tinh diem THOAI MAI (0-100) ket hop nhiet do, do am, gio, UV, mua.
+    """Tính điểm THOẢI MÁI (0-100) kết hợp nhiệt độ, độ ẩm, gió, UV, mưa.
 
-    DUNG KHI: "hom nay thoai mai khong?", "diem thoai mai bao nhieu?",
-    "co de chiu khong?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: score (0-100), label, recommendation, breakdown tung yeu to.
+    DÙNG KHI: "hôm nay thoải mái không?", "điểm thoải mái bao nhiêu?",
+    "có dễ chịu không?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: score (0-100), label, recommendation, breakdown từng yếu tố.
     """
     from app.dal.weather_helpers import compute_comfort_index
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
@@ -221,12 +212,12 @@ def get_comfort_index(ward_id: str = None, location_hint: str = None) -> dict:
         district_fn=_comfort_district,
         city_fn=_comfort_city,
         normalize=False,
-        label="chi so thoai mai",
+        label="chỉ số thoải mái",
     )
 
 
 def _compute_comfort(weather: dict) -> dict:
-    """Tinh comfort index tu weather data (da normalize)."""
+    """Tính comfort index từ weather data (đã normalize)."""
     from app.dal.weather_helpers import compute_comfort_index
     comfort = compute_comfort_index(
         temp=weather.get("temp"),
@@ -236,7 +227,7 @@ def _compute_comfort(weather: dict) -> dict:
         pop=weather.get("pop") or 0,
     )
     if comfort is None:
-        return {"error": "no_data", "message": "Khong du du lieu de tinh chi so thoai mai"}
+        return {"error": "no_data", "message": "Không đủ dữ liệu để tính chỉ số thoải mái"}
     comfort["weather_snapshot"] = {
         "temp": weather.get("temp"),
         "humidity": weather.get("humidity"),
@@ -251,18 +242,18 @@ def _compute_comfort(weather: dict) -> dict:
 
 class GetWeatherChangeAlertInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    hours: int = Field(default=6, description="So gio toi scan (1-12)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    hours: int = Field(default=6, description="Số giờ tới scan (1-12)")
 
 
 @tool(args_schema=GetWeatherChangeAlertInput)
 def get_weather_change_alert(ward_id: str = None, location_hint: str = None, hours: int = 6) -> dict:
-    """Phat hien THAY DOI THOI TIET LON sap xay ra.
+    """Phát hiện THAY ĐỔI THỜI TIẾT LỚN sắp xảy ra.
 
-    DUNG KHI: "sap co gi thay doi khong?", "thoi tiet co bien dong khong?",
-    "co chuyen mua khong?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: changes (temp drop/rise >5C, rain start/stop, wind increase, weather condition change).
+    DÙNG KHI: "sắp có gì thay đổi không?", "thời tiết có biến động không?",
+    "có chuyển mùa không?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: changes (temp drop/rise >5C, rain start/stop, wind increase, weather condition change).
     """
     from app.dal.weather_dal import detect_weather_changes as dal_ward_detect
 
@@ -305,7 +296,7 @@ def get_weather_change_alert(ward_id: str = None, location_hint: str = None, hou
         district_fn=_district_detect,
         city_fn=_city_detect,
         normalize=False,
-        label="bien dong thoi tiet",
+        label="biến động thời tiết",
     )
 
 
@@ -314,9 +305,10 @@ def _detect_changes(current: dict, forecasts: list) -> dict:
     from app.dal.timezone_utils import format_ict
 
     if not forecasts:
-        return {"error": "no_data", "message": "Khong co du lieu du bao"}
+        return {"error": "no_data", "message": "Không có dữ liệu dự báo"}
 
     changes = []
+    detected_types = set()
     cur_temp = current.get("temp")
     cur_pop = current.get("pop") or 0
     cur_wind = current.get("wind_speed") or 0
@@ -332,51 +324,51 @@ def _detect_changes(current: dict, forecasts: list) -> dict:
         f_time = format_ict(f.get("ts_utc"))
         f_is_rain = f_weather in rain_keywords
 
-        if cur_temp is not None and f_temp is not None:
+        if "temperature" not in detected_types and cur_temp is not None and f_temp is not None:
             temp_diff = f_temp - cur_temp
             if abs(temp_diff) >= 5:
-                direction = "tang" if temp_diff > 0 else "giam"
+                direction = "tăng" if temp_diff > 0 else "giảm"
                 changes.append({
                     "type": "temperature",
-                    "description": f"Nhiet do {direction} {abs(temp_diff):.1f}C ({cur_temp:.1f}->{f_temp:.1f}C)",
+                    "description": f"Nhiệt độ {direction} {abs(temp_diff):.1f}C ({cur_temp:.1f}->{f_temp:.1f}C)",
                     "time": f_time,
                     "severity": "high" if abs(temp_diff) >= 8 else "medium"
                 })
-                break
+                detected_types.add("temperature")
 
-        if f_pop - cur_pop >= 0.5:
+        if "rain_start" not in detected_types and f_pop - cur_pop >= 0.5:
             changes.append({
                 "type": "rain_start",
-                "description": f"Kha nang mua tang manh ({cur_pop*100:.0f}%->{f_pop*100:.0f}%)",
+                "description": f"Khả năng mưa tăng mạnh ({cur_pop*100:.0f}%->{f_pop*100:.0f}%)",
                 "time": f_time,
                 "severity": "high" if f_pop >= 0.8 else "medium"
             })
-            break
+            detected_types.add("rain_start")
 
-        if not cur_is_rain and f_is_rain:
+        if "weather_change" not in detected_types and not cur_is_rain and f_is_rain:
             changes.append({
                 "type": "weather_change",
-                "description": f"Troi chuyen mua ({cur_weather}->{f_weather})",
+                "description": f"Trời chuyển mưa ({cur_weather}->{f_weather})",
                 "time": f_time,
                 "severity": "high" if f_weather == "Thunderstorm" else "medium"
             })
-            break
+            detected_types.add("weather_change")
 
-        if cur_is_rain and not f_is_rain and f_pop < 0.3:
+        if "rain_stop" not in detected_types and cur_is_rain and not f_is_rain and f_pop < 0.3:
             changes.append({
-                "type": "rain_stop", "description": "Mua co the tanh",
+                "type": "rain_stop", "description": "Mưa có thể tạnh",
                 "time": f_time, "severity": "low"
             })
-            break
+            detected_types.add("rain_stop")
 
-        if f_wind - cur_wind >= 5:
+        if "wind_increase" not in detected_types and f_wind - cur_wind >= 5:
             changes.append({
                 "type": "wind_increase",
-                "description": f"Gio manh len ({cur_wind:.1f}->{f_wind:.1f} m/s)",
+                "description": f"Gió mạnh lên ({cur_wind:.1f}->{f_wind:.1f} m/s)",
                 "time": f_time,
                 "severity": "high" if f_wind >= 15 else "medium"
             })
-            break
+            detected_types.add("wind_increase")
 
     return {
         "changes": changes,
@@ -393,17 +385,17 @@ def _detect_changes(current: dict, forecasts: list) -> dict:
 
 class GetClothingAdviceInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
-    hours_ahead: int = Field(default=0, description="So gio toi (0=hien tai)")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
+    hours_ahead: int = Field(default=0, description="Số giờ tới (0=hiện tại)")
 
 
 @tool(args_schema=GetClothingAdviceInput)
 def get_clothing_advice(ward_id: str = None, location_hint: str = None, hours_ahead: int = 0) -> dict:
-    """Khuyen nghi TRANG PHUC phu hop voi thoi tiet.
+    """Khuyến nghị TRANG PHỤC phù hợp với thời tiết.
 
-    DUNG KHI: "mac gi hom nay?", "can ao khoac khong?", "nen mang o khong?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: clothing_items, notes, va du lieu thoi tiet co ban.
+    DÙNG KHI: "mặc gì hôm nay?", "cần áo khoác không?", "nên mang ô không?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: clothing_items, notes, và dữ liệu thời tiết cơ bản.
     """
     from app.dal.activity_dal import get_clothing_advice as dal_ward_clothing
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
@@ -432,7 +424,7 @@ def get_clothing_advice(ward_id: str = None, location_hint: str = None, hours_ah
         district_fn=_district_clothing,
         city_fn=_city_clothing,
         normalize=False,
-        label="khuyen nghi trang phuc",
+        label="khuyến nghị trang phục",
     )
 
 
@@ -446,49 +438,49 @@ def _clothing_from_weather(weather: dict, hours_ahead: int = 0) -> dict:
     wm = weather.get("weather_main", "")
 
     if temp is None:
-        return {"error": "Khong co du lieu nhiet do"}
+        return {"error": "Không có dữ liệu nhiệt độ"}
 
     items = []
     notes = []
 
     if temp < 10:
-        items.extend(["Ao phao/ao khoac day", "Khan quang co", "Gang tay", "Mu len"])
-        notes.append("Ret dam - mac nhieu lop, giu am co va tay")
+        items.extend(["Áo phào/áo khoác dày", "Khăn quàng cổ", "Găng tay", "Mũ len"])
+        notes.append("Rét đậm - mặc nhiều lớp, giữ ấm cổ và tay")
     elif temp < 15:
-        items.extend(["Ao khoac day", "Ao len", "Quan dai"])
-        notes.append("Lanh - nen mac ao khoac day")
+        items.extend(["Áo khoác dày", "Áo len", "Quần dài"])
+        notes.append("Lạnh - nên mặc áo khoác dày")
     elif temp < 20:
-        items.extend(["Ao khoac nhe", "Ao dai tay"])
-        notes.append("Se lanh - ao khoac nhe la du")
+        items.extend(["Áo khoác nhẹ", "Áo dài tay"])
+        notes.append("Se lạnh - áo khoác nhẹ là đủ")
     elif temp < 25:
-        items.extend(["Ao thun dai tay hoac ngan tay", "Quan dai hoac short"])
+        items.extend(["Áo thun dài tay hoặc ngắn tay", "Quần dài hoặc short"])
     elif temp < 32:
-        items.extend(["Ao mong thoang", "Quan short", "Mu chong nang"])
-        notes.append("Nong - chon vai thoang mat")
+        items.extend(["Áo mỏng thoáng", "Quần short", "Mũ chống nắng"])
+        notes.append("Nóng - chọn vải thoáng mát")
     else:
-        items.extend(["Ao mong thoang mat nhat", "Mu rong vanh", "Kinh ram"])
-        notes.append("Rat nong - han che ra ngoai, uong nhieu nuoc")
+        items.extend(["Áo mỏng thoáng mát nhất", "Mũ rộng vành", "Kính râm"])
+        notes.append("Rất nóng - hạn chế ra ngoài, uống nhiều nước")
 
     if pop > 0.5 or wm in ("Rain", "Drizzle", "Thunderstorm"):
-        items.append("O/ao mua")
-        notes.append("Co mua - nho mang o")
+        items.append("Ô/áo mưa")
+        notes.append("Có mưa - nhớ mang ô")
     elif pop > 0.3:
-        items.append("O gap nho")
-        notes.append("Co the mua - mang o phong")
+        items.append("Ô gấp nhỏ")
+        notes.append("Có thể mưa - mang ô phòng")
 
     if humidity > 90 and temp > 20:
-        notes.append("Nom am - tranh vai cotton, chon vai nhanh kho")
+        notes.append("Nồm ẩm - tránh vải cotton, chọn vải nhanh khô")
 
     if uvi >= 8:
-        items.append("Kem chong nang SPF50+")
-        if "Kinh ram" not in items:
-            items.append("Kinh ram")
-        notes.append("UV rat cao - bao ve da")
+        items.append("Kem chống nắng SPF50+")
+        if "Kính râm" not in items:
+            items.append("Kính râm")
+        notes.append("UV rất cao - bảo vệ da")
     elif uvi >= 5:
-        items.append("Kem chong nang SPF30+")
+        items.append("Kem chống nắng SPF30+")
 
     if wind > 8:
-        notes.append("Gio manh - tranh ao rong, chon ao sat nguoi")
+        notes.append("Gió mạnh - tránh áo rộng, chọn áo sát người")
 
     return {
         "clothing_items": items, "notes": notes,
@@ -500,20 +492,20 @@ def _clothing_from_weather(weather: dict, hours_ahead: int = 0) -> dict:
 # ============== Tool: get_activity_advice ==============
 
 class GetActivityAdviceInput(BaseModel):
-    activity: str = Field(description="Hoat dong: chay_bo, picnic, bike, chup_anh, du_lich, cam_trai, ...")
+    activity: str = Field(description="Hoạt động: chay_bo, picnic, bike, chup_anh, du_lich, cam_trai, ...")
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=GetActivityAdviceInput)
 def get_activity_advice(activity: str, ward_id: str = None, location_hint: str = None) -> dict:
-    """Khuyen cao co NEN thuc hien hoat dong ngoai troi khong.
+    """Khuyến cáo có NÊN thực hiện hoạt động ngoài trời không.
 
-    DUNG KHI: "di choi duoc khong?", "chay bo co on khong?", "co nen picnic khong?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    KHONG DUNG KHI: hoi may gio tot nhat (dung get_best_time),
-    hoi mac gi (dung get_clothing_advice).
-    Tra ve: muc khuyen cao (nen/co_the/han_che/khong_nen), ly do, khuyen nghi.
+    DÙNG KHI: "đi chơi được không?", "chạy bộ có ổn không?", "có nên picnic không?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    KHÔNG DÙNG KHI: hỏi mấy giờ tốt nhất (dùng get_best_time),
+    hỏi mặc gì (dùng get_clothing_advice).
+    Trả về: mức khuyến cáo (nen/co_the/han_che/khong_nen), lý do, khuyến nghị.
     """
     from app.dal.activity_dal import get_activity_advice as dal_ward_activity
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
@@ -543,7 +535,7 @@ def get_activity_advice(activity: str, ward_id: str = None, location_hint: str =
         district_fn=_district_activity,
         city_fn=_city_activity,
         normalize=False,
-        label="khuyen cao hoat dong",
+        label="khuyến cáo hoạt động",
     )
 
 
@@ -562,32 +554,32 @@ def _activity_from_weather(activity: str, weather: dict) -> dict:
     weather_main = weather.get("weather_main", "")
 
     if pop > THRESHOLDS.get("POP_VERY_LIKELY", 0.8):
-        issues.append(f"Kha nang mua cao ({pop*100:.0f}%)")
-        recommendations.append("Nen mang ao mua hoac o")
+        issues.append(f"Khả năng mưa cao ({pop*100:.0f}%)")
+        recommendations.append("Nên mang áo mưa hoặc ô")
     elif pop > THRESHOLDS.get("POP_LIKELY", 0.5):
-        issues.append(f"Co the mua ({pop*100:.0f}%)")
-        recommendations.append("Nen mang o phong mua")
+        issues.append(f"Có thể mưa ({pop*100:.0f}%)")
+        recommendations.append("Nên mang ô phòng mưa")
 
     if temp is not None:
         if temp > KTTV_THRESHOLDS["NANG_NONG"]:
-            issues.append(f"Nhiet do cao ({temp}C)")
-            recommendations.append("Nen chon buoi sang som (6-9h) hoac chieu muon (17h tro di)")
+            issues.append(f"Nhiệt độ cao ({temp}C)")
+            recommendations.append("Nên chọn buổi sáng sớm (6-9h) hoặc chiều muộn (17h trở đi)")
         elif temp < KTTV_THRESHOLDS["RET_DAM"]:
-            issues.append(f"Nhiet do thap ({temp}C)")
-            recommendations.append("Mac am, han che ra ngoai vao ban dem")
+            issues.append(f"Nhiệt độ thấp ({temp}C)")
+            recommendations.append("Mặc ấm, hạn chế ra ngoài vào ban đêm")
 
     if uvi >= 10:
-        issues.append(f"UV cuc cao ({uvi})")
-        recommendations.append("Han che ra ngoai 10h-14h, dung kem chong nang SPF50+")
+        issues.append(f"UV cực cao ({uvi})")
+        recommendations.append("Hạn chế ra ngoài 10h-14h, dùng kem chống nắng SPF50+")
     elif uvi >= 7:
         issues.append(f"UV cao ({uvi})")
-        recommendations.append("Doi mu, dung kem chong nang")
+        recommendations.append("Đội mũ, dùng kem chống nắng")
 
     if wind_speed > 20:
-        issues.append(f"Gio rat manh ({wind_speed} m/s)")
-        recommendations.append("NGUY HIEM - Khong nen ra ngoai")
+        issues.append(f"Gió rất mạnh ({wind_speed} m/s)")
+        recommendations.append("NGUY HIỂM - Không nên ra ngoài")
     elif wind_speed > 10:
-        issues.append(f"Gio manh ({wind_speed} m/s)")
+        issues.append(f"Gió mạnh ({wind_speed} m/s)")
 
     phenomena = detect_hanoi_weather_phenomena(weather)
     for p in phenomena.get("phenomena", []):
@@ -595,13 +587,13 @@ def _activity_from_weather(activity: str, weather: dict) -> dict:
         recommendations.append(p["description"])
 
     if len(issues) == 0:
-        advice, reason = "nen", "Thoi tiet thuan loi cho hoat dong ngoai troi"
+        advice, reason = "nen", "Thời tiết thuận lợi cho hoạt động ngoài trời"
     elif len(issues) == 1:
-        advice, reason = "co_the", f"Can luu y: {issues[0]}"
-    elif any("NGUY HIEM" in r for r in recommendations):
-        advice, reason = "khong_nen", f"Thoi tiet nguy hiem: {', '.join(issues)}"
+        advice, reason = "co_the", f"Cần lưu ý: {issues[0]}"
+    elif any("NGUY HIỂM" in r for r in recommendations):
+        advice, reason = "khong_nen", f"Thời tiết nguy hiểm: {', '.join(issues)}"
     else:
-        advice, reason = "han_che", f"Nhieu yeu to bat loi: {', '.join(issues)}"
+        advice, reason = "han_che", f"Nhiều yếu tố bất lợi: {', '.join(issues)}"
 
     return {
         "advice": advice, "reason": reason, "recommendations": recommendations,

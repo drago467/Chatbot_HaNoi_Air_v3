@@ -64,198 +64,140 @@ def wilson_ci(successes: int, total: int, z: float = 1.96) -> tuple:
 
 
 # ---- Intent -> Expected Tools mapping (Hierarchical by location scope) ----
-# For each (intent, location_scope), lists the acceptable tools that can
+# For each (intent, location_scope), lists 1-3 acceptable tools that can
 # properly answer the question at that scope level.
 # Recall = 1.0 if agent called at least one expected tool, else 0.0.
-# This is stricter than a flat list: the agent must pick the RIGHT tool
-# for the RIGHT location level.
 #
-# Design rationale per intent (verified against all eval test questions):
-#
-# current_weather: city→aggregated city tool, district→district/ward tool,
-#   ward/poi→ward-level tool. Agent MUST match the location granularity.
-#
-# hourly_forecast: get_hourly_forecast works at all scopes (auto-resolves
-#   location). get_rain_timeline is a valid alternative for rain-related
-#   hourly questions.
-#
-# daily_forecast: city→city aggregated daily, district→district aggregated
-#   or ward-level daily, ward/poi→ward daily. get_weather_period is a
-#   valid alternative for multi-day queries at any scope.
-#
-# weather_overview: summary tools (get_daily_summary, get_weather_period)
-#   plus scope-appropriate data tools. detect_phenomena adds context.
-#
-# rain_query: spans hourly+daily time scales. Includes rain-specific tools
-#   (get_rain_timeline) plus scope-appropriate forecast tools.
-#
-# temperature_query: scope-appropriate current/forecast tools plus
-#   get_temperature_trend for trend questions.
-#
-# wind_query / humidity_fog_query: scope-appropriate current/forecast tools
-#   plus domain-specific tools (detect_phenomena, get_weather_alerts).
-#
-# historical_weather: only get_weather_history at all scopes.
-#
-# location_comparison: needs data from multiple locations. compare_weather
-#   is the primary tool. Individual data tools also valid (called twice).
-#   city scope = comparing districts within the city.
-#
-# activity_weather: activity-specific tools (get_activity_advice, get_best_time,
-#   get_comfort_index, get_clothing_advice) plus scope-appropriate data tools.
-#
-# expert_weather_param: scope-appropriate data tools. get_weather_history
-#   valid for "hôm qua" expert queries.
-#
-# weather_alert: alert-specific tools plus supplementary data tools.
-#
-# seasonal_context: seasonal anomalies, historical comparisons, weather trends.
-#   Uses get_seasonal_comparison, compare_with_yesterday, get_temperature_trend.
-#
-# smalltalk_weather: diverse category (greetings, clothing advice, rain check,
-#   stargazing). Broad expected set at all scopes. Special case:
-#   no tools called is acceptable (greetings, out-of-scope).
+# Design principles (post-refactor, 27 tools):
+# - All tools auto-dispatch to 3 tiers (ward/district/city) via dispatch.py
+# - 1-3 tools per scope: primary tool + 1-2 valid alternatives
+# - INTENT_TO_TOOLS ⊇ PRIMARY_TOOL_MAP (router's focused tools)
+# - City/district scopes may include insight tools; ward/poi focus on core
+# - 6 new insight tools: get_uv_safe_windows, get_pressure_trend,
+#   get_daily_rhythm, get_humidity_timeline, get_sunny_periods,
+#   get_district_multi_compare
+# - smalltalk_weather: no-tools-called is also acceptable (greetings)
 
 INTENT_TO_TOOLS = {
+    # current_weather: "Bây giờ thời tiết thế nào?"
+    # get_current_weather auto-dispatch 3 tiers; detect_phenomena bổ sung ngữ cảnh
     "current_weather": {
-        "city": ["get_city_weather"],
-        "district": ["get_district_weather", "get_current_weather"],
-        "ward": ["get_current_weather"],
-        "poi": ["get_current_weather"],
+        "city":     ["get_current_weather", "detect_phenomena"],
+        "district": ["get_current_weather", "detect_phenomena"],
+        "ward":     ["get_current_weather"],
+        "poi":      ["get_current_weather"],
     },
+    # hourly_forecast: "Chiều nay mưa không?", "Tối nay mấy độ?"
+    # get_rain_timeline là alternative hợp lệ cho câu hỏi mưa theo giờ
     "hourly_forecast": {
-        "city": ["get_hourly_forecast", "get_rain_timeline"],
+        "city":     ["get_hourly_forecast", "get_rain_timeline"],
         "district": ["get_hourly_forecast", "get_rain_timeline"],
-        "ward": ["get_hourly_forecast", "get_rain_timeline"],
-        "poi": ["get_hourly_forecast", "get_rain_timeline"],
+        "ward":     ["get_hourly_forecast", "get_rain_timeline"],
+        "poi":      ["get_hourly_forecast", "get_rain_timeline"],
     },
+    # daily_forecast: "Ngày mai thế nào?", "Cuối tuần?"
+    # get_weather_period cho multi-day; get_temperature_trend bổ sung xu hướng
     "daily_forecast": {
-        "city": ["get_city_daily_forecast", "get_weather_period", "get_daily_summary"],
-        "district": ["get_district_daily_forecast", "get_daily_forecast", "get_weather_period"],
-        "ward": ["get_daily_forecast", "get_weather_period"],
-        "poi": ["get_daily_forecast", "get_weather_period"],
+        "city":     ["get_daily_forecast", "get_weather_period", "get_temperature_trend"],
+        "district": ["get_daily_forecast", "get_weather_period", "get_temperature_trend"],
+        "ward":     ["get_daily_forecast", "get_weather_period"],
+        "poi":      ["get_daily_forecast", "get_weather_period"],
     },
+    # weather_overview: "Tổng hợp thời tiết hôm nay?"
+    # get_daily_summary chính; detect_phenomena + get_daily_rhythm bổ sung
     "weather_overview": {
-        "city": ["get_daily_summary", "get_weather_period", "get_city_daily_forecast",
-                 "get_city_weather", "detect_phenomena", "get_seasonal_comparison"],
-        "district": ["get_daily_summary", "get_weather_period", "get_district_daily_forecast",
-                     "get_district_weather", "detect_phenomena"],
-        "ward": ["get_daily_summary", "get_weather_period", "get_daily_forecast"],
-        "poi": ["get_daily_summary", "get_weather_period", "get_daily_forecast"],
+        "city":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm"],
+        "district": ["get_daily_summary", "detect_phenomena", "get_daily_rhythm"],
+        "ward":     ["get_daily_summary", "detect_phenomena"],
+        "poi":      ["get_daily_summary"],
     },
+    # rain_query: "Lúc nào mưa?", "Có mưa không?"
+    # get_rain_timeline chính; hourly/daily forecast là alternatives hợp lệ
     "rain_query": {
-        "city": ["get_rain_timeline", "get_hourly_forecast", "get_weather_period",
-                 "get_city_daily_forecast", "detect_phenomena"],
-        "district": ["get_rain_timeline", "get_hourly_forecast", "get_district_weather",
-                     "get_weather_period", "get_district_daily_forecast"],
-        "ward": ["get_rain_timeline", "get_hourly_forecast", "get_current_weather",
-                 "get_daily_forecast"],
-        "poi": ["get_rain_timeline", "get_hourly_forecast", "get_current_weather"],
+        "city":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast"],
+        "district": ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast"],
+        "ward":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast"],
+        "poi":      ["get_rain_timeline", "get_hourly_forecast"],
     },
+    # temperature_query: "Nhiệt độ?", "Nóng không?"
+    # current cho hiện tại; trend cho xu hướng; hourly cho dự báo
     "temperature_query": {
-        "city": ["get_city_weather", "get_hourly_forecast", "get_weather_period",
-                 "get_temperature_trend", "get_city_daily_forecast",
-                 "compare_with_yesterday"],
-        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast",
-                     "get_district_daily_forecast", "get_weather_period",
-                     "compare_with_yesterday"],
-        "ward": ["get_current_weather", "get_hourly_forecast", "get_daily_forecast",
-                 "compare_with_yesterday"],
-        "poi": ["get_current_weather", "get_hourly_forecast", "compare_with_yesterday"],
+        "city":     ["get_current_weather", "get_temperature_trend", "get_hourly_forecast"],
+        "district": ["get_current_weather", "get_temperature_trend", "get_hourly_forecast"],
+        "ward":     ["get_current_weather", "get_hourly_forecast"],
+        "poi":      ["get_current_weather", "get_hourly_forecast"],
     },
+    # wind_query: "Gió mạnh không?", "Tốc độ gió?"
+    # pressure_trend: áp suất giảm nhanh → front lạnh/bão → gió mạnh
     "wind_query": {
-        "city": ["get_city_weather", "get_hourly_forecast", "get_weather_alerts",
-                 "get_weather_period", "detect_phenomena"],
-        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast"],
-        "ward": ["get_current_weather", "get_hourly_forecast"],
-        "poi": ["get_current_weather", "get_hourly_forecast"],
+        "city":     ["get_current_weather", "get_hourly_forecast", "get_pressure_trend"],
+        "district": ["get_current_weather", "get_hourly_forecast", "get_pressure_trend"],
+        "ward":     ["get_current_weather", "get_hourly_forecast"],
+        "poi":      ["get_current_weather", "get_hourly_forecast"],
     },
+    # humidity_fog_query: "Độ ẩm?", "Sương mù?"
+    # detect_phenomena phát hiện nồm/sương; humidity_timeline chi tiết theo giờ
     "humidity_fog_query": {
-        "city": ["get_city_weather", "get_hourly_forecast", "detect_phenomena",
-                 "get_weather_period"],
-        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast",
-                     "detect_phenomena"],
-        "ward": ["get_current_weather", "get_hourly_forecast", "detect_phenomena"],
-        "poi": ["get_current_weather", "get_hourly_forecast"],
+        "city":     ["get_current_weather", "detect_phenomena", "get_humidity_timeline"],
+        "district": ["get_current_weather", "detect_phenomena", "get_humidity_timeline"],
+        "ward":     ["get_current_weather", "detect_phenomena"],
+        "poi":      ["get_current_weather"],
     },
+    # historical_weather: "Hôm qua thế nào?", "Ngày 15/3?"
+    # get_daily_summary cũng hỗ trợ ngày quá khứ
     "historical_weather": {
-        "city": ["get_weather_history"],
-        "district": ["get_weather_history"],
-        "ward": ["get_weather_history"],
-        "poi": ["get_weather_history"],
+        "city":     ["get_weather_history", "get_daily_summary"],
+        "district": ["get_weather_history", "get_daily_summary"],
+        "ward":     ["get_weather_history", "get_daily_summary"],
+        "poi":      ["get_weather_history", "get_daily_summary"],
     },
+    # location_comparison: "Cầu Giấy vs Đống Đa?", "Quận nào nóng nhất?"
+    # city: ranking toàn thành phố; district: so sánh 2 nơi + ranking ward
     "location_comparison": {
-        "city": ["get_district_weather", "get_district_ranking", "get_weather_period",
-                 "get_city_daily_forecast", "get_ward_ranking_in_district"],
-        "district": ["compare_weather", "get_district_weather", "get_current_weather",
-                     "get_rain_timeline", "get_hourly_forecast", "get_district_daily_forecast"],
-        "ward": ["compare_weather", "get_current_weather", "get_hourly_forecast"],
-        "poi": ["compare_weather", "get_current_weather", "get_hourly_forecast"],
+        "city":     ["get_district_ranking", "get_district_multi_compare"],
+        "district": ["compare_weather", "get_ward_ranking_in_district"],
+        "ward":     ["compare_weather"],
+        "poi":      ["compare_weather"],
     },
-    # activity_weather: thu hẹp còn 2 tools/scope — get_activity_advice nội bộ
-    # đã tổng hợp comfort + best_time + clothing logic, không cần agent chain thêm.
+    # activity_weather: "Đi chơi được không?", "Mấy giờ chạy bộ tốt?"
+    # activity_advice chính; best_time tìm giờ tối ưu; uv_safe_windows an toàn UV
     "activity_weather": {
-        "city": ["get_activity_advice", "get_city_weather", "get_best_time",
-                 "get_comfort_index", "get_clothing_advice"],
-        "district": ["get_activity_advice", "get_district_weather", "get_best_time",
-                     "get_comfort_index", "get_clothing_advice"],
-        "ward": ["get_activity_advice", "get_current_weather", "get_best_time",
-                 "get_comfort_index"],
-        "poi": ["get_activity_advice", "get_current_weather", "get_best_time",
-                "get_comfort_index", "get_clothing_advice"],
+        "city":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows"],
+        "district": ["get_activity_advice", "get_best_time", "get_uv_safe_windows"],
+        "ward":     ["get_activity_advice", "get_best_time"],
+        "poi":      ["get_activity_advice", "get_best_time"],
     },
+    # expert_weather_param: "Điểm sương?", "Áp suất?", "UV index?"
+    # comfort_index cho cảm giác; pressure_trend cho áp suất chi tiết
     "expert_weather_param": {
-        "city": ["get_city_weather", "get_hourly_forecast", "get_daily_summary",
-                 "get_weather_history", "get_current_weather"],
-        "district": ["get_district_weather", "get_current_weather", "get_hourly_forecast",
-                     "get_weather_history"],
-        "ward": ["get_current_weather", "get_hourly_forecast", "get_daily_summary",
-                 "get_weather_history"],
-        "poi": ["get_current_weather", "get_hourly_forecast", "get_weather_history"],
+        "city":     ["get_current_weather", "get_comfort_index", "get_pressure_trend"],
+        "district": ["get_current_weather", "get_comfort_index", "get_pressure_trend"],
+        "ward":     ["get_current_weather", "get_comfort_index"],
+        "poi":      ["get_current_weather"],
     },
+    # weather_alert: "Có cảnh báo gì không?", "Thời tiết nguy hiểm?"
+    # alerts chính; change_alert phát hiện biến đổi đột ngột; pressure front cảnh báo
     "weather_alert": {
-        "city": ["get_weather_alerts", "get_weather_change_alert", "detect_phenomena",
-                 "get_hourly_forecast", "get_temperature_trend", "get_weather_period",
-                 "compare_with_yesterday"],
-        "district": ["get_weather_alerts", "get_weather_change_alert", "detect_phenomena",
-                     "get_hourly_forecast", "get_temperature_trend",
-                     "compare_with_yesterday"],
-        "ward": ["get_weather_alerts", "get_weather_change_alert", "get_hourly_forecast"],
-        "poi": ["get_weather_alerts", "get_weather_change_alert"],
+        "city":     ["get_weather_alerts", "get_weather_change_alert", "get_pressure_trend"],
+        "district": ["get_weather_alerts", "get_weather_change_alert"],
+        "ward":     ["get_weather_alerts", "get_weather_change_alert"],
+        "poi":      ["get_weather_alerts"],
     },
-    # seasonal_context: câu hỏi về mùa, bất thường, so sánh lịch sử, xu hướng
+    # seasonal_context: "Nóng hơn bình thường không?", "So với mùa này?"
+    # seasonal_comparison chính; compare_with_yesterday + trend bổ sung
     "seasonal_context": {
-        "city": ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend",
-                 "detect_phenomena", "get_city_weather", "get_weather_history",
-                 "get_weather_change_alert"],
-        "district": ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend",
-                     "get_district_weather", "get_weather_history"],
-        "ward": ["get_seasonal_comparison", "compare_with_yesterday", "get_current_weather",
-                 "get_weather_history"],
-        "poi": ["get_seasonal_comparison", "compare_with_yesterday", "get_current_weather",
-                "get_weather_history"],
+        "city":     ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend"],
+        "district": ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend"],
+        "ward":     ["get_seasonal_comparison", "compare_with_yesterday"],
+        "poi":      ["get_seasonal_comparison", "compare_with_yesterday"],
     },
+    # smalltalk_weather: "Xin chào", "Mặc gì hôm nay?"
+    # Broad set; no-tools-called cũng chấp nhận được (greetings)
     "smalltalk_weather": {
-        # Smalltalk: greetings, clothing advice, rain check, stargazing, etc.
-        # Broad expected set; no-tools-called is also acceptable (greetings).
-        "city": [
-            "get_city_weather", "get_daily_summary", "get_clothing_advice",
-            "get_comfort_index", "get_weather_change_alert",
-            "get_hourly_forecast", "get_current_weather", "get_daily_forecast",
-            "get_city_daily_forecast", "detect_phenomena", "get_weather_period",
-        ],
-        "district": [
-            "get_district_weather", "get_current_weather", "get_hourly_forecast",
-            "get_clothing_advice", "get_comfort_index", "detect_phenomena",
-        ],
-        "ward": [
-            "get_current_weather", "get_hourly_forecast", "get_clothing_advice",
-            "get_comfort_index",
-        ],
-        "poi": [
-            "get_current_weather", "get_hourly_forecast", "get_clothing_advice",
-            "get_comfort_index",
-        ],
+        "city":     ["get_current_weather", "get_clothing_advice", "get_comfort_index"],
+        "district": ["get_current_weather", "get_clothing_advice", "get_comfort_index"],
+        "ward":     ["get_current_weather", "get_clothing_advice"],
+        "poi":      ["get_current_weather", "get_clothing_advice"],
     },
 }
 
@@ -462,7 +404,7 @@ def check_tool_precision(intent: str, tools_called: list,
                          location_scope: str = "") -> float:
     """What fraction of called tools were scope-appropriate? (precision)
 
-    Uses hierarchical INTENT_TO_TOOLS so that e.g. calling get_city_weather
+    Uses hierarchical INTENT_TO_TOOLS so that e.g. calling get_district_ranking
     for a ward-level question is correctly identified as irrelevant.
     """
     expected = set(_get_expected_tools(intent, location_scope))
@@ -491,9 +433,9 @@ def check_tool_recall(intent: str, tools_called: list,
 
     Example:
     - intent=current_weather, scope=city
-    - expected = ["get_city_weather"]
-    - tools_called = ["get_city_weather"] → recall = 1.0
-    - tools_called = ["get_current_weather"] → recall = 0.0 (wrong scope)
+    - expected = ["get_current_weather", "detect_phenomena"]
+    - tools_called = ["get_current_weather"] → recall = 1.0
+    - tools_called = ["get_weather_history"] → recall = 0.0 (wrong tool for intent)
     """
     expected = _get_expected_tools(intent, location_scope)
     if not expected:
@@ -627,7 +569,7 @@ def evaluate_query(question, query_id, expected_tool=None, expected_location=Non
     """Evaluate a single query with unique thread_id and optional LLM judge.
 
     Args:
-        mode: "baseline" (25 tools), "routed" (SLM, no fallback), "hybrid" (SLM + fallback)
+        mode: "baseline" (27 tools), "routed" (SLM, no fallback), "hybrid" (SLM + fallback)
     """
     start_time = time.time()
     thread_id = f"eval_{query_id}_{uuid4().hex[:8]}"
@@ -897,7 +839,7 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False, mode="baselin
     Args:
         output_dir: Base directory (contains eval questions CSV)
         skip_judge: Skip LLM-as-Judge evaluation
-        mode: "baseline" (25 tools), "routed" (SLM, no fallback), "hybrid" (SLM + fallback)
+        mode: "baseline" (27 tools), "routed" (SLM, no fallback), "hybrid" (SLM + fallback)
     """
     # Results go to mode-specific subdirectory
     results_dir = Path(output_dir) / mode
@@ -1083,6 +1025,6 @@ if __name__ == "__main__":
                         help="Skip LLM-as-Judge evaluation (faster, no judge scores)")
     parser.add_argument("--mode", choices=["baseline", "routed", "hybrid"],
                         default="baseline",
-                        help="baseline: 25 tools, no router | routed: SLM router, no fallback | hybrid: SLM router with fallback")
+                        help="baseline: 27 tools, no router | routed: SLM router, no fallback | hybrid: SLM router with fallback")
     args = parser.parse_args()
     run_evaluation(args.output, skip_judge=args.skip_judge, mode=args.mode)

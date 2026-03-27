@@ -34,3 +34,7 @@ env_example.txt
 
 # Text
 *.txt
+
+.claude/
+
+model/

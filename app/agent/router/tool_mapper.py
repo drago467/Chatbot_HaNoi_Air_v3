@@ -201,5 +201,5 @@ def get_focused_tools(intent: str, scope: str) -> list | None:
 
 
 def get_all_tools() -> list:
-    """Return the full 31-tool list (for fallback path)."""
+    """Return the full 27-tool list (for fallback path)."""
     return TOOLS

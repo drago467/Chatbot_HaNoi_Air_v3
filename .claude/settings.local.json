@@ -1,19 +1,25 @@
 {
   "permissions": {
     "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
       "WebSearch",
-      "Bash(python3:*)",
-      "Read(//c/Users/X1 gen 9/Downloads/Chatbot_HanoiAir/**)",
-      "Bash(python:*)",
-      "Bash(PYTHONUTF8=1 python << 'EOFPYTHON':*)",
-      "Bash(python -c \":*)",
-      "Bash(/tmp/db_summary.md:*)",
-      "Read(//tmp/**)",
-      "Bash('/c/Users/X1 gen:*)",
-      "Read(//c/Users/X1 gen 9/**)",
-      "Bash(wc -l \"/c/Users/X1 gen 9/Downloads/Chatbot_HanoiAir/app/dal\"/*.py)"
+      "Agent",
+      "Skill",
+      "NotebookEdit",
+      "TodoWrite",
+      "EnterPlanMode",
+      "ExitPlanMode"
     ],
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "C:\\Users\\X1 gen 9\\.claude"
+    ]
   },
   "skipDangerousModePermissionPrompt": true
 }

@@ -1,6 +1,6 @@
 """Compare tools — compare_weather, compare_with_yesterday, seasonal_comparison.
 
-Tat ca deu ho tro 3 tier nhat quan.
+Tất cả đều hỗ trợ 3 tier nhất quán.
 """
 
 from typing import Optional
@@ -11,19 +11,19 @@ from langchain_core.tools import tool
 # ============== Tool: compare_weather ==============
 
 class CompareWeatherInput(BaseModel):
-    location_hint1: str = Field(description="Ten dia diem 1. Vi du: 'Cau Giay', 'Hoan Kiem'")
-    location_hint2: str = Field(description="Ten dia diem 2. Vi du: 'Dong Da', 'Tay Ho'")
+    location_hint1: str = Field(description="Tên địa điểm 1. Ví dụ: 'Cầu Giấy', 'Hoàn Kiếm'")
+    location_hint2: str = Field(description="Tên địa điểm 2. Ví dụ: 'Đống Đa', 'Tây Hồ'")
 
 
 @tool(args_schema=CompareWeatherInput)
 def compare_weather(location_hint1: str, location_hint2: str) -> dict:
-    """So sanh thoi tiet HIEN TAI giua HAI dia diem.
+    """So sánh thời tiết HIỆN TẠI giữa HAI địa điểm.
 
-    DUNG KHI: "A va B noi nao nong/lanh/am hon?", "so sanh thoi tiet A voi B",
-    "Cau Giay hay Hoan Kiem mat hon?".
-    Ho tro: so sanh giua bat ky cap phuong-phuong, quan-quan, phuong-quan.
-    KHONG DUNG KHI: so sanh hom nay vs hom qua (dung compare_with_yesterday),
-    so sanh voi trung binh mua (dung get_seasonal_comparison).
+    DÙNG KHI: "A và B nơi nào nóng/lạnh/ẩm hơn?", "so sánh thời tiết A với B",
+    "Cầu Giấy hay Hoàn Kiếm mát hơn?".
+    Hỗ trợ: so sánh giữa bất kỳ cặp phường-phường, quận-quận, phường-quận.
+    KHÔNG DÙNG KHI: so sánh hôm nay vs hôm qua (dùng compare_with_yesterday),
+    so sánh với trung bình mùa (dùng get_seasonal_comparison).
     """
     from app.agent.utils import auto_resolve_location
     from app.agent.dispatch import normalize_agg_keys
@@ -33,9 +33,9 @@ def compare_weather(location_hint1: str, location_hint2: str) -> dict:
     r2 = auto_resolve_location(location_hint=location_hint2)
 
     if r1["status"] != "ok":
-        return {"error": "location1_not_found", "message": f"Khong tim thay dia diem: {location_hint1}"}
+        return {"error": "location1_not_found", "message": f"Không tìm thấy địa điểm: {location_hint1}"}
     if r2["status"] != "ok":
-        return {"error": "location2_not_found", "message": f"Khong tim thay dia diem: {location_hint2}"}
+        return {"error": "location2_not_found", "message": f"Không tìm thấy địa điểm: {location_hint2}"}
 
     # Get weather for each location at its natural level
     w1 = _get_weather_at_level(r1)
@@ -63,13 +63,13 @@ def compare_weather(location_hint1: str, location_hint2: str) -> dict:
     if temp1 is not None and temp2 is not None:
         temp_diff = temp1 - temp2
         if abs(temp_diff) <= 2:
-            temp_text = "Nhiet do tuong tu"
+            temp_text = "Nhiệt độ tương tự"
         elif temp_diff > 0:
-            temp_text = f"{name1} nong hon {name2} {abs(temp_diff):.1f}C"
+            temp_text = f"{name1} nóng hơn {name2} {abs(temp_diff):.1f}C"
         else:
-            temp_text = f"{name2} nong hon {name1} {abs(temp_diff):.1f}C"
+            temp_text = f"{name2} nóng hơn {name1} {abs(temp_diff):.1f}C"
     else:
-        temp_text = "Khong du du lieu nhiet do de so sanh"
+        temp_text = "Không đủ dữ liệu nhiệt độ để so sánh"
         temp_diff = None
 
     return {
@@ -106,7 +106,7 @@ def _get_location_name(resolved: dict) -> str:
     data = resolved.get("data", {})
     level = resolved.get("level", "ward")
     if level == "city":
-        return "Ha Noi"
+        return "Hà Nội"
     elif level == "district":
         return data.get("district_name_vi", "")
     else:
@@ -117,16 +117,16 @@ def _get_location_name(resolved: dict) -> str:
 
 class CompareWithYesterdayInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=CompareWithYesterdayInput)
 def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sanh thoi tiet HOM NAY voi HOM QUA cho mot dia diem.
+    """So sánh thời tiết HÔM NAY với HÔM QUA cho một địa điểm.
 
-    DUNG KHI: "hom nay nong hon hom qua khong?", "so voi hom qua the nao?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    KHONG DUNG KHI: so sanh 2 dia diem (dung compare_weather).
+    DÙNG KHI: "hôm nay nóng hơn hôm qua không?", "so với hôm qua thế nào?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    KHÔNG DÙNG KHI: so sánh 2 địa điểm (dùng compare_weather).
     """
     from app.agent.dispatch import resolve_and_dispatch
     from app.dal.comparison_dal import (
@@ -142,7 +142,7 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
         ward_fn=dal_ward,
         district_fn=dal_district,
         city_fn=dal_city,
-        label="so sanh hom nay vs hom qua",
+        label="so sánh hôm nay vs hôm qua",
     )
 
 
@@ -150,17 +150,17 @@ def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> di
 
 class GetSeasonalComparisonInput(BaseModel):
     ward_id: Optional[str] = Field(default=None, description="Ward ID")
-    location_hint: Optional[str] = Field(default=None, description="Ten phuong/xa hoac quan/huyen")
+    location_hint: Optional[str] = Field(default=None, description="Tên phường/xã hoặc quận/huyện")
 
 
 @tool(args_schema=GetSeasonalComparisonInput)
 def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sanh thoi tiet hien tai voi trung binh mua (climatology Ha Noi).
+    """So sánh thời tiết hiện tại với trung bình mùa (climatology Hà Nội).
 
-    DUNG KHI: "nong hon binh thuong khong?", "thoi tiet co bat thuong khong?",
-    "so voi mua nay the nao?".
-    Ho tro: phuong/xa, quan/huyen, toan Ha Noi.
-    Tra ve: nhiet do/do am hien tai vs trung binh thang, nhan xet chenh lech.
+    DÙNG KHI: "nóng hơn bình thường không?", "thời tiết có bất thường không?",
+    "so với mùa này thế nào?".
+    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
+    Trả về: nhiệt độ/độ ẩm hiện tại vs trung bình tháng, nhận xét chênh lệch.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_knowledge_dal import compare_with_seasonal
@@ -170,7 +170,7 @@ def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> d
     if not ward_id and not location_hint:
         from app.dal.weather_aggregate_dal import get_city_current_weather
         weather = get_city_current_weather()
-        resolved_data = {"city_name": "Ha Noi"}
+        resolved_data = {"city_name": "Hà Nội"}
     else:
         resolved = auto_resolve_location(ward_id=ward_id, location_hint=location_hint)
         if resolved["status"] != "ok":
@@ -180,8 +180,8 @@ def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> d
 
     if not weather or weather.get("error"):
         return {"error": "no_weather_data",
-                "message": "Khong lay duoc du lieu thoi tiet hien tai de so sanh voi mua",
-                "suggestion": "Thu hoi thoi tiet hien tai truoc"}
+                "message": "Không lấy được dữ liệu thời tiết hiện tại để so sánh với mùa",
+                "suggestion": "Thử hỏi thời tiết hiện tại trước"}
 
     weather = normalize_agg_keys(weather)
     seasonal = compare_with_seasonal(weather)

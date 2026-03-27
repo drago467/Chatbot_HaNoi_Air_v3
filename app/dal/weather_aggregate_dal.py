@@ -205,6 +205,90 @@ def get_city_daily_forecast(days: int = 7) -> List[Dict[str, Any]]:
     return results
 
 
+# ---- Daily summary / trend / period queries (district + city) ----
+
+def get_district_daily_summary_data(district_name: str, date) -> Dict[str, Any]:
+    """Get daily summary for a district on a specific date."""
+    row = query_one(f"""
+        SELECT {_DISTRICT_DAILY_COLS}
+        FROM fact_weather_district_daily
+        WHERE district_name_vi = %s AND date = %s::date
+    """, (district_name, str(date)))
+    if not row:
+        return {}
+    row["level"] = "district"
+    _add_wind_dir(row)
+    return row
+
+
+def get_city_daily_summary_data(date) -> Dict[str, Any]:
+    """Get daily summary for Hanoi city on a specific date."""
+    row = query_one(f"""
+        SELECT {_CITY_DAILY_COLS}
+        FROM fact_weather_city_daily
+        WHERE date = %s::date
+    """, (str(date),))
+    if not row:
+        return {}
+    row["level"] = "city"
+    row["city_name"] = "Hà Nội"
+    _add_wind_dir(row)
+    return row
+
+
+def get_district_temperature_trend_data(
+    district_name: str, days: int = 7
+) -> List[Dict[str, Any]]:
+    """Get daily temperature data for trend analysis (district level)."""
+    days = min(days, 8)
+    return query("""
+        SELECT date, temp_min, temp_max, avg_temp AS temp_avg, weather_main
+        FROM fact_weather_district_daily
+        WHERE district_name_vi = %s
+          AND date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
+        ORDER BY date
+        LIMIT %s
+    """, (district_name, days))
+
+
+def get_city_temperature_trend_data(days: int = 7) -> List[Dict[str, Any]]:
+    """Get daily temperature data for trend analysis (city level)."""
+    days = min(days, 8)
+    return query("""
+        SELECT date, temp_min, temp_max, avg_temp AS temp_avg, weather_main
+        FROM fact_weather_city_daily
+        WHERE date >= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
+        ORDER BY date
+        LIMIT %s
+    """, (days,))
+
+
+def get_district_weather_period_data(
+    district_name: str, start_date: str, end_date: str
+) -> List[Dict[str, Any]]:
+    """Get daily weather data for a date range (district level)."""
+    return query("""
+        SELECT date, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
+               weather_main, avg_wind_speed, avg_wind_deg, max_uvi
+        FROM fact_weather_district_daily
+        WHERE district_name_vi = %s AND date BETWEEN %s AND %s
+        ORDER BY date
+    """, (district_name, start_date, end_date))
+
+
+def get_city_weather_period_data(
+    start_date: str, end_date: str
+) -> List[Dict[str, Any]]:
+    """Get daily weather data for a date range (city level)."""
+    return query("""
+        SELECT date, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
+               weather_main, avg_wind_speed, avg_wind_deg, max_uvi
+        FROM fact_weather_city_daily
+        WHERE date BETWEEN %s AND %s
+        ORDER BY date
+    """, (start_date, end_date))
+
+
 def get_all_districts_current_weather() -> List[Dict[str, Any]]:
     """Get current weather for ALL districts (for comparison/ranking)."""
     results = query(f"""
