@@ -40,30 +40,7 @@ def init_db() -> None:
                     );
                 """)
 
-                # 3) fact_air_pollution_hourly
-                cur.execute("""
-                    CREATE TABLE IF NOT EXISTS fact_air_pollution_hourly (
-                        ward_id TEXT REFERENCES dim_ward(ward_id),
-                        ts_utc TIMESTAMPTZ NOT NULL,
-                        aqi SMALLINT,
-                        aqi_vn INT,
-                        co DOUBLE PRECISION,
-                        no DOUBLE PRECISION,
-                        no2 DOUBLE PRECISION,
-                        o3 DOUBLE PRECISION,
-                        so2 DOUBLE PRECISION,
-                        pm2_5 DOUBLE PRECISION,
-                        pm10 DOUBLE PRECISION,
-                        nh3 DOUBLE PRECISION,
-                        data_kind TEXT,
-                        source TEXT,
-                        source_job TEXT,
-                        ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                        PRIMARY KEY (ward_id, ts_utc)
-                    );
-                """)
-
-                # 4) fact_weather_hourly
+                # 3) fact_weather_hourly
                 cur.execute("""
                     CREATE TABLE IF NOT EXISTS fact_weather_hourly (
                         ward_id TEXT REFERENCES dim_ward(ward_id),
@@ -137,45 +114,8 @@ def init_db() -> None:
                     );
                 """)
 
-                # 6) fact_hanoiair_daily
-                cur.execute("""
-                    CREATE TABLE IF NOT EXISTS fact_hanoiair_daily (
-                        ward_id TEXT REFERENCES dim_ward(ward_id),
-                        date DATE NOT NULL,
-                        aqi DOUBLE PRECISION,
-                        pm2_5 DOUBLE PRECISION,
-                        is_forecast BOOLEAN NOT NULL DEFAULT FALSE,
-                        source TEXT DEFAULT 'hanoiair',
-                        source_job TEXT,
-                        ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                        PRIMARY KEY (ward_id, date)
-                    );
-                """)
-
-                # 7) fact_hanoiair_ranking
-                # NOTE: hanoiair_administrative_id stores the raw ID from
-                # HanoiAir rankingprovince API (format: ID_XXXXX).
-                # No FK to dim_ward because the ranking API may include
-                # administrative units not in our ward dimension.
-                cur.execute("""
-                    CREATE TABLE IF NOT EXISTS fact_hanoiair_ranking (
-                        date DATE NOT NULL,
-                        hanoiair_administrative_id TEXT NOT NULL,
-                        rank INT,
-                        aqi_avg DOUBLE PRECISION,
-                        aqi_avg_pre DOUBLE PRECISION,
-                        source TEXT DEFAULT 'hanoiair',
-                        source_job TEXT DEFAULT 'ranking_daily',
-                        ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                        PRIMARY KEY (date, hanoiair_administrative_id)
-                    );
-                """)
-
                 # Migration block for existing tables
                 logger.info("Applying migrations (if any)...")
-                
-                # Add aqi_vn to air pollution
-                cur.execute("ALTER TABLE fact_air_pollution_hourly ADD COLUMN IF NOT EXISTS aqi_vn INT;")
                 
                 # Add missing columns to fact_weather_daily (2026-02-28)
                 daily_columns = [
@@ -210,8 +150,7 @@ def init_db() -> None:
                 
                 # Migration 2: source columns
                 tables = [
-                    "fact_air_pollution_hourly", "fact_weather_hourly", "fact_weather_daily",
-                    "fact_hanoiair_daily", "fact_hanoiair_ranking"
+                    "fact_weather_hourly", "fact_weather_daily",
                 ]
                 cur.execute("SAVEPOINT sp2")
                 try:

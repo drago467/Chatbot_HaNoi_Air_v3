@@ -26,9 +26,8 @@ class _KeyState:
 class OpenWeatherKeyManager:
     """Unified API key manager for OpenWeather with 5-key pool.
 
-    All 5 keys (0-4) can be used for both:
-    - Air Pollution API
-    - One Call 3.0 API
+    All 5 keys (0-4) can be used for:
+    - One Call 3.0 API (weather current, forecast, timemachine)
 
     Features:
     - Round-robin across all available keys
@@ -86,7 +85,7 @@ class OpenWeatherKeyManager:
         self._reset_minute_window_if_needed(st, now)
         return st.minute_count < self.per_minute_limit
 
-    def get_key(self, service: str = "pollution") -> str:
+    def get_key(self, service: str = "onecall") -> str:
         """Get an available key for the requested service.
 
         Round-robins through all keys until finding one that:
@@ -95,13 +94,13 @@ class OpenWeatherKeyManager:
         - Is not blacklisted for this service
 
         Args:
-            service: 'pollution' or 'onecall'
+            service: 'onecall' or 'timemachine'
 
         Returns:
             An available API key string
 
         Raises:
-            RuntimeError: If no keys are available
+            RuntimeError: If no keys are available (message includes wait time)
         """
         with self._lock:
             now = time.time()
@@ -118,20 +117,54 @@ class OpenWeatherKeyManager:
                     st.minute_count += 1
                     return st.key
 
-            # Track minimal wait time among unavailable keys
-            wait_s = max(0.0, st.cooldown_until - now)
-            if wait_s <= 0:
-                self._reset_minute_window_if_needed(st, now)
-                wait_s = max(0.0, 60.0 - (now - st.minute_window_start))
-
-            if best_wait_s is None or wait_s < best_wait_s:
-                best_wait_s = wait_s
+            # No key available — compute minimum wait across ALL keys
+            for st in self._states:
+                if service in st.disabled_services:
+                    continue  # blacklisted, skip
+                # Time until cooldown expires
+                wait_s = max(0.0, st.cooldown_until - now)
+                if wait_s <= 0:
+                    # Not on cooldown — wait for minute window to reset
+                    self._reset_minute_window_if_needed(st, now)
+                    if st.minute_count >= self.per_minute_limit:
+                        wait_s = max(0.0, 60.0 - (now - st.minute_window_start))
+                    else:
+                        wait_s = 0.0  # actually available (race condition)
+                if best_wait_s is None or wait_s < best_wait_s:
+                    best_wait_s = wait_s
 
         raise RuntimeError(
             f"All {n} keys exhausted for '{service}' "
             f"(limit={self.per_minute_limit}/min per key). "
             f"Try again in ~{(best_wait_s or 0.0):.1f}s"
         )
+
+    def get_wait_seconds(self, service: str = "onecall") -> float:
+        """Return estimated seconds until at least one key becomes available.
+
+        Returns 0.0 if a key is already available.
+        """
+        with self._lock:
+            now = time.time()
+            best_wait: Optional[float] = None
+
+            for st in self._states:
+                if service in st.disabled_services:
+                    continue
+                # Check cooldown
+                if now < st.cooldown_until:
+                    wait = st.cooldown_until - now
+                else:
+                    # Check minute limit
+                    self._reset_minute_window_if_needed(st, now)
+                    if st.minute_count < self.per_minute_limit:
+                        return 0.0  # this key is available right now
+                    wait = max(0.0, 60.0 - (now - st.minute_window_start))
+
+                if best_wait is None or wait < best_wait:
+                    best_wait = wait
+
+            return best_wait if best_wait is not None else 60.0
 
     def report_failure(self, key: str, status_code: int, service: str) -> None:
         """Handle API failure by status code.
