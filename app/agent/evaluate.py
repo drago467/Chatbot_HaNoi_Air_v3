@@ -509,9 +509,10 @@ def llm_judge(question, response, tool_output=None, client=None) -> dict:
     """Run LLM-as-Judge evaluation. Returns dict with validated scores 1-5."""
     if client is None:
         from openai import OpenAI
+        # JUDGE_* takes priority; fallback to legacy API_* for backward compat
         client = OpenAI(
-            base_url=os.getenv("API_BASE"),
-            api_key=os.getenv("API_KEY"),
+            base_url=os.getenv("JUDGE_API_BASE") or os.getenv("API_BASE"),
+            api_key=os.getenv("JUDGE_API_KEY") or os.getenv("API_KEY"),
         )
 
     # Quality judge (always run)
@@ -845,11 +846,13 @@ def run_evaluation(output_dir="data/evaluation", skip_judge=False, mode="baselin
     if not skip_judge:
         try:
             from openai import OpenAI
+            # JUDGE_* takes priority; fallback to legacy API_* for backward compat
             judge_client = OpenAI(
-                base_url=os.getenv("API_BASE"),
-                api_key=os.getenv("API_KEY"),
+                base_url=os.getenv("JUDGE_API_BASE") or os.getenv("API_BASE"),
+                api_key=os.getenv("JUDGE_API_KEY") or os.getenv("API_KEY"),
             )
-            print("LLM-as-Judge: ENABLED")
+            judge_model = os.getenv("JUDGE_MODEL") or os.getenv("MODEL", "gpt-4o-mini")
+            print(f"LLM-as-Judge: ENABLED (model={judge_model})")
         except Exception as e:
             print(f"LLM-as-Judge: DISABLED ({e})")
             skip_judge = True

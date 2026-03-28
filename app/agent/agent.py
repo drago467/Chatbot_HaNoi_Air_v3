@@ -456,12 +456,13 @@ def reset_agent():
 def create_weather_agent():
     global _model, _checkpointer, _db_connection
 
-    API_BASE = os.getenv("API_BASE")
-    API_KEY = os.getenv("API_KEY")
-    MODEL_NAME = os.getenv("MODEL", "gpt-4o-2024-11-20")
+    # AGENT_* takes priority; fallback to legacy API_* for backward compat
+    API_BASE = os.getenv("AGENT_API_BASE") or os.getenv("API_BASE")
+    API_KEY = os.getenv("AGENT_API_KEY") or os.getenv("API_KEY")
+    MODEL_NAME = os.getenv("AGENT_MODEL") or os.getenv("MODEL", "gpt-4o-mini-2024-07-18")
 
     if not API_BASE or not API_KEY:
-        raise ValueError("API_BASE and API_KEY must be set in .env")
+        raise ValueError("AGENT_API_BASE and AGENT_API_KEY must be set in .env")
 
     _model = ChatOpenAI(model=MODEL_NAME, temperature=0, base_url=API_BASE, api_key=API_KEY)
 
@@ -715,17 +716,17 @@ def _create_focused_agent(tools: list, router_result=None):
     # Qwen3 thinking mode: adjust model temperature for complex intents
     model = _model
     if router_result and _model is not None:
-        model_name = os.getenv("MODEL", "")
+        model_name = os.getenv("AGENT_MODEL") or os.getenv("MODEL", "")
         intent = getattr(router_result, "intent", "")
         if "qwen3" in model_name.lower() and intent in _THINKING_INTENTS:
             # Qwen3 recommends temperature=0.6 when thinking mode is active
             from langchain_openai import ChatOpenAI
-            API_BASE = os.getenv("API_BASE")
-            API_KEY = os.getenv("API_KEY")
-            if API_BASE and API_KEY:
+            api_base = os.getenv("AGENT_API_BASE") or os.getenv("API_BASE")
+            api_key = os.getenv("AGENT_API_KEY") or os.getenv("API_KEY")
+            if api_base and api_key:
                 model = ChatOpenAI(
                     model=model_name, temperature=0.6,
-                    base_url=API_BASE, api_key=API_KEY,
+                    base_url=api_base, api_key=api_key,
                 )
 
     return create_react_agent(
@@ -831,20 +832,15 @@ def stream_agent_routed(message: str, thread_id: str = "default"):
                             if content:
                                 yield content
 
-            # Update ConversationState after successful turn
-            # For streaming, we use a separate invoke to get the full result
+            # Update ConversationState (intent + turn count) after successful streaming turn.
+            # Full entity extraction (location) is only available via invoke; for streaming
+            # we update what we know from the router result.
             try:
-                final_result = focused_agent.invoke(
-                    None,  # None = get current state without new input
-                    {"configurable": {"thread_id": thread_id}},
-                ) if False else None  # Avoid double-invoke; state is in checkpointer
-                # Simplified: update with what we know from router
-                state = store.get(thread_id) or __import__(
-                    "app.agent.conversation_state", fromlist=["ConversationState"]
-                ).ConversationState()
+                from app.agent.conversation_state import ConversationState
+                import time as _time
+                state = store.get(thread_id) or ConversationState()
                 state.last_intent = rr.intent
                 state.turn_count = (state.turn_count or 0) + 1
-                import time as _time
                 state.updated_at = _time.time()
                 with store._lock:
                     store._store[thread_id] = state
