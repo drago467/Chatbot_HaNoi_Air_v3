@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="tc" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#64748B"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </radialGradient>
+  </defs>
+  <!-- Dark cloud -->
+  <path d="M8 34 Q8 24 18 24 Q20 16 30 16 Q44 16 44 26 Q52 26 52 34 Z"
+        fill="url(#tc)"/>
+  <!-- Lightning bolt -->
+  <path d="M34 30 L28 42 L33 42 L27 54 L38 40 L33 40 L38 30 Z"
+        fill="#F6C026"/>
+  <!-- Small raindrops -->
+  <ellipse cx="18" cy="44" rx="2" ry="3" fill="#4DA3E0" transform="rotate(-10 18 44)"/>
+  <ellipse cx="48" cy="44" rx="2" ry="3" fill="#4DA3E0" transform="rotate(-10 48 44)"/>
+</svg>

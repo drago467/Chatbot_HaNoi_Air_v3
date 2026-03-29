@@ -57,13 +57,14 @@ async def page_today(request: Request):
 @router.get("/hourly", response_class=HTMLResponse)
 async def page_hourly(request: Request):
     """Trang Hàng giờ — 48h forecast."""
-    from app.dal.weather_dal import get_hourly_forecast
+    from app.dal.weather_dal import get_hourly_forecast, get_current_weather
     from app.dal.location_dal import get_districts
     from app.db.dal import query as db_query
 
     ward_id = _ward_id(request)
     district = _district(request)
     hourly = get_hourly_forecast(ward_id, hours=48)
+    current = get_current_weather(ward_id)
 
     # Fallback: if no future forecasts, show most recent forecast data
     if not hourly:
@@ -88,6 +89,7 @@ async def page_hourly(request: Request):
 
     return _templates(request).TemplateResponse(request, "pages/hourly.html", {
         "hourly": hourly,
+        "current": current,
         "districts": districts,
         "active_page": "hourly",
         "district": district,
@@ -99,16 +101,18 @@ async def page_hourly(request: Request):
 @router.get("/daily", response_class=HTMLResponse)
 async def page_daily(request: Request):
     """Trang 8 ngày — daily forecast."""
-    from app.dal.weather_dal import get_daily_forecast
+    from app.dal.weather_dal import get_daily_forecast, get_current_weather
     from app.dal.location_dal import get_districts
 
     ward_id = _ward_id(request)
     district = _district(request)
     daily = get_daily_forecast(ward_id, days=8)
+    current = get_current_weather(ward_id)
     districts = get_districts()
 
     return _templates(request).TemplateResponse(request, "pages/daily.html", {
         "daily": daily,
+        "current": current,
         "districts": districts,
         "active_page": "daily",
         "district": district,
@@ -140,13 +144,29 @@ async def page_chat(request: Request):
 async def page_alerts(request: Request):
     """Trang Cảnh báo thời tiết."""
     from app.dal.location_dal import get_districts
+    from app.dal.alerts_dal import get_weather_alerts
 
+    ward_id = _ward_id(request)
     district = _district(request)
     districts = get_districts()
 
+    try:
+        alerts = get_weather_alerts(ward_id)
+    except Exception:
+        alerts = []
+
+    try:
+        from app.dal.weather_dal import get_current_weather
+        current = get_current_weather(ward_id)
+    except Exception:
+        current = None
+
     return _templates(request).TemplateResponse(request, "pages/alerts.html", {
         "districts": districts,
+        "alerts": alerts,
+        "current": current,
         "active_page": "alerts",
         "district": district,
+        "ward_id": ward_id,
         "user": _user(request),
     })

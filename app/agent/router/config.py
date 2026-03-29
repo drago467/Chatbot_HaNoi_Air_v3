@@ -20,25 +20,26 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "hanoi-weather-router")
 CONFIDENCE_THRESHOLD = float(os.getenv("SLM_CONFIDENCE_THRESHOLD", "0.75"))
 
 # ── Per-intent adaptive thresholds (Module 4: Calibrated Confidence Routing)
-# Derived from precision-recall analysis on val.jsonl (230 samples).
-# High-accuracy intents (≥95%) use relaxed thresholds; low-accuracy use strict.
-# Intent accuracy reference (from training): current_weather ~97%, weather_alert ~79%
+# Updated 2026-03-29 based on v3 confusion analysis:
+# - weather_alert lowered: miss a storm warning is MORE dangerous than false alert
+# - activity_weather lowered: no longer confused with smalltalk after data relabeling
+# - current_weather vs temperature_query: both medium, let smart routing handle edge cases
 PER_INTENT_THRESHOLDS: dict[str, float] = {
-    "current_weather":      0.65,   # accuracy >95% → relax threshold
+    "current_weather":      0.65,   # common intent, relax threshold
     "weather_overview":     0.65,   # typically easy to classify
-    "smalltalk_weather":    0.60,   # highly distinctive, easy to classify
+    "smalltalk_weather":    0.60,   # highly distinctive
     "hourly_forecast":      0.70,   # good accuracy
     "daily_forecast":       0.70,   # good accuracy
-    "rain_query":           0.72,   # slight confusion with hourly_forecast
+    "rain_query":           0.70,   # improved after data relabeling
     "historical_weather":   0.72,   # moderate accuracy
     "humidity_fog_query":   0.75,   # default
     "seasonal_context":     0.75,   # default
-    "wind_query":           0.75,   # default
+    "wind_query":           0.70,   # improved: wind queries now properly labeled
     "location_comparison":  0.78,   # can confuse with current_weather
-    "activity_weather":     0.78,   # can confuse with smalltalk
-    "expert_weather_param": 0.80,   # lower accuracy → strict threshold
-    "temperature_query":    0.80,   # overlaps with current_weather
-    "weather_alert":        0.80,   # lower accuracy ~79% → strict threshold
+    "activity_weather":     0.70,   # improved: no longer confused with smalltalk
+    "expert_weather_param": 0.78,   # slightly relaxed from 0.80
+    "temperature_query":    0.75,   # relaxed from 0.80: smart routing handles overlap
+    "weather_alert":        0.35,   # SAFETY: miss alert >> false positive
 }
 
 # ── Confidence calibration (Module 4: Temperature Scaling)

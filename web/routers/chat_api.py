@@ -36,7 +36,17 @@ async def _stream_agent(prompt: str, thread_id: str):
             for chunk in stream_agent_routed(prompt, thread_id=thread_id):
                 full += chunk
                 q.put(("chunk", chunk))
+            # Try to get follow-up suggestions from ConversationState
+            suggestions = []
+            try:
+                from app.agent.conversation_state import get_follow_up_suggestions
+                suggestions = get_follow_up_suggestions(thread_id) or []
+            except Exception:
+                pass
             q.put(("done", full))
+            if suggestions:
+                import json as _json
+                q.put(("suggestions", _json.dumps(suggestions, ensure_ascii=False)))
         except Exception as exc:
             q.put(("error", str(exc)))
 

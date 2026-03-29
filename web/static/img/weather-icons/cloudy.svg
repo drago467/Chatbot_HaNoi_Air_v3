@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="c1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="100%" stop-color="#CBD5E1"/>
+    </radialGradient>
+    <radialGradient id="c2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F1F5F9"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </radialGradient>
+  </defs>
+  <!-- Back cloud (darker) -->
+  <path d="M10 46 Q10 36 20 36 Q22 28 32 28 Q44 28 44 38 Q52 38 52 46 Z"
+        fill="url(#c1)"/>
+  <!-- Front cloud (lighter) -->
+  <path d="M6 54 Q6 46 14 46 Q16 40 24 40 Q34 40 34 48 Q40 48 40 54 Z"
+        fill="url(#c2)"/>
+</svg>

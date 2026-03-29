@@ -232,7 +232,7 @@ page_heading_data %}Trợ lý thời tiết{% endblock %} {% block head %}
   }
 
   /* ── SSE stream reader (POST-based) ────────────────── */
-  async function readSSE(response, onChunk, onDone, onError) {
+  async function readSSE(response, onChunk, onDone, onError, onSuggestions) {
     var reader = response.body.getReader();
     var decoder = new TextDecoder();
     var buffer = "";
@@ -263,6 +263,8 @@ page_heading_data %}Trợ lý thời tiết{% endblock %} {% block head %}
         else if (eventType === "done") {
           onDone(data);
           return;
+        } else if (eventType === "suggestions") {
+          try { if (onSuggestions) onSuggestions(JSON.parse(data)); } catch(e) {}
         } else if (eventType === "error") {
           onError(data);
           return;
@@ -277,6 +279,22 @@ page_heading_data %}Trợ lý thời tiết{% endblock %} {% block head %}
   function sendSuggestion(text) {
     document.getElementById("chat-input").value = text.trim();
     handleChatSubmit(new Event("submit", { cancelable: true }));
+  }
+
+  function showFollowUpSuggestions(items) {
+    if (!items || !items.length) return;
+    var container = document.getElementById("chat-suggestions");
+    container.innerHTML = "";
+    items.forEach(function (text) {
+      var btn = document.createElement("button");
+      btn.className =
+        "suggestion-btn text-xs px-3 py-1.5 bg-white border border-gray-200 " +
+        "rounded-full text-gray-600 hover:bg-blue-50 hover:border-blue-300 transition-colors";
+      btn.textContent = text;
+      btn.onclick = function () { sendSuggestion(text); };
+      container.appendChild(btn);
+    });
+    container.style.display = "flex";
   }
 
   /* ── main submit handler (SSE streaming) ───────────── */
@@ -359,6 +377,9 @@ page_heading_data %}Trợ lý thời tiết{% endblock %} {% block head %}
             '<p class="text-red-500 mt-1">Lỗi: ' +
             escapeHtml(msg) +
             "</p>";
+        },
+        function onSuggestions(items) {
+          showFollowUpSuggestions(items);
         },
       );
     } catch (err) {

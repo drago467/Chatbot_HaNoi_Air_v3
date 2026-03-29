@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="sun2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="100%" stop-color="#F6C026"/>
+    </radialGradient>
+    <radialGradient id="cloud1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </radialGradient>
+  </defs>
+  <!-- Small sun top-right -->
+  <g stroke="#F6C026" stroke-width="2" stroke-linecap="round">
+    <line x1="44" y1="8"  x2="44" y2="13"/>
+    <line x1="44" y1="27" x2="44" y2="32"/>
+    <line x1="32" y1="20" x2="37" y2="20"/>
+    <line x1="51" y1="20" x2="56" y2="20"/>
+    <line x1="35.5" y1="11.5" x2="39" y2="15"/>
+    <line x1="49" y1="25"    x2="52.5" y2="28.5"/>
+    <line x1="52.5" y1="11.5" x2="49" y2="15"/>
+    <line x1="39" y1="25"    x2="35.5" y2="28.5"/>
+  </g>
+  <circle cx="44" cy="20" r="8" fill="url(#sun2)"/>
+  <!-- White cloud in front -->
+  <path d="M14 44 Q14 36 22 36 Q24 30 32 30 Q42 30 42 38 Q48 38 48 44 Z"
+        fill="url(#cloud1)"/>
+</svg>

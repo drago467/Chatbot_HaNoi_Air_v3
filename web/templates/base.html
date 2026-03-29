@@ -104,11 +104,6 @@
             <select
               id="district-select"
               class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              hx-get="/api/weather/wards"
-              hx-target="#ward-select"
-              hx-swap="innerHTML"
-              hx-trigger="change"
-              hx-include="this"
               name="district"
             >
               {% for d in districts %}
@@ -164,14 +159,35 @@
           return match ? decodeURIComponent(match[2]) : null;
         }
 
-        // On district change: save cookie (wards loaded by HTMX automatically)
+        // Fetch wards for a given district, then optionally pre-select a ward
+        function loadWards(districtName, wardIdToSelect, onLoaded) {
+          fetch(
+            "/api/weather/wards?district=" + encodeURIComponent(districtName),
+          )
+            .then(function (r) { return r.text(); })
+            .then(function (html) {
+              wardEl.innerHTML = html;
+              if (wardIdToSelect) {
+                var opt = wardEl.querySelector(
+                  'option[value="' + wardIdToSelect + '"]',
+                );
+                if (opt) opt.selected = true;
+              }
+              if (onLoaded) onLoaded();
+            });
+        }
+
+        // On district change: save cookie, fetch new wards, auto-select saved ward if same district
         if (districtEl) {
           districtEl.addEventListener("change", function () {
             setCookie("district", this.value);
+            // When district changes, clear old ward cookie and load fresh wards
+            var savedWard = getCookie("ward_id");
+            loadWards(this.value, savedWard, null);
           });
         }
 
-        // On ward change: save cookie and reload
+        // On ward change: save cookie and reload page
         if (wardEl) {
           wardEl.addEventListener("change", function () {
             if (this.value) {
@@ -181,28 +197,12 @@
           });
         }
 
-        // On page load: always fetch wards for the current district and pre-select saved ward
+        // On page load: fetch wards for the current district and pre-select saved ward
         var savedWardId = getCookie("ward_id");
         var currentDistrict = districtEl ? districtEl.value : null;
 
         if (currentDistrict && wardEl) {
-          fetch(
-            "/api/weather/wards?district=" +
-              encodeURIComponent(currentDistrict),
-          )
-            .then(function (r) {
-              return r.text();
-            })
-            .then(function (html) {
-              wardEl.innerHTML = html;
-              // Pre-select saved ward
-              if (savedWardId) {
-                var opt = wardEl.querySelector(
-                  'option[value="' + savedWardId + '"]',
-                );
-                if (opt) opt.selected = true;
-              }
-            });
+          loadWards(currentDistrict, savedWardId, null);
         }
       })();
 

@@ -1,7 +1,11 @@
-{% extends "base.html" %} {% block title %}Hôm nay — Thời Tiết {{ district }}{%
+{% extends "base.html" %} {% from "macros/weather_icon.html" import icon %} {% block title %}Hôm nay — Thời Tiết {{ district }}{%
 endblock %} {% block page_heading %}Thời tiết hôm nay{% endblock %} {% block
 page_heading_data %}Thời tiết hôm nay{% endblock %} {% block content %}
-<div class="max-w-4xl">
+
+<div class="flex gap-5 items-start w-full">
+
+  {# ── LEFT: Today content ── #}
+  <div class="flex-1 min-w-0">
   {% if current and not current.get("error") %}
   <!-- Day / Night Cards — weather.com style -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -9,12 +13,15 @@ page_heading_data %}Thời tiết hôm nay{% endblock %} {% block content %}
     <div class="bg-white rounded-xl p-6 shadow-sm">
       <div class="text-sm text-gray-500 mb-1">Ngày</div>
       <div class="flex items-start justify-between">
-        <div>
-          <div class="text-5xl font-light text-gray-900">
-            {{ current.temp|safe_round|int }}°
-          </div>
-          <div class="text-sm text-gray-600 mt-2">
-            {{ current.weather_description or current.weather_main or '---' }}
+        <div class="flex items-center gap-4">
+          {{ icon(current.weather_main, current.clouds, current.ts_utc, "w-16 h-16") }}
+          <div>
+            <div class="text-5xl font-light text-gray-900">
+              {{ current.temp|safe_round|int }}°
+            </div>
+            <div class="text-sm text-gray-600 mt-2">
+              {{ current.weather_description or current.weather_main or '---' }}
+            </div>
           </div>
         </div>
         <div class="text-right text-sm text-gray-500 space-y-1">
@@ -80,12 +87,15 @@ page_heading_data %}Thời tiết hôm nay{% endblock %} {% block content %}
       {% if daily and daily|length > 0 %} {% set today_d = daily[0] %}
       <div class="text-sm text-gray-500 mb-1">Đêm</div>
       <div class="flex items-start justify-between">
-        <div>
-          <div class="text-5xl font-light text-gray-900">
-            {{ today_d.temp_min|safe_round|int }}°
-          </div>
-          <div class="text-sm text-gray-600 mt-2">
-            {{ today_d.weather_description or today_d.weather_main or '---' }}
+        <div class="flex items-center gap-4">
+          {{ icon(today_d.weather_main, today_d.clouds, None, "w-16 h-16") }}
+          <div>
+            <div class="text-5xl font-light text-gray-900">
+              {{ today_d.temp_min|safe_round|int }}°
+            </div>
+            <div class="text-sm text-gray-600 mt-2">
+              {{ today_d.weather_description or today_d.weather_main or '---' }}
+            </div>
           </div>
         </div>
         <div class="text-right text-sm text-gray-500 space-y-1">
@@ -154,12 +164,16 @@ page_heading_data %}Thời tiết hôm nay{% endblock %} {% block content %}
       <!-- Summary row — click to toggle detail -->
       <div
         class="flex items-center px-6 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
-        onclick="this.nextElementSibling.classList.toggle('hidden')"
+        onclick="var d=this.nextElementSibling; d.classList.toggle('hidden'); this.classList.toggle('bg-blue-50'); this.classList.toggle('hover:bg-gray-50');"
       >
         <!-- Date -->
-        <div class="w-24 text-sm text-gray-600">
-          {% if day.date %} {{ day.date.strftime('%a %d/%m') if
-          day.date.strftime else day.date }} {% endif %}
+        <div class="w-9 text-xs font-semibold shrink-0">
+          {% set wd = day.date.weekday() if day.date and day.date.weekday else -1 %}
+          {% set vi_days = ['T2','T3','T4','T5','T6','T7','CN'] %}
+          <span class="text-gray-800">{{ vi_days[wd] if wd >= 0 and wd < 7 else (day.date.strftime('%a') if day.date and day.date.strftime else '') }}</span>
+        </div>
+        <div class="w-14 text-xs text-gray-400">
+          {{ day.date.strftime('%d/%m') if day.date and day.date.strftime else day.date }}
         </div>
 
         <!-- Temp -->
@@ -195,57 +209,8 @@ page_heading_data %}Thời tiết hôm nay{% endblock %} {% block content %}
       </div>
 
       <!-- Expanded detail (hidden by default) -->
-      <div class="hidden px-6 pb-4 bg-gray-50">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div>
-            <span class="text-gray-400 text-xs">Sáng</span>
-            <div class="font-medium">
-              {{ day.temp_morn|default('--')|safe_round|int }}°C
-            </div>
-          </div>
-          <div>
-            <span class="text-gray-400 text-xs">Chiều</span>
-            <div class="font-medium">
-              {{ day.temp_eve|default('--')|safe_round|int }}°C
-            </div>
-          </div>
-          <div>
-            <span class="text-gray-400 text-xs">Tối</span>
-            <div class="font-medium">
-              {{ day.temp_night|default('--')|safe_round|int }}°C
-            </div>
-          </div>
-          <div>
-            <span class="text-gray-400 text-xs">Độ ẩm</span>
-            <div class="font-medium">{{ day.humidity|default('--') }}%</div>
-          </div>
-          <div>
-            <span class="text-gray-400 text-xs">UV</span>
-            <div class="font-medium">
-              {{ day.uvi|default(0)|safe_round(1) }}
-            </div>
-          </div>
-          <div>
-            <span class="text-gray-400 text-xs">Lượng mưa</span>
-            <div class="font-medium">
-              {{ day.rain_total|default(0)|safe_round(1) }} mm
-            </div>
-          </div>
-          {% if day.sunrise_time %}
-          <div>
-            <span class="text-gray-400 text-xs">Bình minh</span>
-            <div class="font-medium">{{ day.sunrise_time }}</div>
-          </div>
-          {% endif %} {% if day.sunset_time %}
-          <div>
-            <span class="text-gray-400 text-xs">Hoàng hôn</span>
-            <div class="font-medium">{{ day.sunset_time }}</div>
-          </div>
-          {% endif %}
-        </div>
-        {% if day.summary %}
-        <div class="mt-3 text-sm text-gray-600">{{ day.summary }}</div>
-        {% endif %}
+      <div class="hidden">
+        {% include "partials/daily_detail.html" %}
       </div>
     </div>
     {% endfor %}
@@ -264,5 +229,11 @@ page_heading_data %}Thời tiết hôm nay{% endblock %} {% block content %}
     </a>
   </div>
   {% endif %}
+  </div>{# end left #}
+
+  {# ── RIGHT: companion panel — không có daily strip vì today đã có bên trái ── #}
+  {% set daily = [] %}
+  {% include "partials/weather_panel.html" %}
+
 </div>
 {% endblock %}

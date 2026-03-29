@@ -1,0 +1,672 @@
+{"input": "Gió ở Hòa Phú hiện tại mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hiện tại, áp suất không khí tại Lăng Chủ tịch đang ở mức nào?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "Chiều mai ở Times City dự báo có mưa không nhỉ?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "canh bao thoi tiet o viet hung, long bien trua nay", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Cho mình một bản tổng quan thời tiết 3 ngày tới ở quận Long Biên.", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm nay thời tiết ở Yên Lãng, Mê Linh có gì đặc biệt vào buổi tối không?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.89}}
+{"input": "Quận nào ẩm nhất?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 1}, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.94, "rewritten_query": "Hôm nay quận nào ở Hà Nội có độ ẩm cao nhất?"}}
+{"input": "Dự báo thời tiết ở phường Phú Lương tuần này?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Nhiệt độ điểm sương ở Hà Nội bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.89}}
+{"input": "Tóm tắt tình hình thời tiết ở Sóc Sơn trong 5 ngày tới.", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.92}}
+{"input": "Cho mình biết tình hình thời tiết Hà Nội theo từng giờ buổi chiều nhé!", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Ở Hà Nội, thời tiết trong những giờ tới sẽ ra sao nhỉ?", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Ở phường Phú Lương hôm nay dễ chịu ghê!", "context": null, "output": {"intent": "smalltalk_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Chiều nay ở Phú Thượng có thời tiết tốt cho việc chạy bộ không nhỉ?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Gió mạnh cỡ nào?", "context": {"location": "Gia Lâm", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.96, "rewritten_query": "Gió giông ở quận Gia Lâm mạnh đến mức nào?"}}
+{"input": "Địa điểm nào trong Hà Nội bây giờ đang nóng hơn cả?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.9}}
+{"input": "Hà Nội chiều nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.9}}
+{"input": "Tuần tới ở Hà Nội có nguy cơ mưa giông kèm lốc xoáy không?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.84}}
+{"input": "hom nay di choi duoc khong?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Đi ra ngoài có ổn không?", "context": {"location": "Hà Nội", "intent": "current_weather", "turn": 1}, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.86, "rewritten_query": "Thời tiết ở Hà Nội có cho phép ra ngoài không?"}}
+{"input": "Trời Hà Nội hiện giờ ra sao?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Hiện tại áp suất không khí tại Thạch Thất là bao nhiêu nhỉ?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.87}}
+{"input": "Có mấy độ ẩm ở đây?", "context": {"location": "Nam Từ Liêm", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9, "rewritten_query": "Có mức độ ẩm như thế nào ở quận Nam Từ Liêm?"}}
+{"input": "Dự báo thời tiết Hà Nội theo giờ cho buổi sáng như thế nào?", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.92}}
+{"input": "Thời tiết mùa này ra sao?", "context": {"location": "Đông Anh", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.86, "rewritten_query": "Thời tiết mùa này ở huyện Đông Anh ra sao?"}}
+{"input": "so sanh thoi tiet dong da va nam tu liem toi nay", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Đêm nay ở nội thành Hà Nội tầm nhìn xa có bị hạn chế vì sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.85}}
+{"input": "Hôm nay thời tiết ở Mê Linh thế nào nhỉ?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.9}}
+{"input": "luc nay thoi tiet o ha noi co on khong moi nguoi?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.91}}
+{"input": "Gia Lâm sáng mai gió như thế nào?", "context": {"location": "Gia Lâm", "intent": "weather_alert", "turn": 1}, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.89}}
+{"input": "Trưa nay có nên đi dạo một chút ở Vĩnh Thanh, Đông Anh không?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.87}}
+{"input": "Cường độ UV như thế nào?", "context": {"location": "Yên Hòa", "intent": "current_weather", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.94, "rewritten_query": "UV ở phường Yên Hòa hiện tại có cao không?"}}
+{"input": "Đêm nay có sương mù không bạn?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.89}}
+{"input": "Thời tiết Sóc Sơn mấy ngày qua có thay đổi gì không?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "vai gio toi o hai ba trung troi co chuyen khong?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.86}}
+{"input": "Tối nay, Đống Đa và Nam Từ Liêm quận nào có gió mạnh hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "So sánh thời tiết Ba Đình và Cầu Giấy?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Tốc độ gió ở khu vực Hồ Gươm bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.93}}
+{"input": "Chỗ đó tối nay có mưa không?", "context": {"location": "Hoàn Kiếm", "intent": "rain_query", "turn": 1}, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.95, "rewritten_query": "Tối nay ở quận Hoàn Kiếm có mưa không?"}}
+{"input": "Khu vực Bệnh viện Bạch Mai trưa nay có an toàn không?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.9}}
+{"input": "Có nên mang áo khoác không?", "context": {"location": "Hà Nội", "intent": "smalltalk_weather", "turn": 1}, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.91, "rewritten_query": "Thời tiết Hà Nội hôm nay có cần mặc áo khoác không?"}}
+{"input": "Xuân Mai bây giờ thời tiết thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay thời tiết ra sao?", "context": {"location": "Mê Linh", "intent": "current_weather", "turn": 1}, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9, "rewritten_query": "Thời tiết hôm nay ở huyện Mê Linh như thế nào?"}}
+{"input": "dao quanh ho linh dam thi hom nay co can mang o khong?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Ở Sân bay Nội Bài buổi chiều có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Dương Hòa hôm nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "o ho hoan kiem hom nay mac gi cho phu hop?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Có giông không?", "context": {"location": "Gia Lâm", "intent": "wind_query", "turn": 1}, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.95, "rewritten_query": "Huyện Gia Lâm hôm nay có giông bão không?"}}
+{"input": "thoi tiet quan ba dinh hom nay nhin chung the nao?", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Tổng quan hôm nay ở đó thế nào?", "context": {"location": "Hoàn Kiếm", "intent": "rain_query", "turn": 1}, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9, "rewritten_query": "Tổng quan thời tiết hôm nay ở quận Hoàn Kiếm như thế nào?"}}
+{"input": "Độ ẩm ở phường Yên Lãng bao nhiêu rồi?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.9}}
+{"input": "cho minh hoi troi o khu vuc dam sen bay gio co mat khong?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.92}}
+{"input": "Ba Vì sáng sớm có sương muối không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "Phường Lĩnh Nam chiều nay có nguy hiểm gì không?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Cho mình xem lịch sử thời tiết Hà Nội hôm qua", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Khu vực nào bị ảnh hưởng?", "context": {"location": "Hà Nội", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.88, "rewritten_query": "Cảnh báo thời tiết hôm nay ảnh hưởng đến khu vực nào ở Hà Nội?"}}
+{"input": "Có ai biết dự báo theo giờ ở Royal City tối nay không?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.87}}
+{"input": "thoi tiet soc son may ngay qua co thay doi gi khong?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Tối nay?", "context": {"location": "Cầu Giấy", "intent": "current_weather", "turn": 1}, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.87, "rewritten_query": "Tối nay ở quận Cầu Giấy thời tiết ra sao?"}}
+{"input": "Có cần mang ô không?", "context": {"location": "Hà Nội", "intent": "smalltalk_weather", "turn": 1}, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.95, "rewritten_query": "Hôm nay đi làm ở Hà Nội có cần mang ô không?"}}
+{"input": "Ở đó sáng mai thế nào?", "context": {"location": "Tây Hồ", "intent": "rain_query", "turn": 1}, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9, "rewritten_query": "Sáng mai ở quận Tây Hồ trời thế nào?"}}
+{"input": "Xu hướng nhiệt độ mấy ngày qua thế nào?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.91}}
+{"input": "Lúc này mưa không?", "context": {"location": "Bắc Từ Liêm", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.95, "rewritten_query": "Quận Bắc Từ Liêm lúc này có mưa không?"}}
+{"input": "Cho mình biết thời tiết ở Hồ Linh Đàm hiện nay", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.93}}
+{"input": "Dự báo theo giờ ở Royal City tối nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.91}}
+{"input": "Thời tiết hôm sau ở Phố cổ Hà Nội có gì đặc biệt không?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.92}}
+{"input": "cho minh biet thoi tiet o ha noi chieu nay nhe!", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "Gió mạnh tại sân bay Nội Bài giờ này là bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "bua nay ha noi co suong mu khong nhi?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.9}}
+{"input": "Tháng trước ở Xã Quảng Oai thì trời có đẹp không?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Bữa nay ở Sóc Sơn có sương mù không hả?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "Quận nào ở Hà Nội hiện giờ đang có mưa nhỉ?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.9}}
+{"input": "thoi tiet sang nay o ha noi co thuan loi cho viec di dao ngoai troi khong?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.87}}
+{"input": "Dự báo ngày mai?", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "Đống Đa và Hoàn Kiếm nơi nào mát hơn?", "context": {"location": "Hà Nội", "intent": "weather_overview", "turn": 1}, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.91}}
+{"input": "Hà Nội hôm nay nên mặc gì?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Xã Xuân Mai tuần này có bất thường không?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "co nen di bo buoi sang o yen nghia, ha dong hom nay khong?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.89}}
+{"input": "Đi dạo ở đây có ổn không?", "context": {"location": "Hà Nội", "intent": "current_weather", "turn": 1}, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.92, "rewritten_query": "Thời tiết ở Hà Nội có phù hợp để đi dạo không?"}}
+{"input": "Hà Nội thời tiết đẹp nhỉ bạn?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.94}}
+{"input": "Phường Đại Mỗ tuần này có bất thường không?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm qua trời có mưa không?", "context": {"location": "Ba Đình", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.93, "rewritten_query": "Hôm qua ở quận Ba Đình có mưa không?"}}
+{"input": "Có cảnh báo mưa lớn ở Hà Nội tối nay không?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.83}}
+{"input": "Hà Nội cuối tuần dự báo thế nào?", "context": {"location": "Đống Đa", "intent": "temperature_query", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.92}}
+{"input": "Bây giờ ở xã Đông Anh thì nhiệt độ đang ở mức nào?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Bầu trời ở khu vực Hồ Gươm bây giờ trông như thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.9}}
+{"input": "mua nay thoi tiet ra sao?", "context": {"location": "Hà Nội", "intent": "temperature_query", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.89, "rewritten_query": "Thời tiết mùa này ở Hà Nội như thế nào?"}}
+{"input": "Tốc độ gió ở khu vực Sân Mỹ Đình bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Quận ven hồ có mát hơn không nhỉ?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.96, "rewritten_query": "Các quận ven hồ như Tây Hồ thường mát hơn trung tâm không?"}}
+{"input": "Có cảnh báo mưa lớn ở Hà Nội buổi tối không?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.84}}
+{"input": "Cho mình biết dự báo theo giờ ở Mỹ Đức tối nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.87}}
+{"input": "Yên Sở tổng quan thời tiết hôm nay?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "nhiet do o gia lam ngay bay gio bao nhieu?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.8}}
+{"input": "Tối nay phường Nhật Tân, Tây Hồ có mưa rào hay giông không?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "thu tu o ha noi du bao nhiet do la bao nhieu?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.82}}
+{"input": "Hà Nội năm nay rét muộn không bạn?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.9}}
+{"input": "Hiện tại áp suất khí quyển tại Hà Nội là bao nhiêu ta?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.88}}
+{"input": "Hiện giờ Đông Anh hay Sơn Tây nóng hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Gió ở quận Long Biên hiện tại mạnh không?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.94}}
+{"input": "Có dự báo theo giờ cho Bờ Hồ chiều nay không nhỉ?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Trời ở Nam Từ Liêm hôm nay đẹp không?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Ở đó có nồm không?", "context": {"location": "Kiến Hưng", "intent": "rain_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.91, "rewritten_query": "Phường Kiến Hưng hôm nay có nồm ẩm không?"}}
+{"input": "Áp suất ở Bến xe Nam Từ Liêm giờ này bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "Thứ Tư ở Hà Nội dự báo nhiệt độ là bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.82}}
+{"input": "bay gio ra ngoai co thoai mai khong?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "So với hôm qua thì ở Hồ Linh Đàm hôm nay thế nào?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.86}}
+{"input": "Cảnh báo thời tiết ở Việt Hưng, Long Biên trưa nay", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "mai chieu o thanh xuan co do cao nhat khoang bao nhieu ta?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Ngày kia thời tiết thế nào?", "context": {"location": "Xuân Phương", "intent": "daily_forecast", "turn": 2}, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.89, "rewritten_query": "Dự báo thời tiết ngày kia ở phường Xuân Phương?"}}
+{"input": "mo ta ngan gon thoi tiet tuan nay o ha noi de minh len ke hoach.", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.89}}
+{"input": "Thời tiết Hà Nội có gì đáng lo hôm nay?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.9}}
+{"input": "Dự báo thời tiết Vật Lại ngày mai?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "So với hôm qua thì Mê Linh, Mê Linh hôm nay thế nào?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Có ảnh hưởng đến việc đi xe không?", "context": {"location": "Gia Lâm", "intent": "wind_query", "turn": 1}, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.89, "rewritten_query": "Gió ở huyện Gia Lâm hôm nay có ảnh hưởng đến việc đi xe không?"}}
+{"input": "mua nay ha noi thuong mua nhieu khong?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ở Bờ Hồ tháng trước thế nào?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.89}}
+{"input": "Tốt nhất đi bộ lúc mấy giờ?", "context": {"location": "Yên Hòa", "intent": "current_weather", "turn": 1}, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.92, "rewritten_query": "Ở phường Yên Hòa lúc mấy giờ tốt nhất để đi bộ?"}}
+{"input": "Tối nay ở Hà Nội có gió xoáy mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.9}}
+{"input": "xep hang nhiet do cac quan ha noi buoi toi", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.9}}
+{"input": "Cách đây 2 hôm, thời tiết ở Cao tốc Pháp Vân ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.93}}
+{"input": "Đợt lạnh sắp tới ở Hà Nội nhiệt độ có thể xuống bao thấp?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.84}}
+{"input": "Ngày mai ở Đan Phượng có thuận lợi để làm nông ngoài trời không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Vật Lại tuần này có bất thường không?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Trời thế này đi chợ được không?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Hôm trước ở Phường Bình Phú có thời tiết thế nào nhỉ?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.88}}
+{"input": "phuong chuong my mua nay the nao nhi?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "ward", "confidence": 0.97}}
+{"input": "Bữa nay Hà Nội có thông báo thời tiết đặc biệt nào không?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.9}}
+{"input": "Hôm kia ở Phường Dương Nội trời ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.88}}
+{"input": "Hà Nội hôm nay có khả năng bị mưa không ta?", "context": null, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.9}}
+{"input": "Tốc độ gió ở khu vực Phố cổ bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.92}}
+{"input": "Tháng này có mưa nhiều không?", "context": {"location": "Cầu Giấy", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.88, "rewritten_query": "Tháng này quận Cầu Giấy có mưa nhiều không?"}}
+{"input": "Sáng nay ở Xã Chuyên Mỹ, thời tiết có thích hợp cho việc đạp xe không nhỉ?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.87}}
+{"input": "Đêm nay ở nội thành Hà Nội có nguy cơ mưa lớn gây ngập không?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.9}}
+{"input": "Có phù hợp chạy bộ sáng mai không?", "context": {"location": "Láng", "intent": "weather_overview", "turn": 1}, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.91, "rewritten_query": "Sáng mai ở phường Láng có phù hợp chạy bộ không?"}}
+{"input": "So sánh thời tiết giữa Bắc Từ Liêm với Hoàn Kiếm", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Năm ngoái thời tiết ra sao?", "context": {"location": "Hà Nội", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.92, "rewritten_query": "Năm ngoái cùng kỳ này Hà Nội nhiệt độ bao nhiêu?"}}
+{"input": "Sáng nay Nội Bài có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.89}}
+{"input": "di ho tay hom nay co can mang o khong?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Quận nào ở Hà Nội giờ này nóng nhất?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.88}}
+{"input": "Hà Nội bữa nay có bị gió mạnh làm khó chịu không?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.9}}
+{"input": "Áp suất khí quyển Hà Nội lúc này bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.9}}
+{"input": "Hát Môn dạo này thời tiết có điểm gì đáng chú ý không?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Thuận An (Gia Lâm) hay Phú Diễn (Bắc Từ Liêm) nóng hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay thế nào?", "context": {"location": "Hà Nội", "intent": "historical_weather", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.92, "rewritten_query": "Hà Nội hôm nay nhiệt độ thế nào so với hôm qua?"}}
+{"input": "ngap lut nguy co khong?", "context": {"location": "Hà Nội", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.94, "rewritten_query": "Hà Nội có nguy cơ ngập lụt khi bão đến không?"}}
+{"input": "Hà Nội hiện giờ có mây không nhỉ?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Mai chiều ở phường Định Công, trời có mưa không?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay có cần mang kem chống nắng không?", "context": {"location": "Hà Nội", "intent": "activity_weather", "turn": 1}, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.94, "rewritten_query": "Đi picnic ở Hà Nội hôm nay có cần kem chống nắng không?"}}
+{"input": "Hà Nội hôm nay đẹp trời không?", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "Có cảnh báo gì đặc biệt ở Sơn Tây hôm nay không?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.9}}
+{"input": "Quận Tây Hồ dạo này có thấy thời tiết lạ lắm không nhỉ?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "can mang ao khoac khong?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Trời ở phường Nhật Tân, Tây Hồ tối nay có mưa hay bão không?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Ngày mai quận Mỹ Đức trời sẽ ra sao nhỉ?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.89}}
+{"input": "ha noi cach day mot tuan thi nhiet do la bao nhieu nhi?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "ha noi sang nay co suong mu khong nhi?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.89}}
+{"input": "cho minh biet tong quan thoi tiet ngay mai o ha noi voi.", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.91}}
+{"input": "Dự báo ngày mai cho quận Mỹ Đức", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.91}}
+{"input": "ha noi hom nay nhin chung ra sao?", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "tong quan thoi tiet o phuong liet, thanh xuan buoi toi", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.92}}
+{"input": "Lúc này tại Thiên Lộc, Đông Anh thời tiết thế nào nhỉ?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.91}}
+{"input": "Gió ở Phường Yên Hòa lúc này có nhẹ không?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.91}}
+{"input": "Xu hướng thời tiết phường Tương Mai mấy ngày qua?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "co kha nang mua o day khong?", "context": {"location": "Tây Hồ", "intent": "hourly_forecast", "turn": 1}, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.92, "rewritten_query": "Quận Tây Hồ hôm nay có khả năng mưa không?"}}
+{"input": "toc do gio o khu vuc ho guom bao nhieu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm nay nhiệt độ ở Mê Linh, Mê Linh ra sao vậy?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hiện tại áp suất không khí ở Hà Nội là bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.88}}
+{"input": "Chiều nay ở khu vực Keangnam có thấy sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.89}}
+{"input": "Thời tiết ở đó có nóng không?", "context": {"location": "Tương Mai", "intent": "temperature_query", "turn": 1}, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.92, "rewritten_query": "Phường Tương Mai hôm nay có nóng không?"}}
+{"input": "Mấy ngày nay nhiệt độ tăng hay giảm?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.88}}
+{"input": "Bữa nay ở phường Tứ Liên, Tây Hồ có hạt mưa nào không?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hà Nội buổi tối có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.9}}
+{"input": "quan dong anh trua nay mua khong nhi?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Nhiệt độ bao nhiêu?", "context": {"location": "Cầu Giấy", "intent": "current_weather", "turn": 1}, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.96, "rewritten_query": "Nhiệt độ hiện tại ở quận Cầu Giấy bao nhiêu độ?"}}
+{"input": "du bao theo gio o phuong tien thang?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.91}}
+{"input": "Khu vực Bệnh viện Bạch Mai hôm nay có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.88}}
+{"input": "Thời tiết ở Đống Đa hôm qua so với hôm nay?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Phường Tây Tựu bây giờ bao nhiêu độ?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Còn ngày mai?", "context": {"location": "Bồ Đề", "intent": "rain_query", "turn": 2}, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.88, "rewritten_query": "Ngày mai ở phường Bồ Đề có mưa không?"}}
+{"input": "Gió ở Thanh Liệt hiện tại mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Xã Nam Phù hiện nay tốc độ gió bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.92}}
+{"input": "Chiều nay gió ở Thanh Oai có gì đặc biệt không?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Chiều nay mưa không, nên mặc gì đi?", "context": null, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.9}}
+{"input": "Có gì cần lưu ý về thời tiết không?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.85}}
+{"input": "Hôm nay thời tiết tại Lĩnh Nam, Hoàng Mai thế nào vậy?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Ngày mai có nên đi câu cá ở Sóc Sơn không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.88}}
+{"input": "Hướng gió tại Gia Lâm bây giờ đang thổi theo hướng nào?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.89}}
+{"input": "do am bao nhieu?", "context": {"location": "Hà Nội", "intent": "humidity_fog_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.96, "rewritten_query": "Độ ẩm Hà Nội sáng nay là bao nhiêu?"}}
+{"input": "Nhiệt độ bây giờ ở đó ra sao?", "context": {"location": "Hà Nội", "intent": "weather_overview", "turn": 1}, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.9, "rewritten_query": "Hiện tại nhiệt độ ở Hà Nội là bao nhiêu?"}}
+{"input": "Tối nay trời có sao không nhỉ?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.94}}
+{"input": "Hà Nội bữa mai thời tiết thế nào nhỉ?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.91}}
+{"input": "Xã Bát Tràng bây giờ ra sao?", "context": {"location": "Hà Nội", "intent": "daily_forecast", "turn": 3}, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.89}}
+{"input": "phuong chuyen my hom nay nhin chung the nao?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Phường Văn Miếu - Quốc Tử Giám hôm nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hà Nội sáng nay có mù không nhỉ?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.89}}
+{"input": "Phường Ô Diên tầm nhìn xa hiện tại sao?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết ở các quận Hà Nội bây giờ thế nào, quận nào đang lạnh nhất?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.9}}
+{"input": "So sánh ba quận trung tâm?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 1}, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.93, "rewritten_query": "So sánh độ ẩm quận Hoàn Kiếm, Ba Đình và Đống Đa hôm nay?"}}
+{"input": "Gió ở Keangnam bây giờ mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.88}}
+{"input": "Thời tiết ở Phố cổ Hà Nội và Vườn hoa Lý Thái Tổ bên nào dễ chịu hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Phường Yên Hòa tháng này có gì bất thường?", "context": {"location": "Tây Hồ", "intent": "temperature_query", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.84}}
+{"input": "Cho mình biết áp suất ở Xã Gia Lâm", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết buổi sáng nay ở quận Cầu Giấy có gì đặc biệt không?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết ở chợ Đồng Xuân có khác gì ở ngã tư Hàng Đường không?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Dự báo thời tiết Xã Vật Lại ngày mai?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.91}}
+{"input": "thoi tiet o phuong duong noi va phuong yen nghia phuong nao oi a hon nhi?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.89}}
+{"input": "Ở Hai Bà Trưng chiều nay có thuận lợi cho việc đi bộ buổi sáng không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Tuần trước thời tiết ra sao?", "context": {"location": "Hoàn Kiếm", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.92, "rewritten_query": "Tuần trước ở quận Hoàn Kiếm thời tiết như thế nào?"}}
+{"input": "Ở đó có mát không?", "context": {"location": "Hà Đông", "intent": "rain_query", "turn": 1}, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.95, "rewritten_query": "Thời tiết ở Hà Đông hôm nay có mát mẻ không?"}}
+{"input": "Dự báo thời tiết cho Hà Nội trong 48 tiếng tới thế nào?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Điểm sương là bao nhiêu?", "context": {"location": "Cầu Giấy", "intent": "expert_weather_param", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.88, "rewritten_query": "Điểm sương ở quận Cầu Giấy hiện tại là bao nhiêu?"}}
+{"input": "Bắc Từ Liêm cuối tuần có mưa không?", "context": {"location": "Hoàn Kiếm", "intent": "rain_query", "turn": 2}, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.88}}
+{"input": "o do co nang khong?", "context": {"location": "Xuân Phương", "intent": "temperature_query", "turn": 1}, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9, "rewritten_query": "Phường Xuân Phương hôm nay có nắng không?"}}
+{"input": "Tuần vừa qua ở Phường Hà Đông thời tiết ra sao nhỉ?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Nam Phù, Thanh Trì có mưa hay không vào hôm nay?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết Xã Bất Bạt sáng mai ra sao?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Trưa nay, thời tiết ở Kim Liên, Đống Đa được dự đoán ra sao theo từng giờ?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Quận Sơn Tây chiều nay có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "Độ ẩm ở Hà Nội hôm nay cao không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ngày mai ra sao?", "context": {"location": "Thanh Trì", "intent": "wind_query", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.94, "rewritten_query": "Thời tiết ngày mai ở huyện Thanh Trì ra sao?"}}
+{"input": "Nhiệt độ ở đây thế nào?", "context": {"location": "Đống Đa", "intent": "hourly_forecast", "turn": 1}, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.85, "rewritten_query": "Nhiệt độ tại quận Đống Đa bây giờ ra sao?"}}
+{"input": "Cho mình biết tình hình thời tiết Ba Đình hôm nay", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.91}}
+{"input": "Dự báo ngày mai cho quận Thường Tín", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "cach day mot ngay troi o ung hoa ra sao nhi?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.94}}
+{"input": "Ở Xã Ứng Thiên, gió giật hiện tại mạnh thế nào?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "Thứ 7 này thời tiết ở xã Bình Minh như thế nào nhỉ?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "thoi tiet o xa ung thien chieu nay co bat thuong gi khong?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.82}}
+{"input": "Bây giờ ở phường Dịch Vọng có mưa không nhỉ?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "tam nhin xa o ha noi hien tai sao?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.89}}
+{"input": "thoi tiet ra sao o do?", "context": {"location": "Mê Linh", "intent": "current_weather", "turn": 1}, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.89, "rewritten_query": "Thời tiết hiện tại ở huyện Mê Linh như thế nào?"}}
+{"input": "So với hôm qua thì hôm nay nóng hơn hay mát hơn?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.9}}
+{"input": "Ngày mai thế nào?", "context": {"location": "Hà Nội", "intent": "rain_query", "turn": 2}, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.93, "rewritten_query": "Ngày mai ở phường Hà Nội có mưa không?"}}
+{"input": "nhiet do o thanh oai, thanh oai bay gio bao nhieu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.83}}
+{"input": "Có mạnh không ta? Gió ở Nghĩa Đô, Cầu Giấy bây giờ sao rồi?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.91}}
+{"input": "Phường Nghĩa Đô mấy ngày trước có mưa không?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.93}}
+{"input": "Hà Đông bây giờ độ ẩm khoảng bao nhiêu phần trăm vậy?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "Thanh Oai giờ này đang lạnh hay nóng nhiều?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.8}}
+{"input": "Bây giờ nhiệt độ ở ĐH Quốc Gia đang ở mức nào nhỉ?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết quận Ba Đình hôm nay nhìn chung thế nào?", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Hiện tại áp suất không khí tại Thạch Thất là bao nhiêu nhỉ?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.87}}
+{"input": "Xã Sơn Đồng bây giờ thời tiết thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Bạn có biết áp suất ở Phường Sơn Tây hiện giờ là bao nhiêu không?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.87}}
+{"input": "Phường Phú Lương ngay bây giờ tốc độ gió bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.91}}
+{"input": "ha noi may ngay qua thoi tiet khac nhau the nao?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.88}}
+{"input": "Cầu Giấy hay Đống Đa hôm nay mát hơn?", "context": {"location": "Yên Hòa", "intent": "current_weather", "turn": 1}, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "cho minh biet diem suong o phuong tu liem", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "thoi tiet o phuong xuan phuong hom nay co khac gi so voi hom qua khong?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.88}}
+{"input": "Liệu gió ở Cầu Giấy bây giờ có mạnh không nhỉ?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.89}}
+{"input": "Trời ở Mê Linh hôm nay có mát mẻ không nhỉ?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.94}}
+{"input": "co canh bao gi khong?", "context": {"location": "Bắc Từ Từ Liêm", "intent": "wind_query", "turn": 1}, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.81, "rewritten_query": "Có cảnh báo thời tiết gì ở quận Bắc Từ Liêm không?"}}
+{"input": "Gió ở đó ra sao?", "context": {"location": "Tây Hồ", "intent": "rain_query", "turn": 1}, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.87, "rewritten_query": "Gió tại quận Tây Hồ hôm nay thế nào?"}}
+{"input": "Quận Tây Hồ thời tiết dạo này có gì đặc biệt không?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "hom nay co hoat dong nao ngoai troi khong?", "context": {"location": "Hoàng Mai", "intent": "weather_overview", "turn": 1}, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.87, "rewritten_query": "Hôm nay ở quận Hoàng Mai có hoạt động nào ngoài trời không?"}}
+{"input": "Dự báo Hà Nội mấy ngày tới thế nào?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "o xa ung thien, gio giat hien tai manh the nao?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "cuoi tuan nay thoi tiet o noi thanh khac ngoai thanh ha noi nhu the nao?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.9}}
+{"input": "Ở Văn Miếu hôm nay mặc gì cho phù hợp?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "o lang bac hom nay mac gi cho phu hop?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Ở đó lúc này thế nào?", "context": {"location": "Đan Phượng", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.95, "rewritten_query": "Thời tiết hiện tại ở huyện Đan Phượng như thế nào?"}}
+{"input": "Sáng chủ nhật ở Hồ Gươm đi bộ có bị ướt mưa không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Gió ở thành phố giờ thế nào rồi?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.9}}
+{"input": "Bữa nay có thích hợp để đi câu cá ở Sóc Sơn không nhỉ?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.91}}
+{"input": "Điểm sương (dew point) ở quận Đống Đa bây giờ là bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "Còn ngày mai?", "context": {"location": "Bồ Đề", "intent": "rain_query", "turn": 2}, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.88, "rewritten_query": "Ngày mai ở phường Bồ Đề có mưa không?"}}
+{"input": "chieu nay ha noi nhiet do cao nhat la bao nhieu ta?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.85}}
+{"input": "Trời ở ĐH Bách Khoa bữa qua như thế nào?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.91}}
+{"input": "Thời tiết tuần tới sẽ ra sao?", "context": {"location": "Hà Nội", "intent": "seasonal_context", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.94, "rewritten_query": "Xu hướng nhiệt độ Hà Nội tuần tới như thế nào?"}}
+{"input": "Nhiệt độ ở Thường Tín, Thường Tín hiện tại bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "nhiet do o thach that tuan qua bao nhieu?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.89}}
+{"input": "Thời tiết ở Times City có phù hợp để câu cá không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.88}}
+{"input": "cho minh hoi du bao thoi tiet chi tiet tung gio o cau giay trong buoi chieu nhe!", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Chiều mai ở Thanh Xuân có thể nhiệt độ cao nhất sẽ đạt bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "So sánh thời tiết Thanh Oai và Nam Từ Liêm hôm nay", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Hà Nội chiều nay nóng hay lạnh?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.9}}
+{"input": "Quận Ba Đình hôm nay có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.91}}
+{"input": "thoi tiet may hom nay hay thay doi qua ban nhi?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.9}}
+{"input": "Sáng ngày mai quận Đống Đa thế nào?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 2}, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.89}}
+{"input": "Tháng trước ở quận Sơn Tây trời ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Xã Xuân Mai hôm nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết ở chợ Đồng Xuân có khác gì ở ngã tư Hàng Đường không?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Xã Sơn Đồng nhiệt độ hiện tại bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.82}}
+{"input": "Phường Hạ Bằng sáng nay có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.89}}
+{"input": "Xã Hòa Lạc hôm nay thế nào?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 2}, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.86}}
+{"input": "Tối nay ở Thạch Thất dự đoán nhiệt độ sẽ lên tới bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Nhiệt độ Hà Nội mấy ngày nay có xu hướng tăng hay giảm?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.9}}
+{"input": "Gió ở Công viên Cầu Giấy lúc này mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "cuoi tuan nay co bao hay ap thap nhiet doi anh huong den ha noi khong?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.9}}
+{"input": "thoi tiet co de chiu khong?", "context": {"location": "Hoàn Kiếm", "intent": "temperature_query", "turn": 1}, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.96, "rewritten_query": "Thời tiết quận Hoàn Kiếm hiện tại có dễ chịu không?"}}
+{"input": "Thời tiết ở khu vực ĐH Bách Khoa chiều nay sẽ diễn biến ra sao?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.92}}
+{"input": "Phượng Dực tổng quan thời tiết hôm nay?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.91}}
+{"input": "Cần chuẩn bị gì?", "context": {"location": "Hà Nội", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.93, "rewritten_query": "Trước khi bão đến Hà Nội người dân cần chuẩn bị gì?"}}
+{"input": "Áp suất ở Chùa Trấn Quốc giờ này bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.88}}
+{"input": "Cho mình xem dự báo theo giờ Hà Nội trưa nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Cho mình hỏi hôm qua thời tiết ở Long Biên ra sao, có mưa không, nhiệt độ thế nào?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.91}}
+{"input": "Hà Nội tối nay nóng hay lạnh?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.83}}
+{"input": "sang nay thoi tiet o lang, dong da co on khong nhi?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.93}}
+{"input": "thu tu o ha noi du bao nhiet do la bao nhieu?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.9}}
+{"input": "Mê Linh bây giờ nhiệt độ là bao nhiêu nhỉ?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Tổng quan thời tiết Thanh Oai buổi tối", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.89}}
+{"input": "ha noi may hom nay am uot, hom nay co suong mu nhieu khong?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.9}}
+{"input": "cho minh biet ap suat o phuong son tay", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.89}}
+{"input": "hom nay o van mieu co canh bao thoi tiet nao khong?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.9}}
+{"input": "Chiều nay thời tiết thế nào?", "context": {"location": "Đống Đa", "intent": "temperature_query", "turn": 2}, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.91, "rewritten_query": "Chiều nay ở quận Đống Đa nhiệt độ bao nhiêu?"}}
+{"input": "Ra ngoài Phúc Thọ hôm nay nên phối đồ ra sao?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "co mua o san my dinh khong?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Long Biên tối nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Độ che phủ mây lúc hoàng hôn ở Hồ Tây chiều nay là bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.88}}
+{"input": "Thời tiết Cao tốc Pháp Vân 3 ngày tới thế nào?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Hà Nội hôm nay khác hôm qua thế nào?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.86}}
+{"input": "Phường Chương Mỹ mùa này thế nào nhỉ?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "ward", "confidence": 0.91}}
+{"input": "Dự báo thời tiết tuần sau thế nào?", "context": {"location": "Hà Nội", "intent": "seasonal_context", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.93, "rewritten_query": "Xu hướng thời tiết Hà Nội tuần tới như thế nào?"}}
+{"input": "nhiet do cao nhat ngay mai o gia lam?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "phuong chuong my mua nay the nao nhi?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "ward", "confidence": 0.97}}
+{"input": "Tầm nhìn xa ở Nội Bài có tốt không?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "Phường Tùng Thiện nhiệt độ hiện tại bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.81}}
+{"input": "hom nay o doai phuong, son tay co con mua nao khong nhi?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "hom nay thoi tiet o yen lang, me linh co gi dac biet vao buoi toi khong?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm qua có mưa không?", "context": {"location": "Ba Đình", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.93, "rewritten_query": "Hôm qua ở quận Ba Đình có mưa không?"}}
+{"input": "Khu vực Times City chiều nay mưa không nhỉ?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Gió mạnh cỡ nào?", "context": {"location": "Gia Lâm", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.96, "rewritten_query": "Gió giông ở quận Gia Lâm mạnh đến mức nào?"}}
+{"input": "trua nay o times city co dieu gi can chu y ve thoi tiet khong?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.82}}
+{"input": "troi hom nay co buon khong nhi?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Phường Văn Miếu - Quốc Tử Giám tổng quan thời tiết hôm nay?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.93}}
+{"input": "Chỗ đó có nên mặc áo mỏng không?", "context": {"location": "Long Biên", "intent": "current_weather", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.85, "rewritten_query": "Ở phường Long Biên, hôm nay có nên mặc áo mỏng không?"}}
+{"input": "Phù hợp chạy bộ không?", "context": {"location": "Long Biên", "intent": "weather_overview", "turn": 1}, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.92, "rewritten_query": "Ở quận Long Biên hôm nay có phù hợp để đi chạy bộ không?"}}
+{"input": "bua nay thoi tiet o khu vuc ho hoan kiem the nao nhi?", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Quận nào nóng nhất?", "context": {"location": "Hà Nội", "intent": "weather_overview", "turn": 1}, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.96, "rewritten_query": "Hà Nội hôm nay quận nào nóng nhất?"}}
+{"input": "Dự báo thời tiết Trung Giã, Sóc Sơn thứ 7 này", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.92}}
+{"input": "Dự báo theo giờ ở phường Tiến Thắng?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Tình hình thời tiết ở Bến xe Giáp Bát hôm nay có ổn không?", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Ở Đông Anh đêm nay nhiệt độ sẽ rơi xuống mức nào?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Gió ở Sơn Đồng hiện tại mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.93}}
+{"input": "Phường Hồng Vân hôm nay nhìn chung thế nào?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Hiện tại, nhiệt độ ngoài Sân Nam Từ Liêm đang ở mức nào?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.85}}
+{"input": "Sơn Đồng bây giờ thời tiết thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.93}}
+{"input": "Thời tiết ở Phường Dương Nội và Phường Yên Nghĩa phường nào oi ả hơn nhỉ?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.89}}
+{"input": "Trong 3 giờ tới, phường Xuân Đỉnh có khả năng xuất hiện giông bão không?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.91}}
+{"input": "Dự báo theo giờ ở Lăng Chủ tịch trưa nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Cách đây 2 ngày, thời tiết ở Cao tốc Pháp Vân có gì đặc biệt không?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "hom nay ra ho tay co can mang theo o khong nhi?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm nay ra ngoài ở Khương Đình, Thanh Xuân thì có cần áo phao không ta?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Mưa lúc mấy giờ?", "context": {"location": "Cầu Giấy", "intent": "hourly_forecast", "turn": 1}, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.95, "rewritten_query": "Sáng nay ở quận Cầu Giấy mưa bắt đầu lúc mấy giờ?"}}
+{"input": "Hôm qua thời tiết ở Hà Nội như thế nào nhỉ?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.89}}
+{"input": "gio o ha noi hien tai bao nhieu km/h?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.88}}
+{"input": "Nhiệt độ tại Lăng Bác so với sân bay Nội Bài chỗ nào mát hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Ngày mai UV thế nào?", "context": {"location": "Hà Nội", "intent": "expert_weather_param", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.91, "rewritten_query": "Chỉ số UV Hà Nội ngày mai là bao nhiêu?"}}
+{"input": "Tối nay Hà Nội nhiệt độ bao nhiêu?", "context": {"location": "Gia Lâm", "intent": "weather_alert", "turn": 1}, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.9}}
+{"input": "Chiều nay ở khu vực Keangnam có thấy sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.89}}
+{"input": "Ở Hồ Hoàn Kiếm hôm nay mặc gì cho phù hợp?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết Xã Phú Nghĩa sáng nay từng giờ ra sao?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.87}}
+{"input": "Gần đây, quận Hoàn Kiếm có thấy thời tiết diễn biến lạ không?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Tùng Thiện nhiệt độ hiện tại bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "ngoai troi o hoan kiem gio nhiet do bao nhieu do?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm qua ở Lăng Bác trời có đẹp không?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Chiều nay ở phường Bình Minh có thấy sương mù không nhỉ?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.88}}
+{"input": "Trời ở Mê Linh hôm nay đẹp không?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Áp suất ở Kiến Hưng, Hà Đông hiện nay bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.85}}
+{"input": "Dự báo thời tiết ở Công viên Cầu Giấy sáng mai", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Tuần trước thời tiết Hà Nội ra sao, nhiệt độ thế nào?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.92}}
+{"input": "phuong quang oai troi dep qua nhi?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "ward", "confidence": 0.96}}
+{"input": "Phường Yên Sở bây giờ thời tiết thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Trời Hà Nội ngay bây giờ ra sao?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Độ ẩm tại Phúc Sơn, Mỹ Đức giờ này thế nào?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.9}}
+{"input": "So sánh thời tiết Xã Hát Môn và Xã Chuyên Mỹ", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm qua ở Hồ Tây trời ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Có mưa không?", "context": {"location": "Tây Hồ", "intent": "hourly_forecast", "turn": 1}, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.95, "rewritten_query": "Ở quận Tây Hồ có khả năng mưa không?"}}
+{"input": "Giờ này trời ở Nam Từ Liêm có đẹp không nhỉ?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.92}}
+{"input": "Thời tiết chỗ đó hiện tại thế nào?", "context": {"location": "Bắc Từ Liêm", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.95, "rewritten_query": "Thời tiết hiện tại ở quận Bắc Từ Liêm ra sao?"}}
+{"input": "Bạn biết thời tiết ở Định Công, Hoàng Mai buổi tối ra sao không?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Phúc Thọ (Phúc Thọ) hay Phú Diễn (Bắc Từ Liêm) nóng hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.92}}
+{"input": "Trưa nay ở Hà Nội có nắng nóng gay gắt không, nhiệt độ bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.9}}
+{"input": "o phuong chuong my chieu nay thoi tiet bien doi the nao?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.91}}
+{"input": "du bao thoi tiet ha noi theo gio toi nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "hom qua the nao?", "context": {"location": "Cầu Giấy", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.91, "rewritten_query": "Hôm qua ở quận Cầu Giấy thời tiết thế nào?"}}
+{"input": "Trời bây giờ có lạnh ở Hà Nội không?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.93}}
+{"input": "Nhiệt độ Bến xe Giáp Bát hôm nay so với hôm qua chênh bao nhiêu?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Khoảng 7 giờ sáng mai ở Hoàn Kiếm trời như thế nào?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.91}}
+{"input": "minh thac mac khong biet phu dien (bac tu liem) hay phuc tho (phuc tho) nang nhieu hon?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.91}}
+{"input": "Gió ở ĐH Quốc Gia lúc này mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "toi mai thoi tiet ha noi ra sao?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Năm ngoái thời tiết ra sao?", "context": {"location": "Hà Nội", "intent": "historical_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.92, "rewritten_query": "Năm ngoái cùng kỳ này Hà Nội nhiệt độ bao nhiêu?"}}
+{"input": "phuong phu luong nong hon hay mat hon xung quanh?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "toc do gio o quan thanh xuan bao nhieu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết Xã Chuyên Mỹ sáng nay có ổn để đạp xe không?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.86}}
+{"input": "Ngoài trời gió thổi nhiều không bạn?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.9}}
+{"input": "Tháng trước tại Xã Xuân Đình trời có vẻ ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "diem suong (dew point) o quan dong da bay gio la bao nhieu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "cac ban biet toc do gio o xa doai phuong luc nay khong?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hiện tại gió ở Lăng Chủ tịch ra sao nhỉ?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.93}}
+{"input": "Huyện Thanh Trì cuối tuần dự báo?", "context": {"location": "Hà Nội", "intent": "daily_forecast", "turn": 3}, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.87}}
+{"input": "Nhiệt độ buổi sáng sớm mai ở Ba Đình khoảng bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết ở Phường Phú Thượng (Tây Hồ) có nóng hơn Phường Sơn Tây (Đông Anh) không?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.91}}
+{"input": "Mây mù ở Hồ Trúc Bạch giờ này như thế nào?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "Chiều nay ở Thanh Xuân có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.91}}
+{"input": "Tình hình thời tiết Xã Vĩnh Thanh tối nay", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Từ giờ đến tối trời biến chuyển ra sao?", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.88}}
+{"input": "Nhiệt độ ngày mai ở Cầu Giấy là bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm trước thời tiết ở ĐH Bách Khoa như thế nào?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Mô tả ngắn gọn thời tiết tuần này ở Hà Nội để mình lên kế hoạch.", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.89}}
+{"input": "Quận Sơn Tây hôm nay có thông tin thời tiết theo giờ như thế nào?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Trời hôm nay ở Hà Nội có gió lùa mạnh không ta?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.87}}
+{"input": "Có nên bơi lội ở Hoàng Mai, Hoàng Mai buổi tối không?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Chiều nay ra ngoài ở Hồ Tây có bị mưa không, có nên đi không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.92}}
+{"input": "hom nay co thong tin gi ve thoi tiet o tay mo, nam tu liem khong?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Độ ẩm ở Mỹ Đức bây giờ bao nhiêu?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "hom nay o thanh xuan co thong tin canh bao thoi tiet gi khong nhi?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.83}}
+{"input": "Bữa nay ở Văn Miếu có dự báo thời tiết nào không an toàn không?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.83}}
+{"input": "Thời tiết Hà Nội tuần trước như thế nào, có lạnh không?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Bạn có thể giúp tôi không?", "context": {"location": "Sóc Sơn", "intent": "seasonal_context", "turn": 2}, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.95}}
+{"input": "Trưa bữa nay Đông Anh có nắng không, đi ra ngoài được không?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "thoi tiet khu vuc san nam tu liem ngay bay gio the nao?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.93}}
+{"input": "Tối nay ở Phường Khương Đình, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Cho mình biết thời tiết hiện tại ở khu vực Nam Từ Liêm với.", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.95}}
+{"input": "Có thể cho mình biết thời tiết theo giờ tại Hồ Hoàn Kiếm không?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Tổng quan thời tiết ở Định Công, Hoàng Mai buổi tối", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.92}}
+{"input": "Chỉ số chỉ số UV ở Thạch Thất giờ này là bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.9}}
+{"input": "Đại Mỗ hôm nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Mình muốn biết thời tiết hiện tại ở phố cổ Hà Nội như thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Nhiệt độ tuần vừa qua tại Thạch Thất là bao nhiêu vậy?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.94}}
+{"input": "Hôm nay thời tiết có gì thú vị không?", "context": {"location": "Hà Nội", "intent": "wind_query", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.86, "rewritten_query": "Thời tiết ở Hà Nội có cảnh báo gì đặc biệt không?"}}
+{"input": "Mình muốn biết dự báo thời tiết giờ từng giờ ở Quảng Bị, Chương Mỹ vào buổi chiều hôm nay.", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Xu hướng thời tiết phường Phú Diễn mấy ngày qua?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Trời mưa hay nắng ở Xã Tam Hiệp hôm qua?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết 2 ngày trước ở quận Mỹ Đức có gì đặc biệt không?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Tuần trước Hà Nội mưa nhiều không?", "context": {"location": "Yên Hòa", "intent": "current_weather", "turn": 1}, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.91}}
+{"input": "toi mai thoi tiet ha noi ra sao?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Bao giờ qua?", "context": {"location": "Phú Diễn", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.94, "rewritten_query": "Cảnh báo thời tiết ở phường Phú Diễn bao giờ kết thúc?"}}
+{"input": "Thời tiết ở Phố Cổ với Times City cái nào dễ chịu hơn nhỉ?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.89}}
+{"input": "Dự báo chi tiết theo giờ cho Hà Nội buổi tối", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.87}}
+{"input": "Trời ở Mê Linh hôm nay có mát mẻ không nhỉ?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.94}}
+{"input": "Ở đây có ẩm không?", "context": {"location": "Nghĩa Đô", "intent": "rain_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.87, "rewritten_query": "Hôm nay ở phường Nghĩa Đô có độ ẩm cao không?"}}
+{"input": "Phường Thanh Xuân nóng hơn hay mát hơn xung quanh?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "khu vuc times city trua nay co an toan khong?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.9}}
+{"input": "Dự báo thời tiết Hà Đông theo giờ buổi chiều", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Mưa ở Hà Nội hôm nay kéo dài đến bao giờ?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.94}}
+{"input": "Nhiệt độ sáng mai bao nhiêu?", "context": {"location": "Tây Hồ", "intent": "activity_weather", "turn": 1}, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.88, "rewritten_query": "Sáng mai ở quận Tây Hồ nhiệt độ bao nhiêu?"}}
+{"input": "Hôm nay ổn k ta?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Cái thời tiết ở Mỹ Đình sau 2 ngày ra sao vậy bạn?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Gió ở đây ra sao?", "context": {"location": "Phú Thượng", "intent": "current_weather", "turn": 1}, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.9, "rewritten_query": "Gió ở phường Phú Thượng hiện tại ra sao?"}}
+{"input": "Ở Ngọc Hồi, Thanh Trì, nhiệt độ hiện tại là bao nhiêu ta?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay thời tiết ở đó thế nào?", "context": {"location": "Xuân Phương", "intent": "temperature_query", "turn": 1}, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.95, "rewritten_query": "Tổng quan thời tiết hôm nay ở phường Xuân Phương?"}}
+{"input": "Độ ẩm hiện tại là bao nhiêu?", "context": {"location": "Hà Nội", "intent": "humidity_fog_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.96, "rewritten_query": "Độ ẩm Hà Nội sáng nay là bao nhiêu?"}}
+{"input": "Cường độ gió ở quảng trường Ba Đình hiện tại thế nào?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "duong hoa bay gio thoi tiet the nao?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Sáng nay, áp suất tại Hà Nội là bao nhiêu vậy?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.86}}
+{"input": "Ngày mai có không?", "context": {"location": "Đông Anh", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.91, "rewritten_query": "Ngày mai huyện Đông Anh còn cảnh báo thời tiết không?"}}
+{"input": "nghe noi ha noi thoi gian nay hay mua, khong biet sao nhi?", "context": null, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.94}}
+{"input": "Cuối tuần thì sao?", "context": {"location": "Đống Đa", "intent": "temperature_query", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.89, "rewritten_query": "Cuối tuần này ở quận Đống Đa thời tiết ra sao?"}}
+{"input": "Hà Nội hôm nay có thấy sương mù xuất hiện không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.9}}
+{"input": "Hôm nay có thể đi leo núi ở Hà Nội được không vậy?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Tốc độ gió trung bình hôm nay ở Hà Nội là bao nhiêu?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.9}}
+{"input": "Ở Hoài Đức hôm nay có nên cầm ô theo không ta?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.95}}
+{"input": "Có gió mạnh không?", "context": {"location": "Tây Hồ", "intent": "rain_query", "turn": 1}, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.88, "rewritten_query": "Hôm nay ở quận Tây Hồ có gió mạnh không?"}}
+{"input": "Thế còn bây giờ?", "context": {"location": "Hà Nội", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.93, "rewritten_query": "Thời tiết Hà Nội bây giờ như thế nào?"}}
+{"input": "Thời tiết ở Phường Giảng Võ bữa nay có đẹp để đi picnic không?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.88}}
+{"input": "Gió ở Xã Dương Hòa hiện tại mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.91}}
+{"input": "Chiều nay có trời đẹp không?", "context": {"location": "Thượng Cát", "intent": "humidity_fog_query", "turn": 1}, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.87, "rewritten_query": "Chiều nay ở phường Thượng Cát thời tiết thế nào?"}}
+{"input": "thoi tiet nhu the nao o do?", "context": {"location": "Yên Hòa", "intent": "current_weather", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.88, "rewritten_query": "Thời tiết như thế nào tại phường Yên Hòa?"}}
+{"input": "Độ ẩm ở phường Yên Hòa bao nhiêu rồi?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.91}}
+{"input": "Lăng Bác mưa chưa tạnh?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Phường Nam Phù, Thanh Trì có thấy mưa không vậy?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Phường Phú Nghĩa hôm nay diễn biến theo giờ sao?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.86}}
+{"input": "Thời tiết gần đây thế nào?", "context": {"location": "Long Biên", "intent": "current_weather", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.85, "rewritten_query": "Thời tiết gần đây ở phường Long Biên như thế nào?"}}
+{"input": "Lúc này ở Thiên Lộc, Đông Anh trời ra sao?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm kia trời Hà Nội có nhiều gió không, gió thổi từ hướng nào?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.93}}
+{"input": "Cho mình biết mây ở Phường Bạch Mai", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "bay gio gio o phuong phu luong ra sao nhi?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.89}}
+{"input": "Ngọc Hồi, Thanh Trì hiện tại đang nóng bao nhiêu độ?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hà Nội hôm nay có thời tiết ra sao nhỉ?", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ở Sóc Sơn những ngày gần đây có gì mới không?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm nay ở Hoàng Liệt, Hoàng Mai nhiệt độ hiện tại là bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.95}}
+{"input": "Hà Nội bây giờ có mưa hay nắng nhỉ?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.92}}
+{"input": "Thời tiết có phù hợp cho các hoạt động ngoài trời không?", "context": {"location": "Gia Lâm", "intent": "wind_query", "turn": 1}, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.87, "rewritten_query": "Thời tiết ở huyện Gia Lâm có phù hợp cho các hoạt động ngoài trời không?"}}
+{"input": "toc do gio o quan thanh xuan bao nhieu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Gió ở quận Thanh Trì hiện tại ra sao?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Ngày mai toàn thành phố thế nào?", "context": {"location": "Đống Đa", "intent": "temperature_query", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.88}}
+{"input": "Thời tiết ở Sân bay Nội Bài vào cuối tuần này có gì đặc biệt không?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.94}}
+{"input": "Xin chào bạn!", "context": null, "output": {"intent": "smalltalk_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ẩm ở đây như thế nào?", "context": {"location": "Nam Từ Liêm", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.87, "rewritten_query": "Độ ẩm ở quận Nam Từ Liêm hôm nay như thế nào?"}}
+{"input": "Dự báo sáng mai cho quận Quốc Oai", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.9}}
+{"input": "Ở Keangnam tối nay có cảnh báo thời tiết gì không?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.9}}
+{"input": "toc do gio o khu vuc ho guom bao nhieu?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết ở Sân Mỹ Đình hiện nay thế nào?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.9}}
+{"input": "toi nay phuong nhat tan, tay ho co mua rao hay giong khong?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Có thông báo thời tiết gì không?", "context": {"location": "Hoàng Liệt", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.83, "rewritten_query": "Có thông báo thời tiết gì cho phường Hoàng Liệt không?"}}
+{"input": "Tối mai có mưa không?", "context": {"location": "Cầu Giấy", "intent": "current_weather", "turn": 1}, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.94, "rewritten_query": "Tối mai ở quận Cầu Giấy có mưa không?"}}
+{"input": "Mình muốn chạy bộ ở Hà Nội chiều nay, thời tiết có ổn không?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.88}}
+{"input": "Tối nay gió ở Sóc Sơn với Bắc Từ Liêm nơi nào mạnh hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "khu do co chi so uv cao khong?", "context": {"location": "Thanh Xuân", "intent": "current_weather", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.95, "rewritten_query": "UV ở quận Thanh Xuân hiện tại có cao không?"}}
+{"input": "Ở Mê Linh hôm nay có thuận lợi cho việc đạp xe không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Có nên leo núi ở Phúc Thọ tối nay không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Dự báo thời tiết Phường Yên Sở ngày mai?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Đi Royal City hôm nay có cần mang ô không?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.92}}
+{"input": "Ở đó bây giờ thế nào rồi?", "context": {"location": "Hoàng Mai", "intent": "rain_query", "turn": 1}, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.88, "rewritten_query": "Thời tiết hiện tại ở quận Hoàng Mai như thế nào?"}}
+{"input": "Chỗ đó tối nay có mưa không?", "context": {"location": "Hoàn Kiếm", "intent": "rain_query", "turn": 1}, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.95, "rewritten_query": "Tối nay ở quận Hoàn Kiếm có mưa không?"}}
+{"input": "Thời tiết có dễ chịu không?", "context": {"location": "Hoàn Kiếm", "intent": "temperature_query", "turn": 1}, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.96, "rewritten_query": "Thời tiết quận Hoàn Kiếm hiện tại có dễ chịu không?"}}
+{"input": "Chiều nay ở xã Quốc Oai có thấy sương mù không ta?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.86}}
+{"input": "Dự báo theo giờ ở Đa Phúc, Sóc Sơn chiều nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay ở Tây Hồ và Hoàng Mai nơi nào ẩm hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.89}}
+{"input": "Thời tiết Hà Nội gần đây biến đổi ra sao?", "context": null, "output": {"intent": "seasonal_context", "scope": "city", "confidence": 0.87}}
+{"input": "Ở Mê Linh hôm nay có thuận lợi cho việc đạp xe không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "cho hoi ngoai troi dang the nao?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Hà Nội chiều mai trời thế nào?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ở Royal City có phù hợp để du lịch không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Xã Đông Anh hôm nay gió mạnh không?", "context": {"location": "Gia Lâm", "intent": "weather_alert", "turn": 1}, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.86}}
+{"input": "Thời tiết khu vực Times City chiều nay ra sao, có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Sáng mai?", "context": {"location": "Cầu Giấy", "intent": "current_weather", "turn": 1}, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.92, "rewritten_query": "Sáng mai ở quận Cầu Giấy nhiệt độ bao nhiêu?"}}
+{"input": "Trời ở Cổ Đô, Ba Vì có đang mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời điểm nào hôm nay phù hợp để khám phá Hà Nội ta?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.89}}
+{"input": "Bơi lội ở Hoàng Mai vào buổi tối hôm nay có ổn không mọi người?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Mấy ngày tới ở Thanh Xuân thời tiết thế nào?", "context": null, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.95}}
+{"input": "so voi hom qua thi dai xuyen, phu xuyen hom nay the nao?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết ở đó ra sao?", "context": {"location": "Tương Mai", "intent": "rain_query", "turn": 1}, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.93, "rewritten_query": "Thời tiết hôm nay ở phường Tương Mai ra sao?"}}
+{"input": "Chiều ngày mai, xã Phù Đổng có thời tiết thế nào nhỉ?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Tuần qua ở Phường Tương Mai trời ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.92}}
+{"input": "Dự báo thời tiết ở phường Hương Sơn tuần này?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Quận nào ở Hà Nội đang mưa?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.9}}
+{"input": "Dự báo chi tiết theo giờ cho Hà Nội tối nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "ap suat khi quyen ha noi hom nay bao nhieu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.87}}
+{"input": "Dự báo thời tiết Xuân Mai ngày mai?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Dự báo thời tiết Hà Nội theo giờ tối nay", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Dự báo thời tiết Bình Minh, Thanh Oai 3 ngày tới", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.95}}
+{"input": "Cho mình xin tổng hợp thời tiết khu vực Thanh Trì tối nay nhé.", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.89}}
+{"input": "Bữa nay thời tiết ở Phương Liệt, Thanh Xuân như thế nào nhỉ?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.93}}
+{"input": "Cho mình biết chỉ số UV ở Xã Tây Phương", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "thoi tiet o phuong trang an (tay ho) co cao hon xa tien duoc (soc son) khong?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "Đi làm hôm nay mang ô không nhỉ?", "context": null, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.9}}
+{"input": "Gió ở đó thế nào?", "context": {"location": "Tây Hồ", "intent": "rain_query", "turn": 1}, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.87, "rewritten_query": "Gió tại quận Tây Hồ hôm nay thế nào?"}}
+{"input": "vai gio toi o hai ba trung troi co chuyen khong?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.86}}
+{"input": "Ngày mai thời tiết ra sao?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 1}, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.92, "rewritten_query": "Ngày mai các quận Hà Nội xếp hạng độ ẩm thế nào?"}}
+{"input": "Thời tiết ở Xã Dương Xá (Gia Lâm) so với Phường Nghĩa Đô (Cầu Giấy) thế nào?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "Ra ngoài ở Minh Châu hôm nay có cần áo khoác không hả bạn?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.91}}
+{"input": "Hà Nội hôm nay có thời tiết ra sao?", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "Giờ nào UV cao nhất?", "context": {"location": "Hà Nội", "intent": "expert_weather_param", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.88, "rewritten_query": "Hôm nay UV ở Hà Nội cao nhất vào lúc mấy giờ?"}}
+{"input": "Thứ 7 này thời tiết ở xã Bình Minh như thế nào nhỉ?", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "chieu nay, thoi tiet o vinh hung, hoang mai co dieu gi can luu y khong?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay ở Lăng Bác có nên mặc đồ gì cho hợp lý không?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.96}}
+{"input": "Tổng quan thời tiết Thanh Trì buổi tối", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Ngày mai thế nào?", "context": {"location": "Cầu Giấy", "intent": "current_weather", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.87, "rewritten_query": "Dự báo thời tiết ngày mai ở quận Cầu Giấy như thế nào?"}}
+{"input": "Ngày mai còn cảnh báo không?", "context": {"location": "Hà Nội", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.93, "rewritten_query": "Ngày mai Hà Nội còn cảnh báo thời tiết không?"}}
+{"input": "hom qua o ha noi nhiet do cao nhat la bao nhieu do?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Có thông tin gì về dự báo thời tiết theo giờ cho Hà Nội hôm nay không?", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Nhiệt độ ở ĐH Quốc Gia ngay bây giờ bao nhiêu độ?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Điểm sương hiện tại là bao nhiêu?", "context": {"location": "Cầu Giấy", "intent": "expert_weather_param", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.88, "rewritten_query": "Điểm sương ở quận Cầu Giấy hiện tại là bao nhiêu?"}}
+{"input": "Hôm qua ở Xã Yên Xuân trời ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.92}}
+{"input": "Ngày mai trời quang không?", "context": {"location": "Đống Đa", "intent": "rain_query", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "district", "confidence": 0.87, "rewritten_query": "Ngày mai ở quận Đống Đa trời có quang không?"}}
+{"input": "Cho mình cái nhìn tổng thể về thời tiết Hà Nội chiều nay", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.92}}
+{"input": "so sanh thoi tiet phuong dong da voi cac phuong khac?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.88}}
+{"input": "Gần đây ở Hồ Hoàn Kiếm thời tiết có bất thường không?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Hà Nội hôm nay nhiệt độ giữa ngày và đêm chênh nhau bao nhiêu độ nhỉ?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.9}}
+{"input": "Ở Lăng Bác sáng nay có mưa không?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Độ ẩm ở Hồ Trúc Bạch ngay bây giờ bao nhiêu?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.88}}
+{"input": "Ở đó nóng không?", "context": {"location": "Tương Mai", "intent": "temperature_query", "turn": 1}, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.92, "rewritten_query": "Phường Tương Mai hôm nay có nóng không?"}}
+{"input": "Hướng gió Hà Nội ngay bây giờ thế nào?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết Hà Nội sáng nay có phù hợp để chụp ảnh ngoài trời không?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.88}}
+{"input": "Khu vực Hồ Tây có gió mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "co mua khong nhi?", "context": {"location": "Hà Nội", "intent": "hourly_forecast", "turn": 1}, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.92, "rewritten_query": "Hà Nội hôm nay có mưa không?"}}
+{"input": "anh huong den khu nao?", "context": {"location": "Hà Nội", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.88, "rewritten_query": "Cảnh báo thời tiết hôm nay ảnh hưởng đến khu vực nào ở Hà Nội?"}}
+{"input": "Ở đây ngày mai ra sao?", "context": {"location": "Hà Nội", "intent": "current_weather", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.88, "rewritten_query": "Ngày mai ở Hà Nội thời tiết ra sao?"}}
+{"input": "toi nay o bac tu liem co mua khong nhi?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.94}}
+{"input": "Có nồm không?", "context": {"location": "Hà Nội", "intent": "humidity_fog_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.93, "rewritten_query": "Hà Nội hôm nay có nồm ẩm không?"}}
+{"input": "Sương tan lúc mấy giờ?", "context": {"location": "Thượng Cát", "intent": "humidity_fog_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.93, "rewritten_query": "Sương mù ở phường Thượng Cát sáng nay tan lúc mấy giờ?"}}
+{"input": "Ngày mai xếp hạng thế nào?", "context": {"location": "Hà Nội", "intent": "location_comparison", "turn": 1}, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.92, "rewritten_query": "Ngày mai các quận Hà Nội xếp hạng độ ẩm thế nào?"}}
+{"input": "Ở Hồ Hoàn Kiếm hay ĐH Quốc Gia mát hơn?", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Tối nay ở Sóc Sơn có cảnh báo giông lốc nguy hiểm không?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.85}}
+{"input": "Bây giờ nhiệt độ cảm nhận ở Bình Minh, Thanh Oai là bao nhiêu nhỉ?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.9}}
+{"input": "ha noi co mua vao toi mai khong?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.9}}
+{"input": "Cho mình xem lịch sử thời tiết Hà Nội hôm kia", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Thứ 7 tuần trước ở quận Cầu Giấy trời thế nào?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Nhiệt độ ở Quảng Bị, Chương Mỹ giờ này bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Có ai biết thời tiết ở xã Dân Hòa, Thanh Oai lúc này là gì không?", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết có gì đặc biệt không?", "context": {"location": "Hà Nội", "intent": "wind_query", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.86, "rewritten_query": "Thời tiết ở Hà Nội có cảnh báo gì đặc biệt không?"}}
+{"input": "Khu vực Bờ Hồ tối nay có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.91}}
+{"input": "Gió ở Hà Nội hiện tại bao nhiêu km/h?", "context": null, "output": {"intent": "wind_query", "scope": "city", "confidence": 0.88}}
+{"input": "Trời Hà Nội hiện tại ra sao?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Mưa to k bạn ơi?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.91}}
+{"input": "Hôm nay có mát không?", "context": {"location": "Hoàng Mai", "intent": "seasonal_context", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.89, "rewritten_query": "Quận Hoàng Mai hôm nay có mát hơn hôm qua không?"}}
+{"input": "Mưa to không?", "context": {"location": "Hà Nội", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.96, "rewritten_query": "Tuần này Hà Nội mưa nhiều không?"}}
+{"input": "Bữa nay gió ở Cầu Giấy ra sao nhỉ?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.88}}
+{"input": "troi ha noi hien gio ra sao?", "context": null, "output": {"intent": "current_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Gió ở Yên Sở hiện tại mạnh không?", "context": null, "output": {"intent": "wind_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Mưa to ghê!", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.9}}
+{"input": "Tối nay chỉ số UV tại Hà Nội có thể cao hơn không nhỉ?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ở Hoài Đức hôm nay có cần mang theo dù không?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.92}}
+{"input": "So sánh Cầu Giấy và Đống Đa hôm nay?", "context": {"location": "Hà Nội", "intent": "daily_forecast", "turn": 3}, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.88}}
+{"input": "Nhiệt độ thực tế cảm nhận được tại Bệnh viện Bạch Mai bây giờ là bao nhiêu nhỉ?", "context": null, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.88}}
+{"input": "Bên Hoài Đức giờ này thì trời có mây không?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.91}}
+{"input": "co thong tin gi ve nhiet do cam giac o xa hung dao khong ban?", "context": null, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.87}}
+{"input": "Dự báo thời tiết từng giờ cho Đa Phúc, Sóc Sơn vào buổi trưa hôm nay như thế nào nhỉ?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Tối nay ở Mỹ Đình mình chạy bộ có ổn không, có mưa hay gió to không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Hà Nội chiều nay thời tiết chung ra sao?", "context": null, "output": {"intent": "weather_overview", "scope": "city", "confidence": 0.9}}
+{"input": "Nhiệt độ ở Đông Anh, Đông Anh hiện tại bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "tu gio den sang mai o gia lam co mua phun khong?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.9}}
+{"input": "Tổng thể hôm nay ở đó ra sao?", "context": {"location": "Hà Đông", "intent": "rain_query", "turn": 1}, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.92, "rewritten_query": "Tổng thể thời tiết hôm nay ở quận Hà Đông ra sao?"}}
+{"input": "Ra ngoài ở Khương Đình, Thanh Xuân có cần mặc áo ấm không nhỉ?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.92}}
+{"input": "Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "Xu hướng thời tiết phường Ô Diên mấy ngày qua?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Trưa nay có gì bất thường ở Minh Châu, Ba Vì không nhỉ?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.85}}
+{"input": "o dai xuyen hom nay can mang o khong?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.96}}
+{"input": "Hôm nay trời ở khu vực Hồ Gươm như thế nào?", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.94}}
+{"input": "Đống Đa ngày mai có mưa không?", "context": {"location": "Thanh Xuân", "intent": "daily_forecast", "turn": 2}, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.91}}
+{"input": "Thời tiết lúc này ở Thanh Xuân?", "context": null, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.92}}
+{"input": "Bây giờ ở Sân Mỹ Đình trời lạnh hay nóng, nhiệt độ là bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm nay ở quận Ba Đình có xuất hiện sương mù không nhỉ?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.87}}
+{"input": "Ngày mai ở đó thế nào?", "context": {"location": "Láng", "intent": "weather_overview", "turn": 1}, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.96, "rewritten_query": "Ngày mai ở phường Láng thời tiết thế nào?"}}
+{"input": "Chiều nay ở Hồ Gươm thời tiết có phù hợp để đi dạo không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Khoảng 7 giờ sáng mai ở Hoàn Kiếm trời như thế nào?", "context": null, "output": {"intent": "hourly_forecast", "scope": "district", "confidence": 0.91}}
+{"input": "Đêm nay ở Đông Anh nhiệt độ thấp nhất khoảng bao nhiêu độ?", "context": null, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm qua toàn Hà Nội nhiệt độ cao nhất bao nhiêu?", "context": {"location": "Long Biên", "intent": "rain_query", "turn": 2}, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Thời tiết ở Hồ Linh Đàm gần đây có gì lạ không nhỉ?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.87}}
+{"input": "Độ ẩm ở ĐH Quốc Gia giờ này bao nhiêu?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.86}}
+{"input": "du bao thoi tiet phu dong, gia lam 3 gio nua", "context": null, "output": {"intent": "daily_forecast", "scope": "ward", "confidence": 0.91}}
+{"input": "bua nay o phu luong co nen cam o theo khong ta?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.92}}
+{"input": "Phường Dương Nội hôm nay ẩm lắm không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.88}}
+{"input": "Dự báo theo giờ ở Cầu Giấy, Cầu Giấy buổi chiều", "context": null, "output": {"intent": "hourly_forecast", "scope": "ward", "confidence": 0.9}}
+{"input": "khu do uv cao khong?", "context": {"location": "Thanh Xuân", "intent": "current_weather", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.95, "rewritten_query": "UV ở quận Thanh Xuân hiện tại có cao không?"}}
+{"input": "Hôm nay thời điểm nào thích hợp để đi chơi ở Hà Nội?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Có nên ra ngoài chạy bộ ở Mỹ Đình tối nay không, có mưa hay gió mạnh không?", "context": null, "output": {"intent": "activity_weather", "scope": "district", "confidence": 0.9}}
+{"input": "bua nay co the xem thoi tiet ha noi chi tiet tung gio khong?", "context": null, "output": {"intent": "hourly_forecast", "scope": "city", "confidence": 0.89}}
+{"input": "hom nay ra bo ho co nen mang theo o khong nhi?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.94}}
+{"input": "Ở phường Phù Đổng có nguy cơ ngập không nhỉ?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Ở đó nóng không?", "context": {"location": "Nam Từ Liêm", "intent": "weather_overview", "turn": 1}, "output": {"intent": "temperature_query", "scope": "district", "confidence": 0.94, "rewritten_query": "Quận Nam Từ Liêm hôm nay có nóng không?"}}
+{"input": "Độ ẩm thế nào?", "context": {"location": "Nghĩa Đô", "intent": "rain_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.91, "rewritten_query": "Còn độ ẩm ở phường Nghĩa Đô thế nào?"}}
+{"input": "Tình hình thời tiết khu vực Nhà thờ Lớn trưa nay thế nào?", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.91}}
+{"input": "Ở đây có độ ẩm cao không?", "context": {"location": "Nghĩa Đô", "intent": "rain_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.9, "rewritten_query": "Ở phường Nghĩa Đô hôm nay có độ ẩm cao không?"}}
+{"input": "Phường Yên Hòa hôm nay đi dạo được không?", "context": null, "output": {"intent": "activity_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Hà Nội buổi tối nóng bao nhiêu độ?", "context": null, "output": {"intent": "temperature_query", "scope": "city", "confidence": 0.81}}
+{"input": "pho co ha noi toi nay co bi canh bao thoi tiet gi khong ta?", "context": null, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.87}}
+{"input": "Khu vực Keangnam buổi chiều có sương mù không?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "ngoc hoi, thanh tri sang nay co mua khong?", "context": null, "output": {"intent": "rain_query", "scope": "ward", "confidence": 0.95}}
+{"input": "Hôm kia Hà Nội trời ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.93}}
+{"input": "thoi tiet o benh vien bach mai bua truoc ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "district", "confidence": 0.9}}
+{"input": "Chỉ số mây Hà Nội giờ này là bao nhiêu?", "context": null, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.9}}
+{"input": "phuong kim lien can luu y gi ve thoi tiet?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Thời tiết ở Hoài Đức hôm nay có cần mang theo dù không?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "district", "confidence": 0.92}}
+{"input": "Ngày mai còn không?", "context": {"location": "Đông Anh", "intent": "weather_alert", "turn": 1}, "output": {"intent": "weather_alert", "scope": "district", "confidence": 0.91, "rewritten_query": "Ngày mai huyện Đông Anh còn cảnh báo thời tiết không?"}}
+{"input": "Tuần trước Hà Nội có mưa hay nắng nhiều hơn?", "context": null, "output": {"intent": "historical_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Bây giờ gió ở Bến xe Mỹ Đình có mạnh không nhỉ?", "context": null, "output": {"intent": "wind_query", "scope": "district", "confidence": 0.9}}
+{"input": "troi ha noi trua nay co suong khong?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "city", "confidence": 0.87}}
+{"input": "Thời tiết gần đây ở Hồ Trúc Bạch có gì lạ không nhỉ?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.87}}
+{"input": "Mình muốn chụp ảnh ngoài trời ở Hà Nội chiều nay, thời tiết có ổn không?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.88}}
+{"input": "cuoi tuan nay, ha noi co thoi tiet nhu the nao?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.93}}
+{"input": "Sáng nay ở quận Nam Từ Liêm có đổ mưa không ta?", "context": null, "output": {"intent": "rain_query", "scope": "district", "confidence": 0.93}}
+{"input": "Tổng quan thời tiết Sóc Sơn chiều nay", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Thời tiết hiện tại thế nào?", "context": {"location": "Cầu Giấy", "intent": "daily_forecast", "turn": 1}, "output": {"intent": "current_weather", "scope": "district", "confidence": 0.96, "rewritten_query": "Thời tiết hiện tại ở quận Cầu Giấy như thế nào?"}}
+{"input": "So sánh thời tiết Văn Miếu và Phố cổ", "context": null, "output": {"intent": "location_comparison", "scope": "district", "confidence": 0.9}}
+{"input": "Nhiệt độ ở Thanh Oai, Thanh Oai bây giờ bao nhiêu?", "context": null, "output": {"intent": "temperature_query", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay thời tiết ở Thanh Xuân có cần ô không ta?", "context": null, "output": {"intent": "smalltalk_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "phuong hoai duc hom nay am lam khong?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "ward", "confidence": 0.91}}
+{"input": "hom kia o phuong xuan phuong troi ra sao?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.94}}
+{"input": "UV sáng mai thế nào?", "context": {"location": "Tây Hồ", "intent": "activity_weather", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "district", "confidence": 0.88, "rewritten_query": "Chỉ số UV sáng mai ở quận Tây Hồ bao nhiêu?"}}
+{"input": "cho minh hoi thoi tiet o hong van, huyen thuong tin", "context": null, "output": {"intent": "current_weather", "scope": "ward", "confidence": 0.94}}
+{"input": "Bạn có biết thời tiết ở Định Công, Hoàng Mai vào buổi tối ra sao không?", "context": null, "output": {"intent": "weather_overview", "scope": "ward", "confidence": 0.9}}
+{"input": "Cho mình biết thời tiết ở Đống Đa vào chiều nay nhé.", "context": null, "output": {"intent": "weather_overview", "scope": "district", "confidence": 0.9}}
+{"input": "Hôm nay Hà Nội có chỉ số UV cao không?", "context": {"location": "Hà Nội", "intent": "humidity_fog_query", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "city", "confidence": 0.93, "rewritten_query": "Chỉ số UV ở Hà Nội hôm nay có cao không?"}}
+{"input": "Thời tiết ở Hoài Đức mấy bữa nay có ấm lên hay lạnh đi?", "context": null, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.9}}
+{"input": "Xu hướng thời tiết phường Phú Diễn mấy ngày qua?", "context": null, "output": {"intent": "seasonal_context", "scope": "ward", "confidence": 0.9}}
+{"input": "Hôm nay trời ra sao?", "context": {"location": "Bồ Đề", "intent": "current_weather", "turn": 1}, "output": {"intent": "expert_weather_param", "scope": "ward", "confidence": 0.88, "rewritten_query": "Thời tiết hôm nay ở phường Bồ Đề thế nào?"}}
+{"input": "Quận Đống Đa hôm nay độ ẩm bao nhiêu?", "context": {"location": "Đống Đa", "intent": "temperature_query", "turn": 1}, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "mac gi di lam hom nay?", "context": null, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.9}}
+{"input": "Nhiều hơn tuần này không?", "context": {"location": "Cầu Giấy", "intent": "historical_weather", "turn": 1}, "output": {"intent": "seasonal_context", "scope": "district", "confidence": 0.91, "rewritten_query": "Tuần trước quận Cầu Giấy mưa nhiều hơn tuần này không?"}}
+{"input": "co can mang o khong?", "context": {"location": "Hà Nội", "intent": "smalltalk_weather", "turn": 1}, "output": {"intent": "rain_query", "scope": "city", "confidence": 0.95, "rewritten_query": "Hôm nay đi làm ở Hà Nội có cần mang ô không?"}}
+{"input": "thang truoc o xa quang oai thi troi co dep khong?", "context": null, "output": {"intent": "historical_weather", "scope": "ward", "confidence": 0.9}}
+{"input": "Những ngày tới Hà Nội có trời đẹp không?", "context": null, "output": {"intent": "daily_forecast", "scope": "city", "confidence": 0.92}}
+{"input": "Phường Kiến Hưng buổi chiều có nguy hiểm gì không?", "context": null, "output": {"intent": "weather_alert", "scope": "ward", "confidence": 0.9}}
+{"input": "Ngày mai mặc gì?", "context": {"location": "Hà Nội", "intent": "smalltalk_weather", "turn": 1}, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.93, "rewritten_query": "Ngày mai ở Hà Nội nên mặc gì?"}}
+{"input": "Quận nào mát nhất Hà Nội bây giờ?", "context": null, "output": {"intent": "location_comparison", "scope": "city", "confidence": 0.92}}
+{"input": "dem nay o noi thanh ha noi co nguy co mua lon gay ngap khong?", "context": null, "output": {"intent": "weather_alert", "scope": "city", "confidence": 0.9}}
+{"input": "So sánh thời tiết phường Cửa Nam với các phường khác?", "context": null, "output": {"intent": "location_comparison", "scope": "ward", "confidence": 0.9}}
+{"input": "Hà Đông bây giờ độ ẩm khoảng bao nhiêu phần trăm vậy?", "context": null, "output": {"intent": "humidity_fog_query", "scope": "district", "confidence": 0.9}}
+{"input": "co can kem chong nang khong?", "context": {"location": "Hà Nội", "intent": "activity_weather", "turn": 1}, "output": {"intent": "activity_weather", "scope": "city", "confidence": 0.94, "rewritten_query": "Đi picnic ở Hà Nội hôm nay có cần kem chống nắng không?"}}

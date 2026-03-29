@@ -99,3 +99,20 @@ async def api_wards(district: str = Query(...)):
     for w in wards:
         options += f'<option value="{w["ward_id"]}">{w["ward_name_vi"]}</option>'
     return HTMLResponse(content=options)
+
+
+@router.get("/alerts")
+async def api_weather_alerts(
+    request: Request,
+    ward_id: str = Query(default="ID_00364"),
+    format: str = Query(default="json", pattern="^(json|html)$"),
+):
+    """Weather alerts for a ward — JSON or HTMX partial."""
+    from app.dal.alerts_dal import get_weather_alerts
+    alerts = get_weather_alerts(ward_id)
+
+    if format == "html":
+        return _templates(request).TemplateResponse(
+            request, "partials/alert_card.html", {"alerts": alerts}
+        )
+    return {"alerts": alerts, "ward_id": ward_id}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <radialGradient id="moon2" cx="40%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#D4DDE8"/>
+      <stop offset="100%" stop-color="#94A3B8"/>
+    </radialGradient>
+    <radialGradient id="cloud2" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </radialGradient>
+  </defs>
+  <!-- Small moon top-right -->
+  <path d="M46 10 A10 10 0 1 0 46 30 A7 7 0 1 1 46 10 Z" fill="url(#moon2)"/>
+  <circle cx="56" cy="10" r="1.2" fill="#CBD5E1"/>
+  <circle cx="58" cy="17" r="1"   fill="#CBD5E1"/>
+  <!-- White cloud in front -->
+  <path d="M14 44 Q14 36 22 36 Q24 30 32 30 Q42 30 42 38 Q48 38 48 44 Z"
+        fill="url(#cloud2)"/>
+</svg>

@@ -1,12 +1,13 @@
 """SLM Router — classify user query → {intent, scope, confidence, rewritten_query?}.
 
 Inference backend: Ollama HTTP API (primary).
-Model: fine-tuned Qwen2.5-1.5B-Instruct / Qwen3-1.7B (GGUF Q8_0).
+Model: fine-tuned Qwen2.5-1.5B-Instruct / Qwen3-4B (GGUF Q4_K_M/Q8_0).
 
 Multi-task output (Module 1b): when context is provided from ConversationState,
 the model can also output rewritten_query for standalone contextual resolution.
 
 Calibration (Module 4): applies temperature scaling and per-intent thresholds.
+Smart routing (v4): safety-aware heuristics for ambiguous intent pairs.
 """
 
 from __future__ import annotations
@@ -134,6 +135,69 @@ class SLMRouter:
         """Get per-intent threshold, fallback to global threshold."""
         return self.per_intent_thresholds.get(intent, self.confidence_threshold)
 
+    # ── Smart Routing Heuristics (v4) ──
+    # Safety-aware keyword checks to correct common model confusion pairs
+
+    # Keywords strongly indicating weather_alert (safety-critical)
+    _ALERT_KEYWORDS = re.compile(
+        r"\b(bão|lũ|lu|ngập|ngap|giông|giong|sét|set|lốc|loc"
+        r"|cảnh báo|canh bao|nguy hiểm|nguy hiem"
+        r"|mưa to|mua to|mưa lớn|mua lon|mưa đá|mua da"
+        r"|áp thấp|ap thap|rét hại|ret hai|nắng nóng gay gắt)\b",
+        re.IGNORECASE,
+    )
+
+    # Keywords strongly indicating temperature_query (not general weather)
+    _TEMP_KEYWORDS = re.compile(
+        r"(nhiệt độ|nhiet do|bao nhiêu độ|bao nhieu do|mấy độ|may do"
+        r"|\bnóng\b.*\bkhông\b|\blạnh\b.*\bkhông\b"
+        r"|\bnong\b.*\bkhong\b|\blanh\b.*\bkhong\b)",
+        re.IGNORECASE,
+    )
+
+    # Keywords strongly indicating current_weather (general overview, not specific param)
+    _WEATHER_OVERVIEW_KEYWORDS = re.compile(
+        r"(thời tiết|thoi tiet).*(thế nào|the nao|sao|ra sao)",
+        re.IGNORECASE,
+    )
+
+    def _apply_smart_routing(
+        self, query: str, intent: str, confidence: float
+    ) -> tuple[str, float]:
+        """Apply keyword-based heuristics to correct known confusion pairs.
+
+        Returns (corrected_intent, adjusted_confidence).
+
+        Safety principle:
+        - weather_alert is NEVER downgraded (miss storm warning > false alert)
+        - temperature_query vs current_weather resolved by keyword signal
+        """
+        q = query.lower()
+
+        # Rule 1: Safety — upgrade to weather_alert if danger keywords detected
+        if intent != "weather_alert" and self._ALERT_KEYWORDS.search(q):
+            # Don't override if it's clearly a "dự báo" (forecast) query
+            if "dự báo" not in q and "du bao" not in q:
+                logger.debug("Smart routing: %s → weather_alert (safety keywords)", intent)
+                return "weather_alert", max(confidence, 0.80)
+
+        # Rule 1b: Telex "bao" = "bão" (storm) — only when standalone,
+        # not in "bao nhieu/bao nhiêu/du bao/bao gio/bao giờ/bao lau/bao lâu"
+        if intent != "weather_alert" and re.search(r"\bbao\b", q):
+            if not re.search(r"(du bao|dự báo|bao nhi|bao gi|bao l[aâ]u)", q):
+                logger.debug("Smart routing: %s → weather_alert (telex 'bao'='bão')", intent)
+                return "weather_alert", max(confidence, 0.75)
+
+        # Rule 2: Resolve current_weather ↔ temperature_query
+        if intent == "current_weather" and self._TEMP_KEYWORDS.search(q):
+            logger.debug("Smart routing: current_weather → temperature_query (temp keywords)")
+            return "temperature_query", confidence
+        if intent == "temperature_query" and self._WEATHER_OVERVIEW_KEYWORDS.search(q):
+            logger.debug("Smart routing: temperature_query → current_weather (overview keywords)")
+            return "current_weather", confidence
+
+        return intent, confidence
+
     def classify(
         self,
         query: str,
@@ -200,6 +264,9 @@ class SLMRouter:
 
         # Apply temperature scaling calibration
         confidence = self._apply_calibration(raw_confidence)
+
+        # Apply smart routing heuristics (v4: safety-aware intent correction)
+        intent, confidence = self._apply_smart_routing(query, intent, confidence)
 
         ms = _elapsed_ms(t0)
 
