@@ -1,0 +1,311 @@
+{
+  "total": 171,
+  "successful": 171,
+  "success_rate": 100.0,
+  "tool_accuracy": 91.8,
+  "tool_accuracy_ci95": [
+    86.7,
+    95.1
+  ],
+  "tool_precision_avg": 0.91,
+  "tool_recall_avg": 0.92,
+  "tool_recall_ci95": [
+    86.7,
+    95.1
+  ],
+  "avg_time_ms": 14828,
+  "p50_time_ms": 14154,
+  "p90_time_ms": 18501,
+  "p95_time_ms": 20777,
+  "router_coverage": 99.4,
+  "router_fallback_rate": 0.6,
+  "router_avg_latency_ms": 5981.0,
+  "router_intent_accuracy": 85.9,
+  "router_intent_accuracy_ci95": [
+    79.9,
+    90.3
+  ],
+  "routed_tool_accuracy": 91.8,
+  "judge_relevance_avg": 4.33,
+  "judge_relevance_count": 171,
+  "judge_completeness_avg": 3.85,
+  "judge_completeness_count": 171,
+  "judge_fluency_avg": 4.82,
+  "judge_fluency_count": 171,
+  "judge_actionability_avg": 3.67,
+  "judge_actionability_count": 171,
+  "judge_faithfulness_avg": 4.34,
+  "judge_faithfulness_count": 164,
+  "by_intent": {
+    "current_weather": {
+      "total": 12,
+      "success_rate": 100.0,
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        75.7,
+        100.0
+      ],
+      "avg_time_ms": 17509,
+      "judge_relevance_avg": 5.0,
+      "judge_completeness_avg": 4.92,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 4.42,
+      "judge_faithfulness_avg": 4.25
+    },
+    "rain_query": {
+      "total": 15,
+      "success_rate": 100.0,
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        79.6,
+        100.0
+      ],
+      "avg_time_ms": 14975,
+      "judge_relevance_avg": 4.27,
+      "judge_completeness_avg": 3.4,
+      "judge_fluency_avg": 4.8,
+      "judge_actionability_avg": 3.93,
+      "judge_faithfulness_avg": 5.0
+    },
+    "hourly_forecast": {
+      "total": 10,
+      "success_rate": 100.0,
+      "tool_accuracy": 90.0,
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 15836,
+      "judge_relevance_avg": 4.2,
+      "judge_completeness_avg": 3.8,
+      "judge_fluency_avg": 4.7,
+      "judge_actionability_avg": 3.4,
+      "judge_faithfulness_avg": 4.2
+    },
+    "wind_query": {
+      "total": 10,
+      "success_rate": 100.0,
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        72.2,
+        100.0
+      ],
+      "avg_time_ms": 14834,
+      "judge_relevance_avg": 4.3,
+      "judge_completeness_avg": 3.4,
+      "judge_fluency_avg": 4.9,
+      "judge_actionability_avg": 3.0,
+      "judge_faithfulness_avg": 4.4
+    },
+    "daily_forecast": {
+      "total": 13,
+      "success_rate": 100.0,
+      "tool_accuracy": 76.9,
+      "tool_accuracy_ci95": [
+        49.7,
+        91.8
+      ],
+      "avg_time_ms": 16928,
+      "judge_relevance_avg": 4.46,
+      "judge_completeness_avg": 4.23,
+      "judge_fluency_avg": 4.85,
+      "judge_actionability_avg": 4.23,
+      "judge_faithfulness_avg": 3.92
+    },
+    "weather_overview": {
+      "total": 10,
+      "success_rate": 100.0,
+      "tool_accuracy": 90.0,
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 17490,
+      "judge_relevance_avg": 4.1,
+      "judge_completeness_avg": 4.0,
+      "judge_fluency_avg": 4.7,
+      "judge_actionability_avg": 4.2,
+      "judge_faithfulness_avg": 4.0
+    },
+    "temperature_query": {
+      "total": 12,
+      "success_rate": 100.0,
+      "tool_accuracy": 91.7,
+      "tool_accuracy_ci95": [
+        64.6,
+        98.5
+      ],
+      "avg_time_ms": 14817,
+      "judge_relevance_avg": 3.58,
+      "judge_completeness_avg": 3.33,
+      "judge_fluency_avg": 4.67,
+      "judge_actionability_avg": 3.08,
+      "judge_faithfulness_avg": 3.83
+    },
+    "weather_alert": {
+      "total": 14,
+      "success_rate": 100.0,
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        78.5,
+        100.0
+      ],
+      "avg_time_ms": 12530,
+      "judge_relevance_avg": 3.93,
+      "judge_completeness_avg": 2.79,
+      "judge_fluency_avg": 4.64,
+      "judge_actionability_avg": 3.14,
+      "judge_faithfulness_avg": 4.86
+    },
+    "humidity_fog_query": {
+      "total": 10,
+      "success_rate": 100.0,
+      "tool_accuracy": 90.0,
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 15548,
+      "judge_relevance_avg": 4.4,
+      "judge_completeness_avg": 4.0,
+      "judge_fluency_avg": 4.8,
+      "judge_actionability_avg": 3.5,
+      "judge_faithfulness_avg": 4.6
+    },
+    "historical_weather": {
+      "total": 10,
+      "success_rate": 100.0,
+      "tool_accuracy": 90.0,
+      "tool_accuracy_ci95": [
+        59.6,
+        98.2
+      ],
+      "avg_time_ms": 13741,
+      "judge_relevance_avg": 4.7,
+      "judge_completeness_avg": 4.4,
+      "judge_fluency_avg": 4.9,
+      "judge_actionability_avg": 3.4,
+      "judge_faithfulness_avg": 4.0
+    },
+    "location_comparison": {
+      "total": 8,
+      "success_rate": 100.0,
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        67.6,
+        100.0
+      ],
+      "avg_time_ms": 16993,
+      "judge_relevance_avg": 4.88,
+      "judge_completeness_avg": 4.38,
+      "judge_fluency_avg": 5.0,
+      "judge_actionability_avg": 3.75,
+      "judge_faithfulness_avg": 3.62
+    },
+    "activity_weather": {
+      "total": 18,
+      "success_rate": 100.0,
+      "tool_accuracy": 88.9,
+      "tool_accuracy_ci95": [
+        67.2,
+        96.9
+      ],
+      "avg_time_ms": 13594,
+      "judge_relevance_avg": 4.61,
+      "judge_completeness_avg": 4.5,
+      "judge_fluency_avg": 4.89,
+      "judge_actionability_avg": 4.56,
+      "judge_faithfulness_avg": 4.72
+    },
+    "expert_weather_param": {
+      "total": 10,
+      "success_rate": 100.0,
+      "tool_accuracy": 100.0,
+      "tool_accuracy_ci95": [
+        72.2,
+        100.0
+      ],
+      "avg_time_ms": 13914,
+      "judge_relevance_avg": 4.7,
+      "judge_completeness_avg": 3.4,
+      "judge_fluency_avg": 4.9,
+      "judge_actionability_avg": 2.6,
+      "judge_faithfulness_avg": 4.2
+    },
+    "seasonal_context": {
+      "total": 12,
+      "success_rate": 100.0,
+      "tool_accuracy": 75.0,
+      "tool_accuracy_ci95": [
+        46.8,
+        91.1
+      ],
+      "avg_time_ms": 13090,
+      "judge_relevance_avg": 4.17,
+      "judge_completeness_avg": 4.08,
+      "judge_fluency_avg": 4.83,
+      "judge_actionability_avg": 3.67,
+      "judge_faithfulness_avg": 4.45
+    },
+    "smalltalk_weather": {
+      "total": 7,
+      "success_rate": 100.0,
+      "tool_accuracy": 85.7,
+      "tool_accuracy_ci95": [
+        48.7,
+        97.4
+      ],
+      "avg_time_ms": 10896,
+      "judge_relevance_avg": 3.57,
+      "judge_completeness_avg": 2.86,
+      "judge_fluency_avg": 4.71,
+      "judge_actionability_avg": 3.29,
+      "judge_faithfulness_avg": 3.67
+    }
+  },
+  "by_difficulty": {
+    "easy": {
+      "total": 73,
+      "success_rate": 100.0,
+      "tool_accuracy": 93.2,
+      "tool_accuracy_ci95": [
+        84.9,
+        97.0
+      ],
+      "judge_relevance_avg": 4.63,
+      "judge_completeness_avg": 4.05,
+      "judge_fluency_avg": 4.93,
+      "judge_actionability_avg": 3.68,
+      "judge_faithfulness_avg": 4.32
+    },
+    "medium": {
+      "total": 61,
+      "success_rate": 100.0,
+      "tool_accuracy": 93.4,
+      "tool_accuracy_ci95": [
+        84.3,
+        97.4
+      ],
+      "judge_relevance_avg": 4.23,
+      "judge_completeness_avg": 3.89,
+      "judge_fluency_avg": 4.75,
+      "judge_actionability_avg": 3.75,
+      "judge_faithfulness_avg": 4.47
+    },
+    "hard": {
+      "total": 37,
+      "success_rate": 100.0,
+      "tool_accuracy": 86.5,
+      "tool_accuracy_ci95": [
+        72.0,
+        94.1
+      ],
+      "judge_relevance_avg": 3.92,
+      "judge_completeness_avg": 3.41,
+      "judge_fluency_avg": 4.7,
+      "judge_actionability_avg": 3.51,
+      "judge_faithfulness_avg": 4.12
+    }
+  },
+  "mode": "routed"
+}

@@ -16,6 +16,21 @@
       "EnterPlanMode",
       "ExitPlanMode"
     ],
+    "deny": [
+      "Bash(rm *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(rm -f *)",
+      "Bash(del *)",
+      "Bash(del /f *)",
+      "Bash(del /s *)",
+      "Bash(rmdir *)",
+      "Bash(rd *)",
+      "Bash(rd /s *)",
+      "Bash(format *)",
+      "Bash(Remove-Item *)",
+      "Bash(shred *)"
+    ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [
       "C:\\Users\\X1 gen 9\\.claude"

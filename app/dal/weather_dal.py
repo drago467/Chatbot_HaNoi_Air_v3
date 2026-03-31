@@ -11,6 +11,7 @@ from app.dal.weather_helpers import (
     get_dew_point_status,
     get_pressure_status,
     get_feels_like_status,
+    clean_chinese_weather_desc,
 )
 
 
@@ -72,6 +73,8 @@ def get_current_weather(ward_id: str) -> Dict[str, Any]:
     result["pressure_status"] = get_pressure_status(result.get("pressure"))
     result["feels_like_status"] = get_feels_like_status(result.get("temp"), result.get("feels_like"))
     result["time_ict"] = format_ict(result.get("ts_utc"))
+    # Clean Chinese weather descriptions → Vietnamese
+    result["weather_description"] = clean_chinese_weather_desc(result.get("weather_description"))
     
     return result
 
@@ -104,6 +107,7 @@ def get_hourly_forecast(ward_id: str, hours: int = 48) -> List[Dict[str, Any]]:
         r["wind_direction_vi"] = wind_deg_to_vietnamese(r.get("wind_deg"))
         r["wind_beaufort"] = wind_speed_to_beaufort(r.get("wind_speed"))
         r["time_ict"] = format_ict(r.get("ts_utc"))
+        r["weather_description"] = clean_chinese_weather_desc(r.get("weather_description"))
     
     return results
 
@@ -132,9 +136,25 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
         LIMIT %s
     """, (ward_id, days))
     
-    # Add ICT times + wind direction
+    # Add ICT times + wind direction + day_of_week
     from app.dal.weather_helpers import wind_deg_to_vietnamese
+    from datetime import datetime
+
+    # Vietnamese day-of-week mapping
+    _DAYS_VI = {
+        "Monday": "Thứ Hai", "Tuesday": "Thứ Ba", "Wednesday": "Thứ Tư",
+        "Thursday": "Thứ Năm", "Friday": "Thứ Sáu", "Saturday": "Thứ Bảy",
+        "Sunday": "Chủ Nhật",
+    }
+
     for r in results:
+        # Day of week (giúp model không tính sai thứ)
+        if r.get('date'):
+            try:
+                date_obj = datetime.strptime(str(r['date']), '%Y-%m-%d')
+                r['day_of_week'] = _DAYS_VI.get(date_obj.strftime('%A'), date_obj.strftime('%A'))
+            except (ValueError, TypeError):
+                pass
         if r.get('sunrise'):
             r['sunrise_ict'] = format_ict(r['sunrise'])
             r['sunrise_time'] = format_ict(r['sunrise'], fmt="%H:%M")
@@ -143,7 +163,8 @@ def get_daily_forecast(ward_id: str, days: int = 8) -> List[Dict[str, Any]]:
             r['sunset_time'] = format_ict(r['sunset'], fmt="%H:%M")
         if r.get('wind_deg') is not None:
             r['wind_direction_vi'] = wind_deg_to_vietnamese(r['wind_deg'])
-    
+        r['weather_description'] = clean_chinese_weather_desc(r.get('weather_description'))
+
     return results
 
 
@@ -173,6 +194,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
 
     if result:
         result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
+        result["weather_description"] = clean_chinese_weather_desc(result.get("weather_description"))
         result["note"] = "Dữ liệu lúc 12:00 ICT (noon)"
 
     # Bổ sung daily summary (temp_min/max, rain_total, sunrise/sunset)
@@ -185,6 +207,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
     )
 
     if result and daily:
+        daily["daily_weather_desc"] = clean_chinese_weather_desc(daily.get("daily_weather_desc"))
         result["daily_summary"] = daily
         result["note"] = "Dữ liệu trưa 12:00 ICT + tổng hợp ngày"
         return result
@@ -202,7 +225,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
             "rain_total": daily.get("rain_total"),
             "uvi": daily.get("uvi"),
             "weather_main": daily.get("daily_weather_main"),
-            "weather_description": daily.get("daily_weather_desc"),
+            "weather_description": clean_chinese_weather_desc(daily.get("daily_weather_desc")),
             "sunrise": daily.get("sunrise"),
             "sunset": daily.get("sunset"),
             "note": "Dữ liệu tổng hợp ngày (không có chi tiết theo giờ)",
@@ -278,7 +301,10 @@ def get_weather_range(ward_id: str, start_date: str, end_date: str) -> List[Dict
           AND date BETWEEN %s AND %s
         ORDER BY date
     """, (ward_id, start_date, end_date))
-    
+
+    for r in results:
+        r['weather_description'] = clean_chinese_weather_desc(r.get('weather_description'))
+
     return results
 
 
@@ -395,7 +421,7 @@ def get_daily_summary_data(ward_id: str, query_date) -> Dict[str, Any]:
         "wind": {"speed": row.get("wind_speed"), "direction": wind_dir, "gust": row.get("wind_gust")},
         "clouds": row.get("clouds"),
         "weather_main": row.get("weather_main"),
-        "weather_description": row.get("weather_description"),
+        "weather_description": clean_chinese_weather_desc(row.get("weather_description")),
         "sunrise": str(row.get("sunrise")) if row.get("sunrise") else None,
         "sunset": str(row.get("sunset")) if row.get("sunset") else None,
         "note": bien_do_nhiet,

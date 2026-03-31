@@ -86,10 +86,11 @@ INTENT_TO_TOOLS = {
     },
     # hourly_forecast: "Chiều nay mưa không?", "Tối nay mấy độ?", "Lúc nào nắng?"
     # rain_timeline alternative cho mưa; sunny_periods cho câu hỏi nắng theo giờ
+    # daily_rhythm hợp lệ cho câu hỏi theo buổi ("chiều nay", "sáng nay") — trả data tổng hợp per-period
     "hourly_forecast": {
-        "city":     ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods"],
-        "district": ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods"],
-        "ward":     ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods"],
+        "city":     ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods", "get_daily_rhythm"],
+        "district": ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods", "get_daily_rhythm"],
+        "ward":     ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods", "get_daily_rhythm"],
     },
     # daily_forecast: "Ngày mai thế nào?", "Cuối tuần?"
     # weather_period cho multi-day range; temperature_trend bổ sung xu hướng
@@ -100,10 +101,12 @@ INTENT_TO_TOOLS = {
     },
     # weather_overview: "Tổng hợp thời tiết hôm nay?"
     # daily_summary chính; phenomena + daily_rhythm bổ sung bức tranh toàn cảnh
+    # current_weather cũng chấp nhận (subset hợp lệ khi router classify gần intent)
+    # daily_forecast hợp lệ khi agent dùng forecast data để tổng hợp overview
     "weather_overview": {
-        "city":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm"],
-        "district": ["get_daily_summary", "detect_phenomena", "get_daily_rhythm"],
-        "ward":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm"],
+        "city":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast"],
+        "district": ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast"],
+        "ward":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast"],
     },
     # rain_query: "Lúc nào mưa?", "Có mưa không?", "Mưa lớn gây ngập?"
     # rain_timeline chính; hourly/daily forecast là alternatives; weather_alerts cho câu hỏi ngập/lũ
@@ -141,10 +144,10 @@ INTENT_TO_TOOLS = {
         "ward":     ["get_weather_history", "get_daily_summary", "get_weather_period"],
     },
     # location_comparison: "Cầu Giấy vs Đống Đa?", "Quận nào nóng nhất?"
-    # city: ranking toàn TP + multi_compare; district: so sánh 2 nơi + ranking ward; ward: so sánh trực tiếp
+    # city: ranking toàn TP + multi_compare; district: so sánh 2 nơi + ranking ward + multi_compare; ward: so sánh trực tiếp
     "location_comparison": {
         "city":     ["get_district_ranking", "get_district_multi_compare"],
-        "district": ["compare_weather", "get_ward_ranking_in_district"],
+        "district": ["compare_weather", "get_ward_ranking_in_district", "get_district_ranking", "get_district_multi_compare"],
         "ward":     ["compare_weather"],
     },
     # activity_weather: "Đi chơi được không?", "Mấy giờ chạy bộ tốt?", "Ra ngoài có ổn không?"
@@ -158,10 +161,11 @@ INTENT_TO_TOOLS = {
     # expert_weather_param: "Điểm sương?", "Áp suất?", "UV index?", "Lượng mưa hôm qua?"
     # comfort_index cho cảm giác thực tế; pressure_trend cho áp suất chi tiết
     # weather_history hợp lệ cho thông số kỹ thuật quá khứ (cross-intent overlap)
+    # uv_safe_windows hợp lệ cho câu hỏi UV ("UV cao không?", "mấy giờ UV an toàn?")
     "expert_weather_param": {
-        "city":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history"],
-        "district": ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history"],
-        "ward":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history"],
+        "city":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
+        "district": ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
+        "ward":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
     },
     # weather_alert: "Có cảnh báo gì không?", "Giông mạnh?", "Mưa dông?"
     # alerts chính; change_alert phát hiện biến đổi; pressure_trend front/bão

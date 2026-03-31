@@ -2,6 +2,52 @@
 
 from typing import Optional
 
+# ── Chinese weather description → Vietnamese mapping ──
+_CHINESE_WEATHER_MAP = {
+    "晴": "trời nắng",
+    "多云": "nhiều mây",
+    "少云": "ít mây",
+    "阴": "trời u ám",
+    "阴天": "trời u ám",
+    "大雨": "mưa to",
+    "中雨": "mưa vừa",
+    "小雨": "mưa nhỏ",
+    "暴雨": "mưa rất to",
+    "雷阵雨": "mưa giông",
+    "雷": "giông sét",
+    "雪": "tuyết",
+    "小雪": "tuyết nhẹ",
+    "大雪": "tuyết to",
+    "雾": "sương mù",
+    "霾": "mù (ô nhiễm)",
+    "薄雾": "sương mù nhẹ",
+    "浮尘": "bụi",
+    "扬沙": "cát bụi",
+    "强风": "gió mạnh",
+    "微风": "gió nhẹ",
+}
+
+
+def clean_chinese_weather_desc(text: Optional[str]) -> Optional[str]:
+    """Replace Chinese weather descriptions with Vietnamese equivalents.
+
+    Also strips any remaining CJK characters (U+4E00-U+9FFF) that slip through.
+
+    Args:
+        text: Weather description string (may contain Chinese characters)
+
+    Returns:
+        Cleaned Vietnamese string, or None if input is None
+    """
+    if not text:
+        return text
+    for zh, vi in _CHINESE_WEATHER_MAP.items():
+        text = text.replace(zh, vi)
+    # Fallback: strip any remaining CJK characters
+    import re
+    text = re.sub(r'[\u4e00-\u9fff]+', '', text).strip()
+    return text if text else None
+
 
 def wind_deg_to_vietnamese(deg: Optional[int]) -> str:
     """Convert wind degrees (0-360) to Vietnamese direction.

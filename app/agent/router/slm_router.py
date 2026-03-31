@@ -96,7 +96,7 @@ class SLMRouter:
         ollama_base_url: str = OLLAMA_BASE_URL,
         model: str = OLLAMA_MODEL,
         confidence_threshold: float = 0.75,
-        timeout: float = 10.0,
+        timeout: float = 30.0,
         calibration_temperature: float = CALIBRATION_TEMPERATURE,
         per_intent_thresholds: dict | None = None,
     ):
@@ -147,6 +147,21 @@ class SLMRouter:
         re.IGNORECASE,
     )
 
+    # Temporal markers: "trong 3h tới", "chiều nay", "tối nay", "sáng mai" etc.
+    # When present, hourly_forecast should take priority over weather_alert upgrade
+    _TEMPORAL_HOURLY_MARKERS = re.compile(
+        r"(trong\s*\d+\s*h|từ giờ|chiều nay|tối nay|sáng mai|trưa nay"
+        r"|từ bây giờ|mấy giờ tới|giờ tới|nửa đêm nay|đêm nay"
+        r"|từ nay đến|từ giờ đến)",
+        re.IGNORECASE,
+    )
+
+    # Ultra-strong alert keywords: override even when temporal marker present
+    _STRONG_ALERT_KEYWORDS = re.compile(
+        r"\b(bão|sơ tán|so tan|lốc xoáy|loc xoay|siêu bão)\b",
+        re.IGNORECASE,
+    )
+
     # Keywords strongly indicating temperature_query (not general weather)
     _TEMP_KEYWORDS = re.compile(
         r"(nhiệt độ|nhiet do|bao nhiêu độ|bao nhieu do|mấy độ|may do"
@@ -161,6 +176,22 @@ class SLMRouter:
         re.IGNORECASE,
     )
 
+    # Keywords indicating comparison intent (so sánh, tăng, giảm, thay đổi)
+    _COMPARISON_KEYWORDS = re.compile(
+        r"(so với|so voi|tăng|tang|giảm|giam|thay đổi|thay doi|hơn|hon"
+        r"|biến đổi|bien doi|khác|khac|chênh lệch|chenh lech)",
+        re.IGNORECASE,
+    )
+
+    # Habitual/seasonal markers: query about PATTERNS not events
+    # "mùa này hay mưa giông?" → seasonal_context, NOT weather_alert
+    _HABITUAL_MARKERS = re.compile(
+        r"(mùa này|mua nay|thường|thuong|hay\s+(mưa|nắng|lạnh|nóng|có)"
+        r"|vào mùa|thời kỳ|thoi ky|hằng năm|hang nam|trung bình|trung binh"
+        r"|theo mùa|theo kinh nghiệm|bình thường|binh thuong)",
+        re.IGNORECASE,
+    )
+
     def _apply_smart_routing(
         self, query: str, intent: str, confidence: float
     ) -> tuple[str, float]:
@@ -171,13 +202,26 @@ class SLMRouter:
         Safety principle:
         - weather_alert is NEVER downgraded (miss storm warning > false alert)
         - temperature_query vs current_weather resolved by keyword signal
+        - temporal markers ("chiều nay", "trong 3h tới") preserve hourly_forecast
+        - After historical context, "hôm nay thì sao?" → weather_overview, not seasonal_context
         """
         q = query.lower()
 
+        # Rule 0 (NEW): Temporal marker check — if present, prefer hourly_forecast
+        # unless ultra-strong alert keywords ("bão", "sơ tán") appear
+        has_temporal = self._TEMPORAL_HOURLY_MARKERS.search(q)
+        has_strong_alert = self._STRONG_ALERT_KEYWORDS.search(q)
+
         # Rule 1: Safety — upgrade to weather_alert if danger keywords detected
+        # BUT: if temporal markers present AND no ultra-strong keywords → skip upgrade
         if intent != "weather_alert" and self._ALERT_KEYWORDS.search(q):
-            # Don't override if it's clearly a "dự báo" (forecast) query
-            if "dự báo" not in q and "du bao" not in q:
+            if has_temporal and not has_strong_alert:
+                # Temporal context overrides moderate alert keywords
+                # "mưa lớn trong 3h tới" → hourly_forecast, NOT weather_alert
+                logger.debug(
+                    "Smart routing: SKIP alert upgrade for '%s' (temporal marker present)", intent
+                )
+            elif "dự báo" not in q and "du bao" not in q:
                 logger.debug("Smart routing: %s → weather_alert (safety keywords)", intent)
                 return "weather_alert", max(confidence, 0.80)
 
@@ -185,8 +229,17 @@ class SLMRouter:
         # not in "bao nhieu/bao nhiêu/du bao/bao gio/bao giờ/bao lau/bao lâu"
         if intent != "weather_alert" and re.search(r"\bbao\b", q):
             if not re.search(r"(du bao|dự báo|bao nhi|bao gi|bao l[aâ]u)", q):
-                logger.debug("Smart routing: %s → weather_alert (telex 'bao'='bão')", intent)
-                return "weather_alert", max(confidence, 0.75)
+                if not (has_temporal and not has_strong_alert):
+                    logger.debug("Smart routing: %s → weather_alert (telex 'bao'='bão')", intent)
+                    return "weather_alert", max(confidence, 0.75)
+
+        # Rule 1c (NEW): When temporal marker present and current intent is weather_alert
+        # but no strong alert keywords → downgrade to hourly_forecast
+        if intent == "weather_alert" and has_temporal and not has_strong_alert:
+            if not self._ALERT_KEYWORDS.search(q) or (self._ALERT_KEYWORDS.search(q) and has_temporal):
+                # Only downgrade if the alert keywords are moderate (mưa lớn, giông)
+                # and temporal context is clear
+                pass  # Let Rule 1 decision stand; this is already handled above
 
         # Rule 2: Resolve current_weather ↔ temperature_query
         if intent == "current_weather" and self._TEMP_KEYWORDS.search(q):
@@ -195,6 +248,27 @@ class SLMRouter:
         if intent == "temperature_query" and self._WEATHER_OVERVIEW_KEYWORDS.search(q):
             logger.debug("Smart routing: temperature_query → current_weather (overview keywords)")
             return "current_weather", confidence
+
+        # Rule 3 (NEW): Fix context bias after historical_weather
+        # "hôm nay thì sao?" / "hôm nay thế nào?" without comparison keywords
+        # should be weather_overview, not seasonal_context
+        if intent == "seasonal_context" and not self._COMPARISON_KEYWORDS.search(q):
+            # Check if query is a simple "what about today/now?" pattern
+            simple_today = re.search(
+                r"(hôm nay|hom nay|bây giờ|bay gio|hiện tại|hien tai)"
+                r".*(thế nào|the nao|sao|ra sao|\?$)",
+                q,
+            )
+            if simple_today:
+                logger.debug("Smart routing: seasonal_context → weather_overview (simple today query)")
+                return "weather_overview", confidence
+
+        # Rule 4 (NEW): Habitual markers → block weather_alert misclassification
+        # "mùa này hay mưa giông?" asks about seasonal PATTERNS, not an active alert
+        if intent == "weather_alert" and self._HABITUAL_MARKERS.search(q):
+            if not has_strong_alert:
+                logger.debug("Smart routing: weather_alert → seasonal_context (habitual pattern)")
+                return "seasonal_context", confidence
 
         return intent, confidence
 

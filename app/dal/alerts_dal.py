@@ -48,64 +48,100 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         """
         results = query(sql)
     
+    # Map alert types to Vietnamese category names for clarity
+    ALERT_CATEGORY_VI = {
+        "wind": "gió_giật",
+        "cold": "rét_hại",
+        "heat": "nắng_nóng",
+        "thunderstorm": "giông_sét",
+    }
+
+    # Pre-resolve ward_id → district name (avoid exposing raw IDs to LLM)
+    _ward_district_cache: Dict[str, str] = {}
+    if not ward_id:
+        # District-level query already has district_name_vi in results
+        for r in results:
+            wid = r.get("ward_id", "")
+            dname = r.get("district_name_vi", "")
+            if wid and dname:
+                _ward_district_cache[wid] = dname
+    else:
+        # Resolve single ward_id
+        try:
+            from app.dal.location_dal import get_ward_by_id
+            ward_info = get_ward_by_id(ward_id) or {}
+            _ward_district_cache[ward_id] = ward_info.get("district_name_vi", "Hà Nội")
+        except Exception:
+            _ward_district_cache[ward_id] = "Hà Nội"
+
+    def _resolve_location(wid: str) -> str:
+        return _ward_district_cache.get(wid, "một số khu vực")
+
     # Generate alerts from results
     alerts = []
     for r in results:
-        alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
-        
+        ts_ict = format_ict(r.get("ts_utc"))
+        wid = r.get("ward_id", "")
+        location_name = _resolve_location(wid)
+        base = {"location": location_name, "ts_ict": ts_ict}
+
         # Wind gust alert
         if r.get("wind_gust") is not None and r["wind_gust"] > 20:
-            alert["type"] = "wind"
-            alert["severity"] = "warning"
-            alert["message"] = f"Gió giật {r['wind_gust']:.1f} m/s - Cẩn thận"
-            alerts.append(alert)
-        
+            alerts.append({
+                **base,
+                "type": "wind",
+                "category_vi": ALERT_CATEGORY_VI["wind"],
+                "severity": "warning",
+                "message": f"Gió giật {r['wind_gust']:.1f} m/s - Cẩn thận",
+            })
+
         # Cold alert
         if r.get("temp") is not None and r["temp"] < KTTV_THRESHOLDS["RET_HAI"]:
-            alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
-            alert["type"] = "cold"
-            alert["severity"] = "warning"
-            alert["message"] = f"Rét hại {r['temp']:.1f}°C - Cần mặc ấm"
-            alerts.append(alert)
-        
+            alerts.append({
+                **base,
+                "type": "cold",
+                "category_vi": ALERT_CATEGORY_VI["cold"],
+                "severity": "warning",
+                "message": f"Rét hại {r['temp']:.1f}°C - Cần mặc ấm",
+            })
+
         # Heat alert
         if r.get("temp") and r["temp"] > KTTV_THRESHOLDS["NANG_NONG_DB"]:
-            alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
-            alert["type"] = "heat"
-            alert["severity"] = "warning"
-            alert["message"] = f"Nắng nóng nguy hiểm {r['temp']:.1f}°C - Hạn chế ra ngoài"
-            alerts.append(alert)
-        
+            alerts.append({
+                **base,
+                "type": "heat",
+                "category_vi": ALERT_CATEGORY_VI["heat"],
+                "severity": "warning",
+                "message": f"Nắng nóng nguy hiểm {r['temp']:.1f}°C - Hạn chế ra ngoài",
+            })
+
         # Thunderstorm alert
         if r.get("weather_main") == "Thunderstorm":
-            alert = {"ward_id": r.get("ward_id"), "ts_utc": format_ict(r.get("ts_utc"))}
-            alert["type"] = "thunderstorm"
-            alert["severity"] = "warning"
-            alert["message"] = f"Có giông - Tránh ra ngoài"
-            alerts.append(alert)
-    
+            alerts.append({
+                **base,
+                "type": "thunderstorm",
+                "category_vi": ALERT_CATEGORY_VI["thunderstorm"],
+                "severity": "warning",
+                "message": "Có giông - Tránh ra ngoài",
+            })
+
     return alerts
 
 
 def get_all_district_alerts() -> Dict[str, List[Dict[str, Any]]]:
     """Get alerts grouped by district.
-    
+
     Returns:
         Dictionary with district names as keys and list of alerts as values
     """
-    from app.dal.location_dal import get_ward_by_id
-    
     alerts = get_weather_alerts()
-    
-    # Group by district (resolve ward_id -> district name)
-    district_alerts = {}
+
+    # Group by district (location already resolved in get_weather_alerts)
+    district_alerts: Dict[str, List[Dict[str, Any]]] = {}
     for alert in alerts:
-        ward_id = alert.get("ward_id", "")
-        ward_info = get_ward_by_id(ward_id) or {}
-        district = ward_info.get("district_name_vi", ward_id)
-        
+        district = alert.get("location", "Hà Nội")
         if district not in district_alerts:
             district_alerts[district] = []
         district_alerts[district].append(alert)
-    
+
     return district_alerts

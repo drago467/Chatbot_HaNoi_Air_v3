@@ -1,0 +1,42 @@
+{
+  "mode": "routed",
+  "total_conversations": 42,
+  "total_turns": 128,
+  "CSR": 69.0,
+  "ERA": 89.5,
+  "avg_CRR": 2.36,
+  "overall_tool_accuracy": 89.1,
+  "context_dependent_turns": 76,
+  "by_pattern": {
+    "location_carry_over": {
+      "total": 7,
+      "success": 3,
+      "csr": 42.9
+    },
+    "time_shift": {
+      "total": 7,
+      "success": 4,
+      "csr": 57.1
+    },
+    "topic_drilldown": {
+      "total": 7,
+      "success": 4,
+      "csr": 57.1
+    },
+    "location_switch": {
+      "total": 7,
+      "success": 5,
+      "csr": 71.4
+    },
+    "anaphora_chain": {
+      "total": 7,
+      "success": 7,
+      "csr": 100.0
+    },
+    "mixed_intent": {
+      "total": 7,
+      "success": 6,
+      "csr": 85.7
+    }
+  }
+}

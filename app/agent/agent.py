@@ -78,23 +78,56 @@ Hỗ trợ: Hồ Gươm, Mỹ Đình, Hồ Tây, Sân bay Nội Bài, Times City
 - Nhiệt: 1 decimal °C | Gió: 1 decimal m/s | Ẩm: % nguyên | Áp suất: hPa nguyên | UV: 1 decimal
 - Luôn kèm đơn vị, hướng gió tiếng Việt (Đông Bắc, Tây Nam...)
 
+## Ngôn ngữ trả lời
+- LUÔN trả lời hoàn toàn bằng tiếng Việt có dấu. KHÔNG dùng ký tự Trung Quốc, Nhật, Hàn trong response.
+- Ví dụ: viết "trời trong" thay vì "晴", "mây rải rác" thay vì "少云", "nhiều mây" thay vì "多云".
+- Nếu tool trả weather_description bằng tiếng Anh/Trung → DỊCH sang tiếng Việt.
+
+## Quy tắc cảnh báo thời tiết
+- Khi user hỏi về loại cảnh báo CỤ THỂ (ngập, lạnh, bão, giông) mà data chỉ có loại KHÁC (VD: nắng nóng):
+  → KHÔNG báo cảnh báo khác loại. Trả lời: "Hiện không có cảnh báo [loại user hỏi] cho khu vực này. Tuy nhiên, đang có cảnh báo [loại thực tế]."
+- KHÔNG BAO GIỜ hiển thị raw ID (ID_xxxxx, ward_id). Nếu chưa resolve được tên → nói "một số khu vực".
+- Khi tool get_weather_alerts trả kết quả rỗng → nói rõ "Hiện không có cảnh báo thời tiết nguy hiểm".
+
+## Tham chiếu thông số kỹ thuật (dùng khi trả lời câu hỏi chuyên sâu)
+- Áp suất: <1000 hPa = thấp (thay đổi thời tiết), 1000-1020 = bình thường, >1020 = ổn định
+- UV: 0-2 thấp, 3-5 trung bình, 6-7 cao (cần kem chống nắng), 8+ cực đoan (hạn chế ra ngoài)
+- Gió: <2 m/s lặng gió, 2-5 nhẹ, 5-10 vừa, >10 mạnh (cẩn thận ngoài trời), >20 nguy hiểm
+- Điểm sương: >20°C oi bức, 10-20 dễ chịu, <10 khô hanh
+- Khi trả lời thông số kỹ thuật → LUÔN kèm: giá trị + đánh giá mức (thấp/TB/cao) + ảnh hưởng thực tế.
+
 ## Định dạng trả lời
 - Cho quận/thành phố: tổng quan + nổi bật + hiện tượng đặc biệt
 - Cho phường: chi tiết đầy đủ các thông số
 - Luôn kèm khuyến nghị thực tế (mang ô, áo khoác, tránh giờ nào...)
 - Dùng bullet points khi nhiều thông tin
+- Khi tool get_clothing_advice hoặc get_activity_advice trả kết quả → DÙNG kết quả đó để tư vấn. KHÔNG nói "không thể tư vấn trang phục/hoạt động".
+- Khi hỏi N ngày dự báo → PHẢI trả đủ N ngày. Nếu data thiếu, nói rõ "Chỉ có dữ liệu N-x ngày".
 
 ## Hội thoại nhiều lượt
 - "ở đó thế nào?" → dùng địa điểm lượt trước
 - "còn ngày mai?" → giữ địa điểm, đổi thời gian
 - User hỏi chung chung không rõ địa điểm → mặc định Hà Nội (city-level)
 - Nếu context không rõ và cần chính xác → có thể hỏi lại khu vực cụ thể
+- LUÔN nhắc lại tên khu vực/quận/phường đang nói đến trong câu trả lời (đặc biệt quan trọng khi context carry-over).
+- MỖI LƯỢT MỚI: xác định lại tools cần gọi dựa trên câu hỏi HIỆN TẠI. KHÔNG tái sử dụng kết quả tool cũ khi intent thay đổi.
+  Ví dụ: lượt trước dùng get_daily_forecast → lượt này hỏi "hôm nay cụ thể hơn?" → gọi get_daily_summary + detect_phenomena (KHÔNG lặp get_daily_forecast).
+  Ví dụ: lượt trước hỏi mưa → lượt này hỏi "gió mạnh không?" → gọi get_current_weather/get_hourly_forecast mới.
 
 ## Xử lý lỗi
 - Tool trả error → KHÔNG retry cùng tool với cùng tham số. Giải thích rõ + gợi ý thay thế.
 - KHÔNG gọi cùng 1 tool quá 3 lần. Error 2 lần → dừng, thông báo user.
 - Không tìm thấy địa điểm → gợi ý: "quận Cầu Giấy, phường Dịch Vọng"
 - Không có dữ liệu → nêu rõ giới hạn, gợi ý thời gian/khu vực khác
+
+## Tool sử dụng — QUY TẮC BẮT BUỘC
+- CHỈ gọi tools trong danh sách được cung cấp. KHÔNG BAO GIỜ tự sáng tạo tên tool.
+- Các tên tool SAI thường gặp (KHÔNG DÙNG):
+  + get_weekly_forecast → dùng get_daily_forecast hoặc get_weather_period
+  + get_uv_index → dùng get_current_weather (trả field uvi) hoặc get_comfort_index
+  + get_district_weather_impact → dùng get_district_ranking
+  + get_forecast → dùng get_daily_forecast hoặc get_hourly_forecast
+  + get_weather → dùng get_current_weather
 
 ## Khi KHÔNG gọi tool
 - Lời chào → trả lời thân thiện, giới thiệu bản thân là trợ lý thời tiết Hà Nội
@@ -464,7 +497,13 @@ def create_weather_agent():
     if not API_BASE or not API_KEY:
         raise ValueError("AGENT_API_BASE and AGENT_API_KEY must be set in .env")
 
-    _model = ChatOpenAI(model=MODEL_NAME, temperature=0, base_url=API_BASE, api_key=API_KEY)
+    # Qwen3 models have thinking enabled by default on some providers.
+    # For invoke (non-streaming) calls, the API rejects enable_thinking=true.
+    # Disable it on the default model; streaming paths create their own model.
+    _extra_kwargs = {}
+    if "qwen3" in MODEL_NAME.lower():
+        _extra_kwargs = {"extra_body": {"enable_thinking": False}}
+    _model = ChatOpenAI(model=MODEL_NAME, temperature=0, base_url=API_BASE, api_key=API_KEY, **_extra_kwargs)
 
     DATABASE_URL = os.getenv("DATABASE_URL")
     if not DATABASE_URL:
@@ -704,11 +743,14 @@ def _strip_thinking_tokens(text: str) -> str:
     return _THINK_TOKEN_RE.sub("", text).strip()
 
 
-def _create_focused_agent(tools: list, router_result=None):
+def _create_focused_agent(tools: list, router_result=None, streaming: bool = True):
     """Create a ReAct agent with focused tool set and dynamic prompt.
 
     Uses focused system prompt (BASE + only relevant tool rules)
     instead of full 25-tool prompt — reduces confusion and tokens.
+
+    Args:
+        streaming: If False, disables Qwen3 thinking mode (required for invoke).
     """
     get_agent()  # ensure _model and _checkpointer are initialized
     tool_names = [t.name for t in tools]
@@ -718,16 +760,26 @@ def _create_focused_agent(tools: list, router_result=None):
     if router_result and _model is not None:
         model_name = os.getenv("AGENT_MODEL") or os.getenv("MODEL", "")
         intent = getattr(router_result, "intent", "")
-        if "qwen3" in model_name.lower() and intent in _THINKING_INTENTS:
-            # Qwen3 recommends temperature=0.6 when thinking mode is active
+        is_qwen3 = "qwen3" in model_name.lower()
+
+        if is_qwen3:
             from langchain_openai import ChatOpenAI
             api_base = os.getenv("AGENT_API_BASE") or os.getenv("API_BASE")
             api_key = os.getenv("AGENT_API_KEY") or os.getenv("API_KEY")
             if api_base and api_key:
-                model = ChatOpenAI(
-                    model=model_name, temperature=0.6,
-                    base_url=api_base, api_key=api_key,
-                )
+                if streaming and intent in _THINKING_INTENTS:
+                    # Streaming + thinking intent: enable thinking with higher temp
+                    model = ChatOpenAI(
+                        model=model_name, temperature=0.6,
+                        base_url=api_base, api_key=api_key,
+                    )
+                elif not streaming:
+                    # Non-streaming (invoke): must explicitly disable thinking
+                    model = ChatOpenAI(
+                        model=model_name, temperature=0,
+                        base_url=api_base, api_key=api_key,
+                        extra_body={"enable_thinking": False},
+                    )
 
     return create_react_agent(
         model=model,
@@ -943,7 +995,7 @@ def run_agent_routed(message: str, thread_id: str = "default", *,
 
     for attempt in range(max_retries):
         try:
-            focused_agent = _create_focused_agent(focused_tools, router_result=rr)
+            focused_agent = _create_focused_agent(focused_tools, router_result=rr, streaming=False)
             config = {
                 "configurable": {"thread_id": thread_id},
                 "recursion_limit": 15,

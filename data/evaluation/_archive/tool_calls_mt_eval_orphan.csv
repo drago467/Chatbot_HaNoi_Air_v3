@@ -1,0 +1,2 @@
+timestamp,session_id,turn_number,tool_name,tool_input,tool_output,success,execution_time_ms
+2026-03-31T12:25:35.335925+07:00,mt_eval_conv_001_fe124bbe,0,get_current_weather,{'location_hint': 'Cầu Giấy'},,True,0
