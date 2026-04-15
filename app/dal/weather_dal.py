@@ -195,7 +195,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
     if result:
         result["wind_direction_vi"] = wind_deg_to_vietnamese(result.get("wind_deg"))
         result["weather_description"] = clean_chinese_weather_desc(result.get("weather_description"))
-        result["note"] = "Dữ liệu lúc 12:00 ICT (noon)"
+        result["note"] = "Dữ liệu lúc 12:00 trưa"
 
     # Bổ sung daily summary (temp_min/max, rain_total, sunrise/sunset)
     daily = query_one(
@@ -209,7 +209,7 @@ def get_weather_history(ward_id: str, date: str) -> Dict[str, Any]:
     if result and daily:
         daily["daily_weather_desc"] = clean_chinese_weather_desc(daily.get("daily_weather_desc"))
         result["daily_summary"] = daily
-        result["note"] = "Dữ liệu trưa 12:00 ICT + tổng hợp ngày"
+        result["note"] = "Dữ liệu trưa 12:00 + tổng hợp ngày"
         return result
 
     if result:

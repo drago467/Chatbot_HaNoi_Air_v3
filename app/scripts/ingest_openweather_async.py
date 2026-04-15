@@ -66,7 +66,9 @@ class OpenWeatherAsyncIngestor:
                     self._key_ready_event.set()
                     return
 
-        # Not the leader — just wait for the leader to finish
+        # Not the leader — just wait for the leader to finish.
+        # Note: asyncio.Event.wait() returns immediately if already set,
+        # so there's no race condition between is_set() check and wait().
         await self._key_ready_event.wait()
 
     async def fetch_json(self, session: aiohttp.ClientSession, url: str, params: Dict[str, Any], service: str) -> Optional[Dict[str, Any]]:
@@ -86,8 +88,9 @@ class OpenWeatherAsyncIngestor:
                     try:
                         api_key = self.key_manager.get_key(service=service)
                     except RuntimeError:
-                        # All keys exhausted — release semaphore, wait, then retry
-                        raise  # caught by outer RuntimeError handler
+                        # All keys exhausted — raise exits the semaphore context
+                        # manager (releasing it correctly), then caught by outer handler
+                        raise
 
                     current_params = {**params, "appid": api_key}
                     async with session.get(url, params=current_params, timeout=25) as resp:
@@ -125,31 +128,68 @@ class OpenWeatherAsyncIngestor:
                 columns = [desc[0] for desc in cur.description]
                 return [dict(zip(columns, row)) for row in cur.fetchall()]
         finally:
-            conn.close()
+            release_connection(conn)
+
+    def _parse_nowcast_record(self, ward: Dict, data: Dict) -> Optional[tuple]:
+        """Parse a single nowcast API response into a DB record tuple."""
+        if not data or not data.get("current"):
+            return None
+        curr = data["current"]
+        w_info = curr["weather"][0] if curr.get("weather") else {}
+        return (
+            ward["ward_id"], datetime.fromtimestamp(curr["dt"], tz=timezone.utc),
+            curr.get("temp"), curr.get("feels_like"), curr.get("pressure"),
+            curr.get("humidity"), curr.get("dew_point"), curr.get("clouds"),
+            curr.get("wind_speed"), curr.get("wind_deg"), curr.get("wind_gust"),
+            curr.get("visibility"), curr.get("uvi"), None,  # pop is not in current
+            (curr.get("rain") or {}).get("1h"), w_info.get("main"), w_info.get("description"),
+            'current', 'openweather', 'nowcast'
+        )
 
     async def run_nowcast(self):
         """Job 1: OneCall current weather (Hourly)."""
         wards = self._get_ward_list()
         logger.info(f"Starting Nowcast job for {len(wards)} wards...")
 
+        nowcast_params = lambda w: {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}
+
         async with aiohttp.ClientSession() as session:
-            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,hourly,daily,alerts"}, "onecall") for w in wards]
+            weather_tasks = [self.fetch_json(session, self.onecall_url, nowcast_params(w), "onecall") for w in wards]
             weather_results = await asyncio.gather(*weather_tasks)
 
         weather_records = []
+        failed_wards = []
         for ward, data in zip(wards, weather_results):
-            if data and data.get("current"):
-                curr = data["current"]
-                w_info = curr["weather"][0] if curr.get("weather") else {}
-                weather_records.append((
-                    ward["ward_id"], datetime.fromtimestamp(curr["dt"], tz=timezone.utc),
-                    curr.get("temp"), curr.get("feels_like"), curr.get("pressure"),
-                    curr.get("humidity"), curr.get("dew_point"), curr.get("clouds"),
-                    curr.get("wind_speed"), curr.get("wind_deg"), curr.get("wind_gust"),
-                    curr.get("visibility"), curr.get("uvi"), None, # pop is not in current
-                    (curr.get("rain") or {}).get("1h"), w_info.get("main"), w_info.get("description"),
-                    'current', 'openweather', 'nowcast'
-                ))
+            rec = self._parse_nowcast_record(ward, data)
+            if rec:
+                weather_records.append(rec)
+            else:
+                failed_wards.append(ward)
+
+        # Retry failed wards (up to 2 additional rounds)
+        for retry_round in range(1, 3):
+            if not failed_wards:
+                break
+            logger.warning(f"Nowcast retry round {retry_round}: {len(failed_wards)}/{len(wards)} wards failed, retrying...")
+            await asyncio.sleep(3 * retry_round)  # backoff between retries
+            async with aiohttp.ClientSession() as session:
+                retry_tasks = [self.fetch_json(session, self.onecall_url, nowcast_params(w), "onecall") for w in failed_wards]
+                retry_results = await asyncio.gather(*retry_tasks)
+            still_failed = []
+            for ward, data in zip(failed_wards, retry_results):
+                rec = self._parse_nowcast_record(ward, data)
+                if rec:
+                    weather_records.append(rec)
+                else:
+                    still_failed.append(ward)
+            failed_wards = still_failed
+
+        # Completeness report
+        success_count = len(wards) - len(failed_wards)
+        logger.info(f"Nowcast complete: {success_count}/{len(wards)} wards OK")
+        if failed_wards:
+            names = [w["ward_name_vi"] for w in failed_wards[:10]]
+            logger.error(f"Nowcast INCOMPLETE: {len(failed_wards)} wards still failed after retries: {names}")
 
         self._bulk_upsert_weather_hourly(weather_records, priority='current')
 
@@ -198,58 +238,95 @@ class OpenWeatherAsyncIngestor:
                     execute_values(cur, query, records)
             logger.info(f"Bulk upserted {len(records)} weather hourly records ({priority})")
         finally:
-            conn.close()
+            release_connection(conn)
+
+    def _parse_forecast_records(self, ward: Dict, data: Dict) -> tuple[list, list]:
+        """Parse a single forecast API response into hourly + daily record lists."""
+        hourly_records = []
+        daily_records = []
+        if not data:
+            return hourly_records, daily_records
+
+        if data.get("hourly"):
+            for h in data["hourly"]:
+                w_info = h["weather"][0] if h.get("weather") else {}
+                hourly_records.append((
+                    ward["ward_id"], datetime.fromtimestamp(h["dt"], tz=timezone.utc),
+                    h.get("temp"), h.get("feels_like"), h.get("pressure"),
+                    h.get("humidity"), h.get("dew_point"), h.get("clouds"),
+                    h.get("wind_speed"), h.get("wind_deg"), h.get("wind_gust"),
+                    h.get("visibility"), h.get("uvi"), h.get("pop"),
+                    (h.get("rain") or {}).get("1h"), w_info.get("main"), w_info.get("description"),
+                    'forecast', 'openweather', 'forecast'
+                ))
+
+        if data.get("daily"):
+            for d in data["daily"]:
+                w_info = d["weather"][0] if d.get("weather") else {}
+                feels_like = d.get("feels_like", {})
+                daily_records.append((
+                    ward["ward_id"], datetime.fromtimestamp(d["dt"], tz=ICT).date(),
+                    d["temp"].get("min"), d["temp"].get("max"), d["temp"].get("day"),
+                    d["temp"].get("morn"), d["temp"].get("day"), d["temp"].get("eve"), d["temp"].get("night"),
+                    feels_like.get("morn"), feels_like.get("day"), feels_like.get("eve"), feels_like.get("night"),
+                    d.get("humidity"), d.get("pressure"), d.get("dew_point"),
+                    d.get("wind_speed"), d.get("wind_deg"), d.get("wind_gust"),
+                    d.get("clouds"), d.get("pop"), d.get("rain"), d.get("uvi"),
+                    w_info.get("main"), w_info.get("description"), d.get("summary"),
+                    datetime.fromtimestamp(d["sunrise"], tz=timezone.utc) if d.get("sunrise") else None,
+                    datetime.fromtimestamp(d["sunset"], tz=timezone.utc) if d.get("sunset") else None,
+                    'forecast', 'openweather', 'forecast'
+                ))
+
+        return hourly_records, daily_records
 
     async def run_forecast(self):
         """Job 2: OneCall full forecast (6-hourly)."""
         wards = self._get_ward_list()
         logger.info(f"Starting Forecast job for {len(wards)} wards...")
 
+        forecast_params = lambda w: {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}
+
         async with aiohttp.ClientSession() as session:
-            weather_tasks = [self.fetch_json(session, self.onecall_url, {"lat": w["lat"], "lon": w["lon"], "units": "metric", "exclude": "minutely,alerts"}, "onecall") for w in wards]
+            weather_tasks = [self.fetch_json(session, self.onecall_url, forecast_params(w), "onecall") for w in wards]
             weather_results = await asyncio.gather(*weather_tasks)
 
         weather_hourly_records = []
         weather_daily_records = []
+        failed_wards = []
         for ward, data in zip(wards, weather_results):
-            if not data: continue
+            if data is None:
+                failed_wards.append(ward)
+                continue
+            hourly, daily = self._parse_forecast_records(ward, data)
+            weather_hourly_records.extend(hourly)
+            weather_daily_records.extend(daily)
 
-            if data.get("hourly"):
-                for h in data["hourly"]:
-                    w_info = h["weather"][0] if h.get("weather") else {}
-                    weather_hourly_records.append((
-                        ward["ward_id"], datetime.fromtimestamp(h["dt"], tz=timezone.utc),
-                        h.get("temp"), h.get("feels_like"), h.get("pressure"),
-                        h.get("humidity"), h.get("dew_point"), h.get("clouds"),
-                        h.get("wind_speed"), h.get("wind_deg"), h.get("wind_gust"),
-                        h.get("visibility"), h.get("uvi"), h.get("pop"),
-                        (h.get("rain") or {}).get("1h"), w_info.get("main"), w_info.get("description"),
-                        'forecast', 'openweather', 'forecast'
-                    ))
+        # Retry failed wards (up to 2 additional rounds)
+        for retry_round in range(1, 3):
+            if not failed_wards:
+                break
+            logger.warning(f"Forecast retry round {retry_round}: {len(failed_wards)}/{len(wards)} wards failed, retrying...")
+            await asyncio.sleep(3 * retry_round)
+            async with aiohttp.ClientSession() as session:
+                retry_tasks = [self.fetch_json(session, self.onecall_url, forecast_params(w), "onecall") for w in failed_wards]
+                retry_results = await asyncio.gather(*retry_tasks)
+            still_failed = []
+            for ward, data in zip(failed_wards, retry_results):
+                if data is None:
+                    still_failed.append(ward)
+                    continue
+                hourly, daily = self._parse_forecast_records(ward, data)
+                weather_hourly_records.extend(hourly)
+                weather_daily_records.extend(daily)
+            failed_wards = still_failed
 
-            if data.get("daily"):
-                for d in data["daily"]:
-                    w_info = d["weather"][0] if d.get("weather") else {}
-                    feels_like = d.get("feels_like", {})
-                    weather_daily_records.append((
-                        ward["ward_id"], datetime.fromtimestamp(d["dt"], tz=ICT).date(),
-                        # Temperature
-                        d["temp"].get("min"), d["temp"].get("max"), d["temp"].get("day"),  # temp_min, temp_max, temp_avg (=day)
-                        d["temp"].get("morn"), d["temp"].get("day"), d["temp"].get("eve"), d["temp"].get("night"),  # temp_morn, temp_day, temp_eve, temp_night
-                        # Feels like
-                        feels_like.get("morn"), feels_like.get("day"), feels_like.get("eve"), feels_like.get("night"),
-                        # Other weather
-                        d.get("humidity"), d.get("pressure"), d.get("dew_point"),
-                        d.get("wind_speed"), d.get("wind_deg"), d.get("wind_gust"),
-                        d.get("clouds"), d.get("pop"), d.get("rain"), d.get("uvi"),
-                        # Weather condition
-                        w_info.get("main"), w_info.get("description"), d.get("summary"),
-                        # Sun times
-                        datetime.fromtimestamp(d["sunrise"], tz=timezone.utc) if d.get("sunrise") else None,
-                        datetime.fromtimestamp(d["sunset"], tz=timezone.utc) if d.get("sunset") else None,
-                        # Metadata
-                        'forecast', 'openweather', 'forecast'
-                    ))
+        # Completeness report
+        success_count = len(wards) - len(failed_wards)
+        logger.info(f"Forecast complete: {success_count}/{len(wards)} wards OK")
+        if failed_wards:
+            names = [w["ward_name_vi"] for w in failed_wards[:10]]
+            logger.error(f"Forecast INCOMPLETE: {len(failed_wards)} wards still failed after retries: {names}")
 
         self._bulk_upsert_weather_hourly(weather_hourly_records, priority='forecast')
         self._bulk_upsert_weather_daily(weather_daily_records)
@@ -321,7 +398,7 @@ class OpenWeatherAsyncIngestor:
                     execute_values(cur, query, records)
             logger.info(f"Bulk upserted {len(records)} weather daily records (priority={priority})")
         finally:
-            conn.close()
+            release_connection(conn)
 
     async def run_history_backfill(self, days: int = 14):
         """Job 3: Backfill Weather history (One-time).
@@ -346,77 +423,74 @@ class OpenWeatherAsyncIngestor:
 
         Note: Timemachine returns 1 record per call (for a specific hour).
         For efficiency, we fetch once per day (at noon) as proxy for daily weather.
+        Uses async batched calls (like run_forecast) for performance.
         """
-        import math
-
         logger.info(f"Starting Weather History Backfill for {len(wards)} wards, last {days} days...")
 
         end_dt = datetime.now(timezone.utc)
         start_dt = end_dt - timedelta(days=days)
 
-        weather_records = []
+        # Build all (ward, noon_dt) pairs
+        tasks_meta = []
+        for w in wards:
+            current = start_dt
+            while current < end_dt:
+                noon = current.replace(hour=12, minute=0, second=0, microsecond=0)
+                tasks_meta.append((w, noon))
+                current += timedelta(days=1)
 
+        logger.info(f"History: {len(tasks_meta)} API calls ({len(wards)} wards x {days} days)")
+
+        # Fetch all in parallel (semaphore in fetch_json limits concurrency)
         async with aiohttp.ClientSession() as session:
-            # Fetch at noon each day as proxy for daily weather
-            for w in wards:
-                current = start_dt
-                attempts = 0
-                max_attempts = days
+            api_tasks = [
+                self.fetch_json(
+                    session,
+                    f"{self.onecall_url}/timemachine",
+                    {"lat": w["lat"], "lon": w["lon"], "dt": int(noon.timestamp()), "units": "metric"},
+                    "timemachine"
+                )
+                for w, noon in tasks_meta
+            ]
+            results = await asyncio.gather(*api_tasks)
 
-                while current < end_dt and attempts < max_attempts:
-                    # Use noon of each day as the timestamp (middle of day)
-                    noon = current.replace(hour=12, minute=0, second=0, microsecond=0)
-                    params = {
-                        "lat": w["lat"],
-                        "lon": w["lon"],
-                        "dt": int(noon.timestamp()),
-                        "units": "metric"
-                    }
+        weather_records = []
+        failed_count = 0
+        for (ward, noon), data in zip(tasks_meta, results):
+            if not data or not data.get("data"):
+                failed_count += 1
+                continue
+            item = data["data"][0]
+            w_info = item.get("weather", [{}])[0] if item.get("weather") else {}
+            weather_records.append((
+                ward["ward_id"],
+                datetime.fromtimestamp(item["dt"], tz=timezone.utc),
+                item.get("temp"),
+                item.get("feels_like"),
+                item.get("pressure"),
+                item.get("humidity"),
+                item.get("dew_point"),
+                item.get("clouds"),
+                item.get("wind_speed"),
+                item.get("wind_deg"),
+                item.get("wind_gust"),
+                item.get("visibility"),
+                item.get("uvi"),
+                item.get("pop"),
+                (item.get("rain") or {}).get("1h"),
+                w_info.get("main"),
+                w_info.get("description"),
+                'history',
+                'openweather',
+                'weather_history_backfill'
+            ))
 
-                    try:
-                        data = await self.fetch_json(
-                            session,
-                            f"{self.onecall_url}/timemachine",
-                            params,
-                            "timemachine"
-                        )
-
-                        if data and data.get("data"):
-                            item = data["data"][0]
-                            w_info = item.get("weather", [{}])[0] if item.get("weather") else {}
-
-                            weather_records.append((
-                                w["ward_id"],
-                                datetime.fromtimestamp(item["dt"], tz=timezone.utc),
-                                item.get("temp"),
-                                item.get("feels_like"),
-                                item.get("pressure"),
-                                item.get("humidity"),
-                                item.get("dew_point"),
-                                item.get("clouds"),
-                                item.get("wind_speed"),
-                                item.get("wind_deg"),
-                                item.get("wind_gust"),
-                                item.get("visibility"),
-                                item.get("uvi"),
-                                item.get("pop"),
-                                item.get("rain", {}).get("1h") if item.get("rain") else None,
-                                w_info.get("main"),
-                                w_info.get("description"),
-                                'history',  # data_kind = history
-                                'openweather',
-                                'weather_history_backfill'
-                            ))
-                    except Exception as e:
-                        logger.warning(f"Error fetching weather history for {w['ward_id']} at {noon}: {e}")
-
-                    current += timedelta(days=1)
-                    attempts += 1
-
-        logger.info(f"Weather History Backfill: collected {len(weather_records)} records")
+        success_count = len(tasks_meta) - failed_count
+        logger.info(f"Weather History Backfill: {success_count}/{len(tasks_meta)} calls OK, {len(weather_records)} records collected")
+        if failed_count:
+            logger.warning(f"History: {failed_count} API calls failed (some wards/days may be incomplete)")
 
         if weather_records:
-            # Use bulk upsert with history priority
             self._bulk_upsert_weather_hourly(weather_records, priority='history')
         else:
             logger.warning("No weather history records to insert")
@@ -562,34 +636,41 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="OpenWeather Weather Ingestion Script")
-    parser.add_argument("--days", type=int, default=14, help="Number of days for history backfill (default: 14)")
+    parser.add_argument("--days", type=int, default=0, help="Number of days for history backfill (default: 0 = skip history)")
     parser.add_argument("--history-only", action="store_true", help="Only ingest history data")
     parser.add_argument("--current-only", action="store_true", help="Only ingest current data")
     parser.add_argument("--forecast-only", action="store_true", help="Only ingest forecast data")
 
     args = parser.parse_args()
 
+    do_history  = args.days > 0 and not (args.current_only or args.forecast_only)
+    do_current  = not (args.history_only or args.forecast_only)
+    do_forecast = not (args.history_only or args.current_only)
+
+    # If --history-only is set but --days is 0, default to 14 days
+    if args.history_only and args.days == 0:
+        args.days = 14
+        do_history = True
+
     print(f"Mode: Weather Ingestion")
-    print(f"History days: {args.days}")
-    print(f"History: {not (args.current_only or args.forecast_only)}")
-    print(f"Current: {not (args.history_only or args.forecast_only)}")
-    print(f"Forecast: {not (args.history_only or args.current_only)}")
+    print(f"History: {do_history} (days={args.days})")
+    print(f"Current: {do_current}")
+    print(f"Forecast: {do_forecast}")
     print()
 
-    ingestor = OpenWeatherAsyncIngestor()
+    async def main():
+        ingestor = OpenWeatherAsyncIngestor()
 
-    # Run in order: history -> current -> forecast
-    if not args.current_only and not args.forecast_only:
-        # History
-        print("=== STEP 1: HISTORY BACKFILL ===")
-        asyncio.run(ingestor.run_history_backfill(days=args.days))
+        if do_history:
+            print("=== STEP 1: HISTORY BACKFILL ===")
+            await ingestor.run_history_backfill(days=args.days)
 
-    if not args.history_only and not args.forecast_only:
-        # Current
-        print("\n=== STEP 2: CURRENT DATA ===")
-        asyncio.run(ingestor.run_nowcast())
+        if do_current:
+            print("\n=== STEP 2: CURRENT DATA ===")
+            await ingestor.run_nowcast()
 
-    if not args.history_only and not args.current_only:
-        # Forecast
-        print("\n=== STEP 3: FORECAST DATA ===")
-        asyncio.run(ingestor.run_forecast())
+        if do_forecast:
+            print("\n=== STEP 3: FORECAST DATA ===")
+            await ingestor.run_forecast()
+
+    asyncio.run(main())

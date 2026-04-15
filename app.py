@@ -1,319 +1,161 @@
 """
-HanoiAir Weather Chatbot - Streamlit UI
+HanoiAir Weather Chatbot — Streamlit UI
 
-A clean, ChatGPT-like interface for the weather chatbot.
+Entry point for the chatbot interface. Delegates to app.ui for rendering.
+Run with: streamlit run app.py
 """
-import streamlit as st
+
+import operator
 import time
-import uuid
 from datetime import datetime
 
-# Setup logging
-from app.core.logging_config import setup_logging
-setup_logging()
+import streamlit as st
 
-# Page config
-st.set_page_config(
-    page_title="Chatbot Thời Tiết Hà Nội",
-    page_icon="cloud",
-    layout="wide",
-    initial_sidebar_state="expanded"
+# ── Patch: langchain-core _dict_int_op doesn't handle None usage values ──
+# Some OpenAI-compatible providers return None for usage_metadata fields
+# (e.g. prompt_tokens: None), which crashes _dict_int_op during streaming.
+# This patch treats None as 0.
+import langchain_core.utils.usage as _usage_mod
+
+_original_dict_int_op = _usage_mod._dict_int_op
+
+
+def _patched_dict_int_op(left, right, op, *, default=0, depth=0, max_depth=100):
+    cleaned_left = {k: (0 if v is None else v) for k, v in left.items()}
+    cleaned_right = {k: (0 if v is None else v) for k, v in right.items()}
+    return _original_dict_int_op(
+        cleaned_left, cleaned_right, op,
+        default=default, depth=depth, max_depth=max_depth,
+    )
+
+
+_usage_mod._dict_int_op = _patched_dict_int_op
+# ── End patch ──────────────────────────────────────────────────────────
+
+from app.core.logging_config import setup_logging
+from app.ui.styles import CUSTOM_CSS
+from app.ui.components import (
+    init_session_state,
+    get_active_conversation,
+    render_sidebar,
+    render_info_panel,
+    render_welcome_message,
 )
 
-# Initialize session state
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+setup_logging()
 
-if "thread_id" not in st.session_state:
-    st.session_state.thread_id = str(uuid.uuid4())
+# ── Page config ────────────────────────────────────────────────────────
 
-if "location" not in st.session_state:
-    st.session_state.location = None
+st.set_page_config(
+    page_title="Chatbot Thời Tiết Hà Nội",
+    page_icon="☁️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
+# ── Inject custom CSS ──────────────────────────────────────────────────
 
-def get_weather_emoji(weather_main: str) -> str:
-    """Get weather emoji based on weather condition."""
-    emoji_map = {
-        "Clear": "☀️",
-        "Clouds": "☁️",
-        "Few clouds": "⛅",
-        "Scattered clouds": "⛅",
-        "Broken clouds": "☁️",
-        "Overcast clouds": "☁️",
-        "Rain": "🌧️",
-        "Light rain": "🌦️",
-        "Moderate rain": "🌧️",
-        "Heavy rain": "⛈️",
-        "Drizzle": "🌦️",
-        "Thunderstorm": "⛈️",
-        "Snow": "❄️",
-        "Mist": "🌫️",
-        "Fog": "🌫️",
-        "Haze": "🌫️",
-        "Smoke": "🌫️",
-        "Dust": "💨",
-        "Sand": "💨",
-        "Ash": "🌋",
-        "Squall": "🌬️",
-        "Tornado": "🌪️",
-    }
-    return emoji_map.get(weather_main, "🌤️")
+st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
+# ── Initialize session state ───────────────────────────────────────────
 
-def get_wind_direction(deg: int) -> str:
-    """Convert wind degree to direction.
-    
-    Uses floor division with offset for correct boundary handling.
-    Standard wind sectors: N(0-22.5), NE(22.5-67.5), E(67.5-112.5), 
-    SE(112.5-157.5), S(157.5-202.5), SW(202.5-247.5), W(247.5-292.5), NW(292.5-337.5)
-    """
-    if deg is None:
-        return ""
-    directions = ["Bắc", "Đông Bắc", "Đông", "Đông Nam", "Nam", "Tây Nam", "Tây", "Tây Bắc"]
-    # Add 22.5 to shift boundaries, then floor divide by 45
-    idx = int((deg + 22.5) / 45) % 8
-    return directions[idx]
+init_session_state()
 
+# ── Left sidebar (conversations + data refresh) ───────────────────────
 
-def get_weather_description_vi(weather_main: str) -> str:
-    """Translate weather condition to Vietnamese."""
-    desc_map = {
-        "Clear": "Trời quang",
-        "Clouds": "Có mây",
-        "Few clouds": "Mây ít",
-        "Scattered clouds": "Mây rải rác",
-        "Broken clouds": "Mây cụm",
-        "Overcast clouds": "Mây đen",
-        "Rain": "Mưa",
-        "Light rain": "Mưa nhẹ",
-        "Moderate rain": "Mưa vừa",
-        "Heavy rain": "Mưa to",
-        "Drizzle": "Mưa phùn",
-        "Thunderstorm": "Giông",
-        "Snow": "Tuyết",
-        "Mist": "Sương mù",
-        "Fog": "Sương mù",
-        "Haze": "Mù",
-        "Smoke": "Khói",
-        "Dust": "Bụi",
-        "Sand": "Cát",
-        "Ash": "Tro",
-        "Squall": "Gió giật",
-        "Tornado": "Lốc xoáy",
-    }
-    return desc_map.get(weather_main, weather_main or "---")
+render_sidebar()
 
+# ── Main area with optional right panel ────────────────────────────────
 
-@st.cache_data(ttl=3600)
-def get_districts() -> list:
-    """Get all districts from database (cached for 1 hour)."""
-    from app.db.dal import query
-    try:
-        districts = query("""
-            SELECT DISTINCT district_name_vi 
-            FROM dim_ward 
-            ORDER BY district_name_vi
-        """)
-        return [d["district_name_vi"] for d in districts if d.get("district_name_vi")]
-    except Exception:
-        return []
+conv = get_active_conversation()
 
+if st.session_state.show_info_panel:
+    chat_col, info_col = st.columns([3, 1.2])
+else:
+    chat_col = st.container()
+    info_col = None
 
-@st.cache_data(ttl=3600)
-def get_wards_by_district(district: str) -> dict:
-    """Get wards for a specific district (cached for 1 hour)."""
-    from app.db.dal import query
-    try:
-        wards = query("""
-            SELECT ward_id, ward_name_vi 
-            FROM dim_ward 
-            WHERE district_name_vi = %s
-            ORDER BY ward_name_vi
-        """, (district,))
-        return {w["ward_name_vi"]: w["ward_id"] for w in wards}
-    except Exception:
-        return {}
+# ── Chat column ────────────────────────────────────────────────────────
 
+with chat_col:
+    # Toggle button row
+    _, toggle_col = st.columns([10, 1])
+    with toggle_col:
+        icon = "◀" if st.session_state.show_info_panel else "▶"
+        tooltip = "Ẩn thông tin thời tiết" if st.session_state.show_info_panel else "Hiện thông tin thời tiết"
+        if st.button(icon, help=tooltip, key="toggle_panel"):
+            st.session_state.show_info_panel = not st.session_state.show_info_panel
+            st.rerun()
 
-def call_agent(prompt: str, thread_id: str):
-    """Call the agent and yield response chunks.
+    # Welcome screen when conversation is empty
+    if not conv["messages"]:
+        render_welcome_message()
 
-    Uses SLM routing when USE_SLM_ROUTER=true, otherwise standard 25-tool agent.
-    """
-    from app.agent.agent import stream_agent_routed
+    # Display chat history
+    for msg in conv["messages"]:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
 
-    try:
-        for chunk in stream_agent_routed(prompt, thread_id=thread_id):
-            yield chunk
-    except Exception as e:
-        yield f"Lỗi: {str(e)}"
+# ── Right info panel ──────────────────────────────────────────────────
 
+if info_col:
+    with info_col:
+        render_info_panel()
 
-def get_current_weather_summary(ward_id: str = None):
-    """Get quick weather summary for sidebar."""
-    from app.db.dal import query
-    
-    # Use session state location if not provided
-    if ward_id is None:
-        ward_id = st.session_state.get("location", "ID_00364")
-    
-    try:
-        result = query("""
-            SELECT temp, humidity, weather_main, wind_speed, wind_deg
-            FROM fact_weather_hourly
-            WHERE ward_id = %s
-            ORDER BY ts_utc DESC
-            LIMIT 1
-        """, (ward_id,))
-        
-        if result:
-            return result[0]
-    except Exception:
-        pass
-    return None
+# ── Chat input (page level — spans full width) ────────────────────────
 
+user_input = st.chat_input("Hỏi về thời tiết Hà Nội...")
 
-# Sidebar
-with st.sidebar:
-    st.title("🌤️ Thời Tiết Hà Nội")
-    
-    weather = get_current_weather_summary()
-    if weather:
-        # Weather condition card
-        weather_emoji = get_weather_emoji(weather.get('weather_main'))
-        weather_desc = get_weather_description_vi(weather.get('weather_main'))
-        
-        st.markdown(f"""
-        <div style="
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            color: white;
-            margin-bottom: 16px;
-        ">
-            <div style="font-size: 48px; margin-bottom: 8px;">{weather_emoji}</div>
-            <div style="font-size: 18px; font-weight: 600;">{weather_desc}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Metrics in 2x2 grid
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric(
-                "🌡️ Nhiệt độ", 
-                f"{weather.get('temp', '--')}°C",
-                delta_color="off"
-            )
-        with col2:
-            st.metric(
-                "💧 Độ ẩm", 
-                f"{weather.get('humidity', '--')}%",
-                delta_color="off"
-            )
-        
-        col3, col4 = st.columns(2)
-        with col3:
-            wind_speed = weather.get('wind_speed')
-            st.metric(
-                "💨 Gió", 
-                f"{wind_speed:.1f} m/s" if wind_speed else "--",
-                delta_color="off"
-            )
-        with col4:
-            wind_deg = weather.get('wind_deg')
-            wind_dir = get_wind_direction(wind_deg) if wind_deg else "--"
-            st.metric(
-                "🧭 Hướng gió", 
-                wind_dir,
-                delta_color="off"
-            )
-    
-    st.divider()
-    
-    st.subheader("Chọn địa điểm")
-    
-    # Get districts first (outside try to avoid st.stop being caught)
-    district_names = get_districts()
-    if not district_names:
-        st.warning("Chưa có dữ liệu quận/huyện")
-        st.stop()
-    
-    try:
-        selected_district = st.selectbox("Quận/Huyện", district_names, index=0)
-        
-        ward_names = get_wards_by_district(selected_district)
-        selected_ward = st.selectbox("Phường/Xã", list(ward_names.keys()))
-        
-        if selected_ward:
-            st.session_state.location = ward_names[selected_ward]
-    except Exception as e:
-        st.warning(f"Không thể tải danh sách: {e}")
-    
-    st.divider()
-    
-    if st.button("Xóa hội thoại", use_container_width=True):
-        st.session_state.messages = []
-        st.session_state.thread_id = str(uuid.uuid4())
-        st.rerun()
+# Merge: either user typed or clicked a suggestion chip
+prompt = st.session_state.pending_suggestion or user_input
+if st.session_state.pending_suggestion:
+    st.session_state.pending_suggestion = None
 
+if prompt:
+    # Add user message
+    conv["messages"].append({"role": "user", "content": prompt})
 
-# Main chat area
-st.title("Chatbot Thời Tiết Hà Nội")
+    # Auto-title from first user message
+    if sum(1 for m in conv["messages"] if m["role"] == "user") == 1:
+        conv["title"] = prompt[:30] + ("..." if len(prompt) > 30 else "")
 
-# Display chat history
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
-# Chat input
-if prompt := st.chat_input("Hỏi về thời tiết Hà Nội..."):
-    
-    # Thêm vào session state
-    st.session_state.messages.append({
-        "role": "user", 
-        "content": prompt
-    })
-    
-    # Hiển thị lên giao diện
+    # Display user message
     with st.chat_message("user"):
         st.markdown(prompt)
-    
-    # Xử lý phản hồi từ Agent (Streaming)
+
+    # Stream agent response
     with st.chat_message("assistant"):
-        message_placeholder = st.empty()
+        placeholder = st.empty()
         full_response = ""
         start_time = time.time()
-        
-        # Stream response (outside status to avoid UI flickering)
-        for chunk in call_agent(prompt, st.session_state.thread_id):
-            full_response += chunk
-            message_placeholder.markdown(full_response + "▌")
-        
-        # Final response and timing
-        message_placeholder.markdown(full_response)
+
+        try:
+            from app.agent.agent import stream_agent_routed
+            for chunk in stream_agent_routed(prompt, thread_id=conv["thread_id"]):
+                full_response += chunk
+                placeholder.markdown(full_response + "▌")
+        except Exception as e:
+            full_response = f"Xin lỗi, đã có lỗi xảy ra: {e}"
+
+        # Final render (remove streaming cursor)
+        placeholder.markdown(full_response)
         elapsed = time.time() - start_time
         st.caption(f"⏱ {elapsed:.1f}s")
-        
-        # Log conversation for evaluation
-        try:
-            from app.agent.telemetry import get_evaluation_logger
-            logger = get_evaluation_logger()
-            logger.log_conversation(
-                session_id=st.session_state.thread_id,
-                turn_number=len(st.session_state.messages) // 2,
-                user_query=prompt,
-                llm_response=full_response,
-                response_time_ms=elapsed * 1000
-            )
-        except Exception as e:
-            st.caption(f"Log error: {e}")
-        
-        st.session_state.messages.append({
-            "role": "assistant", 
-            "content": full_response
-        })
 
+    # Save assistant response
+    conv["messages"].append({"role": "assistant", "content": full_response})
+    conv["updated_at"] = datetime.now()
 
-st.markdown("---")
-st.caption("Gợi ý: 'Thời tiết hôm nay thế nào?', 'Ngày mai có mưa không?', 'So sánh Cầu Giấy và Hoàn Kiếm'")
+    # Telemetry logging
+    try:
+        from app.agent.telemetry import get_evaluation_logger
+        logger = get_evaluation_logger()
+        logger.log_conversation(
+            session_id=conv["thread_id"],
+            turn_number=sum(1 for m in conv["messages"] if m["role"] == "user"),
+            user_query=prompt,
+            llm_response=full_response,
+            response_time_ms=elapsed * 1000,
+        )
+    except Exception:
+        pass

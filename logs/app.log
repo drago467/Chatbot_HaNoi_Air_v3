@@ -464,3 +464,254 @@
 2026-04-08 09:47:08 | INFO | __main__ | Aggregated hourly: forecast - district: 19592, city: 685
 2026-04-08 09:47:08 | INFO | __main__ | Aggregated daily: forecast - district: 1402, city: 47
 2026-04-08 09:47:08 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-12 10:51:35 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-12 10:51:35 | INFO | __main__ | Starting History Backfill for 126 wards, last 7 days...
+2026-04-12 10:51:35 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 7 days...
+2026-04-12 10:56:36 | INFO | __main__ | Weather History Backfill: collected 882 records
+2026-04-12 10:56:36 | INFO | __main__ | Bulk upserted 882 weather hourly records (history)
+2026-04-12 10:56:36 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-12 10:56:37 | INFO | __main__ | Aggregated 3402 daily history records
+2026-04-12 10:56:37 | INFO | __main__ | Starting aggregation for history data...
+2026-04-12 10:56:37 | INFO | __main__ | Aggregated hourly: history - district: 19654, city: 687
+2026-04-12 10:56:37 | INFO | __main__ | Aggregated daily: history - district: 1406, city: 47
+2026-04-12 10:56:37 | INFO | __main__ | Aggregation completed for history data
+2026-04-12 10:56:37 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-12 10:56:38 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-12 10:56:38 | INFO | __main__ | Starting aggregation for current data...
+2026-04-12 10:56:40 | INFO | __main__ | Aggregated hourly: current - district: 19695, city: 689
+2026-04-12 10:56:40 | INFO | __main__ | Aggregation completed for current data
+2026-04-12 10:56:40 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-12 10:56:40 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 10:56:45 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 10:56:50 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 10:56:55 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 10:57:00 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 10:57:05 | INFO | __main__ | Bulk upserted 3600 weather hourly records (forecast)
+2026-04-12 10:57:05 | INFO | __main__ | Bulk upserted 600 weather daily records (priority=forecast)
+2026-04-12 10:57:05 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-12 10:57:09 | INFO | __main__ | Aggregated hourly: forecast - district: 21087, city: 737
+2026-04-12 10:57:09 | INFO | __main__ | Aggregated daily: forecast - district: 1522, city: 51
+2026-04-12 10:57:09 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-12 10:58:40 | WARNING | app.agent.router.slm_router | SLM Router error: timed out
+2026-04-12 10:58:40 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: timed out, 32071ms)
+2026-04-12 10:58:40 | INFO | app.agent.agent | SLM Router → fallback (model_error: timed out)
+2026-04-12 10:58:48 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 10:58:51 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 10:59:29 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-12 10:59:29 | INFO | app.agent.agent | SLM Router: RouterResult(rain_query/city, conf=0.92, 5004ms)
+2026-04-12 10:59:29 | INFO | app.agent.agent | SLM Router → fast path: rain_query/city (conf=0.92), 1 tools: ['get_rain_timeline']
+2026-04-12 10:59:32 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 10:59:34 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:02:40 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-12 11:02:40 | INFO | app.agent.agent | SLM Router: RouterResult(current_weather/district, conf=0.90, 4788ms)
+2026-04-12 11:02:40 | INFO | app.agent.agent | SLM Router → fast path: current_weather/district (conf=0.90), 2 tools: ['get_current_weather', 'detect_phenomena']
+2026-04-12 11:02:43 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:02:46 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:03:34 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-12 11:03:34 | INFO | app.agent.agent | SLM Router: RouterResult(seasonal_context/city, conf=0.87, 9046ms, rewrite='Hôm nay là ngày 12/4 mà hôm qua Hà Nội n...')
+2026-04-12 11:03:34 | INFO | app.agent.agent | SLM Router rewrote query: 'hôm nay là ngày 12/4 mà' → 'Hôm nay là ngày 12/4 mà hôm qua Hà Nội nhiệt độ thấp hơn bìn'
+2026-04-12 11:03:34 | INFO | app.agent.agent | SLM Router → fast path: seasonal_context/city (conf=0.87), 2 tools: ['get_seasonal_comparison', 'compare_with_yesterday']
+2026-04-12 11:03:38 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:03:41 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:13:08 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:13:11 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:13:48 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:13:50 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:14:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:14:44 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:15:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:15:52 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:15:59 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:16:02 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:16:37 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:16:42 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:17:30 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:17:34 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:18:10 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:18:16 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:18:40 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:18:44 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:19:00 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:19:40 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:19:48 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:21:03 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-12 11:21:03 | INFO | app.scripts.ingest_openweather_async | Starting Nowcast job for 126 wards...
+2026-04-12 11:21:04 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 126 weather hourly records (current)
+2026-04-12 11:21:04 | INFO | app.scripts.ingest_openweather_async | Starting aggregation for current data...
+2026-04-12 11:21:04 | INFO | app.scripts.ingest_openweather_async | Aggregated hourly: current - district: 21117, city: 738
+2026-04-12 11:21:04 | INFO | app.scripts.ingest_openweather_async | Aggregation completed for current data
+2026-04-12 11:21:04 | INFO | app.scripts.ingest_openweather_async | Starting Forecast job for 126 wards...
+2026-04-12 11:21:04 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 11:21:09 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 11:21:14 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 11:21:19 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 11:21:24 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-12 11:21:29 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 3600 weather hourly records (forecast)
+2026-04-12 11:21:29 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 600 weather daily records (priority=forecast)
+2026-04-12 11:21:29 | INFO | app.scripts.ingest_openweather_async | Starting aggregation for forecast data...
+2026-04-12 11:21:33 | INFO | app.scripts.ingest_openweather_async | Aggregated hourly: forecast - district: 21146, city: 739
+2026-04-12 11:21:33 | INFO | app.scripts.ingest_openweather_async | Aggregated daily: forecast - district: 1522, city: 51
+2026-04-12 11:21:33 | INFO | app.scripts.ingest_openweather_async | Aggregation completed for forecast data
+2026-04-12 11:23:28 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:23:32 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:28:16 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:28:18 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:28:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:28:48 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:29:21 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:29:25 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:29:47 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:29:52 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:30:12 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:30:17 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:31:07 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:31:12 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:32:01 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:32:09 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:34:09 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:34:14 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:34:53 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:34:57 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:35:38 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:35:43 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:36:26 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:36:36 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-12 11:36:59 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-12 11:36:59 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-12 11:37:00 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-12 11:37:00 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-12 11:37:00 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-12 11:37:11 | INFO | __main__ | Aggregated hourly: forecast - district: 21194, city: 739
+2026-04-12 11:37:11 | INFO | __main__ | Aggregated daily: forecast - district: 1530, city: 51
+2026-04-12 11:37:11 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-12 11:52:41 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-12 11:52:42 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-12 11:52:43 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-12 11:52:44 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-12 11:52:45 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-12 11:52:45 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-12 11:53:04 | INFO | __main__ | Aggregated hourly: forecast - district: 21194, city: 739
+2026-04-12 11:53:04 | INFO | __main__ | Aggregated daily: forecast - district: 1530, city: 51
+2026-04-12 11:53:04 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-13 07:55:49 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-13 07:55:49 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-13 07:55:51 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-13 07:55:51 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-13 07:55:51 | INFO | __main__ | Starting aggregation for current data...
+2026-04-13 07:55:52 | INFO | __main__ | Aggregated hourly: current - district: 21251, city: 741
+2026-04-13 07:55:52 | INFO | __main__ | Aggregation completed for current data
+2026-04-13 07:56:03 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-13 07:56:03 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-13 07:56:06 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-13 07:56:06 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-13 07:56:06 | INFO | __main__ | Starting aggregation for current data...
+2026-04-13 07:56:07 | INFO | __main__ | Aggregated hourly: current - district: 21251, city: 741
+2026-04-13 07:56:07 | INFO | __main__ | Aggregation completed for current data
+2026-04-13 07:56:07 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-13 07:56:10 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-13 07:56:10 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-13 07:56:10 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-13 07:56:10 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-13 07:56:14 | INFO | __main__ | Aggregated hourly: forecast - district: 21851, city: 761
+2026-04-13 07:56:14 | INFO | __main__ | Aggregated daily: forecast - district: 1560, city: 52
+2026-04-13 07:56:14 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-13 07:56:26 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-13 07:56:26 | INFO | __main__ | Starting History Backfill for 126 wards, last 14 days...
+2026-04-13 07:56:26 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 14 days...
+2026-04-13 07:56:26 | INFO | __main__ | History: 1764 API calls (126 wards x 14 days)
+2026-04-13 07:56:35 | WARNING | __main__ | All keys exhausted for 'timemachine'. Waiting 51s for rate limit window to reset...
+2026-04-13 07:57:33 | WARNING | __main__ | All keys exhausted for 'timemachine'. Waiting 53s for rate limit window to reset...
+2026-04-13 07:58:49 | WARNING | __main__ | All keys exhausted for 'timemachine'. Waiting 37s for rate limit window to reset...
+2026-04-13 07:59:32 | WARNING | __main__ | All keys exhausted for 'timemachine'. Waiting 54s for rate limit window to reset...
+2026-04-13 08:00:33 | WARNING | __main__ | All keys exhausted for 'timemachine'. Waiting 54s for rate limit window to reset...
+2026-04-13 08:01:26 | INFO | __main__ | Weather History Backfill: 1500/1764 calls OK, 1500 records collected
+2026-04-13 08:01:26 | WARNING | __main__ | History: 264 API calls failed (some wards/days may be incomplete)
+2026-04-13 08:01:27 | INFO | __main__ | Bulk upserted 1500 weather hourly records (history)
+2026-04-13 08:01:27 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-13 08:01:27 | INFO | __main__ | Aggregated 3491 daily history records
+2026-04-13 08:01:27 | INFO | __main__ | Starting aggregation for history data...
+2026-04-13 08:01:27 | INFO | __main__ | Aggregated hourly: history - district: 21852, city: 761
+2026-04-13 08:01:27 | INFO | __main__ | Aggregated daily: history - district: 1560, city: 52
+2026-04-13 08:01:27 | INFO | __main__ | Aggregation completed for history data
+2026-04-13 08:07:58 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-13 08:07:58 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-13 08:07:58 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-13 08:07:58 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-13 08:08:00 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-13 08:08:00 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-13 08:08:00 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-13 08:08:00 | INFO | __main__ | Aggregated 3510 daily history records
+2026-04-13 08:08:00 | INFO | __main__ | Starting aggregation for history data...
+2026-04-13 08:08:00 | INFO | __main__ | Aggregated hourly: history - district: 21852, city: 761
+2026-04-13 08:08:00 | INFO | __main__ | Aggregated daily: history - district: 1560, city: 52
+2026-04-13 08:08:00 | INFO | __main__ | Aggregation completed for history data
+2026-04-13 08:08:00 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-13 08:08:01 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-13 08:08:01 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-13 08:08:01 | INFO | __main__ | Starting aggregation for current data...
+2026-04-13 08:08:02 | INFO | __main__ | Aggregated hourly: current - district: 21882, city: 762
+2026-04-13 08:08:02 | INFO | __main__ | Aggregation completed for current data
+2026-04-13 08:08:02 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-13 08:08:02 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 56s for rate limit window to reset...
+2026-04-13 08:08:59 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-13 08:08:59 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-13 08:08:59 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-13 08:08:59 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-13 08:09:03 | INFO | __main__ | Aggregated hourly: forecast - district: 21912, city: 763
+2026-04-13 08:09:03 | INFO | __main__ | Aggregated daily: forecast - district: 1560, city: 52
+2026-04-13 08:09:03 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-13 08:12:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:12:48 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:13:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:13:37 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:14:29 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:14:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:14:37 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:16:09 | INFO | git.cmd | Ignored error after process had died: OSError(9, 'The handle is invalid', None, 6, None)
+2026-04-13 08:16:09 | INFO | git.cmd | Ignored error after process had died: OSError(9, 'The handle is invalid', None, 6, None)
+2026-04-13 08:16:28 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:16:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:16:37 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 08:17:24 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 09:07:46 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 09:07:50 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 09:08:41 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 09:08:47 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 09:28:36 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 09:28:42 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:10:54 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-13 21:10:54 | INFO | app.scripts.ingest_openweather_async | Starting Nowcast job for 126 wards...
+2026-04-13 21:10:57 | INFO | app.scripts.ingest_openweather_async | Nowcast complete: 126/126 wards OK
+2026-04-13 21:10:57 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 126 weather hourly records (current)
+2026-04-13 21:10:57 | INFO | app.scripts.ingest_openweather_async | Starting aggregation for current data...
+2026-04-13 21:10:57 | INFO | app.scripts.ingest_openweather_async | Aggregated hourly: current - district: 21968, city: 765
+2026-04-13 21:10:57 | INFO | app.scripts.ingest_openweather_async | Aggregation completed for current data
+2026-04-13 21:10:57 | INFO | app.scripts.ingest_openweather_async | Starting Forecast job for 126 wards...
+2026-04-13 21:10:57 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:02 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:07 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:12 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:17 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:22 | WARNING | app.scripts.ingest_openweather_async | Forecast retry round 1: 51/126 wards failed, retrying...
+2026-04-13 21:11:25 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:30 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:35 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-13 21:11:41 | INFO | app.scripts.ingest_openweather_async | Forecast complete: 126/126 wards OK
+2026-04-13 21:11:41 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-13 21:11:41 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-13 21:11:41 | INFO | app.scripts.ingest_openweather_async | Starting aggregation for forecast data...
+2026-04-13 21:11:45 | INFO | app.scripts.ingest_openweather_async | Aggregated hourly: forecast - district: 22358, city: 778
+2026-04-13 21:11:45 | INFO | app.scripts.ingest_openweather_async | Aggregated daily: forecast - district: 1560, city: 52
+2026-04-13 21:11:45 | INFO | app.scripts.ingest_openweather_async | Aggregation completed for forecast data
+2026-04-13 21:12:09 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:12:16 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:12:42 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:12:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:13:13 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:13:18 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:13:51 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:13:57 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:14:48 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:14:51 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:52:36 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-13 21:52:41 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"

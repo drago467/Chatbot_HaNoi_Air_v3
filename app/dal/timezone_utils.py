@@ -58,7 +58,7 @@ def now_utc() -> datetime:
     return datetime.now(UTC)
 
 
-def format_ict(utc_dt: datetime, fmt: str = "%H:%M ICT ngay %d/%m/%Y") -> str:
+def format_ict(utc_dt: datetime, fmt: str = "%H:%M ngày %d/%m/%Y") -> str:
     """Format UTC datetime as ICT string.
     
     Args:

@@ -1,0 +1,241 @@
+timestamp,session_id,turn_number,user_query,resolved_location,llm_response,response_time_ms,tool_calls,error_type,user_rating
+2026-04-12T10:59:35.004481+07:00,265687bc-df7e-4811-9136-5ec67fd104ff,1,Ngày mai có mưa không?,,Hiệnkhôngcódữ liệu dự báo mưa cho Hà Nội. Bạn có thể hỏi về thời tiếthiện tại hoặc dự báo ngắn hạn để được thông tin chính xác hơn nhé!,10331.8,,,
+2026-04-12T11:02:49.840568+07:00,71e38850-fa86-4f76-acec-b92a4c4f49f5,1,thời tiết quận cầu giấy hiện tại,,"Thờitiếthiệntại tại **quận Cầu Giấy** vào lúc 09:00 ICT ngày 14/04/2026 như sau:
+
+- **Nhiệt độ**: 26.9°C (thấp nhẹ)
+- **Độ ẩm**: 80% (nồm ẩm)
+- **Gió**: Tốc độ 2.2 m/s, hướng Đông Nam, gió giật lên đến 3.5 m/s
+- **Mây**: Nhiều mây (100%)
+- **Áp suất**: 1009 hPa (bình thường)
+- **UV**: 1.1 (thấp)- **Điểm sương**: 23.1°C (oibức)
+
+Khí hậu ổn định, không mưa. Bạn có thể ra ngoàithoải mái, nhưng nên mang theo áo chống nắng vì UV ở mức thấp.",14286.5,,,
+2026-04-12T11:03:44.707800+07:00,71e38850-fa86-4f76-acec-b92a4c4f49f5,2,hôm nay là ngày 12/4 mà,,"Hômnaylà ngày 12/04/2026, nhưng dữliệu so sánh cho thấy **hôm qua (ngày 11/04/2026)** tại **quận Hoàn Kiếm** có nhiệt độ **thấp hơn bình thường** so với trungbình mùa. Cụ thể:
+
+- **Hôm qua (11/04)**: Nhiệt độ trung bình là **28.0°C**
+- **Hôm nay (12/04)**:Nhiệt độ trung bình là **30.3°C**
+
+→ **Nhiệt độ tăng 2.3°C** so với hôm qua,tức là **hôm qua thấp hơn bình thường**. Thời tiết hôm quamát mẻ hơn so với mức trung bình của tháng 4.",19197.29,,,
+2026-04-12T11:13:16.311387+07:00,a649c3f5-d381-42e5-b0ba-9ab52e6795ee,1,thời tiết của quận Cầu Giấy,,"Quận Cầu Giấy hiện tại có thời tiết như sau:
+
+- **Nhiệt độ**: 26.9°C (cảm giác 27.0°C)
+- **Độ ẩm**: 80%
+- **Gió**: Đông Nam, tốc độ trung bình 2.2 m/s, gió giật lên đến 3.5 m/s
+- **UV**: 1.1 (thấp)
+- **Điểm sương**: 23.1°C (oi bức)
+- **Mây**: 100% (trời nhiều mây)
+- **Áp suất**: 1009 hPa (bình thường)
+- **Khí tượng chính**: Nhiều mây
+
+💡 **Lưu ý**: Thời tiết ổn định, không mưa. Bạn có thể ra ngoài thoải mái, nhưng nên mang theo áo chống nắng nếu đi ngoài đường vào buổi trưa.",15987.52,,,
+2026-04-12T11:13:52.209535+07:00,a649c3f5-d381-42e5-b0ba-9ab52e6795ee,2,thời tiết chi tiết của các phường thì sao,,"Xin lỗi, hiện tại không thể tìm thấy thông tin về quận Cầu Giấy. Vui lòng kiểm tra lại tên khu vực hoặc chọn một quận/huyện khác như: Quận Đống Đa, Quận Tây Hồ, Quận Ba Đình... để được hỗ trợ tốt nhất.",9783.85,,,
+2026-04-12T11:14:46.163426+07:00,a649c3f5-d381-42e5-b0ba-9ab52e6795ee,3,xếp hạng các phường trong quận Cầu Giấy,,"Xin lỗi, hiện tại không thể tìm thấy thông tin về quận Cầu Giấy. Vui lòng kiểm tra lại tên khu vực hoặc chọn một quận/huyện khác như: Quận Đống Đa, Quận Tây Hồ, Quận Ba Đình... để được hỗ trợ tốt nhất.",27134.52,,,
+2026-04-12T11:16:14.973782+07:00,a649c3f5-d381-42e5-b0ba-9ab52e6795ee,4,"quận Cầu Giấy gồm có phường Nghĩa Đô, phường Yên Hòa, Phường Cầu Giấy",,"Dưới đây là thời tiết chi tiết của các phường trong quận Cầu Giấy:
+
+### 1. **Phường Nghĩa Đô**
+- **Nhiệt độ**: 31.0°C (cảm giác 38.0°C)
+- **Độ ẩm**: 74%
+- **Gió**: Đông, tốc độ trung bình 2.1 m/s, gió giật lên đến 4.4 m/s
+- **UV**: 5.8 (cao - Hạn chế ra ngoài)
+- **Điểm sương**: 25.8°C (nguy hiểm - Nồm ẩm)
+- **Mây**: 75% (mây rải rác)
+- **Khí tượng chính**: Sương mù
+- **Lưu ý**: Có thể say nắng, chuột rút. Uống nhiều nước.
+
+### 2. **Phường Yên Hòa**
+- **Nhiệt độ**: 31.0°C (cảm giác 31.7°C)
+- **Độ",40065.86,,,
+2026-04-12T11:16:45.742175+07:00,d7bf589e-fa61-4e75-8221-1e4a0178742a,1,Quận nào đang nóng nhất,,"Theo dữ liệu hiện tại, các quận/huyện đang nóng nhất là:
+
+1. **Huyện Phú Xuyên** - 27.5°C  
+2. **Huyện Mỹ Đức** - 27.4°C  
+3. **Huyện Chương Mỹ** - 27.3°C  
+4. **Huyện Ứng Hòa** - 27.3°C  
+5. **Huyện Thường Tín** - 27.2°C  
+
+Nhiệt độ cao hơn so với trung bình, nên cần lưu ý giữ mát và uống đủ nước nhé!",15518.31,,,
+2026-04-12T11:17:39.070233+07:00,d7bf589e-fa61-4e75-8221-1e4a0178742a,2,còn Quận Cầu Giấy thì sao,,"Quận Cầu Giấy hiện tại có thời tiết như sau:
+
+- **Nhiệt độ**: 26.9°C (cảm giác 27.0°C)  
+- **Độ ẩm**: 80% (oi bức)  
+- **Gió**: Đông Nam 2.2 m/s, gió giật lên đến 3.5 m/s  
+- **UV**: 1.1 (thấp)  
+- **Điểm sương**: 23.1°C (oi bức)  
+- **Áp suất**: 1009 hPa (bình thường)  
+- **Trời**: Nhiều mây (100%)  
+
+Khí hậu ổn định, không mưa. Bạn có thể ra ngoài nhưng nên mang theo áo chống nắng và giữ đủ nước nhé!",14484.22,,,
+2026-04-12T11:18:17.574576+07:00,d7bf589e-fa61-4e75-8221-1e4a0178742a,3,dự báo thời gian tới quận Cầu Giấy có mưa không,,"Theo dự báo 24 giờ tới, **quận Cầu Giấy** không có mưa. Thời tiết ổn định, không xuất hiện mưa trong khoảng thời gian này. Bạn có thể yên tâm ra ngoài mà không cần mang ô nhé!",17314.83,,,
+2026-04-12T11:19:08.635011+07:00,d7bf589e-fa61-4e75-8221-1e4a0178742a,5,mấy ngày tới có mưa không,,"Theo dự báo từ ngày **15/04 đến 19/04/2026**, **quận Cầu Giấy** sẽ có mưa trong **tất cả 5 ngày**. Dưới đây là chi tiết:
+
+### 🌧️ Dự báo mưa:
+- **Ngày 15/04**: Mưa nhẹ (0.56mm), xác suất mưa 75%  
+- **Ngày 16/04**: Mưa vừa (0.99mm), xác suất mưa 100%  
+- **Ngày 17/04**: Mưa lớn (10.95mm), xác suất mưa 100%  
+- **Ngày 18/04**: Mưa nhẹ (1.08mm), xác suất mưa 34%  
+- **Ngày 19/04**: Mưa vừa (2.54mm), xác suất mưa 100%  
+
+### ⚠️ Lưu ý:
+- **Ngày 17/04** là ngày mưa lớn nhất, nên cần mang theo áo mưa v",12473.1,,,
+2026-04-12T11:19:51.475958+07:00,d7bf589e-fa61-4e75-8221-1e4a0178742a,6,ngày 15 mưa trong khoảng thời gian nào,,"Theo dự báo 24 giờ tới (từ **12:00 ICT ngày 12/04/2026 đến 11:00 ICT ngày 13/04/2026**), **quận Cầu Giấy** **không có mưa** trong khoảng thời gian này. Thời tiết ổn định, không xuất hiện mưa, phù hợp để ra ngoài mà không cần mang ô.
+
+Tuy nhiên, lưu ý rằng dữ liệu chỉ bao gồm 24 giờ gần nhất và không có thông tin về mưa trong các giờ khác. Nếu bạn cần biết tình hình mưa trong những giờ sau đó, vui lòng hỏi cụ thể hơn nhé!",17534.07,,,
+2026-04-12T11:23:34.415568+07:00,fd2aeca5-d1f9-42b0-af83-98ea99f78f47,1,Nên mặc gì hôm nay?,,"Hôm nay ở Hà Nội, thời tiết có nhiệt độ 31°C, độ ẩm 62%, không mưa và chỉ số UV là 5.78 (trung bình). 
+
+💡 **Khuyến nghị trang phục:**
+- Áo mỏng thoáng
+- Quần short
+- Mũ chống nắng
+- Kem chống nắng SPF30+
+
+Nên chọn vải thoáng mát để tránh cảm giác nóng bức.",14031.43,,,
+2026-04-12T11:28:20.544774+07:00,b43dfa1c-6297-4ef4-bbe1-be2d95831818,1,thời tiết Hồ Gươm chiều nay như thế nào,,"Hiện tại, không có dữ liệu dự báo theo giờ cho khu vực Hồ Gươm (thuộc Quận Hoàn Kiếm). Bạn có thể tham khảo dự báo tổng hợp cho cả ngày hoặc kiểm tra lại vào thời điểm khác để có thông tin chi tiết hơn.",16281.15,,,
+2026-04-12T11:28:50.011373+07:00,b43dfa1c-6297-4ef4-bbe1-be2d95831818,2,Thời tiết Hồ Gươm hôm nay,,"Xin lỗi, hiện tại không có dữ liệu thời tiết cho Hồ Gươm (thuộc Quận Hoàn Kiếm) vào ngày 12/04/2026. Bạn vui lòng kiểm tra lại vào thời điểm khác hoặc tham khảo dự báo tổng hợp cho khu vực Hà Nội.",9759.38,,,
+2026-04-12T11:29:26.832414+07:00,8c62f03a-bd1d-4201-87f9-26b3e07e13a5,1,Thời tiết Đại học Quốc Gia như thế nào,,"Không tìm thấy địa điểm ""Đại học Quốc Gia"". Vui lòng cung cấp thêm thông tin như tên quận hoặc phường để mình có thể hỗ trợ chính xác hơn.",12172.48,,,
+2026-04-12T11:29:57.079467+07:00,8c62f03a-bd1d-4201-87f9-26b3e07e13a5,2,thời tiết phường bạch mai nhé,,"Theo thời tiết hiện tại (11:21 ICT, 12/04/2026):
+
+**Phường Bạch Mai, Quận Hai Bà Trưng:**
+- **Nhiệt độ:** 31.0°C (cảm giác 34.8°C)
+- **Độ ẩm:** 60%
+- **Áp suất:** 1004 hPa (trung bình)
+- **Điểm sương:** 22.3°C (rất ẩm, khó chịu)
+- **Gió:** Tây Nam 1.7 m/s (gió nhẹ), gió giật 4.9 m/s
+- **UV:** 5.8 (cao - hạn chế ra ngoài)
+- **Trạng thái:** Nóng hơn thực tế, có thể say nắng, chuột rút. Uống nhiều nước.
+
+💡 **Khuyến nghị:** Mang theo áo chống nắng, che chắn kỹ lưỡng khi ra ngoài. Tránh hoạt động ngo",13437.31,,,
+2026-04-12T11:30:18.234120+07:00,8c62f03a-bd1d-4201-87f9-26b3e07e13a5,3,Chiều nay có mưa không,,Hiện tại không có dữ liệu dự báo theo giờ cho Phường Bạch Mai. Vui lòng kiểm tra lại thời gian hoặc khu vực khác để được hỗ trợ chính xác hơn.,12035.71,,,
+2026-04-12T11:31:14.090883+07:00,8c62f03a-bd1d-4201-87f9-26b3e07e13a5,4,mấy ngày tới thời tiết như thế nào,,Hiện không có dữ liệu thời tiết cho khoảng thời gian từ 13/04 đến 17/04. Vui lòng kiểm tra lại ngày hoặc khu vực khác để được hỗ trợ chính xác hơn.,13589.55,,,
+2026-04-12T11:32:10.509780+07:00,8c62f03a-bd1d-4201-87f9-26b3e07e13a5,5,thời tiết mấy ngày tới phường cầu giấy,,Hiện không có dữ liệu thời tiết cho khoảng thời gian từ 13/04 đến 17/04. Vui lòng kiểm tra lại ngày hoặc khu vực khác để được hỗ trợ chính xác hơn.,12365.35,,,
+2026-04-12T11:34:31.621422+07:00,0e51adb2-89c8-4ca9-a20b-cc37254e72d3,1,thời tiết Huyện ba vì những ngày tới như thế nào,,"Theo dự báo 6 ngày tới cho Huyện Ba Vì:
+
+- **Ngày 13/04**: Trời nhiều mây, nhiệt độ từ 23.5°C đến 38.4°C, độ ẩm 62%, không mưa. Gió nhẹ đến trung bình, tốc độ 7.4 m/s.
+- **Ngày 14/04**: Trời nhiều mây, nhiệt độ từ 24.0°C đến 34.1°C, độ ẩm 70.3%, có mưa nhỏ với lượng mưa 0.16 mm. Gió nhẹ, tốc độ 5.8 m/s.
+- **Ngày 15/04**: Trời mưa, nhiệt độ từ 24.4°C đến 33.5°C, độ ẩm 77.5%, mưa vừa với lượng mưa 0.67 mm. Gió nhẹ, tốc độ 5.7 m/s.
+- **Ngày 16/04**: Trời mưa, nhiệt độ từ 24.9°C đến 32.9°C, độ ẩm 78",28750.89,,,
+2026-04-12T11:35:00.289897+07:00,0e51adb2-89c8-4ca9-a20b-cc37254e72d3,2,vậy thời tiết các phường xã trong Huyện Ba Vì thì sao,,"Hiện tại, dữ liệu chỉ có xếp hạng nhiệt độ trung bình của các quận/huyện, không bao gồm các phường/xã cụ thể trong Huyện Ba Vì. Để biết thời tiết chi tiết từng phường/xã, bạn cần cung cấp tên cụ thể hơn hoặc tôi có thể hỗ trợ dự báo cho một số khu vực tiêu biểu trong huyện. Bạn có muốn biết thêm thông tin về một phường/xã nào đó không?",11229.01,,,
+2026-04-12T11:35:45.199310+07:00,0e51adb2-89c8-4ca9-a20b-cc37254e72d3,3,"xã bất bạt, xã cố đô trước đi",,"Không tìm thấy thông tin chính xác cho ""Xã Bất Bạt, Huyện Ba Vì"". Dữ liệu hiện tại chỉ có xếp hạng nhiệt độ trung bình của các quận/huyện, không bao gồm các phường/xã cụ thể trong Huyện Ba Vì. Bạn có thể cung cấp tên khu vực khác hoặc chọn một quận/huyện để tôi hỗ trợ chi tiết hơn?",13421.28,,,
+2026-04-12T11:36:39.027310+07:00,0e51adb2-89c8-4ca9-a20b-cc37254e72d3,4,xã minh châu thì sao,,"Không tìm thấy thông tin chính xác cho ""Xã Minh Châu, Huyện Ba Vì"". Dữ liệu hiện tại chỉ có xếp hạng nhiệt độ trung bình của các quận/huyện, không bao gồm các phường/xã cụ thể trong Huyện Ba Vì. Bạn có thể cung cấp tên khu vực khác hoặc chọn một quận/huyện để tôi hỗ trợ chi tiết hơn?",21972.73,,,
+2026-04-13T08:12:59.800256+07:00,217f42f3-b849-48d0-a9f9-0c552829d7c9,1,Thời tiết quận Cầu Giấy vài giờ tới ?,,"Theo dự báo 6 giờ tới cho Quận Cầu Giấy:
+
+- **09:00 ICT**: 27.6°C, độ ẩm 84.3%, gió Đông Nam 2.1 m/s, UV 2.5 (thấp). Trời có mây.
+- **10:00 ICT**: 27.4°C, độ ẩm 79.7%, gió Đông Nam 1.5 m/s, UV 4.4 (trung bình). Trời có mây.
+- **11:00 ICT**: 28.1°C, độ ẩm 67.7%, gió Nam 1.2 m/s, UV 5.8 (cao). Trời có mây.
+- **12:00 ICT**: 29.8°C, độ ẩm 53.7%, gió Tây Nam 2.2 m/s, UV 7.4 (rất cao). Trời có mây.
+- **13:00 ICT**: 31.0°C, độ ẩm 33.7%, gió Tây Nam 1.8 m/s, UV 6.6 (cao). Trời có mây.
+- **14:00 ICT**: 3",21848.1,,,
+2026-04-13T08:13:40.121125+07:00,217f42f3-b849-48d0-a9f9-0c552829d7c9,2,Các Phường của Quận cầu Giấy thì như thế nào,,"Dữ liệu hiện tại không cung cấp thông tin chi tiết về các phường trong Quận Cầu Giấy. Tuy nhiên, theo xếp hạng nhiệt độ trung bình của các quận/huyện, Quận Cầu Giấy có nhiệt độ trung bình là **25.6°C**, đứng thứ 10 trong danh sách.
+
+Nếu bạn cần thông tin cụ thể hơn về từng phường trong Quận Cầu Giấy, vui lòng cho biết tên phường bạn quan tâm.",10606.08,,,
+2026-04-13T08:14:44.053150+07:00,217f42f3-b849-48d0-a9f9-0c552829d7c9,3,Phường Nghĩa Đô,,"**Phường Nghĩa Đô, Quận Cầu Giấy** hiện tại:
+
+- **Nhiệt độ**: 28.0°C (cảm giác 33.6°C)  
+- **Độ ẩm**: 89% (nồm ẩm mức độ vừa)  
+- **Áp suất**: 1007 hPa (trung bình)  
+- **Gió**: Đông 3.1 m/s (gió nhẹ)  
+- **UV**: 1.1 (thấp - an toàn)  
+- **Trời**: Nhiều mây (overcast clouds)  
+
+⚠️ **Cảnh báo**:  
+- **Nồm ẩm**: Độ ẩm cao, cảm giác ẩm ướt.  
+- **Nóng hơn thực tế**: Cảm giác nóng do độ ẩm cao.  
+- **Cảnh báo say nắng**: Có thể say nắng, chuột rút. Uống nhiều nước và tránh ra ngoài vào giờ nắng.
+
+💡 ",21095.07,,,
+2026-04-13T08:16:43.525458+07:00,217f42f3-b849-48d0-a9f9-0c552829d7c9,4,Vậy còn xã Đông Anh thì sao,,"**Xã Đông Anh, Huyện Đông Anh** hiện tại:
+
+- **Nhiệt độ**: 28.0°C (cảm giác 33.7°C)  
+- **Độ ẩm**: 89% (nồm ẩm mức độ vừa)  
+- **Áp suất**: 1007 hPa (trung bình)  
+- **Gió**: Đông 3.1 m/s (gió nhẹ)  
+- **UV**: 1.1 (thấp - an toàn)  
+- **Trời**: Nhiều mây (overcast clouds)  
+
+⚠️ **Cảnh báo**:  
+- **Nồm ẩm**: Độ ẩm cao, cảm giác ẩm ướt.  
+- **Nóng hơn thực tế**: Cảm giác nóng do độ ẩm cao.  
+- **Cảnh báo say nắng**: Có thể say nắng, chuột rút. Uống nhiều nước và tránh ra ngoài vào giờ nắng.
+
+💡 **K",21331.47,,,
+2026-04-13T08:17:26.906511+07:00,217f42f3-b849-48d0-a9f9-0c552829d7c9,5,Bạn có biết thông tin thời tiết của ĐH Quốc Gia không,,"Không, mình không có thông tin thời tiết cụ thể cho Đại học Quốc Gia Hà Nội (ĐHQGHN) trong dữ liệu hiện tại. Tuy nhiên, bạn có thể tham khảo thời tiết khu vực **Quận Cầu Giấy** hoặc **Phường Nghĩa Đô**, nơi ĐHQGHN tọa lạc, để có cái nhìn tổng quát về điều kiện thời tiết xung quanh.
+
+Nếu bạn cần, mình có thể cung cấp thông tin thời tiết chi tiết cho **Phường Nghĩa Đô** hoặc các khu vực lân cận.",8711.08,,,
+2026-04-13T09:08:48.384174+07:00,1b6e668d-5ebf-4bb4-85c2-fa1239d40c27,1,So sánh Cầu Giấy và Hoàn Kiếm,,"Xin lỗi, đã có lỗi xảy ra: Unknown value types: [<class 'NoneType'>, <class 'NoneType'>]. Only dict and int values are supported.",12008.17,,,
+2026-04-13T09:28:48.284810+07:00,7dac6f65-49ee-411f-87d7-75629adae139,1,So sánh Cầu Giấy và Hoàn Kiếm,,"So sánh thời tiết giữa Quận Cầu Giấy và Quận Hoàn Kiếm:
+
+- **Nhiệt độ**: Cả hai quận đều có nhiệt độ trung bình là 25.6°C và 25.44°C, tương tự nhau.
+- **Độ ẩm**: Quận Cầu Giấy có độ ẩm cao hơn một chút so với Quận Hoàn Kiếm (87% vs 88%).
+- **Gió**: Cả hai quận đều có tốc độ gió trung bình khoảng 2.8 m/s, hướng Đông Nam.
+- **Gió giật**: Quận Hoàn Kiếm có gió giật mạnh hơn một chút (4.88 m/s) so với Quận Cầu Giấy (4.56 m/s).
+- **Mây**: Cả hai quận đều có 90% mây, điều kiện thời tiết tương đối giốn",21254.49,,,
+2026-04-13T21:12:22.367073+07:00,d1b1862a-f827-4e7d-b4f7-10197678e442,1,So sánh Cầu Giấy và Hoàn Kiếm,,"So sánh thời tiết giữa Quận Cầu Giấy và Quận Hoàn Kiếm:
+
+- **Nhiệt độ**: Cầu Giấy có nhiệt độ trung bình là 26.9°C, trong khi Hoàn Kiếm là 26.5°C. Sự chênh lệch nhỏ (0.4°C), nên hai khu vực đều có điều kiện thời tiết tương tự.
+- **Độ ẩm**: Cầu Giấy có độ ẩm trung bình 81%, cao hơn Hoàn Kiếm (83%) khoảng 2%.
+- **Gió**: Cả hai quận đều có gió Đông Nam với tốc độ trung bình lần lượt là 6.5 m/s và 6.2 m/s. Gió giật ở Cầu Giấy mạnh hơn một chút (10.17 m/s so với 9.96 m/s của Hoàn Kiếm).
+- **Khác biệt",22491.31,,,
+2026-04-13T21:12:52.302024+07:00,d1b1862a-f827-4e7d-b4f7-10197678e442,2,Thời tiết Quận Cầu Giấy ngày mai,,"Theo dự báo thời tiết cho Quận Cầu Giấy ngày mai (13/04/2026):
+
+- **Nhiệt độ**: Trung bình 28.37°C, dao động từ 25.5°C đến 33.33°C.
+- **Độ ẩm**: Trung bình 63.7%, hơi khô nhẹ.
+- **Mưa**: Có mưa nhẹ với tổng lượng mưa 0.16 mm, xác suất mưa là 13%.
+- **Gió**: Gió Đông Nam trung bình 7.96 m/s, gió giật lên đến 11.54 m/s.
+- **Áp suất**: 1007 hPa, ổn định.
+- **UV**: UV cao nhất là 7.38 (cao, cần che chắn khi ra ngoài).
+- **Điểm sương**: 22.36°C, hơi ẩm.
+
+💡 **Khuyến nghị**:
+- Mang theo áo khoác vì có ",15724.06,,,
+2026-04-13T21:13:20.953937+07:00,d1b1862a-f827-4e7d-b4f7-10197678e442,3,vậy còn ngày kia,,"Theo dữ liệu hiện có, chỉ có thông tin về thời tiết cho ngày 13/04/2026. Không có dữ liệu cho ""ngày kia"" (ngày 14/04/2026). Bạn có thể cung cấp thêm thông tin cụ thể hơn về ngày bạn quan tâm không?",14354.67,,,
+2026-04-13T21:14:01.249564+07:00,aba4ed25-9363-47c2-a4c5-52e5afd2cf5b,1,Thời tiết quận Cầu Giấy ngày mai,,"Theo dự báo 24h tới cho quận Cầu Giấy:
+
+- Nhiệt độ: 28.4°C (từ 25.5°C đến 33.3°C)
+- Độ ẩm: 63.7%
+- Gió: Đông Nam, tốc độ trung bình 8.0 m/s, gió giật lên đến 11.5 m/s
+- Điểm sương: 22.4°C
+- Áp suất: 1007 hPa
+- Mây: 80.7%
+- UV: Cao (7.4)
+- Xác suất mưa: 13%
+- Tổng lượng mưa: 0.16 mm
+
+🌤️ Trời có mưa nhẹ, nên mang ô khi ra ngoài. Thời tiết oi bức, cần uống nước thường xuyên.",16835.02,,,
+2026-04-13T21:15:02.516971+07:00,aba4ed25-9363-47c2-a4c5-52e5afd2cf5b,2,Cuối tuần này thời tiết như thế nào ?,,"Cuối tuần này (16-18/04) thời tiết Hà Nội như sau:
+
+### Thứ Bảy (16/04):
+- Nhiệt độ: 28.7°C (từ 24.5°C đến 33.4°C)
+- Độ ẩm: 73%
+- Gió: Đông Nam, tốc độ trung bình 5.7 m/s
+- UV: Trung bình (4.1)
+- Xác suất mưa: 90%
+- Tổng lượng mưa: 0.41 mm
+
+🌧️ Trời có mưa rải rác, nên mang ô và áo mưa khi ra ngoài.
+
+### Chủ Nhật (17/04):
+- Nhiệt độ: 24.6°C (từ 22.4°C đến 25.6°C)
+- Độ ẩm: 78%
+- Gió: Đông Bắc, tốc độ trung bình 4.2 m/s
+- UV: Rất thấp (0.9)
+- Xác suất mưa: 100%
+- Tổng lượng mưa: 7.74 mm
+
+🌧️ Mưa lớn",19114.41,,,
+2026-04-13T21:52:50.498998+07:00,6b10f017-1eb9-43b6-be21-52485d1d1045,1,Thời tiết phường Cầu Giấy cuối tuần này,,"Theo dự báo thời tiết cuối tuần này (18-19/04/2026) tại **phường Cầu Giấy**:
+
+### Ngày 18/04/2026:
+- Nhiệt độ: 28.98°C (từ 22.9°C đến 31.85°C)
+- Độ ẩm: 66%
+- Mưa: Có, tổng lượng mưa 1.54mm
+- Gió: Tốc độ trung bình 7.29m/s, hướng Đông Nam (136.3°)
+- UV: Cực thấp (1.0)
+
+### Ngày 19/04/2026:
+- Nhiệt độ: 29.83°C (từ 23.41°C đến 29.94°C)
+- Độ ẩm: 63%
+- Mưa: Có, tổng lượng mưa 4.55mm
+- Gió: Tốc độ trung bình 4.78m/s, hướng Đông Nam (148.0°)
+- UV: Cực thấp (1.0)
+
+### Tổng hợp:
+- Trung bình nhiệt độ: 29",23355.04,,,

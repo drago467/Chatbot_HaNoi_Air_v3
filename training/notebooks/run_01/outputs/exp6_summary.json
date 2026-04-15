@@ -1,0 +1,520 @@
+{
+  "experiment": "Exp6_Router_Size_Ablation",
+  "rq": "RQ5: Is Qwen3-4B the sweet spot for router size?",
+  "dataset": "multitask_val_v5_clean.jsonl (373 samples, 0% leakage)",
+  "inference_precision": "fp16 (merged_16bit)",
+  "primary_metric": "routing_accuracy_pct (intent+scope both correct, same as v4)",
+  "models": {
+    "Qwen2.5-0.5B": {
+      "repo": "daredevil467/hanoi-router-qwen25-05b",
+      "params_billions": 0.5,
+      "routing_accuracy_pct": 86.49,
+      "routing_ci95": [
+        82.63,
+        89.6
+      ],
+      "intent_accuracy_pct": 87.84,
+      "intent_ci95": [
+        84.11,
+        90.79
+      ],
+      "scope_accuracy_pct": 97.57,
+      "macro_f1": 0.8805,
+      "parse_failures": 0,
+      "rewrite_routing_acc": 81.97,
+      "rewrite_entity_cov": 96.72,
+      "rewrite_n": 61,
+      "no_rewrite_routing_acc": 87.38,
+      "latency_p50_ms": 640.2,
+      "latency_p90_ms": 1236.9,
+      "latency_p95_ms": 1288.1,
+      "per_intent_f1": {
+        "activity_weather": 0.857,
+        "current_weather": 0.898,
+        "daily_forecast": 0.818,
+        "expert_weather_param": 0.927,
+        "historical_weather": 0.93,
+        "hourly_forecast": 0.842,
+        "humidity_fog_query": 0.952,
+        "location_comparison": 1.0,
+        "rain_query": 0.789,
+        "seasonal_context": 0.862,
+        "smalltalk_weather": 0.739,
+        "temperature_query": 0.889,
+        "weather_alert": 0.836,
+        "weather_overview": 0.884,
+        "wind_query": 0.982,
+        "macro avg": 0.88,
+        "weighted avg": 0.877
+      },
+      "per_intent_accuracy": {
+        "activity_weather": 90.9,
+        "current_weather": 81.5,
+        "daily_forecast": 93.1,
+        "expert_weather_param": 95.0,
+        "historical_weather": 100.0,
+        "hourly_forecast": 80.0,
+        "humidity_fog_query": 100.0,
+        "location_comparison": 100.0,
+        "rain_query": 75.0,
+        "seasonal_context": 89.3,
+        "smalltalk_weather": 68.0,
+        "temperature_query": 88.9,
+        "weather_alert": 76.7,
+        "weather_overview": 82.6,
+        "wind_query": 100.0
+      },
+      "top_confusion_pairs": [
+        [
+          "smalltalk_weather->activity_weather",
+          6
+        ],
+        [
+          "weather_overview->daily_forecast",
+          3
+        ],
+        [
+          "activity_weather->smalltalk_weather",
+          3
+        ],
+        [
+          "rain_query->daily_forecast",
+          3
+        ],
+        [
+          "temperature_query->historical_weather",
+          2
+        ],
+        [
+          "weather_alert->expert_weather_param",
+          2
+        ],
+        [
+          "seasonal_context->daily_forecast",
+          2
+        ],
+        [
+          "hourly_forecast->temperature_query",
+          2
+        ],
+        [
+          "weather_alert->seasonal_context",
+          2
+        ],
+        [
+          "current_weather->rain_query",
+          1
+        ]
+      ]
+    },
+    "Qwen2.5-1.5B": {
+      "repo": "daredevil467/hanoi-router-qwen25-15b",
+      "params_billions": 1.5,
+      "routing_accuracy_pct": 86.22,
+      "routing_ci95": [
+        82.33,
+        89.36
+      ],
+      "intent_accuracy_pct": 87.57,
+      "intent_ci95": [
+        83.81,
+        90.55
+      ],
+      "scope_accuracy_pct": 98.38,
+      "macro_f1": 0.8757,
+      "parse_failures": 0,
+      "rewrite_routing_acc": 85.25,
+      "rewrite_entity_cov": 95.08,
+      "rewrite_n": 61,
+      "no_rewrite_routing_acc": 86.41,
+      "latency_p50_ms": 753.2,
+      "latency_p90_ms": 1409.1,
+      "latency_p95_ms": 1464.9,
+      "per_intent_f1": {
+        "activity_weather": 0.875,
+        "current_weather": 0.764,
+        "daily_forecast": 0.862,
+        "expert_weather_param": 0.947,
+        "historical_weather": 0.976,
+        "hourly_forecast": 0.8,
+        "humidity_fog_query": 0.976,
+        "location_comparison": 1.0,
+        "rain_query": 0.833,
+        "seasonal_context": 0.931,
+        "smalltalk_weather": 0.745,
+        "temperature_query": 0.9,
+        "weather_alert": 0.877,
+        "weather_overview": 0.667,
+        "wind_query": 0.982,
+        "micro avg": 0.877,
+        "macro avg": 0.876,
+        "weighted avg": 0.874
+      },
+      "per_intent_accuracy": {
+        "activity_weather": 84.8,
+        "current_weather": 77.8,
+        "daily_forecast": 86.2,
+        "expert_weather_param": 90.0,
+        "historical_weather": 100.0,
+        "hourly_forecast": 70.0,
+        "humidity_fog_query": 100.0,
+        "location_comparison": 100.0,
+        "rain_query": 100.0,
+        "seasonal_context": 96.4,
+        "smalltalk_weather": 76.0,
+        "temperature_query": 100.0,
+        "weather_alert": 83.3,
+        "weather_overview": 52.2,
+        "wind_query": 100.0
+      },
+      "top_confusion_pairs": [
+        [
+          "weather_overview->current_weather",
+          6
+        ],
+        [
+          "activity_weather->smalltalk_weather",
+          3
+        ],
+        [
+          "daily_forecast->rain_query",
+          2
+        ],
+        [
+          "current_weather->rain_query",
+          2
+        ],
+        [
+          "weather_overview->daily_forecast",
+          2
+        ],
+        [
+          "current_weather->temperature_query",
+          2
+        ],
+        [
+          "hourly_forecast->daily_forecast",
+          2
+        ],
+        [
+          "weather_alert->seasonal_context",
+          2
+        ],
+        [
+          "hourly_forecast->temperature_query",
+          2
+        ],
+        [
+          "smalltalk_weather->activity_weather",
+          2
+        ]
+      ]
+    },
+    "Qwen3-1.7B": {
+      "repo": "daredevil467/hanoi-router-qwen3-17b",
+      "params_billions": 1.7,
+      "routing_accuracy_pct": 89.19,
+      "routing_ci95": [
+        85.61,
+        91.96
+      ],
+      "intent_accuracy_pct": 90.27,
+      "intent_ci95": [
+        86.82,
+        92.89
+      ],
+      "scope_accuracy_pct": 98.65,
+      "macro_f1": 0.902,
+      "parse_failures": 0,
+      "rewrite_routing_acc": 90.16,
+      "rewrite_entity_cov": 98.36,
+      "rewrite_n": 61,
+      "no_rewrite_routing_acc": 89.0,
+      "latency_p50_ms": 945.2,
+      "latency_p90_ms": 1798.7,
+      "latency_p95_ms": 1882.2,
+      "per_intent_f1": {
+        "activity_weather": 0.925,
+        "current_weather": 0.941,
+        "daily_forecast": 0.821,
+        "expert_weather_param": 0.974,
+        "historical_weather": 0.952,
+        "hourly_forecast": 0.789,
+        "humidity_fog_query": 0.976,
+        "location_comparison": 0.976,
+        "rain_query": 0.851,
+        "seasonal_context": 0.906,
+        "smalltalk_weather": 0.76,
+        "temperature_query": 0.931,
+        "weather_alert": 0.915,
+        "weather_overview": 0.829,
+        "wind_query": 0.982,
+        "macro avg": 0.902,
+        "weighted avg": 0.902
+      },
+      "per_intent_accuracy": {
+        "activity_weather": 93.9,
+        "current_weather": 88.9,
+        "daily_forecast": 79.3,
+        "expert_weather_param": 95.0,
+        "historical_weather": 100.0,
+        "hourly_forecast": 75.0,
+        "humidity_fog_query": 100.0,
+        "location_comparison": 100.0,
+        "rain_query": 100.0,
+        "seasonal_context": 85.7,
+        "smalltalk_weather": 76.0,
+        "temperature_query": 100.0,
+        "weather_alert": 90.0,
+        "weather_overview": 73.9,
+        "wind_query": 100.0
+      },
+      "top_confusion_pairs": [
+        [
+          "daily_forecast->rain_query",
+          3
+        ],
+        [
+          "seasonal_context->historical_weather",
+          2
+        ],
+        [
+          "weather_overview->smalltalk_weather",
+          2
+        ],
+        [
+          "daily_forecast->hourly_forecast",
+          2
+        ],
+        [
+          "activity_weather->smalltalk_weather",
+          2
+        ],
+        [
+          "hourly_forecast->temperature_query",
+          2
+        ],
+        [
+          "smalltalk_weather->activity_weather",
+          2
+        ],
+        [
+          "smalltalk_weather->rain_query",
+          2
+        ],
+        [
+          "weather_overview->daily_forecast",
+          1
+        ],
+        [
+          "current_weather->wind_query",
+          1
+        ]
+      ]
+    },
+    "Qwen3-4B-v5": {
+      "repo": "daredevil467/hanoi-router-qwen3-4b-v5",
+      "params_billions": 4.0,
+      "routing_accuracy_pct": 91.62,
+      "routing_ci95": [
+        88.35,
+        94.03
+      ],
+      "intent_accuracy_pct": 92.97,
+      "intent_ci95": [
+        89.9,
+        95.16
+      ],
+      "scope_accuracy_pct": 98.38,
+      "macro_f1": 0.9295,
+      "parse_failures": 0,
+      "rewrite_routing_acc": 90.16,
+      "rewrite_entity_cov": 98.36,
+      "rewrite_n": 61,
+      "no_rewrite_routing_acc": 91.91,
+      "latency_p50_ms": 1191.0,
+      "latency_p90_ms": 2357.6,
+      "latency_p95_ms": 2432.4,
+      "per_intent_f1": {
+        "activity_weather": 0.921,
+        "current_weather": 0.962,
+        "daily_forecast": 0.912,
+        "expert_weather_param": 0.974,
+        "historical_weather": 0.976,
+        "hourly_forecast": 0.857,
+        "humidity_fog_query": 0.976,
+        "location_comparison": 0.976,
+        "rain_query": 0.889,
+        "seasonal_context": 0.964,
+        "smalltalk_weather": 0.816,
+        "temperature_query": 0.9,
+        "weather_alert": 0.949,
+        "weather_overview": 0.889,
+        "wind_query": 0.982,
+        "macro avg": 0.93,
+        "weighted avg": 0.929
+      },
+      "per_intent_accuracy": {
+        "activity_weather": 87.9,
+        "current_weather": 92.6,
+        "daily_forecast": 89.7,
+        "expert_weather_param": 95.0,
+        "historical_weather": 100.0,
+        "hourly_forecast": 75.0,
+        "humidity_fog_query": 100.0,
+        "location_comparison": 100.0,
+        "rain_query": 100.0,
+        "seasonal_context": 96.4,
+        "smalltalk_weather": 80.0,
+        "temperature_query": 100.0,
+        "weather_alert": 93.3,
+        "weather_overview": 87.0,
+        "wind_query": 100.0
+      },
+      "top_confusion_pairs": [
+        [
+          "daily_forecast->rain_query",
+          3
+        ],
+        [
+          "activity_weather->smalltalk_weather",
+          3
+        ],
+        [
+          "hourly_forecast->temperature_query",
+          2
+        ],
+        [
+          "smalltalk_weather->rain_query",
+          2
+        ],
+        [
+          "smalltalk_weather->weather_overview",
+          1
+        ],
+        [
+          "weather_overview->daily_forecast",
+          1
+        ],
+        [
+          "current_weather->wind_query",
+          1
+        ],
+        [
+          "weather_alert->temperature_query",
+          1
+        ],
+        [
+          "weather_overview->smalltalk_weather",
+          1
+        ],
+        [
+          "hourly_forecast->weather_overview",
+          1
+        ]
+      ]
+    },
+    "Qwen3-8B": {
+      "repo": "daredevil467/hanoi-router-qwen3-8b",
+      "params_billions": 8.0,
+      "routing_accuracy_pct": 88.11,
+      "routing_ci95": [
+        84.41,
+        91.02
+      ],
+      "intent_accuracy_pct": 89.19,
+      "intent_ci95": [
+        85.61,
+        91.96
+      ],
+      "scope_accuracy_pct": 98.92,
+      "macro_f1": 0.8936,
+      "parse_failures": 0,
+      "rewrite_routing_acc": 80.33,
+      "rewrite_entity_cov": 98.36,
+      "rewrite_n": 61,
+      "no_rewrite_routing_acc": 89.64,
+      "latency_p50_ms": 1454.8,
+      "latency_p90_ms": 2848.2,
+      "latency_p95_ms": 2919.2,
+      "per_intent_f1": {
+        "activity_weather": 0.885,
+        "current_weather": 0.885,
+        "daily_forecast": 0.852,
+        "expert_weather_param": 1.0,
+        "historical_weather": 0.976,
+        "hourly_forecast": 0.75,
+        "humidity_fog_query": 1.0,
+        "location_comparison": 0.976,
+        "rain_query": 0.87,
+        "seasonal_context": 0.964,
+        "smalltalk_weather": 0.745,
+        "temperature_query": 0.852,
+        "weather_alert": 0.867,
+        "weather_overview": 0.837,
+        "wind_query": 0.945,
+        "macro avg": 0.894,
+        "weighted avg": 0.891
+      },
+      "per_intent_accuracy": {
+        "activity_weather": 81.8,
+        "current_weather": 85.2,
+        "daily_forecast": 89.7,
+        "expert_weather_param": 100.0,
+        "historical_weather": 100.0,
+        "hourly_forecast": 60.0,
+        "humidity_fog_query": 100.0,
+        "location_comparison": 100.0,
+        "rain_query": 100.0,
+        "seasonal_context": 96.4,
+        "smalltalk_weather": 76.0,
+        "temperature_query": 96.3,
+        "weather_alert": 86.7,
+        "weather_overview": 78.3,
+        "wind_query": 92.9
+      },
+      "top_confusion_pairs": [
+        [
+          "activity_weather->smalltalk_weather",
+          5
+        ],
+        [
+          "daily_forecast->rain_query",
+          3
+        ],
+        [
+          "weather_overview->daily_forecast",
+          3
+        ],
+        [
+          "wind_query->weather_alert",
+          2
+        ],
+        [
+          "current_weather->temperature_query",
+          2
+        ],
+        [
+          "smalltalk_weather->temperature_query",
+          2
+        ],
+        [
+          "hourly_forecast->daily_forecast",
+          2
+        ],
+        [
+          "hourly_forecast->temperature_query",
+          2
+        ],
+        [
+          "smalltalk_weather->rain_query",
+          2
+        ],
+        [
+          "smalltalk_weather->weather_overview",
+          1
+        ]
+      ]
+    }
+  }
+}

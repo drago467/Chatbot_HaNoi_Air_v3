@@ -26,10 +26,10 @@
     "description": "Dự báo nhiều ngày",
     "examples": [
       {
-        "user": "Cuối tuần này Hà Nội thế nào?",
-        "thought": "Người dùng hỏi dự báo cuối tuần (nhiều ngày) → get_daily_forecast để có dự báo theo ngày, get_weather_period cho khoảng thời gian cụ thể.",
-        "action": "get_daily_forecast(location_hint='Hà Nội')",
-        "response_prefix": "Dự báo cuối tuần này tại Hà Nội:"
+        "user": "3 ngày tới Hà Nội thế nào?",
+        "thought": "Người dùng hỏi dự báo 3 ngày tới → get_daily_forecast(days=3) để lấy dự báo theo ngày.",
+        "action": "get_daily_forecast(location_hint='Hà Nội', days=3)",
+        "response_prefix": "Dự báo 3 ngày tới tại Hà Nội:"
       }
     ]
   },

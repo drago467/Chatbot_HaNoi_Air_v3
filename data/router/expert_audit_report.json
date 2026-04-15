@@ -1,0 +1,76 @@
+{
+  "version": "v5-clean-final",
+  "parent": "v4-clean",
+  "actions": {
+    "umbrella_relabeled": 24,
+    "clothing_relabeled": 3,
+    "alert_relabeled": 3,
+    "smalltalk_augmented": 55,
+    "val_added": 5,
+    "collisions_skipped": 0
+  },
+  "final_counts": {
+    "train": 3357,
+    "val": 370
+  },
+  "train_distribution": {
+    "intents": {
+      "rain_query": 299,
+      "current_weather": 272,
+      "activity_weather": 265,
+      "weather_alert": 265,
+      "temperature_query": 261,
+      "wind_query": 253,
+      "daily_forecast": 228,
+      "seasonal_context": 224,
+      "humidity_fog_query": 200,
+      "location_comparison": 197,
+      "expert_weather_param": 196,
+      "weather_overview": 195,
+      "hourly_forecast": 183,
+      "historical_weather": 176,
+      "smalltalk_weather": 143
+    },
+    "scopes": {
+      "district": 1381,
+      "ward": 991,
+      "city": 985
+    }
+  },
+  "val_distribution": {
+    "intents": {
+      "activity_weather": 33,
+      "weather_alert": 30,
+      "daily_forecast": 29,
+      "wind_query": 28,
+      "seasonal_context": 28,
+      "current_weather": 27,
+      "temperature_query": 27,
+      "smalltalk_weather": 25,
+      "weather_overview": 23,
+      "location_comparison": 20,
+      "rain_query": 20,
+      "humidity_fog_query": 20,
+      "hourly_forecast": 20,
+      "expert_weather_param": 20,
+      "historical_weather": 20
+    },
+    "scopes": {
+      "district": 169,
+      "city": 106,
+      "ward": 95
+    }
+  },
+  "quality_checks": {
+    "train_duplicates": 0,
+    "exact_leaks": 0,
+    "fuzzy_leaks": 0,
+    "val_all_intents_gte_20": true,
+    "train_max_min_ratio": 2.09
+  },
+  "known_limitations": [
+    "47.79% of confidence values are exactly 0.90 (synthetic artifact)",
+    "13.96% context.intent != output.intent (expected: multi-turn intent shifts)",
+    "Weather comment boundary: some 'trời đẹp không?' in smalltalk could be current_weather"
+  ]
+}
