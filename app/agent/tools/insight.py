@@ -509,13 +509,21 @@ class GetActivityAdviceInput(BaseModel):
 
 @tool(args_schema=GetActivityAdviceInput)
 def get_activity_advice(activity: str, ward_id: str = None, location_hint: str = None) -> dict:
-    """Khuyến cáo có NÊN thực hiện hoạt động ngoài trời không.
+    """KHUYẾN CÁO chung có nên LÀM hoạt động X hay không (output generic: nên/có thể/hạn chế/không nên).
 
-    DÙNG KHI: "đi chơi được không?", "chạy bộ có ổn không?", "có nên picnic không?".
-    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
-    KHÔNG DÙNG KHI: hỏi mấy giờ tốt nhất (dùng get_best_time),
-    hỏi mặc gì (dùng get_clothing_advice).
-    Trả về: mức khuyến cáo (nen/co_the/han_che/khong_nen), lý do, khuyến nghị.
+    DÙNG KHI: user cần ĐÁNH GIÁ CHUNG nhanh:
+        "đi chơi được không?", "chạy bộ có ổn không?", "có nên picnic không?".
+
+    KHÔNG DÙNG ĐƠN LẺ KHI user hỏi CHI TIẾT cần data cụ thể:
+        - "chiều mưa đến khi nào?" → PHẢI gọi kèm get_rain_timeline.
+        - "UV mấy giờ an toàn?" → PHẢI gọi kèm get_uv_safe_windows.
+        - "mấy giờ là tốt nhất?" → PHẢI gọi get_best_time.
+        - "mặc gì" → get_clothing_advice.
+        Output activity_advice CHỈ trả message generic ("nên/có thể..."), không có mốc giờ,
+        không có số mưa/UV. Nếu câu hỏi đòi chi tiết mà bạn chỉ gọi tool này → TRẢ LỜI THIẾU.
+
+    Returns: Flat VN dict `"khuyến nghị"` (nen/co_the/han_che/khong_nen), `"lý do"`,
+    `"gợi ý thêm"` (list khuyến nghị thực tế).
     """
     from app.dal.activity_dal import get_activity_advice as dal_ward_activity
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys

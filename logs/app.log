@@ -2849,3 +2849,18 @@ PermissionError: [Errno 13] Permission denied: '/home/appuser'
 2026-04-20 14:36:07 | INFO | __main__ | Aggregated hourly: forecast - district: 27676, city: 959
 2026-04-20 14:36:07 | INFO | __main__ | Aggregated daily: forecast - district: 1770, city: 59
 2026-04-20 14:36:07 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-20 20:58:02 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-20 20:58:02 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-20 20:58:03 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-20 20:58:03 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-20 20:58:03 | INFO | __main__ | Starting aggregation for current data...
+2026-04-20 20:58:04 | INFO | __main__ | Aggregated hourly: current - district: 27728, city: 961
+2026-04-20 20:58:04 | INFO | __main__ | Aggregation completed for current data
+2026-04-20 20:58:04 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-20 20:58:05 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-20 20:58:05 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-20 20:58:06 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-20 20:58:06 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-20 20:58:12 | INFO | __main__ | Aggregated hourly: forecast - district: 27908, city: 967
+2026-04-20 20:58:12 | INFO | __main__ | Aggregated daily: forecast - district: 1770, city: 59
+2026-04-20 20:58:12 | INFO | __main__ | Aggregation completed for forecast data

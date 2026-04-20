@@ -17,14 +17,18 @@ class CompareWeatherInput(BaseModel):
 
 @tool(args_schema=CompareWeatherInput)
 def compare_weather(location_hint1: str, location_hint2: str) -> dict:
-    """So sánh thời tiết HIỆN TẠI giữa HAI địa điểm.
+    """SO SÁNH 2 ĐỊA ĐIỂM tại thời điểm HIỆN TẠI (1 call duy nhất, KHÔNG 2× current).
 
-    DÙNG KHI: "A và B nơi nào nóng/lạnh/ẩm hơn?", "so sánh A với B".
-    KHÔNG DÙNG KHI: so sánh today vs yesterday (dùng compare_with_yesterday),
-    so sánh với TB mùa (dùng get_seasonal_comparison).
+    DÙNG KHI: "A và B nơi nào nóng/lạnh/ẩm hơn?", "so sánh A với B", "A so với B".
 
-    Returns: Flat VN dict: `"địa điểm 1": {<flat VN weather dict>}`,
-    `"địa điểm 2": {...}`, `"chênh lệch": {"nhiệt độ", "độ ẩm"}`, `"tóm tắt"`.
+    KHÔNG DÙNG KHI:
+        - today vs yesterday 1 địa điểm → compare_with_yesterday.
+        - hiện tại vs TB mùa → get_seasonal_comparison.
+        - 3+ quận → get_district_ranking hoặc get_district_multi_compare.
+        - So 2 ngày khác nhau của cùng 1 nơi → gọi 2 tool get_daily_summary riêng.
+
+    Returns: Flat VN dict: `"địa điểm 1"` + `"địa điểm 2"` (mỗi block là flat VN weather),
+    `"chênh lệch"` (nhiệt độ/độ ẩm), `"tóm tắt"`.
     """
     from app.agent.utils import auto_resolve_location
     from app.agent.dispatch import normalize_agg_keys, router_scope_var
@@ -127,13 +131,21 @@ class CompareWithYesterdayInput(BaseModel):
 
 @tool(args_schema=CompareWithYesterdayInput)
 def compare_with_yesterday(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sánh thời tiết HÔM NAY với HÔM QUA cho một địa điểm.
+    """SO SÁNH HÔM NAY vs HÔM QUA cho 1 địa điểm — PAST direction only.
 
-    DÙNG KHI: "hôm nay nóng hơn hôm qua không?", "so với hôm qua thế nào?".
-    KHÔNG DÙNG KHI: so sánh 2 địa điểm (dùng compare_weather).
+    DÙNG KHI: user hỏi today-vs-yesterday:
+        "hôm nay nóng hơn hôm qua không?", "so với hôm qua thế nào?",
+        "mấy hôm nay hay thay đổi nhỉ?" (ám chỉ past).
 
-    Returns: Flat VN dict với `"hôm nay": {ngày, nhiệt độ TB, thời tiết, lượng mưa, độ ẩm}`,
-    `"hôm qua": {...}`, `"thay đổi": [list VN strings]`, `"tóm tắt"`.
+    KHÔNG DÙNG KHI:
+        - "so hôm nay vs NGÀY MAI" (FUTURE direction — tool này SAI hướng).
+          Thay: gọi get_current_weather + get_daily_forecast(start_date=tomorrow_iso, days=1),
+          so sánh 2 block trong câu trả lời.
+        - So 2 địa điểm khác nhau cùng thời điểm → compare_weather.
+        - So 1 địa điểm qua nhiều ngày → get_weather_period.
+
+    Returns: Flat VN dict: `"hôm nay"` + `"hôm qua"` (block mini), `"thay đổi"` list,
+    `"tóm tắt"`. Nếu error "not_enough_data" → gợi ý xem thời tiết hiện tại.
     """
     from app.agent.dispatch import resolve_and_dispatch
     from app.dal.comparison_dal import (
@@ -164,12 +176,19 @@ class GetSeasonalComparisonInput(BaseModel):
 
 @tool(args_schema=GetSeasonalComparisonInput)
 def get_seasonal_comparison(ward_id: str = None, location_hint: str = None) -> dict:
-    """So sánh thời tiết hiện tại với TRUNG BÌNH MÙA (climatology Hà Nội).
+    """SO HIỆN TẠI vs TRUNG BÌNH CLIMATOLOGY tháng hiện tại (Hà Nội).
 
-    DÙNG KHI: "nóng hơn bình thường không?", "thời tiết có bất thường không?".
+    DÙNG KHI: user hỏi bất thường THEO MÙA:
+        "nóng hơn bình thường không?", "thời tiết có bất thường không?",
+        "dạo này khó chịu quá nhỉ?", "mùa này thường thế nào?".
 
-    Returns: Flat VN dict với `"hiện tại": {nhiệt độ, độ ẩm}`,
-    `"trung bình mùa": {...}`, `"so sánh": [{yếu tố, hiện tại, TB mùa, chênh, mô tả}]`.
+    KHÔNG DÙNG KHI:
+        - "so tuần trước / hôm qua / ngày mai" — đó là so 2 thời điểm, không phải climatology.
+          Dùng compare_with_yesterday hoặc compare_weather.
+        - "bây giờ mấy độ" — dùng get_current_weather.
+
+    Returns: Flat VN dict: `"hiện tại"`, `"trung bình mùa"`, `"nhận xét"` (list string VN).
+    Error "no_weather_data" → gợi ý hỏi thời tiết hiện tại trước.
     """
     from app.agent.utils import auto_resolve_location
     from app.dal.weather_knowledge_dal import compare_with_seasonal

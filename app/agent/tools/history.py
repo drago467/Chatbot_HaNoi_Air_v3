@@ -18,16 +18,23 @@ class GetWeatherHistoryInput(BaseModel):
 
 @tool(args_schema=GetWeatherHistoryInput)
 def get_weather_history(ward_id: str = None, location_hint: str = None, date: str = None) -> dict:
-    """Lấy thời tiết của một NGÀY trong QUÁ KHỨ (max 14 ngày).
+    """LỊCH SỬ thời tiết 1 ngày đã qua (≤ 14 ngày gần nhất). PAST-only.
 
-    DÙNG KHI: user hỏi "hôm qua" (truyền date={yesterday_iso}), "ngày 15/3", ngày đã qua.
-    KHÔNG DÙNG KHI: so sánh today vs yesterday (dùng compare_with_yesterday).
+    DÙNG KHI: user hỏi ngày ĐÃ QUA:
+        "hôm qua" (truyền `date=<yesterday_iso>`), "hôm kia", "ngày 15/3", "tuần trước".
 
-    Returns: Flat VN dict với `"ngày"` (DD/MM/YYYY thứ VN), `"thời tiết chung"`,
-    `"nhiệt độ"`, `"cảm giác"` (CHỈ ward), `"nhiệt độ min-max"`, `"độ ẩm"`, `"điểm sương"`,
-    `"tổng lượng mưa"`, `"gió"`, `"UV"`.
-    ⚠ Ward-level history CHỈ có `wind_gust`, KHÔNG có `wind_speed` — value gió sẽ là
-    `"Giật X m/s"` chứ KHÔNG có "TB X m/s". KHÔNG diễn giải wind_gust thành avg.
+    KHÔNG DÙNG KHI:
+        - "hôm nay / bây giờ" → get_current_weather hoặc get_daily_summary.
+        - "ngày mai / tương lai" → get_daily_forecast.
+        - So today vs yesterday → get_compare_with_yesterday (1 tool thay vì 2).
+        - Ngày vượt 14-ngày past → refuse với limit.
+
+    Returns: Flat VN dict (`"ngày"` DD/MM/YYYY `(Thứ X)`, `"thời tiết chung"`, `"nhiệt độ"`,
+    `"cảm giác"` CHỈ ward, `"nhiệt độ min-max"`, `"độ ẩm"`, `"điểm sương"`,
+    `"tổng lượng mưa"`, `"gió"`, `"UV"`).
+
+    ⚠ Ward-level history CHỈ có `wind_gust` (không có `wind_speed` avg). Value `"gió"` sẽ là
+    "Giật X m/s" — KHÔNG diễn giải thành "TB X m/s" hay "wind avg".
     """
     from app.agent.dispatch import resolve_and_dispatch
     from app.dal.weather_dal import (
@@ -60,14 +67,23 @@ class GetDailySummaryInput(BaseModel):
 
 @tool(args_schema=GetDailySummaryInput)
 def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str = None) -> dict:
-    """Tổng hợp thời tiết CẢ NGÀY chi tiết 4 khung sáng/trưa/chiều/tối.
+    """TỔNG HỢP CHI TIẾT 1 NGÀY DUY NHẤT với 4 khung sáng/trưa/chiều/tối (ward only).
 
-    DÙNG KHI: "hôm nay thời tiết thế nào?", "tổng hợp ngày", "ngày mai có gì?".
-    Ward-level có temp_progression chi tiết sáng/trưa/chiều/tối.
+    DÙNG KHI: user cần nhìn CẢ NGÀY chi tiết:
+        "hôm nay/ngày mai/ngày X có gì?", "tổng hợp ngày", "cả ngày mấy độ?",
+        "ngày X sáng/trưa/chiều/tối mấy độ", "nhiệt độ max/min ngày X".
 
-    Returns: Flat VN dict: `"địa điểm", "ngày", "thời tiết chung", "nhiệt độ"`,
-    `"nhiệt độ theo ngày"` (Sáng/Trưa/Chiều/Tối — ward only), `"độ ẩm"`,
-    `"xác suất mưa"`, `"tổng lượng mưa"`, `"gió"`, `"UV"`, `"thời gian nắng"`, `"mọc-lặn"`.
+    KHÔNG DÙNG KHI:
+        - "bây giờ / tức thời" → get_current_weather (snapshot tại NOW).
+        - "nhiều ngày / tuần / cuối tuần" → get_daily_forecast / get_weather_period
+          (tool này CHỈ trả 1 ngày duy nhất).
+        - "X giờ tối nay" (khung giờ cụ thể <1h granularity) → get_hourly_forecast.
+
+    Returns: Flat VN dict: `"ngày"` (DD/MM `(Thứ X)`), `"thời tiết chung"`, `"nhiệt độ"`
+    (min/max/TB), `"nhiệt độ theo ngày"` (Sáng/Trưa/Chiều/Tối — CHỈ ward), `"độ ẩm"`,
+    `"xác suất mưa"`, `"tổng lượng mưa"` mm, `"gió"` (có thể kèm max_gust daily), `"UV"`,
+    `"thời gian nắng"`, `"mọc-lặn"`.
+    `"gợi ý dùng output"`: cảnh báo đây là TỔNG HỢP CẢ NGÀY, không phải tức thời.
     """
     from app.dal.timezone_utils import now_ict
     from datetime import date as date_type
@@ -134,12 +150,20 @@ class GetWeatherPeriodInput(BaseModel):
 @tool(args_schema=GetWeatherPeriodInput)
 def get_weather_period(ward_id: str = None, location_hint: str = None,
                        start_date: str = None, end_date: str = None) -> dict:
-    """Lấy thời tiết NHIỀU NGÀY trong khoảng thời gian (history 14 ngày + forecast 8 ngày).
+    """THỜI TIẾT KHOẢNG NHIỀU NGÀY (past 14 ngày + forecast 8 ngày, tối đa 14 ngày range).
 
-    DÙNG KHI: user hỏi "tuần này", "cuối tuần", "3 ngày tới", "từ ngày A đến ngày B".
-    PREFER dùng tool này cho range rộng thay vì nhiều call get_daily_forecast.
+    DÙNG KHI: user hỏi RANGE ngày:
+        "tuần này", "cuối tuần", "3 ngày tới", "từ ngày A đến ngày B",
+        "tuần trước", "cả tháng" (giới hạn 14 ngày mỗi call).
+        PREFER tool này cho range rộng thay nhiều call daily_summary/forecast.
 
-    Returns: Flat VN dict: `"địa điểm", "phạm vi"`, `"ngày": [list per-day flat VN dicts]`,
+    KHÔNG DÙNG KHI:
+        - 1 ngày duy nhất chi tiết 4 buổi → get_daily_summary.
+        - Khung giờ trong 48h → get_hourly_forecast.
+        - Range > 14 ngày hoặc vượt 8-ngày forecast — refuse với limit.
+
+    Returns: Flat VN dict: `"phạm vi"` (range), `"ngày"` = list per-day flat VN dict,
+    `"tổng hợp"` (ngày nóng/mát/mưa nhiều/ít nhất — pre-computed, COPY thẳng),
     `"thống kê tổng"` (nhiệt độ TB/thấp/cao, tổng mưa, số ngày có mưa).
     """
     from datetime import datetime

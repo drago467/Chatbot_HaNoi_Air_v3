@@ -36,28 +36,30 @@ class GetCurrentWeatherInput(BaseModel):
 
 @tool(args_schema=GetCurrentWeatherInput)
 def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
-    """Lấy thời tiết HIỆN TẠI (real-time) cho phường/xã, quận/huyện, hoặc toàn Hà Nội.
+    """SNAPSHOT thời tiết tại THỜI ĐIỂM HIỆN TẠI (1 mốc thời gian duy nhất).
 
-    DÙNG KHI: user hỏi "bây giờ", "hiện tại", "đang", "lúc này".
-    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội (tự động dispatch).
-    KHÔNG DÙNG KHI: hỏi về tương lai (dùng get_hourly_forecast), hỏi cả ngày
-    (dùng get_daily_summary), hỏi giờ đã qua hôm nay (không có current cho quá khứ).
+    DÙNG KHI: user dùng từ khoá SNAPSHOT thật sự:
+        "bây giờ", "hiện tại", "đang", "lúc này", "vừa xong".
+
+    KHÔNG DÙNG KHI (để tránh "reaching for the hammer"):
+        - "chiều / tối / đêm / sáng mai / X giờ tối nay" → dùng get_hourly_forecast.
+        - "ngày mai / thứ X / cuối tuần / 3 ngày tới" → dùng get_daily_forecast.
+        - "cả ngày chi tiết sáng/trưa/chiều/tối" → dùng get_daily_summary.
+        - "hôm qua / ngày đã qua" → dùng get_weather_history.
+        - "max/min/đỉnh/mạnh nhất/cao nhất cả ngày" → dùng get_daily_summary (superlative
+          từ snapshot CHỈ là 1 mốc, KHÔNG phải max cả ngày).
+        - "so hôm nay vs ngày mai" → gọi CẢ current + get_daily_forecast(tomorrow), KHÔNG
+          1 mình current rồi tự ngoại suy.
 
     Returns: Flat VN dict, value = "[nhãn] [số] [đơn vị]":
-    - "địa điểm": tên + cấp
-    - "thời điểm": "HH:MM [thứ] NGÀY/THÁNG/NĂM"
-    - "thời tiết chung": VN text (Nhiều mây / Có mưa / Giông bão...)
-    - "nhiệt độ": "<Nhãn HN> N.N°C"
-    - "độ ẩm": "N%"
-    - "cảm giác": "<Nhãn> N.N°C" (CHỈ ward; district/city KHÔNG có)
-    - "điểm sương", "xác suất mưa" (0-1 converted %), "gió" (avg cấp X + giật + hướng)
-    - "cường độ mưa hiện tại" (mm/h): CHỈ khi đang mưa
-    - "mây", "UV", "áp suất"
-    - "cảm giác nóng" / "cảm giác lạnh": CONDITIONAL (theo ngưỡng nhiệt-ẩm / nhiệt-gió)
-    - "tầm nhìn": CHỈ khi <5km
-    - "tóm tắt": 1-3 câu VN
-
-    Lưu ý: KHÔNG có `pop` trong current-level data của OWM. Xác suất mưa lấy từ forecast lân cận.
+    - "địa điểm", "thời điểm" (HH:MM Thứ X NGÀY/THÁNG/NĂM), "thời tiết chung"
+    - "nhiệt độ", "độ ẩm", "cảm giác" (CHỈ ward)
+    - "điểm sương", "xác suất mưa" (từ forecast lân cận vì snapshot không có pop)
+    - "gió" (avg + giật + hướng), "mây", "UV", "áp suất"
+    - "cường độ mưa hiện tại" (CHỈ khi đang mưa)
+    - "cảm giác nóng"/"cảm giác lạnh" (conditional theo ngưỡng)
+    - "tầm nhìn" (CHỈ khi <5km), "tóm tắt"
+    - "gợi ý dùng output": nếu xuất hiện → ĐỌC + làm theo.
     """
     from app.agent.dispatch import resolve_and_dispatch
     from app.agent.utils import enrich_weather_response, enrich_district_response, enrich_city_response

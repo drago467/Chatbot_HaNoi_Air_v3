@@ -170,5 +170,84 @@
         "response_prefix": "Gợi ý trang phục hôm nay:"
       }
     ]
+  },
+  "anaphoric_ambiguous": {
+    "description": "Câu đại từ thiếu địa điểm — phải hỏi lại, KHÔNG gọi tool",
+    "examples": [
+      {
+        "user": "Trời đẹp không?",
+        "thought": "Câu này không có địa điểm cụ thể và không có context carry-over. Theo POLICY 3.5 anaphoric — phải hỏi lại, KHÔNG mặc định Hà Nội.",
+        "action": "(không gọi tool)",
+        "response_prefix": "Bạn muốn biết thời tiết ở khu vực nào ạ? (Ví dụ: Hà Nội toàn TP, quận Cầu Giấy, phường Dịch Vọng...)"
+      },
+      {
+        "user": "Ở đó có mưa không?",
+        "thought": "Đại từ 'ở đó' không có location trước đó. Phải hỏi lại.",
+        "action": "(không gọi tool)",
+        "response_prefix": "Bạn đang nói tới khu vực nào ạ? Mình cần tên quận/phường cụ thể để tra."
+      }
+    ]
+  },
+  "out_of_scope_location": {
+    "description": "Câu hỏi về thời tiết ngoài Hà Nội — phải refuse, KHÔNG bịa data",
+    "examples": [
+      {
+        "user": "Thời tiết Sài Gòn hôm nay thế nào?",
+        "thought": "Sài Gòn ngoài scope. Theo POLICY 3.1 + 3.6, refuse với scope đúng, KHÔNG bịa số.",
+        "action": "(không gọi tool)",
+        "response_prefix": "Mình chỉ hỗ trợ thời tiết khu vực Hà Nội. Bạn có muốn hỏi một quận/huyện nào ở HN không?"
+      },
+      {
+        "user": "Đà Nẵng có mưa không?",
+        "thought": "Ngoài Hà Nội → refuse.",
+        "action": "(không gọi tool)",
+        "response_prefix": "Mình chỉ tra được thời tiết Hà Nội. Bạn hỏi HN nhé?"
+      }
+    ]
+  },
+  "beyond_forecast_horizon": {
+    "description": "Ngày vượt limit forecast (>8 ngày) hoặc history (>14 ngày) — refuse với limit, KHÔNG bịa",
+    "examples": [
+      {
+        "user": "Hà Nội ngày 15/5 nhiệt độ bao nhiêu?",
+        "thought": "15/5 vượt 8 ngày từ hôm nay (nếu hôm nay là 20/4, ngày 15/5 là ~25 ngày sau). Theo POLICY 3.6 refuse với limit, KHÔNG bịa.",
+        "action": "(không gọi tool hoặc tool sẽ refuse)",
+        "response_prefix": "Hệ thống dự báo tối đa 8 ngày tới. Ngày 15/5 đang vượt giới hạn, mình chưa có data chắc chắn."
+      },
+      {
+        "user": "Thời tiết HN 2 tháng trước như nào?",
+        "thought": "2 tháng trước vượt 14-ngày history. Refuse.",
+        "action": "(không gọi tool)",
+        "response_prefix": "Lịch sử hệ thống chỉ lưu 14 ngày gần nhất. 2 tháng trước đã vượt giới hạn."
+      }
+    ]
+  },
+  "temporal_direction_future": {
+    "description": "So sánh hôm nay vs ngày mai (FUTURE) — KHÔNG compare_with_yesterday (past); gọi 2 tool riêng",
+    "examples": [
+      {
+        "user": "Hôm nay với ngày mai khác nhau thế nào?",
+        "thought": "Direction FUTURE (today vs tomorrow). compare_with_yesterday CHỈ past direction. Theo POLICY 3.4 gọi 2 tool riêng: current + daily_forecast(tomorrow).",
+        "action": "get_current_weather(location_hint='Hà Nội') ; get_daily_forecast(location_hint='Hà Nội', start_date='<tomorrow_iso>', days=1)",
+        "response_prefix": "So sánh hôm nay vs ngày mai:"
+      },
+      {
+        "user": "Ngày mai có ấm hơn hôm nay không?",
+        "thought": "FUTURE direction — không dùng compare_with_yesterday. Gọi 2 tool riêng.",
+        "action": "get_current_weather(location_hint='Hà Nội') ; get_daily_forecast(location_hint='Hà Nội', start_date='<tomorrow_iso>', days=1)",
+        "response_prefix": "So nhiệt độ hôm nay vs ngày mai:"
+      }
+    ]
+  },
+  "no_tool_refuse_when_fail": {
+    "description": "Tool fail hoàn toàn — refuse lịch sự, KHÔNG bịa (POLICY 3.1 + FALLBACK 6.5)",
+    "examples": [
+      {
+        "user": "HN hôm nay nóng quá nhỉ?",
+        "thought": "User hỏi state (nóng không) → cần call tool. Nếu tất cả tool fail (vd network/database), refuse; KHÔNG tự viết 'Trời ấm, dễ chịu'. Policy: no-tool = no-number, không ngoại lệ.",
+        "action": "get_current_weather(location_hint='Hà Nội') (nếu fail) ; (refuse)",
+        "response_prefix": "Mình đang tạm không tra được dữ liệu. Bạn thử lại sau hoặc hỏi khung giờ/khu vực khác nhé."
+      }
+    ]
   }
 }

@@ -18,11 +18,22 @@ class GetHourlyForecastInput(BaseModel):
 
 @tool(args_schema=GetHourlyForecastInput)
 def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Lấy dự báo thời tiết THEO GIỜ (1-48 giờ tới). MAX hours=48 (OWM One Call 3.0).
+    """DỰ BÁO THEO GIỜ cho 1-48 giờ tới. MAX `hours` = 48.
 
-    Returns: Flat VN dict với key `"dự báo": [list per-hour flat VN dicts]`, mỗi entry có
-    các key: `"thời điểm"`, `"thời tiết"`, `"nhiệt độ"`, `"độ ẩm"`, `"xác suất mưa"`,
-    `"cường độ mưa"` (khi mưa), `"gió"`, `"mây"`. Thêm `"tóm tắt tổng"` + `"ghi chú dữ liệu"`.
+    DÙNG KHI: user hỏi khung giờ CỤ THỂ trong 48h:
+        "chiều/tối/đêm nay", "sáng mai", "X giờ tối nay", "vài giờ tới", "6-9h sáng mai".
+        Set `hours` ĐỦ phủ khung user hỏi (vd NOW=16h & "8pm-midnight" → `hours` ≥ 10;
+        NOW=11h & "6-9h sáng mai" → `hours` ≥ 24).
+
+    KHÔNG DÙNG KHI:
+        - "bây giờ / hiện tại" → get_current_weather (snapshot).
+        - "ngày cụ thể / nhiều ngày" (>48h) → get_daily_forecast.
+        - "hôm qua / ngày đã qua" → get_weather_history.
+        - Khoảng vượt 48h → refuse hoặc chuyển daily_forecast.
+
+    Returns: Flat VN dict, key `"dự báo"` = list per-hour flat VN dict
+    (`"thời điểm"`, `"thời tiết"`, `"nhiệt độ"`, `"độ ẩm"`, `"xác suất mưa"`,
+    `"cường độ mưa"` khi mưa, `"gió"`, `"mây"`) + `"tóm tắt tổng"` + `"ghi chú dữ liệu"`.
 
     DÙNG KHI: user hỏi về chiều nay, tối nay, sáng mai, vài giờ tới,
     mưa lúc mấy giờ, nhiệt độ tối nay, gió đêm nay, khoảng thời gian cụ thể.
@@ -81,39 +92,30 @@ class GetDailyForecastInput(BaseModel):
 
 @tool(args_schema=GetDailyForecastInput)
 def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int = 7, start_date: str = None) -> dict:
-    """Lấy dự báo thời tiết THEO NGÀY (1-8 ngày tới). MAX days=8 (OWM One Call 3.0).
+    """DỰ BÁO THEO NGÀY cho khoảng 1-8 ngày (overview per-day). MAX `days` = 8.
 
-    ⚠ VƯỢT GIỚI HẠN: User hỏi ngày 9+ trở đi (vd "tuần sau" = ngày 8-14, tháng này nếu >8 ngày)
-    → Tool chỉ trả tối đa 8 ngày. PHẢI nói rõ "hệ thống dự báo tối đa 8 ngày". KHÔNG bịa.
+    DÙNG KHI: user hỏi nguyên ngày hoặc nhiều ngày tương lai:
+        "ngày mai", "ngày kia", "thứ X", "3 ngày tới", "cuối tuần này",
+        "tuần tới" (phần trong 8 ngày).
 
-    Returns: Flat VN dict, key `"dự báo": [list per-day flat VN dicts]`, mỗi entry có
-    `"ngày"` (DD/MM/YYYY thứ VN), `"thời tiết"`, `"nhiệt độ"` (Thấp-Cao range),
-    `"nhiệt độ theo ngày"` (Sáng/Trưa/Chiều/Tối), `"độ ẩm"`, `"xác suất mưa"`,
-    `"tổng lượng mưa"` (mm), `"gió"`, `"UV"`, `"mọc-lặn"`, `"tóm tắt"`.
+    KHÔNG DÙNG KHI:
+        - "cả ngày X chi tiết sáng/trưa/chiều/tối" 1 ngày duy nhất → get_daily_summary.
+        - "chiều/tối/X giờ" trong 48h → get_hourly_forecast.
+        - "hôm qua" → get_weather_history.
+        - "bây giờ" → get_current_weather.
+        - Khoảng vượt 8 ngày → refuse nói rõ "tối đa 8 ngày", KHÔNG bịa.
 
-    DÙNG KHI: user hỏi "ngày mai", "cuối tuần", "3 ngày tới".
-    Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội (tự động dispatch).
+    LOGIC param:
+        - `start_date` (ISO YYYY-MM-DD): mặc định hôm nay. User hỏi "ngày mai" → PHẢI
+          truyền `start_date=tomorrow_iso`, `days=1`. KHÔNG gọi days=1 thiếu start_date.
+        - `days`: số ngày bao gồm start_date. 1 ≤ days ≤ 8.
 
-    LOGIC: Query lấy các ngày có date >= start_date, giới hạn bởi days.
-    - start_date mặc định = HÔM NAY (theo timezone Asia/Ho_Chi_Minh)
-    - days = số ngày muốn lấy (BAO GỒM start_date)
-    - ⚠ QUAN TRỌNG: start_date=None + days=1 → trả về HÔM NAY (không phải ngày mai)!
-
-    VÍ DỤ (CHÚ Ý start_date):
-    - "ngày mai" → PHẢI set start_date=<tomorrow YYYY-MM-DD>, days=1
-      (NẾU KHÔNG set start_date, tool trả HÔM NAY, sai với ý user)
-    - "ngày kia" → start_date=<day_after_tomorrow>, days=1
-    - "3 ngày tới" (bao gồm hôm nay) → start_date=None, days=3
-    - "3 ngày tới" (từ ngày mai) → start_date=<tomorrow>, days=3
-    - "cuối tuần này" → start_date=<Thứ 7 this week>, days=2
-    - "thứ sáu tuần này" → start_date=<Fri YYYY-MM-DD>, days=1
-    - "tuần tới" (thứ 2 tuần sau) → start_date=<Mon next week>, days=7
-
-    Dựa vào system prompt có {today_date} + {today_weekday} → TÍNH đúng start_date
-    trước khi gọi tool. TUYỆT ĐỐI không gọi days=1 không kèm start_date khi user
-    hỏi "ngày mai".
-
-    KHÔNG DÙNG KHI: hỏi theo giờ (dùng get_hourly_forecast).
+    Returns: Flat VN dict:
+        - `"dự báo"`: list per-day flat VN dict (`"ngày"` DD/MM/YYYY `(Thứ X)`,
+          `"thời tiết"`, `"nhiệt độ"` Thấp-Cao, `"nhiệt độ theo ngày"` Sáng/Trưa/Chiều/Tối
+          overview, `"xác suất mưa"`, `"tổng lượng mưa"` mm, `"gió"`, `"UV"`, `"mọc-lặn"`).
+        - `"tổng hợp"`: pre-computed superlatives (ngày nóng/mát/mưa nhiều/ít nhất).
+          COPY thẳng, KHÔNG tự argmax qua list.
     """
     from app.agent.dispatch import dispatch_forecast
     from app.dal.weather_dal import get_daily_forecast as dal_ward
@@ -153,12 +155,20 @@ class GetRainTimelineInput(BaseModel):
 
 @tool(args_schema=GetRainTimelineInput)
 def get_rain_timeline(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
-    """Timeline mưa: khi nào bắt đầu mưa, khi nào tạnh, max lượng mưa. MAX hours=48.
+    """TIMELINE MƯA: đợt mưa bắt đầu/kết thúc/cường độ đỉnh trong 1-48h. MAX `hours` = 48.
 
-    DÙNG KHI: "lúc nào mưa?", "mưa đến bao giờ?", "trời tạnh lúc nào?".
+    DÙNG KHI: user hỏi MỐC mưa trong 48h:
+        "lúc nào mưa?", "mưa đến bao giờ?", "trời tạnh lúc nào?", "chiều có mưa không?".
+        Phải đọc timestamp start/end trong output — gán vào đúng NGÀY user hỏi.
 
-    Returns: Flat VN dict với `"đợt mưa": [{"bắt đầu", "kết thúc", "xác suất cao nhất",
-    "cường độ đỉnh"}]`, `"tổng số đợt"`, và `"tóm tắt"` (next_rain / next_clear).
+    KHÔNG DÙNG KHI:
+        - "tổng lượng mưa ngày / tháng" → dùng get_daily_forecast / get_weather_period
+          (có `"tổng lượng mưa"` mm/ngày). Key `"cường độ đỉnh"` ở đây là mm/h TẠI 1 GIỜ,
+          KHÔNG phải tổng.
+        - "ngày mai có mưa không" nếu data chỉ 48h và hỏi ngày > 48h tới → refuse với limit.
+
+    Returns: Flat VN dict với `"đợt mưa"` = list `[{"bắt đầu", "kết thúc", "xác suất cao nhất",
+    "cường độ đỉnh" (mm/h)}]`, `"tổng số đợt"`, `"tóm tắt"` (next_rain / next_clear).
     """
     from app.agent.dispatch import dispatch_forecast
     from app.dal.weather_dal import get_hourly_forecast as dal_ward_hourly

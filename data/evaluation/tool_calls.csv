@@ -106,3 +106,6 @@ timestamp,session_id,turn_number,tool_name,tool_input,tool_output,success,execut
 2026-04-20T11:22:28.992044+07:00,trace-69-8b0b70c5,0,get_daily_summary,"{'date': '2026-04-21', 'location_hint': 'Ba Vì'}",,True,0
 2026-04-20T14:52:23.575764+07:00,trace-62-0136f2a1,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Đông Anh'}",,True,0
 2026-04-20T14:54:02.258925+07:00,trace-69-9e018f9f,0,get_daily_summary,"{'date': '2026-04-21', 'location_hint': 'Ba Vì'}",,True,0
+2026-04-20T21:19:00.141682+07:00,trace-62-4041865e,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Đông Anh'}",,True,0
+2026-04-20T21:20:59.213156+07:00,trace-69-7e90e698,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Ba Vì', 'start_date': '2026-04-21'}",,True,0
+2026-04-20T21:27:39.012788+07:00,trace-91-f4b32e72,0,get_weather_history,"{'date': '2026-04-19', 'location_hint': 'Hà Nội'}",,True,0
