@@ -1,9 +1,6 @@
 """Router configuration — paths, thresholds, constants."""
 
 import os
-from pathlib import Path
-
-_ROOT = Path(__file__).resolve().parents[3]
 
 # ── Ollama (primary inference backend) ──
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
@@ -12,37 +9,28 @@ OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "hanoi-weather-router")
 # ── Thresholds ──
 CONFIDENCE_THRESHOLD = float(os.getenv("SLM_CONFIDENCE_THRESHOLD", "0.75"))
 
-# ── Per-intent adaptive thresholds (Module 4: Calibrated Confidence Routing)
-# Updated 2026-03-29 based on v3 confusion analysis:
-# - weather_alert lowered: miss a storm warning is MORE dangerous than false alert
-# - activity_weather lowered: no longer confused with smalltalk after data relabeling
-# - current_weather vs temperature_query: both medium, let smart routing handle edge cases
+# ── Per-intent thresholds ──
+# Model output raw confidence thường ~0.9 (training data artifact — hard-coded
+# 0.9 trong 1586/3000 samples). Trước đây có calibration T=1.4019 nhưng vô nghĩa
+# vì model không học confidence thực. Giờ dùng raw conf; thresholds 0.75-0.85
+# đủ để mọi câu "tự tin" pass, chỉ câu rare (conf < 0.75) rơi fallback.
 PER_INTENT_THRESHOLDS: dict[str, float] = {
-    "current_weather":      0.65,   # common intent, relax threshold
-    "weather_overview":     0.65,   # typically easy to classify
-    "smalltalk_weather":    0.60,   # highly distinctive
-    "hourly_forecast":      0.70,   # good accuracy
-    "daily_forecast":       0.70,   # good accuracy
-    "rain_query":           0.70,   # improved after data relabeling
-    "historical_weather":   0.72,   # moderate accuracy
-    "humidity_fog_query":   0.75,   # default
-    "seasonal_context":     0.75,   # default
-    "wind_query":           0.70,   # improved: wind queries now properly labeled
-    "location_comparison":  0.78,   # can confuse with current_weather
-    "activity_weather":     0.70,   # improved: no longer confused with smalltalk
-    "expert_weather_param": 0.78,   # slightly relaxed from 0.80
-    "temperature_query":    0.75,   # relaxed from 0.80: smart routing handles overlap
-    "weather_alert":        0.35,   # SAFETY: miss alert >> false positive
+    "current_weather":      0.82,
+    "hourly_forecast":      0.82,
+    "daily_forecast":       0.80,
+    "weather_overview":     0.85,
+    "rain_query":           0.85,
+    "temperature_query":    0.82,
+    "wind_query":           0.80,
+    "humidity_fog_query":   0.82,
+    "historical_weather":   0.82,
+    "location_comparison":  0.82,
+    "activity_weather":     0.75,
+    "expert_weather_param": 0.79,
+    "weather_alert":        0.73,
+    "seasonal_context":     0.78,
+    "smalltalk_weather":    0.85,
 }
-
-# ── Confidence calibration (Module 4: Temperature Scaling)
-# Post-hoc temperature scaling: calibrated_conf = softmax(logits / T)
-# T=1.0 means no calibration (identity). Update via scripts/router/calibrate.py
-CALIBRATION_TEMPERATURE = float(os.getenv("SLM_CALIBRATION_TEMPERATURE", "1.0"))
-
-# ── Calibration file path ──
-# File may not exist if calibration has not been run. slm_router.py checks .exists() before loading.
-CALIBRATION_FILE = _ROOT / "model" / "router" / "calibration.json"
 
 # ── Feature flag ──
 USE_SLM_ROUTER = os.getenv("USE_SLM_ROUTER", "false").lower() in ("true", "1", "yes")

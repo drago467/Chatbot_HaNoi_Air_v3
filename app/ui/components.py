@@ -1,179 +1,39 @@
-"""Streamlit UI components — sidebar, right info panel, weather, data refresh."""
+"""Streamlit UI components — sidebar, right info panel, weather, data refresh.
+
+Đã refactor để gọi FastAPI backend (app/ui/api_client.py) thay vì truy vấn DB
+hoặc chạy agent trực tiếp. Các vấn đề UX chính đã xử lý:
+- Stream không bị huỷ khi user tương tác (chat area trong @st.fragment).
+- Data refresh không block UI (enqueue Celery task + poll).
+- Không còn block 15s chờ Ollama khi load page (chuyển sang /ready endpoint).
+- Toggle info panel dời về sidebar (checkbox), bỏ nút ▶/◀ nổi.
+- Welcome screen ẩn ngay khi user gõ / click suggestion đầu tiên.
+"""
 
 from __future__ import annotations
 
-import asyncio
 import logging
-import os
-import subprocess
-import time as _time
 import uuid
 from datetime import datetime, timedelta
 
 import streamlit as st
 
-from app.ui.utils import get_weather_emoji, get_wind_direction, get_weather_description_vi
+from app.ui import api_client
+from app.ui.utils import (
+    get_weather_description_vi,
+    get_weather_emoji,
+    get_wind_direction,
+)
 
 _logger = logging.getLogger(__name__)
-
-
-# ── Ollama startup helper ─────────────────────────────────────────────
-
-
-def ensure_ollama_running() -> None:
-    """Check if Ollama is reachable; if not, attempt to start it.
-
-    Only runs once per Streamlit session (result cached in session_state).
-    On Windows, starts 'ollama serve' as a background process.
-    """
-    if st.session_state.get("_ollama_checked"):
-        return
-
-    from app.agent.router.config import OLLAMA_BASE_URL, USE_SLM_ROUTER
-
-    if not USE_SLM_ROUTER:
-        st.session_state._ollama_checked = True
-        return
-
-    if _ollama_is_reachable(OLLAMA_BASE_URL):
-        _logger.info("Ollama already running at %s", OLLAMA_BASE_URL)
-        st.session_state._ollama_checked = True
-        return
-
-    st.toast("Đang khởi động Ollama...", icon="🔄")
-    _logger.info("Ollama not reachable — attempting to start")
-
-    try:
-        subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-    except FileNotFoundError:
-        st.warning("Không tìm thấy Ollama. Hãy cài đặt từ https://ollama.com")
-        st.session_state._ollama_checked = True
-        return
-    except Exception as e:
-        _logger.warning("Could not start Ollama: %s", e)
-        st.session_state._ollama_checked = True
-        return
-
-    for i in range(30):
-        _time.sleep(0.5)
-        if _ollama_is_reachable(OLLAMA_BASE_URL):
-            _logger.info("Ollama started successfully after %.1fs", (i + 1) * 0.5)
-            st.toast("Ollama sẵn sàng!", icon="✅")
-            st.session_state._ollama_checked = True
-            return
-
-    st.warning("Ollama chưa phản hồi sau 15s. Router sẽ fallback sang full agent.")
-    _logger.warning("Ollama did not start within 15s")
-    st.session_state._ollama_checked = True
-
-
-def _ollama_is_reachable(base_url: str) -> bool:
-    """Quick HTTP check to see if Ollama is responding."""
-    import httpx
-    try:
-        resp = httpx.get(f"{base_url.rstrip('/')}/api/tags", timeout=3.0)
-        return resp.status_code == 200
-    except Exception:
-        return False
-
-
-# ── Database helpers (cached) ──────────────────────────────────────────
-
-
-@st.cache_data(ttl=3600)
-def get_districts() -> list:
-    """Get all districts from database (cached 1 hour)."""
-    from app.db.dal import query
-    try:
-        districts = query("""
-            SELECT DISTINCT district_name_vi
-            FROM dim_ward
-            ORDER BY district_name_vi
-        """)
-        return [d["district_name_vi"] for d in districts if d.get("district_name_vi")]
-    except Exception:
-        return []
-
-
-@st.cache_data(ttl=3600)
-def get_wards_by_district(district: str) -> dict:
-    """Get wards for a specific district (cached 1 hour)."""
-    from app.db.dal import query
-    try:
-        wards = query("""
-            SELECT ward_id, ward_name_vi
-            FROM dim_ward
-            WHERE district_name_vi = %s
-            ORDER BY ward_name_vi
-        """, (district,))
-        return {w["ward_name_vi"]: w["ward_id"] for w in wards}
-    except Exception:
-        return {}
-
-
-def get_current_weather_summary(ward_id: str | None = None) -> dict | None:
-    """Get latest weather data for display."""
-    if ward_id is None:
-        ward_id = st.session_state.get("location", "ID_00364")
-    return _fetch_weather(ward_id)
-
-
-@st.cache_data(ttl=300)
-def _fetch_weather(ward_id: str) -> dict | None:
-    """Cached weather query (5 min TTL). Keyed by ward_id."""
-    from app.db.dal import query
-
-    try:
-        result = query("""
-            SELECT temp, humidity, weather_main, wind_speed, wind_deg
-            FROM fact_weather_hourly
-            WHERE ward_id = %s
-            ORDER BY ts_utc DESC
-            LIMIT 1
-        """, (ward_id,))
-        if result:
-            return result[0]
-    except Exception:
-        pass
-    return None
-
-
-@st.cache_data(ttl=300)
-def _fetch_hourly_forecast(ward_id: str) -> list[dict]:
-    """Fetch next 24h forecast data for Plotly chart."""
-    from app.db.dal import query
-    try:
-        return query("""
-            SELECT ts_utc AT TIME ZONE 'Asia/Ho_Chi_Minh' AS time_local,
-                   temp, humidity
-            FROM fact_weather_hourly
-            WHERE ward_id = %s
-              AND data_kind = 'forecast'
-              AND ts_utc > NOW()
-            ORDER BY ts_utc
-            LIMIT 24
-        """, (ward_id,))
-    except Exception:
-        return []
 
 
 # ── Session state management ──────────────────────────────────────────
 
 
 def init_session_state() -> None:
-    """Initialize all session state keys, loading persisted conversations from DB."""
+    """Init tất cả session state keys. Load conversations từ DB qua API."""
     if "conversations" not in st.session_state:
-        try:
-            from app.db.conversation_dal import load_all_conversations
-            st.session_state.conversations = load_all_conversations()
-        except Exception:
-            _logger.warning("Could not load conversations from DB, starting fresh")
-            st.session_state.conversations = {}
+        st.session_state.conversations = _load_conversations_from_api()
 
     if "active_id" not in st.session_state:
         convs = st.session_state.conversations
@@ -192,11 +52,58 @@ def init_session_state() -> None:
     if "show_info_panel" not in st.session_state:
         st.session_state.show_info_panel = True
 
-    ensure_ollama_running()
+    if "is_streaming" not in st.session_state:
+        st.session_state.is_streaming = False
+
+    if "active_job_id" not in st.session_state:
+        st.session_state.active_job_id = None
+
+
+def _load_conversations_from_api() -> dict:
+    """Fetch danh sách hội thoại qua FastAPI. Fallback: empty dict nếu API down."""
+    import requests
+
+    try:
+        r = requests.get(f"{api_client.API_URL}/conversations", timeout=5)
+        r.raise_for_status()
+        summaries = r.json()
+    except Exception as e:
+        _logger.warning("Could not load conversations from API: %s", e)
+        return {}
+
+    # Lấy detail cho từng conv (messages) — thesis scope thường <20 conv nên OK
+    result: dict = {}
+    for s in summaries:
+        try:
+            d = requests.get(
+                f"{api_client.API_URL}/conversations/{s['conv_id']}",
+                timeout=5,
+            ).json()
+            result[s["conv_id"]] = {
+                "title": d["title"],
+                "messages": d["messages"],
+                "thread_id": d["thread_id"],
+                "created_at": _parse_iso(d["created_at"]),
+                "updated_at": _parse_iso(d["updated_at"]),
+                "welcome_dismissed": len(d["messages"]) > 0,
+            }
+        except Exception as e:
+            _logger.warning("Could not load conv %s: %s", s["conv_id"], e)
+    return result
+
+
+def _parse_iso(s: str | datetime) -> datetime:
+    """Parse ISO string sang datetime. Tolerate datetime object có sẵn."""
+    if isinstance(s, datetime):
+        return s
+    try:
+        return datetime.fromisoformat(s.replace("Z", "+00:00"))
+    except Exception:
+        return datetime.now()
 
 
 def create_new_conversation() -> str:
-    """Create a new conversation and set it as active. Returns the new ID."""
+    """Tạo hội thoại mới + set active. Persist qua DB."""
     from app.dal.timezone_utils import now_ict
 
     conv_id = str(uuid.uuid4())
@@ -208,10 +115,11 @@ def create_new_conversation() -> str:
         "thread_id": thread_id,
         "created_at": now,
         "updated_at": now,
+        "welcome_dismissed": False,
     }
     st.session_state.active_id = conv_id
 
-    # Persist to DB
+    # Persist trực tiếp (DAL vẫn dùng được — Streamlit container có DB access)
     try:
         from app.db.conversation_dal import save_conversation
         save_conversation(conv_id, thread_id, "Trò chuyện mới", [], now, now)
@@ -222,12 +130,11 @@ def create_new_conversation() -> str:
 
 
 def delete_conversation(conv_id: str) -> None:
-    """Delete a conversation. If it was active, switch to the most recent one."""
+    """Xoá 1 hội thoại. Nếu đang active, chuyển sang hội thoại mới nhất."""
     convs = st.session_state.conversations
     if conv_id in convs:
         del convs[conv_id]
 
-    # Remove from DB
     try:
         from app.db.conversation_dal import delete_conversation_db
         delete_conversation_db(conv_id)
@@ -243,7 +150,7 @@ def delete_conversation(conv_id: str) -> None:
 
 
 def get_active_conversation() -> dict:
-    """Get the currently active conversation dict."""
+    """Lấy hội thoại đang active."""
     convs = st.session_state.conversations
     active_id = st.session_state.active_id
 
@@ -257,44 +164,49 @@ def get_active_conversation() -> dict:
 
 
 def render_sidebar() -> None:
-    """Render the left sidebar (conversations + data refresh)."""
+    """Render sidebar. Bọc @st.fragment để toggle/click không rerun toàn app."""
     with st.sidebar:
         _sidebar_fragment()
 
 
 @st.fragment
 def _sidebar_fragment() -> None:
-    """Sidebar content wrapped in @st.fragment for isolated reruns."""
+    """Nội dung sidebar. Tất cả tương tác ở đây cô lập trong fragment."""
     _render_header()
     _render_new_chat_button()
     st.divider()
     _render_conversation_list()
     st.divider()
     _render_data_refresh_section()
+    st.divider()
+    _render_options_section()
 
 
 def _render_header() -> None:
-    """App logo and title."""
-    st.markdown("""
-    <div class="sidebar-header">
-        <div class="sidebar-header-icon">🌤️</div>
-        <div>
-            <div class="sidebar-header-text">HanoiAir</div>
-            <div class="sidebar-header-sub">Chatbot Thời Tiết</div>
+    """Logo + tên app."""
+    st.markdown(
+        """
+        <div class="sidebar-header">
+            <div class="sidebar-header-icon">🌤️</div>
+            <div>
+                <div class="sidebar-header-text">HanoiWeather</div>
+                <div class="sidebar-header-sub">Chatbot Thời Tiết</div>
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _render_new_chat_button() -> None:
-    """Button to create a new conversation."""
+    """Nút tạo hội thoại mới."""
     if st.button("＋  Trò chuyện mới", use_container_width=True, type="primary"):
         create_new_conversation()
         st.rerun(scope="app")
 
 
 def _render_conversation_list() -> None:
-    """Conversation list grouped by date."""
+    """List hội thoại theo ngày."""
     convs = st.session_state.conversations
     if not convs:
         return
@@ -315,7 +227,7 @@ def _render_conversation_list() -> None:
     )
 
     for conv_id, conv in sorted_convs:
-        d = conv["created_at"].date()
+        d = conv["created_at"].date() if isinstance(conv["created_at"], datetime) else today
         if d == today:
             groups["Hôm nay"].append((conv_id, conv))
         elif d == yesterday:
@@ -351,11 +263,11 @@ def _render_conversation_list() -> None:
                         st.rerun(scope="app")
 
 
-# ── Data refresh (in left sidebar) ───────────────────────────────────
+# ── Data refresh section ─────────────────────────────────────────────
 
 
 def _render_data_refresh_section() -> None:
-    """Data refresh button with optional history backfill."""
+    """Nút cập nhật dữ liệu — enqueue Celery task, poll trạng thái."""
     st.markdown("##### 🔄 Cập nhật dữ liệu")
 
     include_history = st.checkbox("Bao gồm dữ liệu lịch sử", value=False)
@@ -367,84 +279,123 @@ def _render_data_refresh_section() -> None:
             options=[3, 7, 14],
             value=7,
         )
-        st.caption(f"⏱ Ước tính: ~{_estimate_time(history_days)}s")
 
-    if st.button("Cập nhật ngay", use_container_width=True):
-        _run_data_refresh(include_history=include_history, history_days=history_days)
+    disabled = st.session_state.active_job_id is not None
 
-
-def _estimate_time(history_days: int) -> int:
-    """Rough time estimate for data refresh."""
-    base = 30
-    if history_days:
-        base += history_days * 10
-    return base
-
-
-def _run_data_refresh(include_history: bool = False, history_days: int = 7) -> None:
-    """Execute data ingestion with progress feedback."""
-    from app.scripts.ingest_openweather_async import OpenWeatherAsyncIngestor
-
-    ingestor = OpenWeatherAsyncIngestor()
-    total_steps = 3 if include_history else 2
-    progress = st.progress(0)
-    status = st.empty()
-
-    def _run_async(coro):
-        """Run an async coroutine safely (handles existing event loop)."""
+    if st.button("Cập nhật ngay", use_container_width=True, disabled=disabled):
         try:
-            loop = asyncio.get_running_loop()
-        except RuntimeError:
-            loop = None
+            task_id = api_client.enqueue_ingest(
+                include_history=include_history,
+                history_days=history_days,
+            )
+            st.session_state.active_job_id = task_id
+            st.rerun(scope="fragment")
+        except Exception as e:
+            st.error(f"Không enqueue được job: {e}")
 
-        if loop and loop.is_running():
-            import concurrent.futures
-            with concurrent.futures.ThreadPoolExecutor() as pool:
-                future = pool.submit(asyncio.run, coro)
-                return future.result()
-        else:
-            return asyncio.run(coro)
+    # Hiển thị trạng thái khi có job đang chạy — fragment riêng tự refresh 2s
+    if st.session_state.active_job_id:
+        _job_status_fragment()
+
+
+@st.fragment(run_every=2)
+def _job_status_fragment() -> None:
+    """Poll trạng thái Celery task mỗi 2s đến khi SUCCESS/FAILURE."""
+    task_id = st.session_state.active_job_id
+    if not task_id:
+        return
 
     try:
-        status.info("🌡️ Đang cập nhật thời tiết hiện tại...")
-        _run_async(ingestor.run_nowcast())
-        progress.progress(1 / total_steps)
-
-        status.info("📊 Đang cập nhật dự báo...")
-        _run_async(ingestor.run_forecast())
-        progress.progress(2 / total_steps)
-
-        if include_history:
-            status.info(f"📜 Đang cập nhật lịch sử ({history_days} ngày)...")
-            _run_async(ingestor.run_history_backfill(days=history_days))
-            progress.progress(1.0)
-
-        progress.progress(1.0)
-        status.success("Cập nhật dữ liệu thành công!")
-
-        _fetch_weather.clear()
-        _fetch_hourly_forecast.clear()
-
+        status = api_client.poll_task(task_id)
     except Exception as e:
-        status.warning(f"Lỗi khi cập nhật: {e}")
+        st.error(f"Lỗi poll task: {e}")
+        st.session_state.active_job_id = None
+        return
+
+    state = status.get("state", "PENDING")
+    progress = float(status.get("progress", 0))
+    step = status.get("step") or state
+
+    st.progress(progress)
+    st.caption(f"⏳ {step}")
+
+    if state == "SUCCESS":
+        st.success("Cập nhật dữ liệu thành công!")
+        st.session_state.active_job_id = None
+    elif state == "FAILURE":
+        st.error(f"Cập nhật thất bại: {status.get('error') or 'unknown'}")
+        st.session_state.active_job_id = None
+
+
+# ── Options section (toggle info panel — thay cho nút floating ▶/◀) ───
+
+
+def _render_options_section() -> None:
+    """Section tuỳ chọn UI. Toggle panel thời tiết.
+
+    Không dùng on_change callback vì Streamlit block st.rerun() trong callback.
+    Thay vào đó: check diff trong fragment body rồi st.rerun(scope=\"app\") để
+    main body re-evaluate column layout.
+    """
+    st.markdown("##### ⚙️ Tuỳ chọn")
+
+    # Init widget state 1 lần, sync từ show_info_panel
+    if "chk_info_panel" not in st.session_state:
+        st.session_state.chk_info_panel = st.session_state.show_info_panel
+
+    # Không truyền value= cùng với key= (sẽ conflict với session_state)
+    new_value = st.checkbox(
+        "Hiện panel thời tiết",
+        key="chk_info_panel",
+        help="Ẩn/hiện panel bên phải (địa điểm, thời tiết, biểu đồ)",
+    )
+
+    if new_value != st.session_state.show_info_panel:
+        st.session_state.show_info_panel = new_value
+        # Full-app rerun: main body (ngoài fragment) re-evaluate layout
+        st.rerun(scope="app")
+
+    _render_backend_status_badge()
+
+
+def _render_backend_status_badge() -> None:
+    """Badge nhỏ hiển thị trạng thái backend (Postgres/Redis/Router/LLM)."""
+    if "backend_status" not in st.session_state:
+        st.session_state.backend_status = api_client.get_ready_status()
+
+    status = st.session_state.backend_status
+    all_ok = all(v in ("ok", "disabled") for v in status.values())
+
+    if all_ok:
+        st.caption("🟢 Backend: tất cả sẵn sàng")
+    else:
+        issues = [k for k, v in status.items() if v not in ("ok", "disabled")]
+        st.caption(f"🟡 Backend issues: {', '.join(issues)}")
 
 
 # ── Right info panel ──────────────────────────────────────────────────
 
 
 def render_info_panel() -> None:
-    """Render the right info panel (location, weather, chart)."""
+    """Render right info panel: location selector + weather card + forecast chart.
+
+    Không bọc fragment vì fragment lồng trong st.columns có thể gây lệch layout
+    (nội dung nhảy xuống dưới thay vì render đúng cột). Chat stream đã được cô
+    lập bằng fragment riêng trong app.py nên info panel không cần cô lập thêm.
+    """
     _render_location_selector()
     _render_weather_card()
     _render_temperature_chart()
 
 
 def _render_location_selector() -> None:
-    """District and ward selector dropdowns."""
-    st.markdown('<div class="info-panel-header">📍 Địa điểm</div>',
-                unsafe_allow_html=True)
+    """Dropdown chọn quận/phường."""
+    st.markdown(
+        '<div class="info-panel-header">📍 Địa điểm</div>',
+        unsafe_allow_html=True,
+    )
 
-    district_names = get_districts()
+    district_names = api_client.get_districts()
     if not district_names:
         st.caption("Chưa có dữ liệu quận/huyện")
         return
@@ -457,7 +408,7 @@ def _render_location_selector() -> None:
         key="info_district",
     )
 
-    ward_names = get_wards_by_district(selected_district)
+    ward_names = api_client.get_wards(selected_district)
     if ward_names:
         selected_ward = st.selectbox(
             "Phường/Xã",
@@ -470,8 +421,9 @@ def _render_location_selector() -> None:
 
 
 def _render_weather_card() -> None:
-    """Compact current weather display."""
-    weather = get_current_weather_summary()
+    """Card hiển thị thời tiết hiện tại."""
+    ward_id = st.session_state.get("location") or "ID_00364"
+    weather = api_client.get_current_weather(ward_id)
     if not weather:
         return
 
@@ -484,49 +436,56 @@ def _render_weather_card() -> None:
     wind_dir = get_wind_direction(wind_deg) if wind_deg is not None else "--"
     wind_str = f"{wind_speed:.1f} m/s" if wind_speed else "--"
 
-    st.markdown(f"""
-    <div class="weather-card">
-        <div class="weather-card-top">
-            <div class="weather-card-temp">{temp}°C</div>
-            <div class="weather-card-emoji">{emoji}</div>
+    st.markdown(
+        f"""
+        <div class="weather-card">
+            <div class="weather-card-top">
+                <div class="weather-card-temp">{temp}°C</div>
+                <div class="weather-card-emoji">{emoji}</div>
+            </div>
+            <div class="weather-card-desc">{desc}</div>
+            <div class="weather-card-grid">
+                <div class="weather-card-item">💧 {humidity}%</div>
+                <div class="weather-card-item">💨 {wind_str}</div>
+                <div class="weather-card-item">🧭 {wind_dir}</div>
+            </div>
         </div>
-        <div class="weather-card-desc">{desc}</div>
-        <div class="weather-card-grid">
-            <div class="weather-card-item">💧 {humidity}%</div>
-            <div class="weather-card-item">💨 {wind_str}</div>
-            <div class="weather-card-item">🧭 {wind_dir}</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def _render_temperature_chart() -> None:
-    """Render Plotly temperature chart (24h forecast)."""
-    st.markdown('<div class="info-panel-header">📈 Dự báo 24h</div>',
-                unsafe_allow_html=True)
+    """Biểu đồ Plotly nhiệt độ 24h."""
+    st.markdown(
+        '<div class="info-panel-header">📈 Dự báo 24h</div>',
+        unsafe_allow_html=True,
+    )
 
-    ward_id = st.session_state.get("location", "ID_00364")
-    data = _fetch_hourly_forecast(ward_id)
+    ward_id = st.session_state.get("location") or "ID_00364"
+    data = api_client.get_hourly_forecast(ward_id, hours=24)
     if not data:
         st.caption("Chưa có dữ liệu dự báo")
         return
 
     import plotly.graph_objects as go
 
-    times = [d["time_local"] for d in data]
-    temps = [d["temp"] for d in data]
+    times = [_parse_iso(d["time_local"]) for d in data]
+    temps = [d.get("temp") for d in data]
 
     fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=times,
-        y=temps,
-        mode="lines+markers",
-        line=dict(color="#3b82f6", width=2),
-        marker=dict(size=4),
-        fill="tozeroy",
-        fillcolor="rgba(59,130,246,0.1)",
-        hovertemplate="%{x|%H:%M}<br>%{y:.1f}°C<extra></extra>",
-    ))
+    fig.add_trace(
+        go.Scatter(
+            x=times,
+            y=temps,
+            mode="lines+markers",
+            line=dict(color="#3b82f6", width=2),
+            marker=dict(size=4),
+            fill="tozeroy",
+            fillcolor="rgba(59,130,246,0.1)",
+            hovertemplate="%{x|%H:%M}<br>%{y:.1f}°C<extra></extra>",
+        )
+    )
     fig.update_layout(
         height=200,
         margin=dict(l=0, r=0, t=10, b=0),
@@ -542,17 +501,20 @@ def _render_temperature_chart() -> None:
 
 
 def render_welcome_message() -> None:
-    """Welcome screen shown when conversation has no messages."""
-    st.markdown("""
-    <div class="welcome-container">
-        <div class="welcome-icon">🌤️</div>
-        <div class="welcome-title">Xin chào! Tôi là trợ lý thời tiết Hà Nội</div>
-        <div class="welcome-subtitle">
-            Hỏi tôi bất cứ điều gì về thời tiết — dự báo, so sánh,
-            gợi ý trang phục, cảnh báo, và nhiều hơn nữa.
+    """Welcome screen — chỉ hiện khi conversation mới tinh, chưa tương tác."""
+    st.markdown(
+        """
+        <div class="welcome-container">
+            <div class="welcome-icon">🌤️</div>
+            <div class="welcome-title">Xin chào! Tôi là trợ lý thời tiết Hà Nội</div>
+            <div class="welcome-subtitle">
+                Hỏi tôi bất cứ điều gì về thời tiết — dự báo, so sánh,
+                gợi ý trang phục, cảnh báo, và nhiều hơn nữa.
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True,
+    )
 
     suggestions = [
         "Thời tiết hôm nay thế nào?",
@@ -566,4 +528,23 @@ def render_welcome_message() -> None:
         with cols[i]:
             if st.button(sug, key=f"sug_{i}", use_container_width=True):
                 st.session_state.pending_suggestion = sug
+                # Dismiss welcome ngay trong conversation hiện tại
+                conv = get_active_conversation()
+                conv["welcome_dismissed"] = True
                 st.rerun()
+
+
+def should_show_welcome(conv: dict) -> bool:
+    """Kiểm tra có nên hiển thị welcome screen không.
+
+    Ẩn khi: đã có message, đã dismiss, có pending suggestion, hoặc đang stream.
+    """
+    if conv.get("welcome_dismissed"):
+        return False
+    if len(conv.get("messages", [])) > 0:
+        return False
+    if st.session_state.get("pending_suggestion"):
+        return False
+    if st.session_state.get("is_streaming"):
+        return False
+    return True

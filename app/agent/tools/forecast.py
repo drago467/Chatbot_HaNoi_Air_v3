@@ -23,6 +23,21 @@ def get_hourly_forecast(ward_id: str = None, location_hint: str = None, hours: i
     DÙNG KHI: user hỏi về chiều nay, tối nay, sáng mai, vài giờ tới,
     mưa lúc mấy giờ, nhiệt độ tối nay, gió đêm nay, khoảng thời gian cụ thể.
     Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội (tự động dispatch).
+
+    ⚠ QUAN TRỌNG về param `hours`:
+    - `hours` là KHOẢNG THỜI GIAN (range từ NOW đến NOW+hours), KHÔNG phải 1 giờ cụ thể.
+    - hours=3 → trả 3 record đầu tiên từ NOW (KHÔNG phải "3 giờ user hỏi").
+    - Nếu user hỏi khung giờ tương lai xa (ví dụ "6h-9h SÁNG MAI"):
+      → phải set hours đủ lớn để cover khung đó (thường hours=24-30).
+      → Sau đó đọc forecasts array, PICK entries có `time_ict` match khung user hỏi.
+      → KHÔNG báo cáo data của 3 giờ đầu tiên khi user hỏi sáng mai.
+
+    VÍ DỤ:
+    - "chiều nay có mưa không" (13-18h TODAY, NOW=8am) → hours=10-11 (đủ cover đến 18h)
+    - "9h tối nay Cầu Giấy nhiệt độ" (21h TODAY) → hours=13+, pick entry có time_ict='21:00'
+    - "6h-9h sáng mai Long Biên sương mù" (NOW=10am) → hours=24, pick entries 06-09:00 ngày mai
+    - "3 giờ tới có giông không" → hours=3 (đúng nghĩa 3 giờ từ NOW)
+
     KHÔNG DÙNG KHI: hỏi cả ngày mai/tuần này (dùng get_daily_forecast),
     hỏi hiện tại (dùng get_current_weather), hỏi mưa đến bao giờ (dùng get_rain_timeline).
     """
@@ -65,14 +80,23 @@ def get_daily_forecast(ward_id: str = None, location_hint: str = None, days: int
     Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội (tự động dispatch).
 
     LOGIC: Query lấy các ngày có date >= start_date, giới hạn bởi days.
-    - start_date mặc định = hôm nay (theo timezone Asia/Ho_Chi_Minh)
-    - days = số ngày muốn lấy (bao gồm start_date)
+    - start_date mặc định = HÔM NAY (theo timezone Asia/Ho_Chi_Minh)
+    - days = số ngày muốn lấy (BAO GỒM start_date)
+    - ⚠ QUAN TRỌNG: start_date=None + days=1 → trả về HÔM NAY (không phải ngày mai)!
 
-    VÍ DỤ:
-    - "ngày mai" → start_date = ngày_mai (YYYY-MM-DD), days=1
-    - "3 ngày tới" (tính từ hôm nay) → start_date = None, days=3
-    - "từ ngày mai trong 3 ngày" → start_date = ngày_mai, days=3
-    - "cuối tuần này" → start_date = ngày_thứ_7, days=2 (T7 + CN)
+    VÍ DỤ (CHÚ Ý start_date):
+    - "ngày mai" → PHẢI set start_date=<tomorrow YYYY-MM-DD>, days=1
+      (NẾU KHÔNG set start_date, tool trả HÔM NAY, sai với ý user)
+    - "ngày kia" → start_date=<day_after_tomorrow>, days=1
+    - "3 ngày tới" (bao gồm hôm nay) → start_date=None, days=3
+    - "3 ngày tới" (từ ngày mai) → start_date=<tomorrow>, days=3
+    - "cuối tuần này" → start_date=<Thứ 7 this week>, days=2
+    - "thứ sáu tuần này" → start_date=<Fri YYYY-MM-DD>, days=1
+    - "tuần tới" (thứ 2 tuần sau) → start_date=<Mon next week>, days=7
+
+    Dựa vào system prompt có {today_date} + {today_weekday} → TÍNH đúng start_date
+    trước khi gọi tool. TUYỆT ĐỐI không gọi days=1 không kèm start_date khi user
+    hỏi "ngày mai".
 
     KHÔNG DÙNG KHI: hỏi theo giờ (dùng get_hourly_forecast).
     """

@@ -97,7 +97,50 @@ def _search_district_only(norm: str) -> Dict[str, Any]:
 
 
 def _search_ward_only(norm: str) -> Dict[str, Any]:
-    """Tìm CHỈ trong wards. Không tìm thấy → not_found."""
+    """Tìm CHỈ trong wards. Không tìm thấy → not_found.
+
+    Hỗ trợ format "Ward, District" (ví dụ user gõ "phu dien, bac tu liem"):
+    split theo dấu phẩy → tìm ward KHỚP district. Tránh case "multiple" khi
+    chỉ có 1 phường đúng trong district cụ thể.
+    """
+    # 0. Format "ward_part, district_part" — split và query kèm district filter
+    if "," in norm:
+        ward_part = norm.split(",", 1)[0].strip()
+        district_part = norm.split(",", 1)[1].strip()
+        if ward_part and district_part:
+            # Thử exact ward_name_norm + district_name_norm match
+            for wp in (ward_part, f"phuong {ward_part}", f"xa {ward_part}"):
+                for dp in (district_part, f"quan {district_part}", f"huyen {district_part}"):
+                    result = query_one("""
+                        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+                        FROM dim_ward
+                        WHERE ward_name_norm = %s AND district_name_norm = %s
+                        LIMIT 1
+                    """, (wp, dp))
+                    if result:
+                        return {"status": "exact", "level": "ward", "data": result}
+            # Fuzzy ward WITHIN the district (nếu district tồn tại)
+            fuzzy_in_district = query("""
+                SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
+                       similarity(ward_name_norm, %s) as score
+                FROM dim_ward
+                WHERE district_name_norm IN (%s, %s, %s)
+                  AND ward_name_norm %% %s
+                ORDER BY score DESC LIMIT 3
+            """, (ward_part, district_part,
+                  f"quan {district_part}", f"huyen {district_part}", ward_part))
+            if fuzzy_in_district:
+                if len(fuzzy_in_district) == 1:
+                    return {"status": "fuzzy", "level": "ward", "data": fuzzy_in_district[0]}
+                return {
+                    "status": "multiple", "level": "ward", "data": fuzzy_in_district,
+                    "needs_clarification": True,
+                    "message": f"Nhiều phường '{ward_part}' trong {district_part}",
+                    "suggestion": "Vui lòng nói chính xác tên phường",
+                }
+            # District part không khớp — fall through to normal search với ward_part thôi
+            norm = ward_part
+
     # 1. Exact match (norm có thể đã có prefix hoặc chưa)
     result = query_one("""
         SELECT ward_id, ward_name_vi, district_name_vi, lat, lon

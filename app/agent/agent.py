@@ -18,6 +18,24 @@ from app.dal.timezone_utils import now_ict
 
 logger = logging.getLogger(__name__)
 
+
+# Compat shim: langgraph < 0.2.56 dùng `state_modifier=`, từ 0.2.56 dùng `prompt=`.
+# Project chạy trên nhiều env (Docker có langgraph 1.x, laptop system python có
+# bản cũ). Detect signature 1 lần lúc import để không phải try/except mỗi call.
+_PROMPT_KWARG: str = "prompt"
+try:
+    import inspect as _inspect
+    _sig_params = _inspect.signature(create_react_agent).parameters
+    if "prompt" in _sig_params:
+        _PROMPT_KWARG = "prompt"
+    elif "state_modifier" in _sig_params:
+        _PROMPT_KWARG = "state_modifier"
+    else:
+        logger.warning("create_react_agent signature unexpected: %s", list(_sig_params))
+    del _sig_params, _inspect
+except Exception as _e:
+    logger.warning("Could not detect create_react_agent prompt kwarg: %s", _e)
+
 # Vietnamese weekday names
 _WEEKDAYS_VI = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật"]
 
@@ -69,6 +87,13 @@ Hỗ trợ: Hồ Gươm, Mỹ Đình, Hồ Tây, Sân bay Nội Bài, Times City
 - Dự báo giờ: tối đa 48h. Dự báo ngày: tối đa 8 ngày. Lịch sử: 14 ngày gần nhất.
 - Dữ liệu thiếu/lỗi: thông báo rõ ràng, gợi ý khu vực/thời gian khác.
 - Khi user hỏi giờ cụ thể (VD "7h sáng mai") mà tool không có data cho giờ đó → NÓI "không có dữ liệu cho giờ đó", KHÔNG đoán.
+
+## Anaphoric (câu tham chiếu đại từ "ở đó", "khu đó"...)
+- Nếu user hỏi "ở đó nóng không?", "khu đó mưa không?", "chỗ kia thế nào?" mà TRONG cùng câu hỏi KHÔNG có tên địa điểm cụ thể, VÀ KHÔNG thấy câu hỏi có ngữ cảnh địa điểm từ trước:
+  → TRẢ LỜI: "Bạn muốn biết thời tiết ở khu vực nào ạ? (Ví dụ: Hà Nội, quận Cầu Giấy, phường Dịch Vọng...)" và KHÔNG gọi tool.
+- KHÔNG mặc định là "Hà Nội" khi câu hỏi có đại từ thay thế không rõ nghĩa.
+- Ngoại lệ: nếu câu hỏi đã có context địa điểm (multi-turn, hoặc router đã rewrite query thành câu rõ ràng) → dùng địa điểm đó, KHÔNG hỏi lại.
+- Câu quá mơ hồ không có cả địa điểm lẫn ngữ cảnh ("Thời tiết thế nào?" không kèm gì) → cũng hỏi lại địa điểm.
 
 ## Hiện tượng đặc biệt Hà Nội
 - Nồm ẩm: Tháng 2-4, độ ẩm > 85%, điểm sương - nhiệt <= 2°C
@@ -163,7 +188,12 @@ TOOL_RULES = {
 
     "get_rain_timeline": """- "mưa đến bao giờ", "mấy giờ tạnh", "khi nào mưa" → timeline mưa
 - Trả về: rain_periods (start/end/max_pop), next_rain, next_clear
-- Hỗ trợ: phường, quận, toàn Hà Nội""",
+- Hỗ trợ: phường, quận, toàn Hà Nội
+-  QUAN TRỌNG: Data chỉ có 24-48h tới kể từ BÂY GIỜ. Khi user hỏi "ngày mai có mưa không":
+  + ĐỌC KỸ timestamp (start/end) trong rain_periods trả về
+  + CHỈ báo cáo mưa cho đúng ngày user hỏi, dựa theo timestamp thực tế
+  + Nếu data không cover đủ ngày mai → NÓI RÕ "chỉ có dữ liệu đến [giờ cuối]"
+  + TUYỆT ĐỐI KHÔNG lấy data mưa ngày hôm nay gán cho ngày mai""",
 
     "get_best_time": """- "mấy giờ tốt nhất", "lúc nào nên đi" → thời điểm tốt nhất cho hoạt động
 - Hỗ trợ: phường, quận, toàn Hà Nội""",
@@ -368,6 +398,24 @@ def get_focused_system_prompt(tool_names: list, router_result=None) -> str:
             rules.append(rule.strip())
 
     prompt = base
+
+    # Tool restriction — router đã chọn focused subset.
+    # Strict version trước đó làm agent từ chối ngay cả khi tool có data hỗ trợ
+    # (ví dụ get_current_weather có dew_point cho expert query). Soften để agent
+    # ưu tiên tool list nhưng VẪN dùng tool gần nhất khi cần.
+    if tool_names:
+        prompt += (
+            "\n## Danh sách công cụ Ưu tiên\n"
+            f"Ưu tiên dùng các tool sau: {', '.join(tool_names)}.\n"
+            "Đây là tool CHÍNH cho câu hỏi này. KHÔNG gọi tool ngoài list trừ khi "
+            "thực sự cần thiết.\n"
+            "Nếu user hỏi thông số CỤ THỂ (dew_point, wind_chill, UV, áp suất...) "
+            "mà tool trong list trả về data đó (ví dụ get_current_weather có nhiều "
+            "field) → DÙNG tool đó + extract field user hỏi. KHÔNG từ chối.\n"
+            "Chỉ trả \"chưa hỗ trợ\" khi tool gọi thực sự ERROR và không có "
+            "alternative trong list.\n"
+        )
+
     if rules:
         prompt += "\n## Hướng dẫn sử dụng công cụ\n" + "\n".join(rules)
 
@@ -467,7 +515,8 @@ def create_weather_agent():
 
     agent = create_react_agent(
         model=_model, tools=TOOLS,
-        state_modifier=_prompt_with_datetime, checkpointer=_checkpointer,
+        checkpointer=_checkpointer,
+        **{_PROMPT_KWARG: _prompt_with_datetime},
     )
     return agent
 
@@ -781,8 +830,8 @@ def _create_focused_agent(tools: list, router_result=None, streaming: bool = Tru
     return create_react_agent(
         model=model,
         tools=tools,
-        state_modifier=_focused_prompt_callable(tool_names, router_result),
         checkpointer=_checkpointer,
+        **{_PROMPT_KWARG: _focused_prompt_callable(tool_names, router_result)},
     )
 
 

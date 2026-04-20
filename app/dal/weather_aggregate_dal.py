@@ -57,13 +57,19 @@ def _add_wind_dir(row: Dict[str, Any]) -> None:
 
 
 def get_district_current_weather(district_name: str) -> Dict[str, Any]:
-    """Get current weather for a district from aggregated table."""
+    """Get current weather for a district from aggregated table.
+
+    Bound ts_utc <= NOW() + 30m để tránh lấy forecast aggregate (nếu có)
+    thay cho current observation — agent sẽ tưởng đó là "lúc này" và báo
+    sai timestamp.
+    """
     result = query_one(f"""
         SELECT {_DISTRICT_HOURLY_COLS},
                NOW() - ts_utc AS data_age
         FROM fact_weather_district_hourly
         WHERE district_name_vi = %s
           AND ts_utc > NOW() - INTERVAL '2 hours'
+          AND ts_utc <= NOW() + INTERVAL '30 minutes'
         ORDER BY ts_utc DESC
         LIMIT 1
     """, (district_name,))
@@ -74,6 +80,7 @@ def get_district_current_weather(district_name: str) -> Dict[str, Any]:
                    NOW() - ts_utc AS data_age
             FROM fact_weather_district_hourly
             WHERE district_name_vi = %s
+              AND ts_utc <= NOW() + INTERVAL '30 minutes'
             ORDER BY ts_utc DESC
             LIMIT 1
         """, (district_name,))
@@ -140,12 +147,16 @@ def get_district_daily_forecast(district_name: str, days: int = 7, start_date: s
 
 
 def get_city_current_weather() -> Dict[str, Any]:
-    """Get current weather for Hanoi city from aggregated table."""
+    """Get current weather for Hanoi city from aggregated table.
+
+    Bound ts_utc <= NOW() + 30m để tránh lấy forecast aggregate.
+    """
     result = query_one(f"""
         SELECT {_CITY_HOURLY_COLS},
                NOW() - ts_utc AS data_age
         FROM fact_weather_city_hourly
         WHERE ts_utc > NOW() - INTERVAL '2 hours'
+          AND ts_utc <= NOW() + INTERVAL '30 minutes'
         ORDER BY ts_utc DESC
         LIMIT 1
     """)
@@ -155,6 +166,7 @@ def get_city_current_weather() -> Dict[str, Any]:
             SELECT {_CITY_HOURLY_COLS},
                    NOW() - ts_utc AS data_age
             FROM fact_weather_city_hourly
+            WHERE ts_utc <= NOW() + INTERVAL '30 minutes'
             ORDER BY ts_utc DESC
             LIMIT 1
         """)

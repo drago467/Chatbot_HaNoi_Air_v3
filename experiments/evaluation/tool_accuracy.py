@@ -35,15 +35,15 @@ INTENT_TO_TOOLS = {
     },
     # weather_overview: "Tong hop thoi tiet hom nay?"
     "weather_overview": {
-        "city":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast"],
-        "district": ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast"],
-        "ward":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast"],
+        "city":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast", "get_weather_period"],
+        "district": ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast", "get_weather_period"],
+        "ward":     ["get_daily_summary", "detect_phenomena", "get_daily_rhythm", "get_current_weather", "get_daily_forecast", "get_weather_period"],
     },
     # rain_query: "Luc nao mua?", "Co mua khong?"
     "rain_query": {
-        "city":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts"],
-        "district": ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts"],
-        "ward":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts"],
+        "city":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary"],
+        "district": ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary"],
+        "ward":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary"],
     },
     # temperature_query: "Nhiet do?", "Nong khong?"
     "temperature_query": {
@@ -87,7 +87,8 @@ INTENT_TO_TOOLS = {
         "district": ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
         "ward":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
     },
-    # weather_alert: "Co canh bao gi khong?", "Giong manh?"
+    # weather_alert: "Co canh bao gi khong?", "Giong manh?", "Mua rao/giong khong?"
+    # Đã có get_rain_timeline + get_hourly_forecast (match PRIMARY_TOOL_MAP R4.2).
     "weather_alert": {
         "city":     ["get_weather_alerts", "get_weather_change_alert", "get_pressure_trend", "get_rain_timeline", "get_hourly_forecast"],
         "district": ["get_weather_alerts", "get_weather_change_alert", "get_pressure_trend", "get_rain_timeline", "get_hourly_forecast"],

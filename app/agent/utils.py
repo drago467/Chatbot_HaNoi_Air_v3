@@ -105,13 +105,17 @@ def auto_resolve_location(
     # If location_hint provided, resolve it
     if location_hint:
         # Step 0: Try POI mapping first (fast, no LLM cost)
-        poi_result = _resolve_poi(location_hint)
-        if poi_result:
-            # Respect scope: nếu POI trả district nhưng scope=city → upgrade
-            if target_scope == "city":
-                return {"status": "ok", "level": "city",
-                        "data": {"city_name": "Hà Nội"}}
-            return poi_result
+        # SKIP POI khi scope=ward — POI thường map về district, nhưng nếu user
+        # chỉ rõ scope=ward (qua router) thì ưu tiên search ward trước
+        # (case Q3: "phường Cầu Giấy" bị POI "Công viên Cầu Giấy" override).
+        if target_scope != "ward":
+            poi_result = _resolve_poi(location_hint)
+            if poi_result:
+                # Respect scope: nếu POI trả district nhưng scope=city → upgrade
+                if target_scope == "city":
+                    return {"status": "ok", "level": "city",
+                            "data": {"city_name": "Hà Nội"}}
+                return poi_result
 
         # DB resolution với scope guidance
         result = resolve_location_scoped(location_hint, target_scope=target_scope)

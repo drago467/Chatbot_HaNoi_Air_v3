@@ -961,3 +961,1848 @@
 2026-04-16 09:13:26 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/city (conf=0.93), 4 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend']
 2026-04-16 09:13:29 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
 2026-04-16 09:13:32 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:27:55 | INFO | httpx | HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-04-17 09:27:55 | INFO | app.ui.components | Ollama already running at http://localhost:11434
+2026-04-17 09:28:06 | INFO | app.agent.router.slm_router | Loaded calibration T=1.4019 from C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\model\router\calibration.json
+2026-04-17 09:28:06 | INFO | app.agent.router.slm_router | Loaded per-intent thresholds from calibration file
+2026-04-17 09:28:39 | WARNING | app.agent.router.slm_router | SLM Router error: timed out
+2026-04-17 09:28:39 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: timed out, 32071ms)
+2026-04-17 09:28:39 | INFO | app.agent.agent | SLM Router → fallback (model_error: timed out)
+2026-04-17 09:28:46 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:29:09 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-17 09:29:09 | INFO | app.scripts.ingest_openweather_async | Starting Nowcast job for 126 wards...
+2026-04-17 09:29:10 | INFO | app.scripts.ingest_openweather_async | Nowcast complete: 126/126 wards OK
+2026-04-17 09:29:10 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 126 weather hourly records (current)
+2026-04-17 09:29:10 | INFO | app.scripts.ingest_openweather_async | Starting aggregation for current data...
+2026-04-17 09:29:11 | INFO | app.scripts.ingest_openweather_async | Aggregated hourly: current - district: 24327, city: 845
+2026-04-17 09:29:11 | INFO | app.scripts.ingest_openweather_async | Aggregation completed for current data
+2026-04-17 09:29:11 | INFO | app.scripts.ingest_openweather_async | Starting Forecast job for 126 wards...
+2026-04-17 09:29:11 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:16 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:21 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:26 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:31 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:36 | WARNING | app.scripts.ingest_openweather_async | Forecast retry round 1: 51/126 wards failed, retrying...
+2026-04-17 09:29:39 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:44 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:49 | WARNING | app.scripts.ingest_openweather_async | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-17 09:29:54 | INFO | app.scripts.ingest_openweather_async | Forecast complete: 126/126 wards OK
+2026-04-17 09:29:54 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-17 09:29:54 | INFO | app.scripts.ingest_openweather_async | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-17 09:29:54 | INFO | app.scripts.ingest_openweather_async | Starting aggregation for forecast data...
+2026-04-17 09:30:01 | INFO | app.scripts.ingest_openweather_async | Aggregated hourly: forecast - district: 25107, city: 871
+2026-04-17 09:30:01 | INFO | app.scripts.ingest_openweather_async | Aggregated daily: forecast - district: 1680, city: 56
+2026-04-17 09:30:01 | INFO | app.scripts.ingest_openweather_async | Aggregation completed for forecast data
+2026-04-17 09:30:31 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 09:30:31 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/ward, conf=0.83, 7393ms)
+2026-04-17 09:30:31 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/ward (conf=0.83), 2 tools: ['get_hourly_forecast', 'get_sunny_periods']
+2026-04-17 09:30:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:30:40 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:31:56 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 09:31:56 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/ward, conf=0.83, 5543ms)
+2026-04-17 09:31:56 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/ward (conf=0.83), 2 tools: ['get_hourly_forecast', 'get_sunny_periods']
+2026-04-17 09:32:00 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:32:04 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:34:25 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 09:34:25 | INFO | app.agent.agent | SLM Router: RouterResult(rain_query/city, conf=0.85, 5481ms)
+2026-04-17 09:34:25 | INFO | app.agent.agent | SLM Router → fast path: rain_query/city (conf=0.85), 1 tools: ['get_rain_timeline']
+2026-04-17 09:34:28 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:34:30 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:35:21 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 09:35:21 | INFO | app.agent.agent | SLM Router: RouterResult(rain_query/ward, conf=0.88, 8457ms)
+2026-04-17 09:35:21 | INFO | app.agent.agent | SLM Router → fast path: rain_query/ward (conf=0.88), 1 tools: ['get_rain_timeline']
+2026-04-17 09:35:24 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:35:25 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:50:03 | INFO | httpx | HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-04-17 09:50:03 | INFO | app.ui.components | Ollama already running at http://localhost:11434
+2026-04-17 09:50:33 | INFO | app.agent.router.slm_router | Loaded calibration T=1.4019 from C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\model\router\calibration.json
+2026-04-17 09:50:33 | INFO | app.agent.router.slm_router | Loaded per-intent thresholds from calibration file
+2026-04-17 09:51:01 | INFO | httpx | HTTP Request: GET http://localhost:11434/api/tags "HTTP/1.1 200 OK"
+2026-04-17 09:51:01 | INFO | app.ui.components | Ollama already running at http://localhost:11434
+2026-04-17 09:51:05 | WARNING | app.agent.router.slm_router | SLM Router error: timed out
+2026-04-17 09:51:05 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: timed out, 32074ms)
+2026-04-17 09:51:05 | INFO | app.agent.agent | SLM Router → fallback (model_error: timed out)
+2026-04-17 09:51:12 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:51:37 | WARNING | app.agent.router.slm_router | SLM Router error: timed out
+2026-04-17 09:51:37 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: timed out, 32032ms)
+2026-04-17 09:51:37 | INFO | app.agent.agent | SLM Router → fallback (model_error: timed out)
+2026-04-17 09:51:40 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:52:03 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 09:52:03 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: low_confidence: 0.82, 5883ms)
+2026-04-17 09:52:03 | INFO | app.agent.agent | SLM Router → fallback (low_confidence: 0.82)
+2026-04-17 09:52:08 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:52:12 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:53:03 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 09:53:03 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: low_confidence: 0.83, 4323ms)
+2026-04-17 09:53:03 | INFO | app.agent.agent | SLM Router → fallback (low_confidence: 0.83)
+2026-04-17 09:53:08 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:53:10 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:58:37 | WARNING | app.agent.router.slm_router | SLM Router error: timed out
+2026-04-17 09:58:37 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: timed out, 32068ms)
+2026-04-17 09:58:37 | INFO | app.agent.agent | SLM Router → fallback (model_error: timed out)
+2026-04-17 09:58:42 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 09:58:44 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 10:00:19 | INFO | httpx | HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-04-17 10:00:19 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: low_confidence: 0.83, 5011ms)
+2026-04-17 10:00:19 | INFO | app.agent.agent | SLM Router → fallback (low_confidence: 0.83)
+2026-04-17 10:00:24 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 10:00:27 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 19:38:24 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-17 19:38:24 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-17 19:38:31 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-17 19:38:31 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-17 19:38:31 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-17 19:38:31 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-17 19:38:43 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-17 19:38:43 | WARNING | kombu.connection | No hostname was supplied. Reverting to default 'localhost'
+2026-04-17 19:38:43 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-17 19:38:43 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-17 19:38:43 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-17 19:38:43 | INFO | app.api.routes.chat | chat_async enqueued (task_id=118464d6-ef25-4a7b-b32f-db56c77c332b, thread_id=test-async-1)
+2026-04-17 19:38:43 | INFO | httpx | HTTP Request: POST http://testserver/chat/async "HTTP/1.1 200 OK"
+2026-04-17 19:38:54 | INFO | app.workers.tasks.chat | run_chat_task start (thread_id=thread-1)
+2026-04-17 19:38:54 | INFO | app.workers.tasks.chat | run_chat_task completed (thread_id=thread-1)
+2026-04-17 19:38:54 | INFO | celery.app.trace | Task app.workers.tasks.chat.run_chat_task[221357df-29ee-4b44-abf5-2b71532e63ee] succeeded in 0.01599999999598367s: {'status': 'ok', 'result': {'messages': [{...}]}}
+2026-04-17 19:38:54 | INFO | celery.app.trace | Task app.workers.tasks.telemetry.log_conversation_task[4a45e1e9-2037-4b58-9649-794efc6d4ac1] succeeded in 0.0s: {'status': 'ok'}
+2026-04-17 19:38:54 | INFO | app.workers.tasks.ingest | ingest_weather_task start (history=False, days=7)
+2026-04-17 19:38:54 | INFO | app.workers.tasks.ingest | ingest_weather_task completed
+2026-04-17 19:38:54 | INFO | celery.app.trace | Task app.workers.tasks.ingest.ingest_weather_task[27afac07-e045-41ab-bd21-31a1ec9b3ec1] succeeded in 0.0s: {'status': 'ok', 'include_history': False}
+2026-04-17 19:39:32 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-17 19:39:32 | WARNING | kombu.connection | No hostname was supplied. Reverting to default 'localhost'
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | app.api.routes.chat | chat_async enqueued (task_id=fb826276-d177-49ed-8ac5-072e8125463f, thread_id=test-async-1)
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: POST http://testserver/chat/async "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-17 19:39:32 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-17 19:39:32 | INFO | app.workers.tasks.chat | run_chat_task start (thread_id=thread-1)
+2026-04-17 19:39:32 | INFO | app.workers.tasks.chat | run_chat_task completed (thread_id=thread-1)
+2026-04-17 19:39:32 | INFO | celery.app.trace | Task app.workers.tasks.chat.run_chat_task[7124b2fb-439d-4e58-8987-5ecb02c9e402] succeeded in 0.014999999999417923s: {'status': 'ok', 'result': {'messages': [{...}]}}
+2026-04-17 19:39:32 | INFO | celery.app.trace | Task app.workers.tasks.telemetry.log_conversation_task[126d7362-4387-4e24-8a2d-5e843932e511] succeeded in 0.0s: {'status': 'ok'}
+2026-04-17 19:39:32 | INFO | app.workers.tasks.ingest | ingest_weather_task start (history=False, days=7)
+2026-04-17 19:39:32 | INFO | app.workers.tasks.ingest | ingest_weather_task completed
+2026-04-17 19:39:32 | INFO | celery.app.trace | Task app.workers.tasks.ingest.ingest_weather_task[997a9f5c-0c34-475d-97a9-a194f59a7c97] succeeded in 0.0s: {'status': 'ok', 'include_history': False}
+2026-04-17 12:53:45 | INFO | __main__ | Initializing database schema...
+2026-04-17 12:53:45 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 12:53:45 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 12:53:45 | INFO | __main__ | Database init/migration completed.
+2026-04-17 12:53:45 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 12:53:45 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 12:53:45 | INFO | app.api.main | Redis connection OK
+2026-04-17 12:54:05 | INFO | app.api.main | FastAPI shutting down...
+2026-04-17 12:54:05 | INFO | __main__ | Initializing database schema...
+2026-04-17 12:54:05 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 12:54:05 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 12:54:05 | INFO | __main__ | Database init/migration completed.
+2026-04-17 12:54:06 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 12:54:06 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 12:54:06 | INFO | app.api.main | Redis connection OK
+2026-04-17 12:54:44 | WARNING | app.ui.components | Could not persist new conversation bd6945c2-88e9-4d3a-966c-c69fd8d9e911 to DB
+2026-04-17 12:54:48 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:54:48 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:54:55 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:54:55 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:55:05 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:55:07 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:55:09 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:56:08 | INFO | __main__ | Loading data/processed/dim_ward.csv...
+2026-04-17 12:56:08 | INFO | __main__ | Loaded 126 wards from CSV
+2026-04-17 12:56:08 | INFO | __main__ | Districts: 125/126 wards have district_name_vi
+2026-04-17 12:56:08 | WARNING | __main__ | Wards without district: ['Phường Hồng Hà']
+2026-04-17 12:56:08 | INFO | __main__ | Importing into Postgres dim_ward table...
+2026-04-17 12:56:08 | INFO | __main__ | Import successful.
+2026-04-17 12:56:08 | INFO | __main__ | Verified: 126/126 wards have district in DB
+2026-04-17 12:57:20 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-17 12:57:20 | INFO | __main__ | Starting History Backfill for 126 wards, last 2 days...
+2026-04-17 12:57:20 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 2 days...
+2026-04-17 12:57:20 | INFO | __main__ | History: 252 API calls (126 wards x 2 days)
+2026-04-17 12:57:25 | INFO | __main__ | Weather History Backfill: 252/252 calls OK, 252 records collected
+2026-04-17 12:57:25 | INFO | __main__ | Bulk upserted 252 weather hourly records (history)
+2026-04-17 12:57:25 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-17 12:57:25 | INFO | __main__ | Aggregated 252 daily history records
+2026-04-17 12:57:25 | INFO | __main__ | Starting aggregation for history data...
+2026-04-17 12:57:25 | INFO | __main__ | Aggregated hourly: history - district: 62, city: 2
+2026-04-17 12:57:25 | INFO | __main__ | Aggregated daily: history - district: 62, city: 2
+2026-04-17 12:57:25 | INFO | __main__ | Aggregation completed for history data
+2026-04-17 12:57:25 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-17 12:57:25 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 55s for rate limit window to reset...
+2026-04-17 12:57:50 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:57:50 | WARNING | app.ui.components | Could not persist new conversation 710d8788-57dd-4455-bb91-9da63e87f847 to DB
+2026-04-17 12:58:26 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-17 12:58:26 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-17 12:58:26 | INFO | __main__ | Starting aggregation for current data...
+2026-04-17 12:58:26 | INFO | __main__ | Aggregated hourly: current - district: 99, city: 4
+2026-04-17 12:58:26 | INFO | __main__ | Aggregation completed for current data
+2026-04-17 12:58:26 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-17 12:58:27 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-17 12:58:27 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-17 12:58:27 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-17 12:58:27 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-17 12:58:27 | INFO | __main__ | Aggregated hourly: forecast - district: 1587, city: 52
+2026-04-17 12:58:27 | INFO | __main__ | Aggregated daily: forecast - district: 310, city: 10
+2026-04-17 12:58:27 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-17 12:58:31 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:58:31 | WARNING | app.ui.components | Could not persist new conversation 30437b8e-0c35-441d-9236-31b7bd2890bd to DB
+2026-04-17 12:58:37 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:58:37 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:59:46 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 12:59:46 | WARNING | app.ui.components | Could not persist new conversation 0910419d-9229-4818-9ee9-6479827c67a1 to DB
+2026-04-17 13:00:15 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:00:16 | INFO | app.api.routes.chat | chat_stream start (thread_id=1f005667-258e-408d-aaab-efbcf652e2c9)
+2026-04-17 13:00:16 | ERROR | app.api.sse | SSE generator error: create_react_agent() got unexpected keyword arguments: {'state_modifier': <function _prompt_with_datetime at 0x79e757b35260>}
+Traceback (most recent call last):
+  File "/app/app/api/sse.py", line 32, in sync_gen_to_sse
+    chunk = await loop.run_in_executor(None, _safe_next)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app/api/sse.py", line 26, in _safe_next
+    return next(sync_gen)
+           ^^^^^^^^^^^^^^
+  File "/app/app/agent/agent.py", line 815, in stream_agent_routed
+    yield from stream_agent(message, thread_id)
+  File "/app/app/agent/agent.py", line 640, in stream_agent
+    raise last_error
+  File "/app/app/agent/agent.py", line 562, in stream_agent
+    agent = get_agent()
+            ^^^^^^^^^^^
+  File "/app/app/agent/agent.py", line 426, in get_agent
+    _agent = create_weather_agent()
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/app/agent/agent.py", line 473, in create_weather_agent
+    agent = create_react_agent(
+            ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/typing_extensions.py", line 3004, in wrapper
+    return arg(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/langgraph/prebuilt/chat_agent_executor.py", line 529, in create_react_agent
+    raise TypeError(
+TypeError: create_react_agent() got unexpected keyword arguments: {'state_modifier': <function _prompt_with_datetime at 0x79e757b35260>}
+2026-04-17 13:00:16 | WARNING | __main__ | chat_stream error: Stream error: create_react_agent() got unexpected keyword arguments: {'state_modifier': <function _prompt_with_datetime at 0x79e757b35260>}
+2026-04-17 13:00:16 | WARNING | __main__ | Could not persist conversation: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+2026-04-17 13:01:01 | INFO | app.api.main | FastAPI shutting down...
+2026-04-17 13:01:02 | INFO | __main__ | Initializing database schema...
+2026-04-17 13:01:02 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 13:01:02 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 13:01:02 | INFO | __main__ | Database init/migration completed.
+2026-04-17 13:01:02 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 13:01:02 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 13:01:02 | INFO | app.api.main | Redis connection OK
+2026-04-17 13:01:39 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:01:39 | WARNING | app.ui.components | Could not persist new conversation 32a2e15b-81c2-44b1-81e0-c47aa8b97dd1 to DB
+2026-04-17 13:01:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:01:45 | INFO | app.api.routes.chat | chat_stream start (thread_id=c5890b08-ce1e-41fa-9d0c-e5882abff63f)
+2026-04-17 13:01:51 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:01:52 | WARNING | __main__ | Could not persist conversation: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+2026-04-17 13:01:52 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:01:52 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:02:06 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:02:06 | INFO | app.api.routes.chat | chat_stream start (thread_id=c5890b08-ce1e-41fa-9d0c-e5882abff63f)
+2026-04-17 13:02:10 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:02:13 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:02:17 | WARNING | __main__ | Could not persist conversation: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+2026-04-17 13:07:16 | WARNING | app.ui.components | Could not persist new conversation dd9a1500-25a3-4951-b9e1-967c7d2a351e to DB
+2026-04-17 13:07:17 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:31 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:31 | WARNING | app.ui.components | Could not persist new conversation 096544e2-8f9b-4a48-85aa-ee6a0375d836 to DB
+2026-04-17 13:07:39 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:39 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:41 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:41 | WARNING | app.ui.components | Could not persist new conversation 2d23a1fd-26fd-4a43-aaec-c7deccb36f11 to DB
+2026-04-17 13:07:44 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:44 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:57 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:07:57 | INFO | app.api.routes.chat | chat_stream start (thread_id=c79c3e56-abad-4950-839f-05ec6fc31c60)
+2026-04-17 13:08:02 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:08:03 | WARNING | __main__ | Could not persist conversation: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+2026-04-17 13:09:35 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:09:35 | WARNING | app.ui.components | Could not persist new conversation e8ebd407-9ea4-425f-ac9d-eadc124ae6af to DB
+2026-04-17 13:09:40 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:09:40 | INFO | app.api.routes.chat | chat_stream start (thread_id=0b84a48d-1524-4c06-a177-8a65b871fcd2)
+2026-04-17 13:09:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:09:49 | WARNING | __main__ | Could not persist conversation: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+2026-04-17 13:09:49 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:09:49 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:11:39 | WARNING | app.ui.components | Could not persist new conversation c9590158-2caa-46a5-8227-35b202a47378 to DB
+2026-04-17 13:11:52 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:11:52 | WARNING | app.ui.components | Could not persist new conversation fb21e634-a4b6-4598-ab8d-002ee5ead0eb to DB
+2026-04-17 13:11:56 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:11 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:12 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:14 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:14 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:41 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:41 | WARNING | app.ui.components | Could not persist new conversation 40ab2bd1-4bd2-46c2-ba9b-24d20559d63e to DB
+2026-04-17 13:12:44 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:12:45 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:15:08 | ERROR | asyncio | Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546
+handle: <Handle AppSession._on_scriptrunner_event.<locals>.<lambda>() at /usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py:546>
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+  File "/usr/local/lib/python3.11/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/streamlit/file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+  File "<frozen os>", line 215, in makedirs
+  File "<frozen os>", line 225, in makedirs
+PermissionError: [Errno 13] Permission denied: '/home/appuser'
+2026-04-17 13:15:08 | WARNING | app.ui.components | Could not persist new conversation 6084ed9a-8601-405c-ba5a-6a6447495853 to DB
+2026-04-17 13:16:14 | INFO | app.api.routes.chat | chat_stream start (thread_id=af95ac33-7664-4ab5-a494-ef82b8aa7772)
+2026-04-17 13:16:20 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:16:26 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:16:49 | INFO | app.api.routes.chat | chat_stream start (thread_id=af95ac33-7664-4ab5-a494-ef82b8aa7772)
+2026-04-17 13:16:53 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:17:02 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:24:54 | INFO | app.api.routes.chat | chat_stream start (thread_id=fb0486c9-e00f-433c-be8b-6e35e52f9f24)
+2026-04-17 13:25:00 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:33:56 | INFO | app.api.routes.chat | chat_stream start (thread_id=df7e75e9-5970-45c8-9923-e3f96d0079ec)
+2026-04-17 13:34:01 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:34:07 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:38:01 | INFO | app.api.routes.chat | chat_stream start (thread_id=82787894-fde8-4775-adc7-f1e5a7fbabcc)
+2026-04-17 13:38:08 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:38:22 | INFO | app.api.routes.chat | chat_stream start (thread_id=82787894-fde8-4775-adc7-f1e5a7fbabcc)
+2026-04-17 13:38:29 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 13:38:37 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 14:01:04 | INFO | app.api.main | FastAPI shutting down...
+2026-04-17 14:01:05 | INFO | __main__ | Initializing database schema...
+2026-04-17 14:01:05 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 14:01:05 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 14:01:05 | INFO | __main__ | Database init/migration completed.
+2026-04-17 14:01:06 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 14:01:06 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 14:01:06 | INFO | app.api.main | Redis connection OK
+2026-04-17 14:03:58 | INFO | app.api.main | FastAPI shutting down...
+2026-04-17 14:04:02 | INFO | __main__ | Initializing database schema...
+2026-04-17 14:04:02 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 14:04:02 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 14:04:02 | INFO | __main__ | Database init/migration completed.
+2026-04-17 14:04:02 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 14:04:02 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 14:04:02 | INFO | app.api.main | Redis connection OK
+2026-04-17 14:04:11 | INFO | httpx | HTTP Request: GET https://wings-equations-cache-con.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-17 14:04:32 | INFO | app.api.routes.chat | chat_sync start (thread_id=router-test)
+2026-04-17 14:04:32 | INFO | app.agent.router.slm_router | Loaded calibration T=1.4019 from /app/model/router/calibration.json
+2026-04-17 14:04:32 | INFO | app.agent.router.slm_router | Loaded per-intent thresholds from calibration file
+2026-04-17 14:04:35 | INFO | httpx | HTTP Request: POST https://wings-equations-cache-con.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-17 14:04:35 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: low_confidence: 0.83, 3304ms)
+2026-04-17 14:04:35 | INFO | app.agent.agent | SLM Router → fallback (low_confidence: 0.83)
+2026-04-17 14:04:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 14:04:52 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 14:05:31 | INFO | httpx | HTTP Request: GET https://wings-equations-cache-con.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-17 14:05:38 | INFO | app.api.routes.chat | chat_stream start (thread_id=5d7eb64c-daa0-42ad-bb04-5b7aad264eaa)
+2026-04-17 14:05:40 | INFO | httpx | HTTP Request: POST https://wings-equations-cache-con.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-17 14:05:40 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: low_confidence: 0.83, 2348ms)
+2026-04-17 14:05:40 | INFO | app.agent.agent | SLM Router → fallback (low_confidence: 0.83)
+2026-04-17 14:05:46 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 14:06:14 | INFO | app.api.routes.chat | chat_stream start (thread_id=5d7eb64c-daa0-42ad-bb04-5b7aad264eaa)
+2026-04-17 14:06:17 | INFO | httpx | HTTP Request: POST https://wings-equations-cache-con.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-17 14:06:17 | INFO | app.agent.agent | SLM Router: RouterResult(daily_forecast/ward, conf=0.83, 3206ms)
+2026-04-17 14:06:17 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/ward (conf=0.83), 4 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend']
+2026-04-17 14:06:22 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 14:06:24 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-17 14:08:58 | INFO | app.api.main | FastAPI shutting down...
+2026-04-17 14:46:24 | INFO | __main__ | Initializing database schema...
+2026-04-17 14:46:24 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 14:46:24 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 14:46:24 | INFO | __main__ | Database init/migration completed.
+2026-04-17 14:46:25 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 14:46:25 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 14:46:25 | INFO | app.api.main | Redis connection OK
+2026-04-17 14:47:16 | INFO | app.api.main | FastAPI shutting down...
+2026-04-17 14:47:17 | INFO | __main__ | Initializing database schema...
+2026-04-17 14:47:17 | INFO | __main__ | Applying migrations (if any)...
+2026-04-17 14:47:17 | INFO | __main__ | Adding columns to aggregated tables...
+2026-04-17 14:47:17 | INFO | __main__ | Database init/migration completed.
+2026-04-17 14:47:18 | INFO | app.api.main | FastAPI starting up...
+2026-04-17 14:47:18 | INFO | app.core.redis_client | Redis client initialized: redis://redis:6379/0
+2026-04-17 14:47:18 | INFO | app.api.main | Redis connection OK
+2026-04-18 09:19:45 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-18 09:19:45 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-18 09:19:45 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-18 09:19:45 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-18 09:19:48 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-18 09:19:48 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-18 09:19:48 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-18 09:19:48 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-18 09:19:48 | INFO | __main__ | Starting aggregation for history data...
+2026-04-18 09:19:48 | INFO | __main__ | Aggregated hourly: history - district: 25107, city: 871
+2026-04-18 09:19:49 | INFO | __main__ | Aggregated daily: history - district: 1680, city: 56
+2026-04-18 09:19:49 | INFO | __main__ | Aggregation completed for history data
+2026-04-18 09:19:49 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-18 09:19:49 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-18 09:19:49 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-18 09:19:49 | INFO | __main__ | Starting aggregation for current data...
+2026-04-18 09:19:50 | INFO | __main__ | Aggregated hourly: current - district: 25154, city: 873
+2026-04-18 09:19:50 | INFO | __main__ | Aggregation completed for current data
+2026-04-18 09:19:50 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-18 09:19:50 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 55s for rate limit window to reset...
+2026-04-18 09:20:46 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-18 09:20:46 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-18 09:20:46 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-18 09:20:46 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-18 09:20:52 | INFO | __main__ | Aggregated hourly: forecast - district: 25874, city: 897
+2026-04-18 09:20:52 | INFO | __main__ | Aggregated daily: forecast - district: 1710, city: 57
+2026-04-18 09:20:52 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-18 15:10:58 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-18 15:10:58 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-18 15:11:02 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-18 15:11:02 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-18 15:11:02 | INFO | __main__ | Starting aggregation for current data...
+2026-04-18 15:11:03 | INFO | __main__ | Aggregated hourly: current - district: 25936, city: 900
+2026-04-18 15:11:03 | INFO | __main__ | Aggregation completed for current data
+2026-04-18 15:11:03 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-18 15:11:06 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-18 15:11:06 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-18 15:11:06 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-18 15:11:06 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-18 15:11:11 | INFO | __main__ | Aggregated hourly: forecast - district: 26116, city: 906
+2026-04-18 15:11:11 | INFO | __main__ | Aggregated daily: forecast - district: 1710, city: 57
+2026-04-18 15:11:11 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-19 10:58:36 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-19 10:58:36 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-19 10:58:36 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-19 10:58:36 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-19 10:58:39 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-19 10:58:39 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-19 10:58:39 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-19 10:58:39 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-19 10:58:39 | INFO | __main__ | Starting aggregation for history data...
+2026-04-19 10:58:39 | INFO | __main__ | Aggregated hourly: history - district: 26116, city: 906
+2026-04-19 10:58:39 | INFO | __main__ | Aggregated daily: history - district: 1710, city: 57
+2026-04-19 10:58:39 | INFO | __main__ | Aggregation completed for history data
+2026-04-19 10:58:39 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-19 10:58:40 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-19 10:58:40 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-19 10:58:40 | INFO | __main__ | Starting aggregation for current data...
+2026-04-19 10:58:41 | INFO | __main__ | Aggregated hourly: current - district: 26146, city: 907
+2026-04-19 10:58:41 | INFO | __main__ | Aggregation completed for current data
+2026-04-19 10:58:41 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-19 10:58:41 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 54s for rate limit window to reset...
+2026-04-19 10:59:36 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-19 10:59:37 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-19 10:59:37 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-19 10:59:37 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-19 10:59:42 | INFO | __main__ | Aggregated hourly: forecast - district: 26716, city: 926
+2026-04-19 10:59:42 | INFO | __main__ | Aggregated daily: forecast - district: 1740, city: 58
+2026-04-19 10:59:42 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-19 15:37:37 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-19 15:37:37 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-19 15:37:38 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-19 15:37:38 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-19 15:37:38 | INFO | __main__ | Starting aggregation for current data...
+2026-04-19 15:37:39 | INFO | __main__ | Aggregated hourly: current - district: 26757, city: 928
+2026-04-19 15:37:39 | INFO | __main__ | Aggregation completed for current data
+2026-04-19 15:37:39 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-19 15:37:40 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-19 15:37:40 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-19 15:37:41 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-19 15:37:41 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-19 15:37:46 | INFO | __main__ | Aggregated hourly: forecast - district: 26907, city: 933
+2026-04-19 15:37:47 | INFO | __main__ | Aggregated daily: forecast - district: 1740, city: 58
+2026-04-19 15:37:47 | INFO | __main__ | Aggregation completed for forecast data

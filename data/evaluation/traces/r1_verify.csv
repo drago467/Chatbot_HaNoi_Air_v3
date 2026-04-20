@@ -1,0 +1,6 @@
+id,question,intent,intent_vi,location_scope,location_name,time_expression,weather_param,api_endpoint,api_fields,difficulty,notes
+1,Bây giờ thời tiết ở Hà Nội như thế nào?,current_weather,Thời tiết hiện tại,city,Hà Nội,hiện tại,general,onecall/current,"temp,feels_like,weather,humidity,wind_speed",easy,"Câu hỏi chung, phổ biến nhất"
+5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",current_weather,Thời tiết hiện tại,ward,Phường Phú Diễn (Bắc Từ Liêm),hiện tại,cloud,onecall/current,"clouds,weather",easy,
+48,"Tối nay phường Tây Hồ, Tây Hồ có mưa rào hay giông không?",rain_query,Truy vấn mưa,ward,Phường Tây Hồ (Tây Hồ),tối nay,rain,onecall/hourly,"pop,weather,rain.1h",easy,
+144,Bạn có thể tư vấn hôm nay nên mặc gì không?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,outfit_advice,onecall/current+daily,"temp,feels_like,pop",hard,Ứng dụng thực tế cao
+172,"Thời tiết tại phường Bạch Mai, Hai Bà Trưng hiện tại thế nào?",current_weather,Thời tiết hiện tại,ward,Phường Bạch Mai (Hai Bà Trưng),hiện tại,general,onecall/current,"temp,weather,humidity,wind_speed",easy,Ward-level post-merger: Bạch Mai thuộc Hai Bà Trưng

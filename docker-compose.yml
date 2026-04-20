@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   postgres:
-    image: postgres:15
-    container_name: hanoiair_postgres
+    image: postgres:16
+    container_name: hanoiweather_postgres
     environment:
       POSTGRES_DB: chatbothanoiair
       POSTGRES_USER: postgres
@@ -19,16 +17,81 @@ services:
       timeout: 5s
       retries: 5
 
-  streamlit:
-    build: .
-    container_name: hanoiair_streamlit
+  redis:
+    image: redis:7-alpine
+    container_name: hanoiweather_redis
     ports:
-      - "8501:8501"
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build: .
+    container_name: hanoiweather_api
+    command: ./entrypoint_api.sh
+    ports:
+      - "8000:8000"
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-hanoiair2024}@postgres:5432/chatbothanoiair
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
       API_BASE: ${API_BASE}
       API_KEY: ${API_KEY}
       MODEL: ${MODEL:-gpt-4o-2024-11-20}
+      AGENT_API_BASE: ${AGENT_API_BASE:-}
+      AGENT_API_KEY: ${AGENT_API_KEY:-}
+      AGENT_MODEL: ${AGENT_MODEL:-}
+      OPENWEATHER_API_KEY_0: ${OPENWEATHER_API_KEY_0:-}
+      OPENWEATHER_API_KEY_1: ${OPENWEATHER_API_KEY_1:-}
+      OPENWEATHER_API_KEY_2: ${OPENWEATHER_API_KEY_2:-}
+      OPENWEATHER_API_KEY_3: ${OPENWEATHER_API_KEY_3:-}
+      OPENWEATHER_API_KEY_4: ${OPENWEATHER_API_KEY_4:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-hanoi-weather-router}
+      USE_SLM_ROUTER: ${USE_SLM_ROUTER:-false}
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./app:/app/app
+      - ./scripts:/app/scripts
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build: .
+    container_name: hanoiweather_worker
+    command: ./entrypoint_worker.sh
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-hanoiair2024}@postgres:5432/chatbothanoiair
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      CELERY_WORKER_CONCURRENCY: ${CELERY_WORKER_CONCURRENCY:-4}
+      API_BASE: ${API_BASE}
+      API_KEY: ${API_KEY}
+      MODEL: ${MODEL:-gpt-4o-2024-11-20}
+      AGENT_API_BASE: ${AGENT_API_BASE:-}
+      AGENT_API_KEY: ${AGENT_API_KEY:-}
+      AGENT_MODEL: ${AGENT_MODEL:-}
+      OPENWEATHER_API_KEY_0: ${OPENWEATHER_API_KEY_0:-}
+      OPENWEATHER_API_KEY_1: ${OPENWEATHER_API_KEY_1:-}
+      OPENWEATHER_API_KEY_2: ${OPENWEATHER_API_KEY_2:-}
+      OPENWEATHER_API_KEY_3: ${OPENWEATHER_API_KEY_3:-}
+      OPENWEATHER_API_KEY_4: ${OPENWEATHER_API_KEY_4:-}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-hanoi-weather-router}
+      USE_SLM_ROUTER: ${USE_SLM_ROUTER:-false}
       PYTHONUNBUFFERED: "1"
     volumes:
       - ./app:/app/app
@@ -37,7 +100,45 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  beat:
+    build: .
+    container_name: hanoiweather_beat
+    command: ./entrypoint_beat.sh
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./app:/app/app
+      - ./logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  streamlit:
+    build: .
+    container_name: hanoiweather_streamlit
+    command: ./entrypoint_streamlit.sh
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://api:8000
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-hanoiair2024}@postgres:5432/chatbothanoiair
+      HOME: /tmp
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./app:/app/app
+      - ./app.py:/app/app.py
+      - ./logs:/app/logs
+    depends_on:
+      - api
     restart: unless-stopped
 
 volumes:
   postgres_data:
+  redis_data:

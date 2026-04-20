@@ -24,7 +24,8 @@ def get_current_weather(ward_id: str) -> Dict[str, Any]:
     Returns:
         Dictionary with current weather data or error
     """
-    # Step 1: Try to get fresh data (within 2 hours)
+    # Step 1: Try to get fresh data (within 2 hours, KHÔNG lấy future data)
+    # Bound trên ts_utc <= NOW() để tránh bắt forecast bị mislabel 'current'.
     result = query_one("""
         SELECT temp, feels_like, humidity, pressure, dew_point, wind_speed, wind_deg,
                wind_gust, clouds, visibility, uvi, pop, rain_1h,
@@ -33,11 +34,12 @@ def get_current_weather(ward_id: str) -> Dict[str, Any]:
         FROM fact_weather_hourly
         WHERE ward_id = %s AND data_kind = 'current'
           AND ts_utc > NOW() - INTERVAL '2 hours'
+          AND ts_utc <= NOW() + INTERVAL '30 minutes'
         ORDER BY ts_utc DESC
         LIMIT 1
     """, (ward_id,))
 
-    # Step 2: Fallback to latest data if no fresh data
+    # Step 2: Fallback — dữ liệu cũ nhưng không quá tương lai
     if not result:
         result = query_one("""
             SELECT temp, feels_like, humidity, pressure, dew_point, wind_speed, wind_deg,
@@ -46,6 +48,7 @@ def get_current_weather(ward_id: str) -> Dict[str, Any]:
                    NOW() - ts_utc AS data_age
             FROM fact_weather_hourly
             WHERE ward_id = %s AND data_kind = 'current'
+              AND ts_utc <= NOW() + INTERVAL '30 minutes'
             ORDER BY ts_utc DESC
             LIMIT 1
         """, (ward_id,))

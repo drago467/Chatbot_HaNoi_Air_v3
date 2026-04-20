@@ -1,48 +1,43 @@
-"""
-HanoiAir Weather Chatbot — Streamlit UI
+"""HanoiWeather — Streamlit UI entry point.
 
-Entry point for the chatbot interface. Delegates to app.ui for rendering.
-Run with: streamlit run app.py
+Streamlit chỉ đóng vai trò renderer: toàn bộ logic agent/tools đi qua
+FastAPI (app/ui/api_client.py). Layout chia làm 3 vùng cô lập trong
+@st.fragment để tương tác với sidebar/info panel KHÔNG cancel chat stream:
+
+    ┌─ Sidebar ─────────┐ ┌─ Chat area ────────────┐ ┌─ Info panel ─┐
+    │ (fragment)        │ │ (fragment, streaming)  │ │ (plain)      │
+    └───────────────────┘ └────────────────────────┘ └──────────────┘
+
+`st.chat_input` đặt ở top của main body (trước columns) để Streamlit tự
+pin ở đáy viewport. Giá trị truyền vào fragment qua session_state.pending_prompt.
+
+Run: streamlit run app.py
 """
 
-import operator
+from __future__ import annotations
+
+import logging
 import time
-from datetime import datetime
 
 import streamlit as st
 
-# ── Patch: langchain-core _dict_int_op doesn't handle None usage values ──
-# Some OpenAI-compatible providers return None for usage_metadata fields
-# (e.g. prompt_tokens: None), which crashes _dict_int_op during streaming.
-# This patch treats None as 0.
-import langchain_core.utils.usage as _usage_mod
-
-_original_dict_int_op = _usage_mod._dict_int_op
-
-
-def _patched_dict_int_op(left, right, op, *, default=0, depth=0, max_depth=100):
-    cleaned_left = {k: (0 if v is None else v) for k, v in left.items()}
-    cleaned_right = {k: (0 if v is None else v) for k, v in right.items()}
-    return _original_dict_int_op(
-        cleaned_left, cleaned_right, op,
-        default=default, depth=depth, max_depth=max_depth,
-    )
-
-
-_usage_mod._dict_int_op = _patched_dict_int_op
-# ── End patch ──────────────────────────────────────────────────────────
-
+# Langchain monkey-patch cho usage_metadata None — phải import trước agent
+from app.core import compat  # noqa: F401
 from app.core.logging_config import setup_logging
-from app.ui.styles import CUSTOM_CSS
+from app.ui import api_client
 from app.ui.components import (
-    init_session_state,
     get_active_conversation,
-    render_sidebar,
+    init_session_state,
     render_info_panel,
+    render_sidebar,
     render_welcome_message,
+    should_show_welcome,
 )
+from app.ui.styles import CUSTOM_CSS
 
 setup_logging()
+_logger = logging.getLogger(__name__)
+
 
 # ── Page config ────────────────────────────────────────────────────────
 
@@ -53,19 +48,24 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Inject custom CSS ──────────────────────────────────────────────────
-
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
-# ── Initialize session state ───────────────────────────────────────────
+# ── Init session state + sidebar ──────────────────────────────────────
 
 init_session_state()
-
-# ── Left sidebar (conversations + data refresh) ───────────────────────
+if "pending_prompt" not in st.session_state:
+    st.session_state.pending_prompt = None
 
 render_sidebar()
 
-# ── Main area with optional right panel ────────────────────────────────
+# ── Chat input — đặt ở TOP main body để Streamlit tự pin đáy viewport ─
+# (Nếu đặt sau st.columns/containers thì behavior pinned-to-bottom mất.)
+
+user_input = st.chat_input("Hỏi về thời tiết Hà Nội...")
+if user_input:
+    st.session_state.pending_prompt = user_input
+
+# ── Layout: chat area (+ optional info panel) ─────────────────────────
 
 conv = get_active_conversation()
 
@@ -75,100 +75,102 @@ else:
     chat_col = st.container()
     info_col = None
 
-# ── Chat column ────────────────────────────────────────────────────────
 
-with chat_col:
-    # Toggle button row
-    _, toggle_col = st.columns([10, 1])
-    with toggle_col:
-        icon = "◀" if st.session_state.show_info_panel else "▶"
-        tooltip = "Ẩn thông tin thời tiết" if st.session_state.show_info_panel else "Hiện thông tin thời tiết"
-        if st.button(icon, help=tooltip, key="toggle_panel"):
-            st.session_state.show_info_panel = not st.session_state.show_info_panel
-            st.rerun()
+# ── Chat handler (stream + persist) ───────────────────────────────────
 
-    # Welcome screen when conversation is empty
-    if not conv["messages"]:
-        render_welcome_message()
 
-    # Display chat history
-    for msg in conv["messages"]:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+def _persist_conversation(conv: dict) -> None:
+    """Ghi conversation xuống DB. Silent-fail + log nếu DB down."""
+    from app.db.conversation_dal import update_conversation
 
-# ── Right info panel ──────────────────────────────────────────────────
-
-if info_col:
-    with info_col:
-        render_info_panel()
-
-# ── Chat input (page level — spans full width) ────────────────────────
-
-user_input = st.chat_input("Hỏi về thời tiết Hà Nội...")
-
-# Merge: either user typed or clicked a suggestion chip
-prompt = st.session_state.pending_suggestion or user_input
-if st.session_state.pending_suggestion:
-    st.session_state.pending_suggestion = None
-
-if prompt:
-    # Add user message
-    conv["messages"].append({"role": "user", "content": prompt})
-
-    # Auto-title from first user message
-    if sum(1 for m in conv["messages"] if m["role"] == "user") == 1:
-        conv["title"] = prompt[:30] + ("..." if len(prompt) > 30 else "")
-
-    # Display user message
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    # Stream agent response
-    with st.chat_message("assistant"):
-        placeholder = st.empty()
-        full_response = ""
-        start_time = time.time()
-
-        try:
-            from app.agent.agent import stream_agent_routed
-            for chunk in stream_agent_routed(prompt, thread_id=conv["thread_id"]):
-                full_response += chunk
-                placeholder.markdown(full_response + "▌")
-        except Exception as e:
-            full_response = f"Xin lỗi, đã có lỗi xảy ra: {e}"
-
-        # Final render (remove streaming cursor)
-        placeholder.markdown(full_response)
-        elapsed = time.time() - start_time
-        st.caption(f"⏱ {elapsed:.1f}s")
-
-    # Save assistant response
-    conv["messages"].append({"role": "assistant", "content": full_response})
-    from app.dal.timezone_utils import now_ict
-    conv["updated_at"] = now_ict()
-
-    # Persist conversation to DB
     try:
-        from app.db.conversation_dal import update_conversation
         update_conversation(
             conv_id=st.session_state.active_id,
             title=conv["title"],
             messages=conv["messages"],
             updated_at=conv["updated_at"],
         )
-    except Exception:
-        pass
+    except Exception as e:
+        _logger.warning("Could not persist conversation: %s", e)
 
-    # Telemetry logging
-    try:
-        from app.agent.telemetry import get_evaluation_logger
-        logger = get_evaluation_logger()
-        logger.log_conversation(
-            session_id=conv["thread_id"],
-            turn_number=sum(1 for m in conv["messages"] if m["role"] == "user"),
-            user_query=prompt,
-            llm_response=full_response,
-            response_time_ms=elapsed * 1000,
-        )
-    except Exception:
-        pass
+
+def _handle_new_message(conv: dict, prompt: str) -> None:
+    """Thêm tin nhắn user, stream response, lưu DB. Chạy trong chat fragment."""
+    from app.dal.timezone_utils import now_ict
+
+    # Ẩn welcome ngay khi có turn đầu tiên
+    conv["welcome_dismissed"] = True
+
+    conv["messages"].append({"role": "user", "content": prompt})
+
+    # Auto-title từ câu hỏi đầu tiên của user
+    if sum(1 for m in conv["messages"] if m["role"] == "user") == 1:
+        conv["title"] = prompt[:30] + ("..." if len(prompt) > 30 else "")
+
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # Stream response từ FastAPI SSE — chạy trong fragment nên không bị cancel
+    st.session_state.is_streaming = True
+    full_response = ""
+    start_time = time.time()
+
+    with st.chat_message("assistant"):
+        placeholder = st.empty()
+        try:
+            for chunk in api_client.chat_stream(prompt, conv["thread_id"]):
+                full_response += chunk
+                placeholder.markdown(full_response + "▌")
+        except Exception as e:
+            _logger.warning("chat_stream error: %s", e)
+            full_response = full_response or f"Xin lỗi, đã có lỗi xảy ra: {e}"
+
+        placeholder.markdown(full_response)
+        elapsed = time.time() - start_time
+        st.caption(f"⏱ {elapsed:.1f}s")
+
+    st.session_state.is_streaming = False
+
+    conv["messages"].append({"role": "assistant", "content": full_response})
+    conv["updated_at"] = now_ict()
+
+    _persist_conversation(conv)
+
+
+def _chat_fragment() -> None:
+    """Render chat area. KHÔNG decorate `@st.fragment` — fragment wrapper
+    phá CSS pin-to-bottom của `st.chat_input` (Streamlit issue #11502).
+    Sidebar vẫn là fragment → widget sidebar chỉ rerun fragment, không cancel
+    stream trong main body.
+    """
+    # 1. Consume pending prompt TRƯỚC → mark welcome_dismissed để check bên dưới
+    #    đánh giá đúng (nếu check welcome trước thì turn đầu sẽ flash welcome).
+    prompt = st.session_state.pending_suggestion or st.session_state.pending_prompt
+    st.session_state.pending_suggestion = None
+    st.session_state.pending_prompt = None
+
+    if prompt:
+        conv["welcome_dismissed"] = True
+
+    # 2. Welcome screen (chỉ hiện khi conversation mới tinh, chưa có prompt pending)
+    if should_show_welcome(conv):
+        render_welcome_message()
+
+    # 3. Lịch sử tin nhắn
+    for msg in conv["messages"]:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    # 4. Xử lý prompt mới (append user msg + stream response)
+    if prompt:
+        _handle_new_message(conv, prompt)
+
+
+# ── Render chat + info panel ──────────────────────────────────────────
+
+with chat_col:
+    _chat_fragment()
+
+if info_col:
+    with info_col:
+        render_info_panel()

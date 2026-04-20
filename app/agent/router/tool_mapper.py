@@ -143,11 +143,13 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
     },
 
     # --- ACTIVITY WEATHER ---
-    # "Di choi duoc khong?", "May gio chay bo tot?"
+    # "Di choi duoc khong?", "May gio chay bo tot?", "Mac gi hom nay?"
+    # get_clothing_advice ADD to primary: "mặc gì hôm nay" vẫn rơi vào
+    # activity_weather qua router → cần tool clothing trong focused set.
     "activity_weather": {
-        "city":     [get_activity_advice, get_best_time, get_uv_safe_windows],
-        "district": [get_activity_advice, get_best_time, get_uv_safe_windows],
-        "ward":     [get_activity_advice, get_best_time, get_uv_safe_windows],
+        "city":     [get_activity_advice, get_best_time, get_uv_safe_windows, get_clothing_advice],
+        "district": [get_activity_advice, get_best_time, get_uv_safe_windows, get_clothing_advice],
+        "ward":     [get_activity_advice, get_best_time, get_uv_safe_windows, get_clothing_advice],
     },
 
     # --- EXPERT WEATHER PARAM ---
@@ -159,11 +161,17 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
     },
 
     # --- WEATHER ALERT ---
-    # "Co canh bao gi khong?", "Thoi tiet nguy hiem?"
+    # "Co canh bao gi khong?", "Thoi tiet nguy hiem?", "Mua rao/giong khong?"
+    # Add get_rain_timeline + get_hourly_forecast: theo intent_disambiguation_rules,
+    # "mưa rào/giông" route weather_alert (rule an toàn). Agent cần data mưa cụ thể
+    # để answer comprehensive ("có giông + có mưa lúc X" thay vì "không có cảnh báo").
     "weather_alert": {
-        "city":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend],
-        "district": [get_weather_alerts, get_weather_change_alert, get_pressure_trend],
-        "ward":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend],
+        "city":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend,
+                     get_rain_timeline, get_hourly_forecast],
+        "district": [get_weather_alerts, get_weather_change_alert, get_pressure_trend,
+                     get_rain_timeline, get_hourly_forecast],
+        "ward":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend,
+                     get_rain_timeline, get_hourly_forecast],
     },
 
     # --- SEASONAL CONTEXT ---

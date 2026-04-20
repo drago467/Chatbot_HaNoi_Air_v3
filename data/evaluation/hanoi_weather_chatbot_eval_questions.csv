@@ -1,22 +1,22 @@
-﻿id,question,intent,intent_vi,location_scope,location_name,time_expression,weather_param,api_endpoint,api_fields,difficulty,notes
+id,question,intent,intent_vi,location_scope,location_name,time_expression,weather_param,api_endpoint,api_fields,difficulty,notes
 1,Bây giờ thời tiết ở Hà Nội như thế nào?,current_weather,Thời tiết hiện tại,city,Hà Nội,hiện tại,general,onecall/current,"temp,feels_like,weather,humidity,wind_speed",easy,"Câu hỏi chung, phổ biến nhất"
 2,Hiện tại ở quận Cầu Giấy thời tiết ra sao?,current_weather,Thời tiết hiện tại,district,Cầu Giấy,hiện tại,general,onecall/current,"temp,weather,humidity",easy,
-3,Thời tiết ở phường Dịch Vọng lúc này có mưa không?,current_weather,Thời tiết hiện tại,ward,Dịch Vọng (Cầu Giấy),hiện tại,rain,onecall/current,"weather,rain.1h",easy,
-4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,current_weather,Thời tiết hiện tại,district,Hoàn Kiếm,hiện tại,temperature,onecall/current,"temp,feels_like",easy,
-5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",current_weather,Thời tiết hiện tại,ward,Phú Diễn (Bắc Từ Liêm),hiện tại,cloud,onecall/current,"clouds,weather",easy,
-6,Gió ở quận Long Biên hiện tại mạnh không?,current_weather,Thời tiết hiện tại,district,Long Biên,hiện tại,wind,onecall/current,"wind_speed,wind_deg,wind_gust",easy,
+3,Thời tiết ở phường Cầu Giấy lúc này có mưa không?,rain_query,Truy vấn mưa,ward,Phường Cầu Giấy (Cầu Giấy),hiện tại,rain,onecall/current,"weather,rain.1h",easy,
+4,Ngoài trời ở Hoàn Kiếm giờ nhiệt độ bao nhiêu độ?,temperature_query,Truy vấn nhiệt độ,district,Hoàn Kiếm,hiện tại,temperature,onecall/current,"temp,feels_like",easy,
+5,"Ở phường Phú Diễn, Bắc Từ Liêm hiện có nhiều mây không?",current_weather,Thời tiết hiện tại,ward,Phường Phú Diễn (Bắc Từ Liêm),hiện tại,cloud,onecall/current,"clouds,weather",easy,
+6,Gió ở quận Long Biên hiện tại mạnh không?,wind_query,Truy vấn gió,district,Long Biên,hiện tại,wind,onecall/current,"wind_speed,wind_deg,wind_gust",easy,
 7,Trời Hà Nội lúc này có nắng không?,current_weather,Thời tiết hiện tại,city,Hà Nội,hiện tại,sun,onecall/current,"weather,clouds,uvi",easy,
-8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,current_weather,Thời tiết hiện tại,district,Hoàng Mai,hiện tại,humidity,onecall/current,humidity,easy,
+8,Độ ẩm hiện tại ở quận Hoàng Mai bao nhiêu?,humidity_fog_query,"Độ ẩm, mây, sương mù",district,Hoàng Mai,hiện tại,humidity,onecall/current,humidity,easy,
 9,Cho mình biết thời tiết hiện tại ở khu vực Mỹ Đình với.,current_weather,Thời tiết hiện tại,poi,Mỹ Đình,hiện tại,general,onecall/current,"temp,weather,humidity,wind_speed",easy,
 10,Bầu trời ở khu vực Hồ Gươm bây giờ trông như thế nào?,current_weather,Thời tiết hiện tại,poi,Hồ Gươm,hiện tại,general,onecall/current,"weather,clouds,visibility",easy,
-11,Nhiệt độ cảm giác ngoài trời ở Thanh Xuân lúc này là bao nhiêu?,current_weather,Thời tiết hiện tại,district,Thanh Xuân,hiện tại,feels_like,onecall/current,"feels_like,temp",easy,
+11,Nhiệt độ cảm giác ngoài trời ở Thanh Xuân lúc này là bao nhiêu?,temperature_query,Truy vấn nhiệt độ,district,Thanh Xuân,hiện tại,feels_like,onecall/current,"feels_like,temp",easy,
 12,Tầm nhìn hiện tại ở sân bay Nội Bài có ổn không?,current_weather,Thời tiết hiện tại,poi,Sân bay Nội Bài,hiện tại,visibility,onecall/current,"visibility,weather",medium,POI đặc thù
 13,Chiều nay ở quận Hai Bà Trưng có mưa không?,rain_query,Truy vấn mưa,district,Hai Bà Trưng,chiều nay,rain,onecall/hourly,"pop,rain.1h,weather",easy,Fix: cùng pattern Q47 - hỏi mưa cụ thể
-14,"Tối nay ở phường Khương Trung, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",hourly_forecast,Dự báo theo giờ,ward,Khương Trung (Thanh Xuân),tối nay,temperature,onecall/hourly,"temp,feels_like",easy,
+14,"Tối nay ở phường Khương Đình, Thanh Xuân nhiệt độ khoảng bao nhiêu độ?",hourly_forecast,Dự báo theo giờ,ward,Phường Khương Đình (Thanh Xuân),tối nay,temperature,onecall/hourly,"temp,feels_like",easy,
 15,Khoảng 9 giờ tối nay ở Cầu Giấy có lạnh không?,hourly_forecast,Dự báo theo giờ,district,Cầu Giấy,21:00 hôm nay,temperature,onecall/hourly,"temp,feels_like",medium,Giờ cụ thể
-16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,hourly_forecast,Dự báo theo giờ,city,Hà Nội,tối nay – 00:00,rain,onecall/hourly,"pop,rain.1h",medium,Khoảng thời gian
+16,Từ giờ đến nửa đêm ở Hà Nội có khả năng mưa lớn không?,rain_query,Truy vấn mưa,city,Hà Nội,tối nay – 00:00,rain,onecall/hourly,"pop,rain.1h",medium,Khoảng thời gian
 17,Đêm nay gió ở khu vực Tây Hồ mạnh không?,wind_query,Truy vấn gió,district,Tây Hồ,đêm nay,wind,onecall/hourly,"wind_speed,wind_gust",easy,Hỏi gió mạnh không → wind_query
-18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,hourly_forecast,Dự báo theo giờ,ward,Xuân Đỉnh (Bắc Từ Liêm),3 giờ tới,rain,onecall/hourly,"pop,weather,rain.1h",medium,
+18,Trong 3 giờ tới ở phường Xuân Đỉnh có mưa rào hay giông không?,weather_alert,Cảnh báo thời tiết,ward,Phường Xuân Đỉnh (Bắc Từ Liêm),3 giờ tới,rain,onecall/hourly,"pop,weather,rain.1h",medium,
 19,Sáng mai từ 6h đến 9h ở Long Biên trời có sương mù không?,hourly_forecast,Dự báo theo giờ,district,Long Biên,06:00–09:00 ngày mai,fog,onecall/hourly,"weather,visibility,humidity,dew_point",medium,Khoảng giờ cụ thể
 20,Mấy tiếng nữa ở Đống Đa mưa sẽ tạnh không?,hourly_forecast,Dự báo theo giờ,district,Đống Đa,vài giờ tới,rain_duration,onecall/hourly,"pop,rain.1h,weather",hard,Câu hỏi ngầm định đang mưa
 21,Từ 8h tối đến nửa đêm ở Thanh Trì có mưa không?,hourly_forecast,Dự báo theo giờ,district,Thanh Trì,20:00–00:00,rain,onecall/hourly,"pop,rain.1h",medium,
@@ -28,11 +28,11 @@
 27,Ba ngày tới ở Gia Lâm có mưa nhiều không?,daily_forecast,Dự báo theo ngày,district,Gia Lâm,3 ngày tới,rain,onecall/daily,"pop,rain,weather",easy,
 28,Tuần sau nhiệt độ ban ngày ở Hoàn Kiếm khoảng bao nhiêu độ?,daily_forecast,Dự báo theo ngày,district,Hoàn Kiếm,tuần sau,temperature,onecall/daily,"temp.day,temp.max,temp.min",medium,
 29,"Trong 7 ngày tới, ngày nào ở Long Biên khả năng mưa lớn cao nhất?",daily_forecast,Dự báo theo ngày,district,Long Biên,7 ngày tới,rain,onecall/daily,"pop,rain",hard,Câu hỏi so sánh nhiều ngày
-30,"Dự báo thời tiết cả tuần cho phường Quang Trung, Đống Đa giúp mình.",daily_forecast,Dự báo theo ngày,ward,Quang Trung (Đống Đa),cả tuần,general,onecall/daily,"temp,weather,pop,wind_speed",medium,
+30,"Dự báo thời tiết cả tuần cho phường Đống Đa, Đống Đa giúp mình.",daily_forecast,Dự báo theo ngày,ward,Phường Đống Đa (Đống Đa),cả tuần,general,onecall/daily,"temp,weather,pop,wind_speed",medium,
 31,Ngày mai Hà Nội có nắng không?,daily_forecast,Dự báo theo ngày,city,Hà Nội,ngày mai,sun,onecall/daily,"weather,clouds,uvi",easy,
 32,Thứ tư tuần này ở Hoàng Mai trời có mưa không?,daily_forecast,Dự báo theo ngày,district,Hoàng Mai,thứ tư,rain,onecall/daily,"pop,rain,weather",easy,
 33,Tuần này ngày nào ở Hà Nội đẹp nhất để ra ngoài?,daily_forecast,Dự báo theo ngày,city,Hà Nội,tuần này,general,onecall/daily,"weather,pop,uvi,wind_speed",hard,Câu hỏi suy luận đa tiêu chí
-34,Ngày mai ở huyện Đan Phượng nhiệt độ cao nhất là bao nhiêu?,daily_forecast,Dự báo theo ngày,district,Đan Phượng,ngày mai,temp_max,onecall/daily,"temp.max,temp.day",easy,
+34,Ngày mai ở huyện Đan Phượng nhiệt độ cao nhất là bao nhiêu?,temperature_query,Truy vấn nhiệt độ,district,Đan Phượng,ngày mai,temp_max,onecall/daily,"temp.max,temp.day",easy,
 35,Sáng thứ sáu tuần này ở Ba Đình thời tiết thế nào?,daily_forecast,Dự báo theo ngày,district,Ba Đình,sáng thứ sáu,general,onecall/daily,"temp.morn,weather,pop",medium,Buổi cụ thể trong ngày
 36,Năm ngày tới ở huyện Sóc Sơn mưa hay nắng?,daily_forecast,Dự báo theo ngày,district,Sóc Sơn,5 ngày tới,general,onecall/daily,"weather,pop,rain,clouds",easy,
 37,Bạn tóm tắt giúp mình thời tiết Hà Nội hôm nay đi.,weather_overview,Tổng quan thời tiết,city,Hà Nội,hôm nay,general,onecall/overview,weather_overview,easy,
@@ -46,10 +46,10 @@
 45,Đánh giá tổng quan thời tiết ở Gia Lâm tuần này đi.,weather_overview,Tổng quan thời tiết,district,Gia Lâm,tuần này,general,onecall/overview + daily,weather_overview,medium,
 46,Khái quát thời tiết khu vực Ba Vì tháng này cho mình biết với.,weather_overview,Tổng quan thời tiết,district,Ba Vì,tháng này,general,onecall/daily + overview,"daily,weather_overview",hard,Tháng vượt quá 8 ngày daily
 47,Chiều nay ở Thanh Xuân có mưa không?,rain_query,Truy vấn mưa,district,Thanh Xuân,chiều nay,rain,onecall/hourly,"pop,rain.1h,weather",easy,
-48,"Tối nay phường Nhật Tân, Tây Hồ có mưa rào hay giông không?",rain_query,Truy vấn mưa,ward,Nhật Tân (Tây Hồ),tối nay,rain,onecall/hourly,"pop,weather,rain.1h",easy,
+48,"Tối nay phường Tây Hồ, Tây Hồ có mưa rào hay giông không?",weather_alert,Cảnh báo thời tiết,ward,Phường Tây Hồ (Tây Hồ),tối nay,rain,onecall/hourly,"pop,weather,rain.1h",easy,
 49,Trong 2 tiếng tới ở Hoàng Mai xác suất mưa là bao nhiêu phần trăm?,rain_query,Truy vấn mưa,district,Hoàng Mai,2 giờ tới,pop,onecall/hourly,pop,medium,Hỏi trực tiếp xác suất mưa
-50,Hôm nay ở Hà Đông có mưa to kéo dài không?,rain_query,Truy vấn mưa,district,Hà Đông,hôm nay,rain,onecall/hourly+daily,"pop,rain.1h,rain,weather",easy,
-51,Đêm nay ở nội thành Hà Nội có nguy cơ mưa lớn gây ngập không?,rain_query,Truy vấn mưa,city,Hà Nội,đêm nay,rain_flood,onecall/hourly,"pop,rain.1h,weather",hard,Kết hợp nguy cơ ngập lụt
+50,Hôm nay ở Hà Đông có mưa to kéo dài không?,weather_alert,Cảnh báo thời tiết,district,Hà Đông,hôm nay,rain,onecall/hourly+daily,"pop,rain.1h,rain,weather",easy,
+51,Đêm nay ở nội thành Hà Nội có nguy cơ mưa lớn gây ngập không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,đêm nay,rain_flood,onecall/hourly,"pop,rain.1h,weather",hard,Kết hợp nguy cơ ngập lụt
 52,Từ giờ đến sáng mai ở Gia Lâm có mưa phùn không?,rain_query,Truy vấn mưa,district,Gia Lâm,tối–sáng mai,rain,onecall/hourly,"weather,rain.1h,pop",medium,Mưa phùn – weather id cụ thể
 53,Tuần này Hà Nội có mưa nhiều không?,rain_query,Truy vấn mưa,city,Hà Nội,tuần này,rain,onecall/daily,"pop,rain",easy,
 54,Lượng mưa dự kiến hôm nay ở Đông Anh là bao nhiêu mm?,rain_query,Truy vấn mưa,district,Đông Anh,hôm nay,precipitation,onecall/hourly+daily,"rain.1h,rain",medium,Hỏi lượng mưa mm
@@ -68,7 +68,7 @@
 67,Khi nào thì Hà Nội ấm dần lên trong vài ngày tới?,temperature_query,Truy vấn nhiệt độ,city,Hà Nội,vài ngày tới,temperature_trend,onecall/daily,"temp.day,temp.max",hard,Câu hỏi xu hướng
 68,Nhiệt độ tối nay ở khu vực Mỹ Đình có xuống dưới 15 độ không?,temperature_query,Truy vấn nhiệt độ,poi,Mỹ Đình,tối nay,temp_min,onecall/hourly,temp,medium,Kiểm tra ngưỡng nhiệt
 69,Ngày mai ở huyện Ba Vì nhiệt độ cao nhất và thấp nhất là bao nhiêu?,temperature_query,Truy vấn nhiệt độ,district,Ba Vì,ngày mai,temp_range,onecall/daily,"temp.max,temp.min",easy,
-70,"Hà Nội mấy ngày tới có rét đậm không, nhiệt độ khoảng bao nhiêu?",temperature_query,Truy vấn nhiệt độ,city,Hà Nội,vài ngày tới,temp_cold,onecall/daily,"temp.min,temp.night",hard,Ngữ cảnh rét đậm (<15°C)
+70,"Hà Nội mấy ngày tới có rét đậm không, nhiệt độ khoảng bao nhiêu?",weather_alert,Cảnh báo thời tiết,city,Hà Nội,vài ngày tới,temp_cold,onecall/daily,"temp.min,temp.night",hard,Ngữ cảnh rét đậm (<15°C)
 71,"Hiện tại gió ở Sóc Sơn mạnh không, hướng nào?",wind_query,Truy vấn gió,district,Sóc Sơn,hiện tại,wind,onecall/current,"wind_speed,wind_deg,wind_gust",easy,
 72,Tối nay ở quận Bắc Từ Liêm có gió to không?,wind_query,Truy vấn gió,district,Bắc Từ Liêm,tối nay,wind,onecall/hourly,"wind_speed,wind_gust",easy,
 73,Trong vài giờ tới ở Hà Nội có khả năng giông mạnh không?,weather_alert,Cảnh báo thời tiết,city,Hà Nội,vài giờ tới,wind_storm,onecall/hourly,"wind_speed,weather,pop",medium,Giông mạnh = hiện tượng thời tiết nguy hiểm
@@ -142,9 +142,9 @@
 141,Trời Hà Nội dạo này khó chịu quá nhỉ?,seasonal_context,Ngữ cảnh thời vụ,city,Hà Nội,gần đây,general,onecall/current,"temp,humidity,weather",hard,Xu hướng gần đây + cảm nhận mùa
 142,Không biết mai có mưa không nhỉ?,rain_query,Truy vấn mưa,city,Hà Nội,ngày mai,rain,onecall/daily,"pop,rain",easy,Câu nói casual nhưng bản chất hỏi mưa ngày mai
 143,"Ngoài trời lạnh quá, có nên mặc áo phao không?",smalltalk_weather,Small talk khí tượng,city,Hà Nội,hiện tại,temperature,onecall/current,"temp,feels_like,wind_speed",medium,Tư vấn trang phục
-144,Bạn có thể tư vấn hôm nay nên mặc gì không?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,outfit_advice,onecall/current+daily,"temp,feels_like,pop",hard,Ứng dụng thực tế cao
+144,Bạn có thể tư vấn hôm nay nên mặc gì không?,activity_weather,Thời tiết theo hoạt động,city,Hà Nội,hôm nay,outfit_advice,onecall/current+daily,"temp,feels_like,pop",hard,Ứng dụng thực tế cao
 145,Sao Hà Nội hôm nay nắng đẹp thế?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,sun,onecall/current,"weather,clouds,uvi",easy,Câu cảm thán → xác nhận + thông tin thêm
-146,Mình cần mang ô đi làm hôm nay không?,smalltalk_weather,Small talk khí tượng,city,Hà Nội,hôm nay,rain,onecall/current+hourly,"pop,weather",easy,Câu hỏi thực dụng
+146,Mình cần mang ô đi làm hôm nay không?,rain_query,Truy vấn mưa,city,Hà Nội,hôm nay,rain,onecall/current+hourly,"pop,weather",easy,Câu hỏi thực dụng
 147,Thời tiết mấy hôm nay hay thay đổi quá bạn nhỉ?,seasonal_context,Ngữ cảnh thời vụ,city,Hà Nội,gần đây,general,onecall/daily,"temp,weather",hard,Xu hướng thay đổi thời tiết gần đây
 148,Hà Nội năm nay rét muộn không bạn?,seasonal_context,Ngữ cảnh thời vụ,city,Hà Nội,năm nay,temperature_seasonal,onecall/timemachine+daily,temp,hard,"Câu hỏi mùa vụ, so sánh lịch sử"
 149,Thời tiết hôm nay có gì bất thường không?,seasonal_context,Ngữ cảnh thời vụ,city,Hà Nội,hôm nay,anomaly,onecall/current,"temp,weather,wind_speed,humidity",hard,Phát hiện bất thường so với mùa
@@ -170,14 +170,14 @@
 169,Hôm qua ở Đống Đa mưa to thế mà hôm nay trời lại nắng nhỉ?,seasonal_context,Ngữ cảnh thời vụ,district,Đống Đa,hôm qua vs hôm nay,weather_change,compare_yesterday,"weather,rain",medium,Nhận xét thay đổi đột ngột
 170,Hà Nội gần đây có hiện tượng thời tiết cực đoan nào không?,seasonal_context,Ngữ cảnh thời vụ,city,Hà Nội,gần đây,extreme_weather,seasonal_comparison,"temp,wind,rain",hard,Phát hiện cực đoan
 171,Nhiệt độ ở Long Biên hôm nay so với hôm qua chênh bao nhiêu?,seasonal_context,Ngữ cảnh thời vụ,district,Long Biên,hôm nay vs hôm qua,temperature_compare,compare_yesterday,"temp,feels_like",easy,So sánh cụ thể - district
-172,"Thời tiết tại phường Bạch Mai, Hai Bà Trưng hiện tại thế nào?",current_weather,Thời tiết hiện tại,ward,Bạch Mai (Hai Bà Trưng),hiện tại,general,onecall/current,"temp,weather,humidity,wind_speed",easy,Ward-level post-merger: Bạch Mai thuộc Hai Bà Trưng
-173,"Phường Lĩnh Nam, Hoàng Mai chiều nay có mưa không?",rain_query,Truy vấn mưa,ward,Lĩnh Nam (Hoàng Mai),chiều nay,rain,onecall/hourly,"pop,rain.1h,weather",medium,Ward-level: Lĩnh Nam - Hoàng Mai
-174,"Gió ở phường Vĩnh Tuy, Hai Bà Trưng tối nay mạnh không?",wind_query,Truy vấn gió,ward,Vĩnh Tuy (Hai Bà Trưng),tối nay,wind,onecall/hourly,"wind_speed,wind_gust,wind_deg",easy,Ward-level: Vĩnh Tuy - Hai Bà Trưng
-175,"Khoảng 8 giờ tối nay ở phường Nghĩa Đô, Cầu Giấy nhiệt độ bao nhiêu?",hourly_forecast,Dự báo theo giờ,ward,Nghĩa Đô (Cầu Giấy),20:00 hôm nay,temperature,onecall/hourly,"temp,feels_like",medium,Ward-level + giờ cụ thể: Nghĩa Đô - Cầu Giấy
-176,"Nhiệt độ phường Tương Mai, Hoàng Mai lúc này là bao nhiêu độ?",temperature_query,Truy vấn nhiệt độ,ward,Tương Mai (Hoàng Mai),hiện tại,temperature,onecall/current,"temp,feels_like",easy,Ward-level: Tương Mai - Hoàng Mai
-177,"Độ ẩm và khả năng có sương mù ở phường Giảng Võ, Ba Đình sáng nay thế nào?",humidity_fog_query,Truy vấn độ ẩm/sương mù,ward,Giảng Võ (Ba Đình),sáng nay,humidity_fog,onecall/current,"humidity,dew_point,visibility,weather",medium,Ward-level humidity+fog: Giảng Võ - Ba Đình
-178,"Dự báo thời tiết 3 ngày tới ở phường Kiến Hưng, Hà Đông ra sao?",daily_forecast,Dự báo theo ngày,ward,Kiến Hưng (Hà Đông),3 ngày tới,general,onecall/daily,"temp,weather,pop,wind_speed",medium,Ward-level daily forecast: Kiến Hưng - Hà Đông
-179,"Cuối tuần đi chạy bộ ở phường Xuân Phương, Nam Từ Liêm có thời tiết ổn không?",activity_weather,Thời tiết theo hoạt động,ward,Xuân Phương (Nam Từ Liêm),cuối tuần,running,onecall/daily,"temp,pop,wind_speed,humidity",medium,Ward-level activity (chạy bộ): Xuân Phương - Nam Từ Liêm
+172,"Thời tiết tại phường Bạch Mai, Hai Bà Trưng hiện tại thế nào?",current_weather,Thời tiết hiện tại,ward,Phường Bạch Mai (Hai Bà Trưng),hiện tại,general,onecall/current,"temp,weather,humidity,wind_speed",easy,Ward-level post-merger: Bạch Mai thuộc Hai Bà Trưng
+173,"Phường Lĩnh Nam, Hoàng Mai chiều nay có mưa không?",rain_query,Truy vấn mưa,ward,Phường Lĩnh Nam (Hoàng Mai),chiều nay,rain,onecall/hourly,"pop,rain.1h,weather",medium,Ward-level: Lĩnh Nam - Hoàng Mai
+174,"Gió ở phường Vĩnh Tuy, Hai Bà Trưng tối nay mạnh không?",wind_query,Truy vấn gió,ward,Phường Vĩnh Tuy (Hai Bà Trưng),tối nay,wind,onecall/hourly,"wind_speed,wind_gust,wind_deg",easy,Ward-level: Vĩnh Tuy - Hai Bà Trưng
+175,"Khoảng 8 giờ tối nay ở phường Nghĩa Đô, Cầu Giấy nhiệt độ bao nhiêu?",hourly_forecast,Dự báo theo giờ,ward,Phường Nghĩa Đô (Cầu Giấy),20:00 hôm nay,temperature,onecall/hourly,"temp,feels_like",medium,Ward-level + giờ cụ thể: Nghĩa Đô - Cầu Giấy
+176,"Nhiệt độ phường Tương Mai, Hoàng Mai lúc này là bao nhiêu độ?",temperature_query,Truy vấn nhiệt độ,ward,Phường Tương Mai (Hoàng Mai),hiện tại,temperature,onecall/current,"temp,feels_like",easy,Ward-level: Tương Mai - Hoàng Mai
+177,"Độ ẩm và khả năng có sương mù ở phường Giảng Võ, Ba Đình sáng nay thế nào?",humidity_fog_query,Truy vấn độ ẩm/sương mù,ward,Phường Giảng Võ (Ba Đình),sáng nay,humidity_fog,onecall/current,"humidity,dew_point,visibility,weather",medium,Ward-level humidity+fog: Giảng Võ - Ba Đình
+178,"Dự báo thời tiết 3 ngày tới ở phường Kiến Hưng, Hà Đông ra sao?",daily_forecast,Dự báo theo ngày,ward,Phường Kiến Hưng (Hà Đông),3 ngày tới,general,onecall/daily,"temp,weather,pop,wind_speed",medium,Ward-level daily forecast: Kiến Hưng - Hà Đông
+179,"Cuối tuần đi chạy bộ ở phường Xuân Phương, Nam Từ Liêm có thời tiết ổn không?",activity_weather,Thời tiết theo hoạt động,ward,Phường Xuân Phương (Nam Từ Liêm),cuối tuần,running,onecall/daily,"temp,pop,wind_speed,humidity",medium,Ward-level activity (chạy bộ): Xuân Phương - Nam Từ Liêm
 180,Giá vé máy bay Hà Nội - TP.HCM hôm nay bao nhiêu tiền?,smalltalk_weather,Small talk khí tượng,city,,,,none,none,easy,OOS: hỏi giá vé máy bay - ngoài domain thời tiết
 181,Nhà hàng nào ngon ở quận Hoàn Kiếm?,smalltalk_weather,Small talk khí tượng,district,Hoàn Kiếm,,,none,none,easy,OOS: hỏi nhà hàng - ngoài domain thời tiết
 182,Thời tiết Đà Nẵng cuối tuần này thế nào?,smalltalk_weather,Small talk khí tượng,city,Đà Nẵng,cuối tuần,,none,none,easy,OOS: địa điểm ngoài Hà Nội (Đà Nẵng) - cần từ chối lịch sự
@@ -193,7 +193,7 @@
 192,troi ha noi co dep hem,current_weather,Thời tiết hiện tại,city,Hà Nội,hiện tại,general,onecall/current,"weather,clouds",medium,Informal robustness: Southern slang hem=không + không dấu
 193,nhiet do ha noi bnhieu do,temperature_query,Truy vấn nhiệt độ,city,Hà Nội,hiện tại,temperature,onecall/current,"temp,feels_like",medium,Informal robustness: bnhieu=bao nhiêu + không dấu
 194,bac tu liem hom nay co mua hong,rain_query,Truy vấn mưa,district,Bắc Từ Liêm,hôm nay,rain,onecall/current,"pop,weather,rain.1h",medium,Informal robustness: Southern hong=không + không dấu
-195,So sánh nhiệt độ hôm nay và ngày mai ở quận Hoàng Mai,location_comparison,So sánh địa điểm,district,Hoàng Mai,hôm nay vs ngày mai,temperature_compare,onecall/current+daily,"temp,feels_like",hard,Complex: so sánh thời điểm current vs forecast
+195,So sánh nhiệt độ hôm nay và ngày mai ở quận Hoàng Mai,seasonal_context,Ngữ cảnh thời vụ,district,Hoàng Mai,hôm nay vs ngày mai,temperature_compare,onecall/current+daily,"temp,feels_like",hard,Complex: so sánh thời điểm current vs forecast
 196,Chiều nay mưa không và nên mặc gì khi ra ngoài?,activity_weather,Thời tiết theo hoạt động,city,Hà Nội,chiều nay,rain+clothing,onecall/hourly,"pop,rain.1h,temp,weather",hard,Complex multi-intent: rain query + clothing advice
 197,Từ 6 giờ sáng đến 9 giờ tối nay nhiệt độ ở Ba Đình thay đổi thế nào?,hourly_forecast,Dự báo theo giờ,district,Ba Đình,06:00-21:00 hôm nay,temperature_trend,onecall/hourly,"temp,feels_like,weather",hard,Complex: khoảng thời gian 15 giờ liên tục
 198,Hà Nội tuần này ngày nào đẹp trời nhất để tổ chức sự kiện ngoài trời?,activity_weather,Thời tiết theo hoạt động,city,Hà Nội,tuần này,event,onecall/daily,"temp,pop,wind_speed,weather",hard,Complex: lựa chọn ngày tốt nhất trong tuần
