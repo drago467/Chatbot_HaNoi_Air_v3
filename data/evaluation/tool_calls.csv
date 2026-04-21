@@ -109,3 +109,8 @@ timestamp,session_id,turn_number,tool_name,tool_input,tool_output,success,execut
 2026-04-20T21:19:00.141682+07:00,trace-62-4041865e,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Đông Anh'}",,True,0
 2026-04-20T21:20:59.213156+07:00,trace-69-7e90e698,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Ba Vì', 'start_date': '2026-04-21'}",,True,0
 2026-04-20T21:27:39.012788+07:00,trace-91-f4b32e72,0,get_weather_history,"{'date': '2026-04-19', 'location_hint': 'Hà Nội'}",,True,0
+2026-04-20T22:32:46.335009+07:00,trace-62-24e47276,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Đông Anh'}",,True,0
+2026-04-20T22:34:34.574709+07:00,trace-69-757d2de2,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Ba Vì', 'start_date': '2026-04-21'}",,True,0
+2026-04-21T10:54:49.072689+07:00,trace-62-0f1a2cb7,0,get_hourly_forecast,"{'hours': 24, 'location_hint': 'Đông Anh'}",,True,0
+2026-04-21T10:56:16.878283+07:00,trace-69-09ce075a,0,get_daily_forecast,"{'days': 1, 'location_hint': 'Ba Vì', 'start_date': '2026-04-22'}",,True,0
+2026-04-21T11:11:15.768238+07:00,trace-138-b58c9bb3,0,get_temperature_trend,"{'days': 7, 'location_hint': 'Hà Nội'}",,True,0

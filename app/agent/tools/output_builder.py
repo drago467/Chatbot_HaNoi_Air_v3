@@ -378,6 +378,81 @@ def _narrative_hourly(forecasts: Sequence[Mapping[str, Any]], location_name: str
     return ", ".join(bits) + "."
 
 
+def _detect_forecast_range_gap(
+    forecasts: Sequence[Mapping[str, Any]],
+    now: Optional[datetime] = None,
+) -> Dict[str, Any]:
+    """Detect gap giữa forecast start và NOW → past-frame warning nếu có.
+
+    Trả dict với các key optional:
+    - "phạm vi thực tế": mô tả start→end (luôn có nếu forecasts ≥1)
+    - "⚠ lưu ý khung đã qua": cảnh báo past-frame nếu data không cover các khung
+      sáng/trưa/chiều/tối HÔM NAY đã qua.
+
+    Lý do: tool hourly/rain_timeline chỉ trả forecast TỪ NOW. Khi NOW=22:14 tối,
+    các khung "chiều/trưa/sáng nay" (13-18h / 11-13h / 6-11h) ĐÃ QUA hoàn toàn.
+    Bot thường lấy data tương lai (23:00+ hoặc ngày mai) rồi dán nhãn khung đã
+    qua → sai nghiêm trọng (audit v8 B1, 15 IDs).
+
+    Args:
+        forecasts: list forecast entries (có ts_utc).
+        now: optional datetime override để test. Mặc định datetime.now(ICT).
+    """
+    result: Dict[str, Any] = {}
+    if not forecasts:
+        return result
+
+    def _dt_of(entry: Mapping[str, Any]) -> Optional[datetime]:
+        ts = entry.get("ts_utc")
+        if isinstance(ts, (int, float)):
+            return datetime.fromtimestamp(float(ts), tz=_ICT)
+        return None
+
+    first_dt = _dt_of(forecasts[0])
+    last_dt = _dt_of(forecasts[-1])
+    if first_dt is None or last_dt is None:
+        return result
+
+    result["phạm vi thực tế"] = (
+        f"từ {first_dt.strftime('%H:%M')} {_WEEKDAYS_VI[first_dt.weekday()]} "
+        f"{first_dt.strftime('%d/%m/%Y')} đến {last_dt.strftime('%H:%M')} "
+        f"{_WEEKDAYS_VI[last_dt.weekday()]} {last_dt.strftime('%d/%m/%Y')}"
+    )
+
+    now = now or datetime.now(_ICT)
+    today = now.date()
+    # Data có cover khung "quá khứ trong hôm nay" không?
+    # Nếu first_dt > NOW (data chỉ forecast tương lai) → các khung đã qua KHÔNG cover.
+    data_covers_today_past = first_dt.date() < today or (
+        first_dt.date() == today and first_dt.hour <= now.hour
+    )
+
+    if data_covers_today_past:
+        return result  # Data cover được → không cần warn
+
+    # Liệt kê khung đã qua so với NOW (dựa giờ)
+    past_frames: List[str] = []
+    if now.hour >= 12:
+        past_frames.append("sáng nay (6-11h)")
+    if now.hour >= 14:
+        past_frames.append("trưa nay (11-13h)")
+    if now.hour >= 19:
+        past_frames.append("chiều nay (13-18h)")
+    if now.hour >= 23:
+        past_frames.append("tối nay (18-22h)")
+
+    if past_frames:
+        result["⚠ lưu ý khung đã qua"] = (
+            f"NOW={now.strftime('%H:%M %d/%m')}. Data forecast chỉ bắt đầu từ "
+            f"{first_dt.strftime('%H:%M %d/%m')}. Các khung HÔM NAY đã qua: "
+            f"{', '.join(past_frames)}. TOOL NÀY KHÔNG COVER khung đã qua — "
+            f"nếu user hỏi về các khung đó → BÁO RÕ 'khung [X] hôm nay đã qua "
+            f"(hiện là {now.strftime('%H:%M')})', TUYỆT ĐỐI KHÔNG dùng data "
+            f"ngày mai dán nhãn khung hôm nay."
+        )
+    return result
+
+
 def build_hourly_forecast_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if _is_error(raw):
         return build_error_output(raw)
@@ -390,8 +465,10 @@ def build_hourly_forecast_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         "địa điểm": location_name,
         "loại dự báo": raw.get("data_coverage") or f"{len(entries)} giờ tới",
         "dự báo": entries,
-        "tóm tắt tổng": _narrative_hourly(forecasts, location_name),
     }
+    # Past-frame detection: thêm "phạm vi thực tế" + cảnh báo nếu khung đã qua
+    result.update(_detect_forecast_range_gap(forecasts))
+    result["tóm tắt tổng"] = _narrative_hourly(forecasts, location_name)
     if raw.get("data_note"):
         result["ghi chú dữ liệu"] = raw["data_note"]
     return result
@@ -597,13 +674,19 @@ def build_rain_timeline_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         summary_text = summary_text[:1].upper() + summary_text[1:] + "."
     else:
         summary_text = "Không có đợt mưa dự báo."
-    return {
+    result: Dict[str, Any] = {
         "địa điểm": location_name,
         "phạm vi": raw.get("data_coverage") or f"{raw.get('hours_scanned', 0)} giờ tới",
         "đợt mưa": period_entries,
         "tổng số đợt": raw.get("total_rain_periods") or len(periods),
         "tóm tắt": summary_text,
     }
+    # Past-frame warning: nếu đợt mưa đầu tiên bắt đầu >1.5h sau NOW,
+    # các khung sáng/trưa/chiều/tối đã qua trong hôm nay có thể không cover.
+    # Tận dụng raw forecasts nếu dispatch layer forward qua.
+    if isinstance(raw.get("forecasts"), list):
+        result.update(_detect_forecast_range_gap(raw["forecasts"]))
+    return result
 
 
 def build_best_time_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
@@ -696,13 +779,25 @@ def build_daily_summary_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         "thời tiết chung": weather_main_to_vietnamese(raw.get("weather_main") or "") or "—",
     }
 
+    # Pre-compute chênh nhiệt ngày-đêm (arithmetic self-check, fix audit B4 ID 64)
+    temp_min_val: Optional[float] = None
+    temp_max_val: Optional[float] = None
+
     tr = raw.get("temp_range")
     if isinstance(tr, Mapping):
+        temp_min_val = tr.get("min")
+        temp_max_val = tr.get("max")
         result["nhiệt độ"] = f"Thấp {tr.get('min', 0):.1f}°C — Cao {tr.get('max', 0):.1f}°C (biên độ {tr.get('bien_do', 0):.1f}°C)"
     elif raw.get("temp_min") is not None and raw.get("temp_max") is not None:
+        temp_min_val = raw["temp_min"]
+        temp_max_val = raw["temp_max"]
         result["nhiệt độ"] = f"Thấp {raw['temp_min']:.1f}°C — Cao {raw['temp_max']:.1f}°C"
     elif raw.get("avg_temp") is not None:
         result["nhiệt độ"] = label_temp_hn(raw["avg_temp"])
+
+    if temp_min_val is not None and temp_max_val is not None:
+        diff = float(temp_max_val) - float(temp_min_val)
+        result["chênh nhiệt ngày-đêm"] = f"{diff:.1f}°C (COPY thẳng, KHÔNG tự tính)"
 
     prog = raw.get("temp_progression")
     if isinstance(prog, Mapping):
@@ -756,7 +851,8 @@ def build_daily_summary_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         "Đây là TỔNG HỢP CẢ NGÀY (min/max/TB + sáng/trưa/chiều/tối), KHÔNG phải thời điểm tức thời. "
         "Nếu user hỏi 'bây giờ / hiện tại / đang' → gọi get_current_weather. "
         "Khi trả lời câu hỏi theo khung (chiều/tối/sáng) → LẤY ĐÚNG giá trị từ 'nhiệt độ theo ngày', "
-        "không gán cả dải 'Thấp X — Cao Y' làm giá trị tức thời."
+        "không gán cả dải 'Thấp X — Cao Y' làm giá trị tức thời. "
+        "Key `chênh nhiệt ngày-đêm` đã pre-compute — COPY thẳng, KHÔNG tự trừ max-min."
     )
     return result
 
@@ -1230,6 +1326,15 @@ def build_temperature_trend_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     return shape_labeled_dict(raw, TEMP_TREND_KEYS)
 
 
+_ADVICE_NO_HALLUCINATE = (
+    "⚠ KHÔNG suy diễn ngoài output: CHỈ dùng các field có trong output này. "
+    "TUYỆT ĐỐI KHÔNG thêm nhãn hiện tượng (mưa phùn, sương mù, đợt lạnh mạnh, "
+    "nắng đẹp, nồm ẩm...) không có trong recommendations/ghi chú. "
+    "Nếu user hỏi chi tiết mưa/UV/giờ cụ thể → gọi tool tương ứng "
+    "(get_rain_timeline / get_uv_safe_windows / get_hourly_forecast) để lấy data."
+)
+
+
 def build_comfort_index_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if _is_error(raw):
         return build_error_output(raw)
@@ -1241,6 +1346,7 @@ def build_comfort_index_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     }
     if isinstance(raw.get("breakdown"), Mapping):
         result["phân tích"] = raw["breakdown"]
+    result["⚠ KHÔNG suy diễn"] = _ADVICE_NO_HALLUCINATE
     return result
 
 
@@ -1254,6 +1360,7 @@ def build_clothing_advice_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     return {
         "trang phục đề xuất": raw.get("clothing_items") or [],
         "ghi chú": raw.get("notes") or [],
+        "⚠ KHÔNG suy diễn": _ADVICE_NO_HALLUCINATE,
     }
 
 
@@ -1264,6 +1371,7 @@ def build_activity_advice_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         "khuyến nghị": raw.get("advice") or "",
         "lý do": raw.get("reason") or "",
         "gợi ý thêm": raw.get("recommendations") or [],
+        "⚠ KHÔNG suy diễn": _ADVICE_NO_HALLUCINATE,
     }
 
 

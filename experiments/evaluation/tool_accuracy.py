@@ -16,10 +16,14 @@
 
 INTENT_TO_TOOLS = {
     # current_weather: "Bay gio thoi tiet the nao?"
+    # R9: + rain_timeline + hourly_forecast defensive (confusion current->rain 2x)
     "current_weather": {
-        "city":     ["get_current_weather", "detect_phenomena", "get_clothing_advice"],
-        "district": ["get_current_weather", "detect_phenomena", "get_clothing_advice"],
-        "ward":     ["get_current_weather", "detect_phenomena", "get_clothing_advice"],
+        "city":     ["get_current_weather", "detect_phenomena", "get_clothing_advice",
+                     "get_rain_timeline", "get_hourly_forecast"],
+        "district": ["get_current_weather", "detect_phenomena", "get_clothing_advice",
+                     "get_rain_timeline", "get_hourly_forecast"],
+        "ward":     ["get_current_weather", "detect_phenomena", "get_clothing_advice",
+                     "get_rain_timeline", "get_hourly_forecast"],
     },
     # hourly_forecast: "Chieu nay mua khong?", "Toi nay may do?"
     "hourly_forecast": {
@@ -28,10 +32,14 @@ INTENT_TO_TOOLS = {
         "ward":     ["get_hourly_forecast", "get_rain_timeline", "get_sunny_periods", "get_daily_rhythm"],
     },
     # daily_forecast: "Ngay mai the nao?", "Cuoi tuan?"
+    # R9: + rain_timeline + hourly_forecast + daily_summary defensive
     "daily_forecast": {
-        "city":     ["get_daily_forecast", "get_weather_period", "get_temperature_trend"],
-        "district": ["get_daily_forecast", "get_weather_period", "get_temperature_trend"],
-        "ward":     ["get_daily_forecast", "get_weather_period", "get_temperature_trend"],
+        "city":     ["get_daily_forecast", "get_weather_period", "get_temperature_trend",
+                     "get_daily_summary", "get_rain_timeline", "get_hourly_forecast"],
+        "district": ["get_daily_forecast", "get_weather_period", "get_temperature_trend",
+                     "get_daily_summary", "get_rain_timeline", "get_hourly_forecast"],
+        "ward":     ["get_daily_forecast", "get_weather_period", "get_temperature_trend",
+                     "get_daily_summary", "get_rain_timeline", "get_hourly_forecast"],
     },
     # weather_overview: "Tong hop thoi tiet hom nay?"
     "weather_overview": {
@@ -52,10 +60,11 @@ INTENT_TO_TOOLS = {
         "ward":     ["get_current_weather", "get_temperature_trend", "get_hourly_forecast", "get_daily_forecast"],
     },
     # wind_query: "Gio manh khong?"
+    # R9: + get_weather_alerts (gio giat manh -> canh bao)
     "wind_query": {
-        "city":     ["get_current_weather", "get_hourly_forecast", "get_pressure_trend"],
-        "district": ["get_current_weather", "get_hourly_forecast", "get_pressure_trend"],
-        "ward":     ["get_current_weather", "get_hourly_forecast", "get_pressure_trend"],
+        "city":     ["get_current_weather", "get_hourly_forecast", "get_pressure_trend", "get_weather_alerts"],
+        "district": ["get_current_weather", "get_hourly_forecast", "get_pressure_trend", "get_weather_alerts"],
+        "ward":     ["get_current_weather", "get_hourly_forecast", "get_pressure_trend", "get_weather_alerts"],
     },
     # humidity_fog_query: "Do am?", "Suong mu?"
     "humidity_fog_query": {
@@ -70,22 +79,32 @@ INTENT_TO_TOOLS = {
         "ward":     ["get_weather_history", "get_daily_summary", "get_weather_period"],
     },
     # location_comparison: "Cau Giay vs Dong Da?", "Quan nao nong nhat?"
+    # R9: + get_current_weather (defensive base data for comparison)
     "location_comparison": {
-        "city":     ["get_district_ranking", "get_district_multi_compare", "compare_weather"],
-        "district": ["compare_weather", "get_ward_ranking_in_district", "get_district_ranking", "get_district_multi_compare"],
-        "ward":     ["compare_weather"],
+        "city":     ["get_district_ranking", "get_district_multi_compare", "compare_weather", "get_current_weather"],
+        "district": ["compare_weather", "get_ward_ranking_in_district", "get_district_ranking",
+                     "get_district_multi_compare", "get_current_weather"],
+        "ward":     ["compare_weather", "get_current_weather"],
     },
     # activity_weather: "Di choi duoc khong?", "May gio chay bo tot?"
+    # R9: + rain_timeline + clothing_advice (activity_advice can combo voi chi tiet)
     "activity_weather": {
-        "city":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather", "get_comfort_index"],
-        "district": ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather", "get_comfort_index"],
-        "ward":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather", "get_comfort_index"],
+        "city":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather",
+                     "get_comfort_index", "get_clothing_advice", "get_rain_timeline"],
+        "district": ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather",
+                     "get_comfort_index", "get_clothing_advice", "get_rain_timeline"],
+        "ward":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather",
+                     "get_comfort_index", "get_clothing_advice", "get_rain_timeline"],
     },
     # expert_weather_param: "Diem suong?", "Ap suat?", "UV index?"
+    # R9: + humidity_timeline (dew/am expert)
     "expert_weather_param": {
-        "city":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
-        "district": ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
-        "ward":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history", "get_uv_safe_windows"],
+        "city":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history",
+                     "get_uv_safe_windows", "get_humidity_timeline"],
+        "district": ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history",
+                     "get_uv_safe_windows", "get_humidity_timeline"],
+        "ward":     ["get_current_weather", "get_comfort_index", "get_pressure_trend", "get_weather_history",
+                     "get_uv_safe_windows", "get_humidity_timeline"],
     },
     # weather_alert: "Co canh bao gi khong?", "Giong manh?", "Mua rao/giong khong?"
     # Đã có get_rain_timeline + get_hourly_forecast (match PRIMARY_TOOL_MAP R4.2).
@@ -101,11 +120,15 @@ INTENT_TO_TOOLS = {
         "ward":     ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary"],
     },
     # smalltalk_weather: "Xin chao", "Mac gi hom nay?"
-    # no-tools-called cung chap nhan duoc (greetings)
+    # no-tools-called cung chap nhan duoc (greetings).
+    # R9: + rain_timeline defensive (user chon Option A; confusion smalltalk->rain 2x).
     "smalltalk_weather": {
-        "city":     ["get_current_weather", "get_clothing_advice", "get_comfort_index", "get_activity_advice"],
-        "district": ["get_current_weather", "get_clothing_advice", "get_comfort_index", "get_activity_advice"],
-        "ward":     ["get_current_weather", "get_clothing_advice", "get_comfort_index", "get_activity_advice"],
+        "city":     ["get_current_weather", "get_clothing_advice", "get_comfort_index",
+                     "get_activity_advice", "get_rain_timeline"],
+        "district": ["get_current_weather", "get_clothing_advice", "get_comfort_index",
+                     "get_activity_advice", "get_rain_timeline"],
+        "ward":     ["get_current_weather", "get_clothing_advice", "get_comfort_index",
+                     "get_activity_advice", "get_rain_timeline"],
     },
 }
 

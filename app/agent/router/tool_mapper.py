@@ -1,294 +1,243 @@
-"""Tool Mapper — map (intent, scope) -> focused tool list (1-3 tools).
+"""Tool Mapper R9 — map (intent, scope) → focused tool list.
 
-Refactored:
-- Tat ca tool now deu support 3 tiers (ward/district/city) nhat quan
-- Khong can dedicated get_district_weather/get_city_weather nua (merged vao get_current_weather)
-- Khong can get_district_daily_forecast/get_city_daily_forecast (merged vao get_daily_forecast)
-- Them 6 insight tools moi: uv_safe, pressure_trend, daily_rhythm, humidity_timeline,
-  sunny_periods, district_multi_compare
-- Moi intent co tool chinh + tool bo sung (optional insight)
+## R9 redesign (2026-04-21)
+
+### Bỏ EXPANDED_TOOL_MAP
+- Lý do: confidence hardcode 0.9 ở 53% training samples → confidence không
+  reliable để phân biệt high/medium confidence. EXPANDED chỉ kích hoạt ở
+  medium zone, nhưng thực tế model predict với confidence ~0.9 cho đa số
+  query → EXPANDED gần như không được dùng.
+- Hậu quả cũ: khi router nhầm với high confidence → dùng PRIMARY (narrow
+  tool set) → bot không có tool để trả lời đúng.
+
+### Defensive tool coverage trong PRIMARY
+- Phân tích confusion pairs của Qwen3-4B (training/notebooks/run_02/outputs/
+  exp6_summary.json):
+  + daily_forecast → rain_query (2 confusions)
+  + daily_forecast → hourly_forecast (2)
+  + weather_overview → daily_forecast (2)
+  + current_weather → rain_query (2)
+  + current_weather → temperature_query (2)
+  + seasonal_context → historical_weather (2)
+  + smalltalk_weather → rain_query (2)
+  + activity_weather → smalltalk_weather (2)
+- Rule: với confusion pair X→Y count ≥ 2, tool map của X PHẢI chứa tool
+  chính của Y. → Defensive coverage.
+
+### Confidence < threshold → fallback full agent (None)
+- Nếu router trả confidence thấp, get_focused_tools trả None.
+- Caller (stream_slm_agent / run_slm_agent) fallback sang full 27-tool agent.
+- Không còn "medium zone EXPANDED".
+
+### Flatten scope structure (trừ location_comparison)
+- 14/15 intents có tool set identical giữa city/district/ward.
+- Dùng helper `_flat` để tránh lặp lại 3 lần.
+- `location_comparison` giữ nested vì city dùng ranking, district/ward dùng
+  compare_weather — khác biệt thực sự.
 """
 
 from __future__ import annotations
 
 from app.agent.tools import (
-    # Core (3)
     resolve_location,
     get_current_weather,
     get_weather_alerts,
-    # Forecast (4)
     get_hourly_forecast,
     get_daily_forecast,
     get_rain_timeline,
     get_best_time,
-    # History (3)
     get_weather_history,
     get_daily_summary,
     get_weather_period,
-    # Compare (3)
     compare_weather,
     compare_with_yesterday,
     get_seasonal_comparison,
-    # Ranking (2)
     get_district_ranking,
     get_ward_ranking_in_district,
-    # Insight (6)
     detect_phenomena,
     get_temperature_trend,
     get_comfort_index,
     get_weather_change_alert,
     get_clothing_advice,
     get_activity_advice,
-    # Insight New (6)
     get_uv_safe_windows,
     get_pressure_trend,
     get_daily_rhythm,
     get_humidity_timeline,
     get_sunny_periods,
     get_district_multi_compare,
-    # Full list
     TOOLS,
 )
 
 
-# ── PRIMARY_TOOL_MAP ──
-# Map (intent, scope) -> list of tool functions (1-3 tools)
-# Thiet ke: tool chinh + optional insight tool de tang chat luong response
-#
-# KHAC BIET CHINH so voi phien ban cu:
-# 1. Tat ca scope (ward/district/city) dung CUNG tool (vi tool tu dispatch)
-# 2. Them insight tools moi de bo sung thong tin
-# 3. Khong con cac tool dedicated (get_district_weather, get_city_weather, ...)
+def _flat(tools: list) -> dict[str, list]:
+    """Giúp giảm boilerplate: intent có cùng tool set cho 3 scope."""
+    return {"city": tools, "district": tools, "ward": tools}
+
+
+# ── PRIMARY_TOOL_MAP R9 ──
+# Mỗi intent: primary tool + 1-3 defensive tool cover confusion pairs.
+# Số tool trung bình ~4 (trong range focused, không vượt 6).
 
 PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
 
-    # --- CURRENT WEATHER ---
-    # "Bay gio troi the nao?", "Nhiet do hien tai?"
-    "current_weather": {
-        "city":     [get_current_weather, detect_phenomena],
-        "district": [get_current_weather, detect_phenomena],
-        "ward":     [get_current_weather, detect_phenomena],
-    },
+    # ══════ SNAPSHOT & NOWCAST ══════
 
-    # --- HOURLY FORECAST ---
-    # "Chieu nay mua khong?", "Toi nay may do?", "Luc nao nang?"
-    "hourly_forecast": {
-        "city":     [get_hourly_forecast, get_sunny_periods],
-        "district": [get_hourly_forecast, get_sunny_periods],
-        "ward":     [get_hourly_forecast, get_sunny_periods],
-    },
+    # "Bây giờ / hiện tại": snapshot + phenomena + defensive rain
+    # Acc 77.8% (lowest) — cần defensive nặng.
+    # Confusion: →rain (2), →temperature_query (2), →weather_overview (1)
+    "current_weather": _flat([
+        get_current_weather,       # primary: snapshot
+        detect_phenomena,          # insight: nồm/gió mùa/rét đậm
+        get_rain_timeline,         # DEFENSIVE: "bây giờ có mưa không"
+        get_hourly_forecast,       # DEFENSIVE: user có thể thực hỏi chiều/tối
+    ]),
 
-    # --- DAILY FORECAST ---
-    # "Ngay mai the nao?", "Cuoi tuan troi dep khong?", "Tuan sau?"
-    "daily_forecast": {
-        "city":     [get_daily_forecast, get_daily_summary, get_weather_period, get_temperature_trend],
-        "district": [get_daily_forecast, get_daily_summary, get_weather_period, get_temperature_trend],
-        "ward":     [get_daily_forecast, get_daily_summary, get_weather_period, get_temperature_trend],
-    },
+    # ══════ FORECAST (TIME-BASED) ══════
 
-    # --- WEATHER OVERVIEW ---
-    # "Tong hop thoi tiet hom nay?", "Overview thoi tiet?"
-    "weather_overview": {
-        "city":     [get_daily_summary, detect_phenomena, get_daily_rhythm],
-        "district": [get_daily_summary, detect_phenomena, get_daily_rhythm],
-        "ward":     [get_daily_summary, detect_phenomena, get_daily_rhythm],
-    },
+    # "Chiều/tối/vài giờ tới" — 1-48h
+    # Acc 84%. Thêm rain để cover edge rain query trong frame giờ.
+    "hourly_forecast": _flat([
+        get_hourly_forecast,       # primary
+        get_sunny_periods,         # "khi nào nắng trong 48h"
+        get_rain_timeline,         # DEFENSIVE: rain chi tiết trong 48h
+    ]),
 
-    # --- RAIN QUERY ---
-    # "Luc nao mua?", "Mua den bao gio?", "Co mua khong?"
-    "rain_query": {
-        "city":     [get_rain_timeline],
-        "district": [get_rain_timeline],
-        "ward":     [get_rain_timeline],
-    },
+    # "Ngày mai / thứ X / 3 ngày tới / tuần" — 1-8 ngày
+    # Acc 87.1%. Confusion: →rain (2), →hourly (2).
+    "daily_forecast": _flat([
+        get_daily_forecast,        # primary
+        get_daily_summary,         # sister tool: 1 ngày chi tiết 4 buổi
+        get_weather_period,        # range rộng
+        get_temperature_trend,     # xu hướng
+        get_rain_timeline,         # DEFENSIVE: →rain_query
+        get_hourly_forecast,       # DEFENSIVE: →hourly_forecast
+    ]),
 
-    # --- TEMPERATURE QUERY ---
-    # "Nhiet do?", "Nong khong?", "Lanh bao nhieu?"
-    "temperature_query": {
-        "city":     [get_current_weather, get_temperature_trend],
-        "district": [get_current_weather, get_temperature_trend],
-        "ward":     [get_current_weather, get_temperature_trend],
-    },
+    # "Tổng hợp hôm nay / overview"
+    # Acc 82.6%. Confusion: →daily_forecast (2).
+    "weather_overview": _flat([
+        get_daily_summary,         # primary: 4 buổi chi tiết
+        detect_phenomena,
+        get_daily_rhythm,          # nhịp nhiệt trong ngày
+        get_daily_forecast,        # DEFENSIVE: →daily_forecast
+    ]),
 
-    # --- WIND QUERY ---
-    # "Gio manh khong?", "Toc do gio?"
-    "wind_query": {
-        "city":     [get_current_weather, get_pressure_trend],
-        "district": [get_current_weather, get_pressure_trend],
-        "ward":     [get_current_weather, get_pressure_trend],
-    },
+    # ══════ FOCUS BY METRIC ══════
 
-    # --- HUMIDITY / FOG QUERY ---
-    # "Do am?", "Co nom am khong?", "Suong mu?"
-    "humidity_fog_query": {
-        "city":     [get_current_weather, get_humidity_timeline, detect_phenomena],
-        "district": [get_current_weather, get_humidity_timeline, detect_phenomena],
-        "ward":     [get_current_weather, get_humidity_timeline, detect_phenomena],
-    },
+    # "Lúc nào mưa / mấy giờ tạnh / có mưa không"
+    # Acc 100% nhưng user thường hỏi combo ("mưa tuần này" → cần daily).
+    "rain_query": _flat([
+        get_rain_timeline,         # primary: đợt mưa 48h
+        get_hourly_forecast,       # giờ-by-giờ chi tiết
+        get_daily_forecast,        # "mưa tuần này / ngày mai"
+        get_weather_alerts,        # "có cảnh báo mưa to"
+    ]),
 
-    # --- HISTORICAL WEATHER ---
-    # "Hom qua the nao?", "Ngay 15/3 troi ra sao?"
-    "historical_weather": {
-        "city":     [get_weather_history],
-        "district": [get_weather_history],
-        "ward":     [get_weather_history],
-    },
+    # "Nhiệt độ bao nhiêu / nóng không / lạnh"
+    # Acc 100%. Thêm hourly/daily cho future frame.
+    "temperature_query": _flat([
+        get_current_weather,       # primary
+        get_temperature_trend,     # "bao giờ ấm/lạnh"
+        get_hourly_forecast,       # "tối nay nhiệt"
+        get_daily_forecast,        # "ngày mai max/min"
+    ]),
 
-    # --- LOCATION COMPARISON ---
-    # "Cau Giay vs Dong Da?", "Quan nao nong nhat?"
-    "location_comparison": {
-        "city":     [get_district_ranking, get_district_multi_compare],
-        "district": [compare_weather],
-        "ward":     [compare_weather],
-    },
+    # "Gió mạnh không / tốc độ gió"
+    # Acc 100%. Thêm alerts vì gió giật mạnh = cảnh báo.
+    "wind_query": _flat([
+        get_current_weather,       # primary: có wind_speed + wind_gust
+        get_pressure_trend,        # front → gió
+        get_hourly_forecast,       # "chiều nay gió bao nhiêu"
+        get_weather_alerts,        # "gió giật → cảnh báo"
+    ]),
 
-    # --- ACTIVITY WEATHER ---
-    # "Di choi duoc khong?", "May gio chay bo tot?", "Mac gi hom nay?"
-    # get_clothing_advice ADD to primary: "mặc gì hôm nay" vẫn rơi vào
-    # activity_weather qua router → cần tool clothing trong focused set.
-    "activity_weather": {
-        "city":     [get_activity_advice, get_best_time, get_uv_safe_windows, get_clothing_advice],
-        "district": [get_activity_advice, get_best_time, get_uv_safe_windows, get_clothing_advice],
-        "ward":     [get_activity_advice, get_best_time, get_uv_safe_windows, get_clothing_advice],
-    },
+    # "Độ ẩm / sương mù / nồm ẩm"
+    # Acc 100%. Giữ nguyên, đã đủ.
+    "humidity_fog_query": _flat([
+        get_current_weather,       # primary
+        get_humidity_timeline,     # timeline ẩm + dew
+        detect_phenomena,          # nồm/sương mù đặc trưng HN
+    ]),
 
-    # --- EXPERT WEATHER PARAM ---
-    # "Diem suong?", "Ap suat?", "UV index?"
-    "expert_weather_param": {
-        "city":     [get_current_weather, get_comfort_index, get_pressure_trend],
-        "district": [get_current_weather, get_comfort_index, get_pressure_trend],
-        "ward":     [get_current_weather, get_comfort_index, get_pressure_trend],
-    },
+    # ══════ TIME: PAST ══════
 
-    # --- WEATHER ALERT ---
-    # "Co canh bao gi khong?", "Thoi tiet nguy hiem?", "Mua rao/giong khong?"
-    # Add get_rain_timeline + get_hourly_forecast: theo intent_disambiguation_rules,
-    # "mưa rào/giông" route weather_alert (rule an toàn). Agent cần data mưa cụ thể
-    # để answer comprehensive ("có giông + có mưa lúc X" thay vì "không có cảnh báo").
-    "weather_alert": {
-        "city":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend,
-                     get_rain_timeline, get_hourly_forecast],
-        "district": [get_weather_alerts, get_weather_change_alert, get_pressure_trend,
-                     get_rain_timeline, get_hourly_forecast],
-        "ward":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend,
-                     get_rain_timeline, get_hourly_forecast],
-    },
+    # "Hôm qua / ngày X đã qua / tuần trước"
+    # Acc 100%. Thêm summary cho "chi tiết ngày X".
+    "historical_weather": _flat([
+        get_weather_history,       # primary
+        get_daily_summary,         # DEFENSIVE: 1 ngày chi tiết 4 buổi
+    ]),
 
-    # --- SEASONAL CONTEXT ---
-    # "Nong hon binh thuong khong?", "So voi mua nay?"
-    "seasonal_context": {
-        "city":     [get_seasonal_comparison, compare_with_yesterday],
-        "district": [get_seasonal_comparison, compare_with_yesterday],
-        "ward":     [get_seasonal_comparison, compare_with_yesterday],
-    },
+    # ══════ COMPARISON ══════
 
-    # --- SMALLTALK ---
-    # "Xin chao", "Mac gi hom nay?", "Cam on"
-    "smalltalk_weather": {
-        "city":     [get_current_weather, get_clothing_advice],
-        "district": [get_current_weather, get_clothing_advice],
-        "ward":     [get_current_weather, get_clothing_advice],
-    },
-}
-
-
-
-# ── EXPANDED_TOOL_MAP ──
-# Used when confidence < per-intent threshold (medium confidence zone: 0.45 - threshold).
-# Includes PRIMARY tools + 2-3 related tools to cover ambiguous cases.
-# Replaces the old 25-tool fallback for medium-confidence routing.
-
-EXPANDED_TOOL_MAP: dict[str, dict[str, list]] = {
-
-    "current_weather": {
-        "city":     [get_current_weather, detect_phenomena, get_daily_rhythm, get_comfort_index],
-        "district": [get_current_weather, detect_phenomena, get_daily_rhythm, get_comfort_index],
-        "ward":     [get_current_weather, detect_phenomena, get_daily_rhythm, get_comfort_index],
-    },
-
-    "hourly_forecast": {
-        "city":     [get_hourly_forecast, get_sunny_periods, get_rain_timeline, get_daily_rhythm],
-        "district": [get_hourly_forecast, get_sunny_periods, get_rain_timeline, get_daily_rhythm],
-        "ward":     [get_hourly_forecast, get_sunny_periods, get_rain_timeline, get_daily_rhythm],
-    },
-
-    "daily_forecast": {
-        "city":     [get_daily_forecast, get_daily_summary, get_weather_period, get_temperature_trend, get_rain_timeline, get_sunny_periods],
-        "district": [get_daily_forecast, get_daily_summary, get_weather_period, get_temperature_trend, get_rain_timeline, get_sunny_periods],
-        "ward":     [get_daily_forecast, get_daily_summary, get_weather_period, get_temperature_trend, get_rain_timeline],
-    },
-
-    "weather_overview": {
-        "city":     [get_daily_summary, detect_phenomena, get_daily_rhythm, get_current_weather, get_temperature_trend],
-        "district": [get_daily_summary, detect_phenomena, get_daily_rhythm, get_current_weather, get_temperature_trend],
-        "ward":     [get_daily_summary, detect_phenomena, get_daily_rhythm, get_current_weather],
-    },
-
-    "rain_query": {
-        "city":     [get_rain_timeline, get_hourly_forecast, get_daily_forecast, get_weather_alerts, get_weather_change_alert],
-        "district": [get_rain_timeline, get_hourly_forecast, get_daily_forecast, get_weather_alerts, get_weather_change_alert],
-        "ward":     [get_rain_timeline, get_hourly_forecast, get_weather_alerts],
-    },
-
-    "temperature_query": {
-        "city":     [get_current_weather, get_temperature_trend, get_hourly_forecast, get_daily_forecast, get_comfort_index],
-        "district": [get_current_weather, get_temperature_trend, get_hourly_forecast, get_daily_forecast, get_comfort_index],
-        "ward":     [get_current_weather, get_temperature_trend, get_hourly_forecast, get_comfort_index],
-    },
-
-    "wind_query": {
-        "city":     [get_current_weather, get_pressure_trend, get_hourly_forecast, get_weather_alerts],
-        "district": [get_current_weather, get_pressure_trend, get_hourly_forecast, get_weather_alerts],
-        "ward":     [get_current_weather, get_pressure_trend, get_hourly_forecast],
-    },
-
-    "humidity_fog_query": {
-        "city":     [get_current_weather, get_humidity_timeline, detect_phenomena, get_daily_rhythm],
-        "district": [get_current_weather, get_humidity_timeline, detect_phenomena, get_daily_rhythm],
-        "ward":     [get_current_weather, get_humidity_timeline, detect_phenomena],
-    },
-
-    "historical_weather": {
-        "city":     [get_weather_history, get_daily_summary, get_weather_period, compare_with_yesterday],
-        "district": [get_weather_history, get_daily_summary, get_weather_period, compare_with_yesterday],
-        "ward":     [get_weather_history, get_daily_summary, get_weather_period],
-    },
-
+    # "So quận / xếp hạng / A vs B"
+    # Acc 100%. Scope-DIFFERENT — giữ nested.
     "location_comparison": {
         "city":     [get_district_ranking, get_district_multi_compare, get_current_weather],
         "district": [compare_weather, get_ward_ranking_in_district, get_current_weather],
         "ward":     [compare_weather, get_current_weather],
     },
 
-    "activity_weather": {
-        "city":     [get_activity_advice, get_best_time, get_uv_safe_windows, get_current_weather, get_comfort_index, get_clothing_advice],
-        "district": [get_activity_advice, get_best_time, get_uv_safe_windows, get_current_weather, get_comfort_index, get_clothing_advice],
-        "ward":     [get_activity_advice, get_best_time, get_uv_safe_windows, get_comfort_index],
-    },
+    # ══════ ACTIVITY & ADVISORY ══════
 
-    "expert_weather_param": {
-        "city":     [get_current_weather, get_comfort_index, get_pressure_trend, get_weather_history, get_humidity_timeline],
-        "district": [get_current_weather, get_comfort_index, get_pressure_trend, get_weather_history, get_humidity_timeline],
-        "ward":     [get_current_weather, get_comfort_index, get_pressure_trend, get_humidity_timeline],
-    },
+    # "Đi chơi / chạy bộ / mấy giờ tốt"
+    # Acc 94.3%. Confusion: →smalltalk (2).
+    # activity_advice generic → cần combo với rain/UV/current.
+    "activity_weather": _flat([
+        get_activity_advice,       # primary: advise chung
+        get_best_time,             # giờ tốt nhất
+        get_uv_safe_windows,       # UV window
+        get_clothing_advice,       # trang phục — overlap với smalltalk
+        get_rain_timeline,         # DEFENSIVE: "chiều đi chơi có mưa không"
+        get_current_weather,       # DEFENSIVE: base data + cover →smalltalk
+    ]),
 
-    "weather_alert": {
-        "city":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend, get_rain_timeline, get_hourly_forecast],
-        "district": [get_weather_alerts, get_weather_change_alert, get_pressure_trend, get_rain_timeline, get_hourly_forecast],
-        "ward":     [get_weather_alerts, get_weather_change_alert, get_pressure_trend, get_rain_timeline],
-    },
+    # ══════ EXPERT ══════
 
-    "seasonal_context": {
-        "city":     [get_seasonal_comparison, compare_with_yesterday, get_temperature_trend, get_current_weather],
-        "district": [get_seasonal_comparison, compare_with_yesterday, get_temperature_trend, get_current_weather],
-        "ward":     [get_seasonal_comparison, compare_with_yesterday, get_temperature_trend],
-    },
+    # "Dew point / áp suất / UV index / feels like"
+    # Acc 95%.
+    "expert_weather_param": _flat([
+        get_current_weather,       # primary: có đầy đủ expert fields
+        get_comfort_index,         # heat index / wind chill
+        get_pressure_trend,        # áp suất
+        get_humidity_timeline,     # DEFENSIVE: dew/ẩm expert
+    ]),
 
-    "smalltalk_weather": {
-        "city":     [get_current_weather, get_clothing_advice, get_comfort_index, get_activity_advice],
-        "district": [get_current_weather, get_clothing_advice, get_comfort_index, get_activity_advice],
-        "ward":     [get_current_weather, get_clothing_advice, get_comfort_index],
-    },
+    # ══════ ALERT & PHENOMENA ══════
+
+    # "Cảnh báo / bão / ngập / rét hại / giông"
+    # Acc 93.3%. Rule an toàn: cover cả rain + hourly.
+    "weather_alert": _flat([
+        get_weather_alerts,        # primary
+        get_weather_change_alert,  # đột biến 6-12h
+        get_pressure_trend,        # front = cảnh báo
+        get_rain_timeline,         # giông/mưa to cụ thể
+        get_hourly_forecast,       # "bão khi nào đến"
+    ]),
+
+    # ══════ CLIMATOLOGY ══════
+
+    # "Dạo này nóng hơn bình thường / so mùa này"
+    # Acc 92.9%. Confusion: →historical_weather (2).
+    "seasonal_context": _flat([
+        get_seasonal_comparison,   # primary: climatology
+        compare_with_yesterday,    # short-term delta
+        get_weather_history,       # DEFENSIVE: →historical
+        get_temperature_trend,     # xu hướng hỗ trợ "dạo này"
+    ]),
+
+    # ══════ SMALLTALK (User Option A: defensive coverage) ══════
+
+    # "Chào / cảm ơn / trời đẹp không / hôm nay nóng nhỉ"
+    # Acc 83.3%. Confusion: →rain (2), →weather_overview (1).
+    # User chọn Option A: thêm defensive tool.
+    "smalltalk_weather": _flat([
+        get_current_weather,       # primary: data nhẹ cho "hôm nay thế nào"
+        get_clothing_advice,       # "mặc gì"
+        get_rain_timeline,         # DEFENSIVE: →rain_query
+        get_comfort_index,         # DEFENSIVE: "dễ chịu không"
+    ]),
 }
 
 
@@ -298,50 +247,42 @@ def get_focused_tools(
     confidence: float = 1.0,
     per_intent_thresholds: dict | None = None,
 ) -> list | None:
-    """Get tool list for (intent, scope) pair, respecting confidence level.
+    """Get focused tool list for (intent, scope, confidence).
 
-    Routing logic:
-    - confidence >= intent_threshold  → PRIMARY_TOOL_MAP (1-3 focused tools)
-    - confidence >= 0.45              → EXPANDED_TOOL_MAP (4-6 tools, graceful degradation)
-    - confidence < 0.45               → None (caller should fallback)
+    R9 logic (bỏ EXPANDED_TOOL_MAP):
+    - confidence >= per_intent_threshold → PRIMARY_TOOL_MAP (focused 3-6 tools,
+      đã có defensive coverage cho các confusion pair thường gặp).
+    - confidence <  per_intent_threshold → None → caller fallback full
+      27-tool agent (run_agent path).
 
     Args:
-        intent: Classified intent string
-        scope: "city" | "district" | "ward"
-        confidence: Router confidence score (0.0-1.0)
-        per_intent_thresholds: Optional dict of per-intent thresholds.
-                               Defaults to global CONFIDENCE_THRESHOLD if None.
+        intent: Classified intent string.
+        scope: "city" | "district" | "ward".
+        confidence: Router confidence score (0.0-1.0).
+        per_intent_thresholds: Optional per-intent threshold dict. Defaults to
+            CONFIDENCE_THRESHOLD nếu None.
 
     Returns:
-        List of tool functions, empty list (smalltalk), or None (should fallback).
+        List tool functions, hoặc None nếu confidence quá thấp (caller fallback).
     """
-    # Determine threshold for this intent
-    if per_intent_thresholds is not None:
-        from app.agent.router.config import CONFIDENCE_THRESHOLD
-        threshold = per_intent_thresholds.get(intent, CONFIDENCE_THRESHOLD)
-    else:
-        from app.agent.router.config import CONFIDENCE_THRESHOLD
-        threshold = CONFIDENCE_THRESHOLD
+    from app.agent.router.config import CONFIDENCE_THRESHOLD
 
-    # Select map based on confidence
-    if confidence >= threshold:
-        tool_map = PRIMARY_TOOL_MAP
-    elif confidence >= 0.45:
-        tool_map = EXPANDED_TOOL_MAP
-    else:
-        return None  # Very low confidence — caller should fallback or return error
+    threshold = (per_intent_thresholds or {}).get(intent, CONFIDENCE_THRESHOLD)
 
-    scope_map = tool_map.get(intent)
+    if confidence < threshold:
+        return None  # Caller fallback sang full agent (27 tools)
+
+    scope_map = PRIMARY_TOOL_MAP.get(intent)
     if scope_map is None:
         return None
 
     tools = scope_map.get(scope)
     if tools is None:
-        # Fallback to city-level tools if scope not found
+        # Scope không match (vd unknown scope) → fallback sang city
         tools = scope_map.get("city")
     return tools
 
 
 def get_all_tools() -> list:
-    """Return the full 27-tool list (kept for baseline evaluation path)."""
+    """Return toàn bộ 27 tools (dùng cho fallback full-agent path)."""
     return TOOLS

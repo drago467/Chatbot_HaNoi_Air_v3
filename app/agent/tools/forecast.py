@@ -204,6 +204,8 @@ def get_rain_timeline(ward_id: str = None, location_hint: str = None, hours: int
     rain_analysis["resolved_location"] = result.get("resolved_location", {})
     rain_analysis["level"] = result.get("level", "city")
     rain_analysis["data_coverage"] = result.get("data_coverage")
+    # Forward forecasts để builder detect past-frame (R10)
+    rain_analysis["forecasts"] = forecasts
     return build_rain_timeline_output(rain_analysis)
 
 
