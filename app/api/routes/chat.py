@@ -2,7 +2,6 @@
 
 - POST /chat           : đồng bộ, trả JSON khi agent xong
 - POST /chat/stream    : SSE stream token-by-token
-- POST /chat/async     : enqueue task, trả task_id để client poll /tasks/{id}
 """
 
 import time
@@ -11,7 +10,7 @@ from fastapi import APIRouter, Depends
 from sse_starlette.sse import EventSourceResponse
 
 from app.api.deps import get_thread_id
-from app.api.schemas import ChatAsyncResponse, ChatRequest, ChatSyncResponse
+from app.api.schemas import ChatRequest, ChatSyncResponse
 from app.api.sse import sync_gen_to_sse
 from app.core.logging_config import get_logger
 
@@ -19,7 +18,26 @@ logger = get_logger(__name__)
 router = APIRouter(prefix="/chat", tags=["chat"])
 
 
-@router.post("", response_model=ChatSyncResponse)
+@router.post(
+    "",
+    response_model=ChatSyncResponse,
+    summary="Chat đồng bộ",
+    description=(
+        "Gửi câu hỏi → block đến khi agent trả kết quả đầy đủ. "
+        "Dùng cho câu đơn giản hoặc client không cần streaming.\n\n"
+        "**Flow**:\n"
+        "1. SLM Router (Qwen3-1.4B) phân loại intent.\n"
+        "2. Agent (Qwen3-14B thinking) chọn tools theo focused set.\n"
+        "3. Gọi tools (DAL query + format).\n"
+        "4. Agent tổng hợp response.\n"
+        "5. Trả full dict + log telemetry.\n\n"
+        "**Latency**: 3-8s tùy câu (thinking mode bật)."
+    ),
+    responses={
+        200: {"description": "Agent trả response thành công"},
+        503: {"description": "Backend (Ollama/LLM/DB) không khả dụng"},
+    },
+)
 def chat_sync(req: ChatRequest, thread_id: str = Depends(get_thread_id)):
     """Chat đồng bộ: block đến khi agent trả kết quả. Dùng cho câu đơn giản."""
     from app.agent.agent import run_agent_routed
@@ -29,8 +47,7 @@ def chat_sync(req: ChatRequest, thread_id: str = Depends(get_thread_id)):
     result = run_agent_routed(req.message, thread_id=thread_id)
     elapsed_ms = (time.time() - t_start) * 1000
 
-    # Enqueue telemetry nền (không block response)
-    _enqueue_telemetry(
+    _log_telemetry(
         thread_id=thread_id,
         user_query=req.message,
         llm_response=_extract_text(result),
@@ -40,30 +57,36 @@ def chat_sync(req: ChatRequest, thread_id: str = Depends(get_thread_id)):
     return ChatSyncResponse(thread_id=thread_id, result=result)
 
 
-@router.post("/stream")
+@router.post(
+    "/stream",
+    summary="Chat streaming (SSE)",
+    description=(
+        "Gửi câu hỏi → nhận response streaming qua Server-Sent Events. "
+        "Ưu tiên dùng cho UI để có TTFT (Time To First Token) thấp.\n\n"
+        "**SSE events**:\n"
+        "- `event: token` — chunk text assistant\n"
+        "- `event: done` — stream kết thúc\n"
+        "- `event: error` — lỗi trong agent chain\n\n"
+        "**Tại sao SSE thay WebSocket?**\n"
+        "- Hướng server → client đơn luồng đã đủ cho stream token.\n"
+        "- Qua reverse proxy / CDN dễ hơn, tự động reconnect phía trình duyệt."
+    ),
+    responses={
+        200: {
+            "description": "SSE stream thành công",
+            "content": {"text/event-stream": {}},
+        },
+        503: {"description": "Backend không khả dụng"},
+    },
+)
 def chat_stream(req: ChatRequest, thread_id: str = Depends(get_thread_id)):
-    """Chat streaming qua SSE. Ưu tiên dùng cho UI để có TTFT thấp.
-
-    SSE chọn thay vì WebSocket vì:
-    - Hướng server -> client đơn luồng đã đủ cho stream token.
-    - Qua reverse proxy / CDN dễ hơn, tự động reconnect phía trình duyệt.
-    """
+    """Chat streaming qua SSE."""
     from app.agent.agent import stream_agent_routed
 
     logger.info("chat_stream start (thread_id=%s)", thread_id)
     sync_gen = stream_agent_routed(req.message, thread_id=thread_id)
     async_gen = sync_gen_to_sse(sync_gen)
     return EventSourceResponse(async_gen, ping=15)
-
-
-@router.post("/async", response_model=ChatAsyncResponse)
-def chat_async(req: ChatRequest, thread_id: str = Depends(get_thread_id)):
-    """Enqueue chat task vào Celery, trả task_id cho client poll."""
-    from app.workers.tasks.chat import run_chat_task
-
-    task = run_chat_task.delay(req.message, thread_id)
-    logger.info("chat_async enqueued (task_id=%s, thread_id=%s)", task.id, thread_id)
-    return ChatAsyncResponse(task_id=task.id, status_url=f"/tasks/{task.id}")
 
 
 def _extract_text(agent_result: dict) -> str:
@@ -76,7 +99,6 @@ def _extract_text(agent_result: dict) -> str:
         msgs = agent_result.get("messages") if isinstance(agent_result, dict) else None
         if msgs:
             last = msgs[-1]
-            # langchain Message object có thuộc tính .content
             content = getattr(last, "content", None) or (last.get("content") if isinstance(last, dict) else None)
             if isinstance(content, str):
                 return content
@@ -85,16 +107,17 @@ def _extract_text(agent_result: dict) -> str:
     return ""
 
 
-def _enqueue_telemetry(thread_id: str, user_query: str, llm_response: str, response_time_ms: float):
-    """Gửi telemetry task vào Celery. Silent-fail nếu broker down."""
+def _log_telemetry(thread_id: str, user_query: str, llm_response: str, response_time_ms: float):
+    """Log telemetry đồng bộ vào CSV. Silent-fail nếu logger down."""
     try:
-        from app.workers.tasks.telemetry import log_conversation_task
-        log_conversation_task.delay(
+        from app.agent.telemetry import get_evaluation_logger
+        logger_instance = get_evaluation_logger()
+        logger_instance.log_conversation(
             session_id=thread_id,
-            turn_number=0,  # API chưa track turn; để 0, client UI set sau nếu cần
+            turn_number=0,
             user_query=user_query,
             llm_response=llm_response,
             response_time_ms=response_time_ms,
         )
     except Exception as e:
-        logger.warning("Could not enqueue telemetry task: %s", e)
+        logger.warning("Could not log telemetry: %s", e)

@@ -104,15 +104,25 @@ def test_current_heat_index_triggers_when_hot_humid():
     assert "cảm giác nóng" in out
 
 
-def test_current_visibility_conditional():
-    """Tầm nhìn key only when visibility < 5km."""
+def test_current_visibility_always_shown():
+    """B.1: Tầm nhìn key luôn hiện khi có data, để LLM copy thay vì suy diễn.
+
+    Trước R15 chỉ show <5km, dẫn tới v12 ID 12 (sân bay Nội Bài) bot suy diễn
+    tầm nhìn từ độ ẩm/mây vì không thấy field. Giờ luôn show với 4 nhãn:
+    Kém / Hạn chế / Trung bình / Tốt.
+    """
     raw = _base_current_ward()
     raw["visibility"] = 10000
     out = build_current_output(raw)
-    assert "tầm nhìn" not in out
+    assert "tầm nhìn" in out
+    assert "Tốt" in out["tầm nhìn"]
     raw["visibility"] = 800
     out = build_current_output(raw)
     assert "tầm nhìn" in out
+    assert "Kém" in out["tầm nhìn"]
+    raw["visibility"] = 4000
+    out = build_current_output(raw)
+    assert "Trung bình" in out["tầm nhìn"]
 
 
 def test_current_no_bịa_fields():

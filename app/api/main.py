@@ -23,18 +23,9 @@ logger = get_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan: warm up Redis, log config. Shutdown: cleanup."""
+    """Lifespan: log startup. Shutdown: cleanup."""
     logger.info("FastAPI starting up...")
-
-    # Warm up Redis (không raise nếu miss — /ready sẽ báo)
-    from app.core.redis_client import ping as redis_ping
-    if redis_ping():
-        logger.info("Redis connection OK")
-    else:
-        logger.warning("Redis ping failed at startup (continuing — /ready will report)")
-
     yield
-
     logger.info("FastAPI shutting down...")
 
 
@@ -56,13 +47,12 @@ app.add_middleware(
 )
 
 # Đăng ký routes
-from app.api.routes import chat, conversations, health, jobs, tasks, weather  # noqa: E402
+from app.api.routes import chat, conversations, health, jobs, weather  # noqa: E402
 
 app.include_router(health.router)
 app.include_router(chat.router)
 app.include_router(conversations.router)
 app.include_router(jobs.router)
-app.include_router(tasks.router)
 app.include_router(weather.router)
 
 

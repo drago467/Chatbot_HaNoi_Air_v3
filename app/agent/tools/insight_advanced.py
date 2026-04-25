@@ -418,7 +418,8 @@ def get_humidity_timeline(ward_id: str = None, location_hint: str = None, hours:
         if hum is not None and dp is not None and temp is not None:
             is_nom_am = hum >= 85 and (temp - dp) <= 2
 
-        entry = {"time": time_str, "humidity": hum, "dew_point": dp,
+        entry = {"ts_utc": f.get("ts_utc"), "time_ict": f.get("time_ict"),
+                 "humidity": hum, "dew_point": dp,
                  "temp": temp, "comfort": comfort, "is_nom_am": is_nom_am}
         timeline.append(entry)
 
@@ -458,7 +459,7 @@ def get_humidity_timeline(ward_id: str = None, location_hint: str = None, hours:
         },
         "nom_am_periods": nom_am_periods,
         "has_nom_am": len(nom_am_periods) > 0,
-        "most_comfortable_time": best_entry["time"] if best_entry else None,
+        "most_comfortable_time": best_entry.get("time_ict") if best_entry else None,
         "resolved_location": result.get("resolved_location", {}),
         "level": result.get("level", "city"),
     })
@@ -625,7 +626,7 @@ def get_district_multi_compare(metrics: str = "nhiet_do,do_am,uvi", limit: int =
     by_district: Dict[str, Dict[str, Any]] = {}
     for metric, data in result.items():
         for r in data.get("top", []) + data.get("bottom", []):
-            dname = r.get("district_name_vi") or r.get("name") or ""
+            dname = r.get("district_name_vi") or r.get("district") or r.get("name") or ""
             if not dname:
                 continue
             entry = by_district.setdefault(dname, {"district_name_vi": dname})

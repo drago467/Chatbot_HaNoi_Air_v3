@@ -101,9 +101,11 @@ def _get_weather_at_level(resolved: dict) -> dict:
         from app.dal.weather_aggregate_dal import get_city_current_weather
         return get_city_current_weather()
     elif level == "district":
-        district_name = data.get("district_name_vi", "")
+        district_id = data.get("district_id")
+        if not district_id:
+            return {"error": "no_district_id", "message": "Không xác định được quận/huyện"}
         from app.dal.weather_aggregate_dal import get_district_current_weather
-        return get_district_current_weather(district_name)
+        return get_district_current_weather(district_id)
     else:
         ward_id = data.get("ward_id", "")
         from app.dal.weather_dal import get_current_weather

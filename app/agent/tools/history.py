@@ -49,7 +49,7 @@ def get_weather_history(ward_id: str = None, location_hint: str = None, date: st
         location_hint=location_hint,
         default_scope="city",
         ward_fn=dal_ward,
-        district_fn=lambda district_name: dal_district(district_name, date),
+        district_fn=lambda district_id: dal_district(district_id, date),
         city_fn=lambda: dal_city(date),
         ward_args={"date": date},
         label="lịch sử thời tiết",
@@ -105,10 +105,10 @@ def get_daily_summary(ward_id: str = None, location_hint: str = None, date: str 
     )
 
     # District level: daily aggregate data
-    def _district_summary(district_name):
-        row = get_district_daily_summary_data(district_name, query_date)
+    def _district_summary(district_id):
+        row = get_district_daily_summary_data(district_id, query_date)
         if not row:
-            return {"error": "no_data", "message": f"Không có dữ liệu ngày {query_date} cho {district_name}"}
+            return {"error": "no_data", "message": f"Không có dữ liệu ngày {query_date} cho quận (district_id={district_id})"}
         from app.agent.dispatch import normalize_agg_keys
         row = normalize_agg_keys(row)
         row["level"] = "district"
@@ -191,8 +191,8 @@ def get_weather_period(ward_id: str = None, location_hint: str = None,
         return _summarize_period(rows, "ward")
 
     # District: use DAL
-    def _district_period(district_name):
-        rows = get_district_weather_period_data(district_name, start_date, end_date)
+    def _district_period(district_id):
+        rows = get_district_weather_period_data(district_id, start_date, end_date)
         if not rows:
             return {"error": "no_data", "message": f"Không có dữ liệu từ {start_date} đến {end_date}"}
         from app.agent.dispatch import normalize_rows

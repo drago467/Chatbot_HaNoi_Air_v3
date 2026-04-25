@@ -22,8 +22,17 @@ def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
 
     DÙNG KHI: "có hiện tượng gì đặc biệt không?", "có nồm ẩm không?",
     "có gió mùa đông bắc không?", "có rét đậm không?".
+
+    KHÔNG DÙNG KHI:
+        - Hỏi tầm nhìn/visibility cụ thể (tool KHÔNG có field visibility).
+        - "Sương mù sáng mai/tối nay" (future-frame) → gọi get_hourly_forecast trước,
+          detect_phenomena chỉ check tại NOW snapshot.
+        - Output KHÔNG có phenomena X (sương mù, băng giá, …) → KHÔNG bịa có;
+          respond rằng "không phát hiện X trong snapshot".
+
     Hỗ trợ: phường/xã, quận/huyện, toàn Hà Nội.
     Trả về: danh sách hiện tượng (nồm ẩm, gió Lào, gió mùa ĐB, rét đậm, sương mù, mưa đông).
+    ⚠ CHỈ liệt kê phenomena CÓ TRONG OUTPUT, KHÔNG suy diễn từ độ ẩm/mây/nhiệt.
     """
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
     from app.dal.weather_knowledge_dal import detect_hanoi_weather_phenomena
@@ -38,9 +47,9 @@ def detect_phenomena(ward_id: str = None, location_hint: str = None) -> dict:
                 "has_dangerous": phenomena.get("has_dangerous", False),
                 "weather_snapshot": weather}
 
-    def _detect_district(district_name):
+    def _detect_district(district_id):
         from app.dal.weather_aggregate_dal import get_district_current_weather
-        weather = get_district_current_weather(district_name)
+        weather = get_district_current_weather(district_id)
         if weather.get("error"):
             return weather
         weather = normalize_agg_keys(weather)
@@ -99,8 +108,8 @@ def get_temperature_trend(ward_id: str = None, location_hint: str = None, days: 
 
     days = max(2, min(days, 8))
 
-    def _district_trend(district_name):
-        rows = get_district_temperature_trend_data(district_name, days)
+    def _district_trend(district_id):
+        rows = get_district_temperature_trend_data(district_id, days)
         return _analyze_trend(rows)
 
     def _city_trend():
@@ -192,9 +201,9 @@ def get_comfort_index(ward_id: str = None, location_hint: str = None) -> dict:
             return weather
         return _compute_comfort(weather)
 
-    def _comfort_district(district_name):
+    def _comfort_district(district_id):
         from app.dal.weather_aggregate_dal import get_district_current_weather
-        weather = get_district_current_weather(district_name)
+        weather = get_district_current_weather(district_id)
         if weather.get("error"):
             return weather
         weather = normalize_agg_keys(weather)
@@ -265,16 +274,16 @@ def get_weather_change_alert(ward_id: str = None, location_hint: str = None, hou
 
     hours = max(1, min(hours, 12))
 
-    def _district_detect(district_name):
+    def _district_detect(district_id):
         from app.dal.weather_aggregate_dal import (
             get_district_current_weather, get_district_hourly_forecast
         )
         from app.agent.dispatch import normalize_agg_keys
-        current = get_district_current_weather(district_name)
+        current = get_district_current_weather(district_id)
         if current.get("error"):
             return current
         current = normalize_agg_keys(current)
-        forecasts = get_district_hourly_forecast(district_name, hours)
+        forecasts = get_district_hourly_forecast(district_id, hours)
         from app.agent.dispatch import normalize_rows
         forecasts = normalize_rows(forecasts)
         return _detect_changes(current, forecasts)
@@ -408,9 +417,9 @@ def get_clothing_advice(ward_id: str = None, location_hint: str = None, hours_ah
     from app.dal.activity_dal import get_clothing_advice as dal_ward_clothing
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
 
-    def _district_clothing(district_name):
+    def _district_clothing(district_id):
         from app.dal.weather_aggregate_dal import get_district_current_weather
-        weather = get_district_current_weather(district_name)
+        weather = get_district_current_weather(district_id)
         if weather.get("error"):
             return weather
         weather = normalize_agg_keys(weather)
@@ -528,9 +537,9 @@ def get_activity_advice(activity: str, ward_id: str = None, location_hint: str =
     from app.dal.activity_dal import get_activity_advice as dal_ward_activity
     from app.agent.dispatch import resolve_and_dispatch, normalize_agg_keys
 
-    def _district_activity(district_name):
+    def _district_activity(district_id):
         from app.dal.weather_aggregate_dal import get_district_current_weather
-        weather = get_district_current_weather(district_name)
+        weather = get_district_current_weather(district_id)
         if weather.get("error"):
             return weather
         weather = normalize_agg_keys(weather)

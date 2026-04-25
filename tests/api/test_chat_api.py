@@ -53,18 +53,3 @@ def test_chat_stream_returns_sse(api_client):
     assert "Hello " in text
 
 
-def test_chat_async_enqueues_task(api_client):
-    """POST /chat/async → 200 + task_id. Celery eager mode chạy ngay."""
-    fake_result = {"messages": [{"role": "assistant", "content": "OK"}]}
-
-    with patch("app.agent.agent.run_agent_routed", return_value=fake_result):
-        resp = api_client.post(
-            "/chat/async",
-            json={"message": "Test"},
-            headers={"X-Thread-Id": "test-async-1"},
-        )
-
-    assert resp.status_code == 200
-    body = resp.json()
-    assert "task_id" in body
-    assert body["status_url"].startswith("/tasks/")

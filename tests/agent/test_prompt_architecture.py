@@ -49,13 +49,14 @@ def test_no_hardcoded_weather_temperature_in_base():
 
 
 def test_no_hardcoded_humidity_or_pop_in_base():
-    """KHÔNG chứa % cụ thể như '75%', '83%' ngoài threshold phenomena."""
+    """KHÔNG chứa % cụ thể như '75%', '83%' ngoài threshold phenomena / COPY examples."""
     p = _rendered_base()
     suspect = []
     for m in re.finditer(r"\d{2,3}%", p):
         start = max(0, m.start() - 50)
         ctx = p[start:m.end() + 20].lower()
-        if "rét" in ctx or "nồm" in ctx or "gió mùa" in ctx or "ẩm >" in ctx or "mây >" in ctx:
+        # Allow: phenomena thresholds + COPY discipline examples (labels từ tool output)
+        if any(k in ctx for k in ("rét", "nồm", "gió mùa", "ẩm >", "mây >", "mây ", "copy")):
             continue
         suspect.append((m.group(0), ctx))
     assert not suspect, f"BASE_PROMPT có % seed: {suspect}"
@@ -180,8 +181,12 @@ def test_base_prompt_size_reasonable():
     p = _rendered_base()
     line_count = len(p.splitlines())
     token_est = len(p) // 4
-    assert line_count <= 160, f"BASE_PROMPT quá dài: {line_count} dòng"
-    assert token_est <= 3000, f"BASE_PROMPT quá nặng: ~{token_est} tokens"
+    # R12: 153 → ~215 dòng sau khi RESTORE POLICY 3.3/3.4 full text + ADD 3.8-3.12.
+    # R13: ~229 dòng (+hour formula D.1, +weekday COPY D.2).
+    # R14: ~250 dòng (+week table E.3, +hourly rule E.4, +POLICY 3.9 E.5, +POLICY 3.12 E.6).
+    # Qwen3-14B 32k context vẫn thoải mái.
+    assert line_count <= 260, f"BASE_PROMPT quá dài: {line_count} dòng"
+    assert token_est <= 5500, f"BASE_PROMPT quá nặng: ~{token_est} tokens"
 
 
 def test_focused_prompt_shorter_than_full():
@@ -220,8 +225,11 @@ def test_get_system_prompt_uses_base_plus_tool_rules():
 def test_runtime_context_injected():
     """Sau inject, prompt KHÔNG còn placeholder chưa thay thế."""
     p = _rendered_base()
-    # Các placeholder phải được thay thế
-    for ph in ["{today_date}", "{yesterday_iso}", "{tomorrow_iso}", "{this_saturday}"]:
+    # Các placeholder phải được thay thế (R14 E.3: + week_weekday_table, today_iso)
+    for ph in [
+        "{today_date}", "{yesterday_iso}", "{tomorrow_iso}", "{this_saturday}",
+        "{week_weekday_table}", "{today_iso}",
+    ]:
         assert ph not in p, f"Placeholder {ph} chưa được inject"
 
 

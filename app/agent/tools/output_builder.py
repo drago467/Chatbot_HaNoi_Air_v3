@@ -202,15 +202,22 @@ def _add_conditional_comfort(result: Dict[str, Any], temp: Optional[float],
 
 
 def _add_visibility(result: Dict[str, Any], vis_m: Optional[float]) -> None:
-    """Chỉ thêm key tầm nhìn khi <5km (đáng chú ý)."""
-    if vis_m is not None and vis_m > 0 and vis_m < 5000:
+    """Thêm key tầm nhìn khi có data, gắn nhãn theo ngưỡng để LLM copy thẳng (B.1).
+
+    Trước đây chỉ show khi <5km, dẫn tới user hỏi tầm nhìn lúc trời quang
+    không thấy field → bot suy diễn từ độ ẩm/mây (v12 ID 12). Giờ luôn show
+    để bot có data ground truth.
+    """
+    if vis_m is not None and vis_m > 0:
         km = vis_m / 1000
         if km < 1:
             label = "Kém"
         elif km < 3:
             label = "Hạn chế"
-        else:
+        elif km < 5:
             label = "Trung bình"
+        else:
+            label = "Tốt"
         result["tầm nhìn"] = f"{label} {km:.1f} km"
 
 
@@ -327,7 +334,16 @@ def build_current_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     )
     if raw.get("data_stale"):
         result["ghi chú dữ liệu"] = raw.get("data_warning") or "Dữ liệu có thể cũ hơn thường lệ."
-    return result
+    # R11 Contract B: snapshot metadata (front-loaded grounding)
+    # R13 Contract D: absence emission cho field thường bị LLM suy diễn (v11 ID 12, 81)
+    return {
+        **_emit_snapshot_metadata(raw.get("time_ict") or raw.get("ts_utc")),
+        **_emit_missing_fields(raw, [
+            ("tầm nhìn", "visibility"),
+            ("sương mù", "fog"),
+        ]),
+        **result,
+    }
 
 
 def _build_hourly_entry(entry: Mapping[str, Any]) -> Dict[str, Any]:
@@ -382,14 +398,16 @@ def _detect_forecast_range_gap(
     forecasts: Sequence[Mapping[str, Any]],
     now: Optional[datetime] = None,
 ) -> Dict[str, Any]:
-    """Detect gap giữa forecast start và NOW → past-frame warning nếu có.
+    """R11 Contract A: emit grounding metadata + past-frame warning cho temporal-window tools.
 
-    Trả dict với các key optional:
-    - "phạm vi thực tế": mô tả start→end (luôn có nếu forecasts ≥1)
-    - "⚠ lưu ý khung đã qua": cảnh báo past-frame nếu data không cover các khung
-      sáng/trưa/chiều/tối HÔM NAY đã qua.
+    Trả dict với các key (order intentionally front-loaded):
+    - "ngày cover": list ["DD/MM/YYYY (Thứ X)"] — machine-checkable grounding (R11 L1).
+    - "phạm vi thực tế": "từ HH:MM Thứ X DD/MM đến HH:MM Thứ Y DD/MM" (R10 — GIỮ backward compat).
+    - "trong phạm vi": bool True khi có data (R11 L1).
+    - "⚠ lưu ý khung đã qua": cảnh báo past-frame nếu data không cover khung
+      sáng/trưa/chiều/tối HÔM NAY đã qua (R10 — GIỮ).
 
-    Lý do: tool hourly/rain_timeline chỉ trả forecast TỪ NOW. Khi NOW=22:14 tối,
+    Lý do past-frame: tool hourly/rain_timeline chỉ trả forecast TỪ NOW. Khi NOW=22:14 tối,
     các khung "chiều/trưa/sáng nay" (13-18h / 11-13h / 6-11h) ĐÃ QUA hoàn toàn.
     Bot thường lấy data tương lai (23:00+ hoặc ngày mai) rồi dán nhãn khung đã
     qua → sai nghiêm trọng (audit v8 B1, 15 IDs).
@@ -413,11 +431,29 @@ def _detect_forecast_range_gap(
     if first_dt is None or last_dt is None:
         return result
 
+    # R11 Contract A: "ngày cover" — list ISO dates với weekday (machine-checkable).
+    dates_covered: List[str] = []
+    seen_dates = set()
+    for entry in forecasts:
+        dt_e = _dt_of(entry)
+        if dt_e is None:
+            continue
+        d_iso = dt_e.date().isoformat()
+        if d_iso in seen_dates:
+            continue
+        seen_dates.add(d_iso)
+        dates_covered.append(f"{dt_e.strftime('%d/%m/%Y')} ({_WEEKDAYS_VI[dt_e.weekday()]})")
+    if dates_covered:
+        result["ngày cover"] = dates_covered
+
+    # R10 key — giữ nguyên (backward compat 6 test R10).
     result["phạm vi thực tế"] = (
         f"từ {first_dt.strftime('%H:%M')} {_WEEKDAYS_VI[first_dt.weekday()]} "
         f"{first_dt.strftime('%d/%m/%Y')} đến {last_dt.strftime('%H:%M')} "
         f"{_WEEKDAYS_VI[last_dt.weekday()]} {last_dt.strftime('%d/%m/%Y')}"
     )
+    # R11 Contract A: bool rõ ràng — LLM đọc nhanh.
+    result["trong phạm vi"] = True
 
     now = now or datetime.now(_ICT)
     today = now.date()
@@ -453,6 +489,136 @@ def _detect_forecast_range_gap(
     return result
 
 
+def _emit_coverage_days(dates: Sequence[Any]) -> Dict[str, Any]:
+    """R11 Contract A (variant cho daily tools): emit `ngày cover` + `trong phạm vi`.
+
+    Dùng khi builder có sẵn list dates (không phải forecast entries với ts_utc).
+    Ví dụ: build_daily_forecast, build_weather_period, build_daily_rhythm.
+
+    Args:
+        dates: list date/string/datetime — được normalize qua `_as_date`.
+
+    Returns:
+        dict có `"ngày cover"` (list "DD/MM/YYYY (Thứ X)") và `"trong phạm vi"` (bool).
+    """
+    result: Dict[str, Any] = {}
+    covered: List[str] = []
+    seen = set()
+    for d in dates:
+        dd = _as_date(d)
+        if dd is None:
+            continue
+        iso = dd.isoformat()
+        if iso in seen:
+            continue
+        seen.add(iso)
+        covered.append(f"{dd.strftime('%d/%m/%Y')} ({_WEEKDAYS_VI[dd.weekday()]})")
+    if covered:
+        result["ngày cover"] = covered
+        result["trong phạm vi"] = True
+    return result
+
+
+def _emit_snapshot_metadata(
+    ts_or_dt: Any, now: Optional[datetime] = None, note: Optional[str] = None
+) -> Dict[str, Any]:
+    """R11 Contract B + R14 E.2: emit snapshot metadata cho tools single-point.
+
+    Trả:
+    - "áp dụng cho": formatted timestamp "HH:MM Thứ X DD/MM/YYYY".
+    - "⚠ snapshot": True — LLM không dán cho future/past khung.
+    - "⚠ KHÔNG dùng cho" (R14 E.2): structured list các khung cấm + tool thay thế.
+      LLM thấy key này KHÓ bỏ qua hơn note prose (v12 IDs 103, 113, 123, 150 fail vì ignore prose).
+    - "⚠ ghi chú snapshot": note chi tiết (backward compat với tests).
+
+    Args:
+        ts_or_dt: unix ts / ISO string / datetime.
+        now: fallback nếu ts_or_dt None (dùng cho advice tools không có timestamp).
+        note: custom warning note. Default = snapshot rejection default.
+    """
+    result: Dict[str, Any] = {}
+    when = _format_dt_ict(ts_or_dt) if ts_or_dt is not None else None
+    if not when:
+        fallback = now or datetime.now(_ICT)
+        when = _format_dt_ict(fallback)
+    if when:
+        result["áp dụng cho"] = when
+    result["⚠ snapshot"] = True
+    result["⚠ KHÔNG dùng cho"] = (
+        "tối nay / ngày mai / cuối tuần / mấy ngày tới — "
+        "gọi get_hourly_forecast (≤48h) hoặc get_daily_forecast (≤8 ngày) THAY THẾ."
+    )
+    result["⚠ ghi chú snapshot"] = note or (
+        "Đây là SNAPSHOT tại thời điểm trên. KHÔNG dán số/nhãn này làm 'chiều/tối/mai/cuối tuần'. "
+        "User hỏi khung tương lai → gọi hourly/daily forecast."
+    )
+    return result
+
+
+def _emit_historical_metadata(loai: str, note: Optional[str] = None) -> Dict[str, Any]:
+    """R11 Contract C: emit historical/aggregate metadata cho tools past-only hoặc tổng hợp.
+
+    Trả:
+    - "loại dữ liệu": "quá khứ" | "tổng hợp cả ngày" | "so sánh past".
+    - "⚠ không phải hiện tại": True — LLM không dùng cho câu hỏi "bây giờ".
+
+    Args:
+        loai: "quá khứ" | "tổng hợp cả ngày" | "so sánh past".
+        note: custom warning note.
+    """
+    result: Dict[str, Any] = {
+        "loại dữ liệu": loai,
+        "⚠ không phải hiện tại": True,
+    }
+    result["⚠ ghi chú loại dữ liệu"] = note or (
+        f"Đây là {loai}, KHÔNG phải tức thời. User hỏi 'bây giờ / hiện tại' → "
+        f"dùng get_current_weather thay."
+    )
+    return result
+
+
+def _emit_missing_fields(
+    raw: Mapping[str, Any],
+    expected_topics: Sequence[tuple],
+) -> Dict[str, Any]:
+    """R13 Contract D: emit `⚠ không có dữ liệu` key cho fields absent.
+
+    Forces LLM to say "Dữ liệu chưa có X" thay vì suy diễn X từ độ ẩm/mây/etc.
+    Same category với R11 L1 Contract A/B/C — additive metadata emission.
+
+    Args:
+        raw: dict thô từ DAL (để check key presence).
+        expected_topics: list[(topic_vi, key_en)]. Mỗi tuple khai báo 1 topic
+            user có thể hỏi (vd "tầm nhìn") và key raw dict tương ứng (vd "visibility").
+            Nếu raw không có key_en OR value là None/empty → topic vào missing list.
+
+    Returns:
+        dict có `"⚠ không có dữ liệu"` = ["topic1", "topic2"] nếu CÓ missing,
+        empty dict nếu tất cả topics đều có data.
+
+    Example:
+        _emit_missing_fields(raw, [("tầm nhìn", "visibility"), ("sương mù", "fog")])
+        # Nếu raw không có key "visibility" và "fog":
+        # → {"⚠ không có dữ liệu": ["tầm nhìn", "sương mù"]}
+    """
+    missing: List[str] = []
+    for topic_vi, key_en in expected_topics:
+        value = raw.get(key_en)
+        # Absent if key missing, None, or empty string/list
+        if value is None or value == "" or value == []:
+            missing.append(topic_vi)
+    if not missing:
+        return {}
+    return {
+        "⚠ không có dữ liệu": missing,
+        "⚠ ghi chú trường thiếu": (
+            f"Output KHÔNG có field: {', '.join(missing)}. Nếu user hỏi về "
+            f"{'/'.join(missing)} → TRẢ LỜI RÕ 'Dữ liệu chưa có', TUYỆT ĐỐI KHÔNG "
+            f"suy diễn từ độ ẩm/mây/nhiệt/điểm sương."
+        ),
+    }
+
+
 def build_hourly_forecast_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if _is_error(raw):
         return build_error_output(raw)
@@ -468,6 +634,13 @@ def build_hourly_forecast_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     }
     # Past-frame detection: thêm "phạm vi thực tế" + cảnh báo nếu khung đã qua
     result.update(_detect_forecast_range_gap(forecasts))
+    # R13 Contract D: hourly forecast entries không emit visibility/fog
+    # → LLM suy diễn từ độ ẩm+mây (v11 ID 19). Emit explicit absence.
+    first_entry = forecasts[0] if forecasts else {}
+    result.update(_emit_missing_fields(first_entry, [
+        ("tầm nhìn", "visibility"),
+        ("sương mù", "fog"),
+    ]))
     result["tóm tắt tổng"] = _narrative_hourly(forecasts, location_name)
     if raw.get("data_note"):
         result["ghi chú dữ liệu"] = raw["data_note"]
@@ -638,7 +811,9 @@ def build_daily_forecast_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     result["tóm tắt tổng"] = _narrative_daily(forecasts, location_name)
     if raw.get("data_note"):
         result["ghi chú dữ liệu"] = raw["data_note"]
-    return result
+    # R11 Contract A: front-load ngày cover (ISO + weekday)
+    dates = [f.get("date") for f in forecasts if isinstance(f, Mapping) and f.get("date")]
+    return {**_emit_coverage_days(dates), **result}
 
 
 def build_rain_timeline_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
@@ -704,7 +879,15 @@ def build_best_time_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
             "ghi chú": ", ".join(s.get("issues") or []) or "Tốt",
         }
 
+    # R11 Contract A: extract dates từ best_hours + worst_hours timestamps
+    all_slots = (raw.get("best_hours") or []) + (raw.get("worst_hours") or [])
+    slot_dates = []
+    for s in all_slots:
+        ts = s.get("ts_utc") if isinstance(s, Mapping) else None
+        if isinstance(ts, (int, float)):
+            slot_dates.append(datetime.fromtimestamp(float(ts), tz=_ICT).date())
     return {
+        **_emit_coverage_days(slot_dates),
         "địa điểm": location_name,
         "hoạt động": raw.get("activity", ""),
         "giờ tốt nhất": [_fmt_slot(s) for s in (raw.get("best_hours") or [])],
@@ -714,7 +897,10 @@ def build_best_time_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
 
 
 def build_weather_history_output(raw: Mapping[str, Any], date_hint: Optional[str] = None) -> Dict[str, Any]:
-    """Timemachine/daily history — ward ONLY có wind_gust (không wind_speed)."""
+    """Timemachine/daily history — ward ONLY có wind_gust (không wind_speed).
+
+    R11 Contract C: emit `"loại dữ liệu": "quá khứ"` + `"⚠ không phải hiện tại"`.
+    """
     if _is_error(raw):
         return build_error_output(raw)
     level = raw.get("level") or "ward"
@@ -764,7 +950,13 @@ def build_weather_history_output(raw: Mapping[str, Any], date_hint: Optional[str
     uvi = daily.get("uvi") or raw.get("uvi") or raw.get("max_uvi")
     if uvi is not None:
         result["UV"] = f"{get_uv_status(uvi)} {uvi:.1f}"
-    return result
+    # R11 Contract C: front-load historical metadata (merge metadata keys TRƯỚC data keys)
+    # R13 Contract D: weather_history không emit visibility → LLM suy diễn. Emit absence.
+    return {
+        **_emit_historical_metadata("quá khứ"),
+        **_emit_missing_fields(raw, [("tầm nhìn", "visibility")]),
+        **result,
+    }
 
 
 def build_daily_summary_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
@@ -800,6 +992,7 @@ def build_daily_summary_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         result["chênh nhiệt ngày-đêm"] = f"{diff:.1f}°C (COPY thẳng, KHÔNG tự tính)"
 
     prog = raw.get("temp_progression")
+    has_progression = False
     if isinstance(prog, Mapping):
         parts = []
         for k, vi in (("sang", "Sáng"), ("trua", "Trưa"), ("chieu", "Chiều"), ("toi", "Tối")):
@@ -808,6 +1001,7 @@ def build_daily_summary_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
                 parts.append(f"{vi} {v:.1f}°C")
         if parts:
             result["nhiệt độ theo ngày"] = " / ".join(parts)
+            has_progression = True
 
     humidity = raw.get("humidity") or raw.get("avg_humidity")
     if humidity is not None:
@@ -847,14 +1041,36 @@ def build_daily_summary_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
 
     if raw.get("note"):
         result["ghi chú"] = raw["note"]
-    result["gợi ý dùng output"] = (
-        "Đây là TỔNG HỢP CẢ NGÀY (min/max/TB + sáng/trưa/chiều/tối), KHÔNG phải thời điểm tức thời. "
-        "Nếu user hỏi 'bây giờ / hiện tại / đang' → gọi get_current_weather. "
-        "Khi trả lời câu hỏi theo khung (chiều/tối/sáng) → LẤY ĐÚNG giá trị từ 'nhiệt độ theo ngày', "
-        "không gán cả dải 'Thấp X — Cao Y' làm giá trị tức thời. "
-        "Key `chênh nhiệt ngày-đêm` đã pre-compute — COPY thẳng, KHÔNG tự trừ max-min."
-    )
-    return result
+    if has_progression:
+        result["gợi ý dùng output"] = (
+            "Đây là TỔNG HỢP CẢ NGÀY (min/max/TB + sáng/trưa/chiều/tối), KHÔNG phải thời điểm tức thời. "
+            "Nếu user hỏi 'bây giờ / hiện tại / đang' → gọi get_current_weather. "
+            "Khi trả lời câu hỏi theo khung (chiều/tối/sáng) → LẤY ĐÚNG giá trị từ 'nhiệt độ theo ngày', "
+            "không gán cả dải 'Thấp X — Cao Y' làm giá trị tức thời. "
+            "Key `chênh nhiệt ngày-đêm` đã pre-compute — COPY thẳng, KHÔNG tự trừ max-min."
+        )
+    else:
+        # B.3: Output không có temp_progression (sáng/trưa/chiều/tối). Gợi ý
+        # phải khớp với data thực tế để LLM không bịa giá trị từng buổi.
+        result["gợi ý dùng output"] = (
+            "Đây là TỔNG HỢP CẢ NGÀY (min/max/TB), KHÔNG phải thời điểm tức thời. "
+            "Output KHÔNG có breakdown sáng/trưa/chiều/tối — chỉ có dải nhiệt min-max cả ngày. "
+            "Nếu user hỏi nhiệt độ buổi cụ thể → trả dải min-max và gọi get_hourly_forecast(start_date=date) "
+            "để lấy nhiệt độ chi tiết theo giờ. TUYỆT ĐỐI KHÔNG bịa giá trị từng buổi từ min-max. "
+            "Nếu user hỏi 'bây giờ / hiện tại / đang' → gọi get_current_weather. "
+            "Key `chênh nhiệt ngày-đêm` đã pre-compute — COPY thẳng, KHÔNG tự trừ max-min."
+        )
+    # R11 Contract C: daily_summary là tổng hợp cả ngày, không phải snapshot
+    # R13 Contract D: daily_summary không có mm chi tiết per-hour (ID 21 bịa 20-24h)
+    missing_topics = [("lượng mưa mm chi tiết từng giờ", "rain_hourly_mm")]
+    if not has_progression:
+        # B.3: emit explicit absence để LLM không bịa breakdown sáng/trưa/chiều/tối
+        missing_topics.append(("nhiệt độ theo buổi", "temp_progression"))
+    return {
+        **_emit_historical_metadata("tổng hợp cả ngày"),
+        **_emit_missing_fields(raw, missing_topics),
+        **result,
+    }
 
 
 def build_weather_period_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
@@ -885,7 +1101,14 @@ def build_weather_period_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         }
     if raw.get("note"):
         result["ghi chú dữ liệu"] = raw["note"]
-    return result
+    # R11 Contract A: ngày cover từ daily list (front-loaded)
+    # R13 Contract D: weather_period không emit alerts/hazard list → LLM có thể suy diễn
+    dates = [d.get("date") for d in daily if isinstance(d, Mapping) and d.get("date")]
+    return {
+        **_emit_coverage_days(dates),
+        **_emit_missing_fields(raw, [("cảnh báo cực đoan cụ thể", "alerts")]),
+        **result,
+    }
 
 
 def _compare_location_block(loc_info: Mapping[str, Any]) -> Dict[str, Any]:
@@ -919,6 +1142,8 @@ def build_compare_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if diffs.get("humidity_diff") is not None:
         diff_bits.append(f"chênh độ ẩm {diffs['humidity_diff']:+.0f}%")
     return {
+        # R11 Contract B: so sánh 2 địa điểm tại NOW
+        **_emit_snapshot_metadata(None, note="So sánh 2 địa điểm tại NOW. User hỏi so sánh khung khác → gọi tool riêng."),
         "loại so sánh": "Hai địa điểm, thời điểm hiện tại",
         "địa điểm 1": _compare_location_block(loc1),
         "địa điểm 2": _compare_location_block(loc2),
@@ -965,6 +1190,8 @@ def build_compare_with_yesterday_output(raw: Mapping[str, Any]) -> Dict[str, Any
             changes.append(f"Lượng mưa thay đổi {rain_diff:+.1f} mm")
 
     return {
+        **_emit_historical_metadata("so sánh past (hôm nay vs hôm qua)",
+                                    note="So sánh này CHỈ hôm nay vs hôm qua. User hỏi 'ngày mai vs hôm nay' → gọi get_current_weather + get_daily_forecast riêng."),
         "loại so sánh": "Hôm nay vs Hôm qua",
         "địa điểm": location_name,
         "hôm nay": today_block,
@@ -1006,7 +1233,11 @@ def build_seasonal_comparison_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     # comparisons là list VN strings từ DAL — giữ nguyên, chỉ rename key
     if comparisons:
         result["nhận xét"] = [str(c) for c in comparisons]
-    return result
+    # R11 Contract B: seasonal comparison baseline là NOW (hiện tại vs TB climatology)
+    return {
+        **_emit_snapshot_metadata(None, note="So sánh hiện tại vs TB climatology tháng. KHÔNG dùng cho 'so hôm qua / ngày mai'."),
+        **result,
+    }
 
 
 # ── Group 2: generic shape_labeled_dict ─────────────────────────────────────
@@ -1119,7 +1350,9 @@ def build_uv_safe_windows_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
             base["UV"] = f"{get_uv_status(uvi)} {uvi:.1f}"
         return base
 
+    # R11 Contract A: scan 48h từ NOW — baseline snapshot + note horizon
     return {
+        **_emit_snapshot_metadata(None, note="Scan UV windows 48h từ NOW. Windows entries có timestamp riêng."),
         "địa điểm": location_name,
         "UV đỉnh": f"{raw.get('peak_uvi', 0):.1f}" if raw.get("peak_uvi") is not None else "—",
         "giờ đỉnh": raw.get("peak_time", ""),
@@ -1134,7 +1367,9 @@ def build_pressure_trend_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         return build_error_output(raw)
     level = raw.get("level") or "ward"
     location_name = _format_location(raw.get("resolved_location") or {}, level)
+    # R11 Contract A: pressure trend 48h from NOW baseline
     return {
+        **_emit_snapshot_metadata(None, note="Xu hướng áp suất 48h từ NOW. Front detect qua drop ≥3 hPa/3h."),
         "địa điểm": location_name,
         "xu hướng áp suất": raw.get("trend", ""),
         "thay đổi tổng": f"{raw.get('total_change', 0):+.1f} hPa" if raw.get("total_change") is not None else "—",
@@ -1170,7 +1405,11 @@ def build_daily_rhythm_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
         result["khung mát nhất"] = raw["coolest_period"]
     if raw.get("hottest_period"):
         result["khung nóng nhất"] = raw["hottest_period"]
-    return result
+    # R11 Contract A: daily rhythm = 1 ngày (4 khung)
+    target_date = raw.get("date") or raw.get("target_date")
+    if target_date:
+        return {**_emit_coverage_days([target_date]), **result}
+    return {**_emit_snapshot_metadata(None, note="Nhịp nhiệt 1 ngày (4 khung sáng/trưa/chiều/tối)."), **result}
 
 
 def build_humidity_timeline_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
@@ -1188,9 +1427,25 @@ def build_humidity_timeline_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
 
     nom = raw.get("nom_am_periods") or []
     stats = raw.get("statistics") or {}
+    # R11 Contract A: extract dates from timeline (hourly entries có ts_utc)
+    timeline = raw.get("timeline") or []
+    timeline_dates = []
+    for e in timeline:
+        if isinstance(e, Mapping):
+            ts = e.get("ts_utc")
+            if isinstance(ts, (int, float)):
+                timeline_dates.append(datetime.fromtimestamp(float(ts), tz=_ICT).date())
+    metadata = _emit_coverage_days(timeline_dates) if timeline_dates else _emit_snapshot_metadata(None, note="Timeline độ ẩm 24h từ NOW.")
+    # R13 Contract D: humidity_timeline không emit sương mù dày / băng giá → LLM dễ suy diễn
+    missing_emit = _emit_missing_fields(raw, [
+        ("sương mù dày đặc (phân loại cụ thể)", "fog_density"),
+        ("băng giá", "frost"),
+    ])
     return {
+        **metadata,
+        **missing_emit,
         "địa điểm": location_name,
-        "timeline độ ẩm": [_hent(e) for e in (raw.get("timeline") or [])[:24]],
+        "timeline độ ẩm": [_hent(e) for e in timeline[:24]],
         "thống kê": {
             "độ ẩm TB": f"{int(round(stats.get('avg_humidity') or 0))}%" if stats.get("avg_humidity") is not None else "—",
             "độ ẩm cao nhất": f"{int(round(stats.get('max_humidity') or 0))}%" if stats.get("max_humidity") is not None else "—",
@@ -1212,7 +1467,9 @@ def build_sunny_periods_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
             base["mây"] = label_clouds(w["avg_clouds"])
         return base
 
+    # R11 Contract A: sunny periods scan 48h từ NOW
     return {
+        **_emit_snapshot_metadata(None, note="Scan khung nắng 48h từ NOW. Windows entries có timestamp riêng."),
         "địa điểm": location_name,
         "khung nắng": [_sun_win(w) for w in (raw.get("sunny_windows") or [])],
         "khung nhiều mây": [_sun_win(w) for w in (raw.get("cloudy_windows") or [])],
@@ -1312,18 +1569,30 @@ def build_weather_alerts_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
             })
         else:
             fmt.append({"mô tả": str(a)})
+    # R11 Contract B: snapshot (alert data tại NOW)
     return {
+        **_emit_snapshot_metadata(None, note="Cảnh báo được tra tại NOW. Không phải dự báo tương lai."),
         "cảnh báo": fmt,
         "số lượng": len(fmt),
     }
 
 
 def build_detect_phenomena_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
-    return shape_labeled_dict(raw, PHENOMENA_KEYS)
+    # R11 Contract B: hiện tượng HN tính tại NOW (nồm ẩm / gió mùa / rét đậm)
+    return {
+        **_emit_snapshot_metadata(None, note="Hiện tượng đặc trưng HN tính tại NOW. User hỏi tương lai → gọi forecast tools."),
+        **shape_labeled_dict(raw, PHENOMENA_KEYS),
+    }
 
 
 def build_temperature_trend_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
-    return shape_labeled_dict(raw, TEMP_TREND_KEYS)
+    # R11 Contract A: trend có ngày cover (2-8 ngày), lấy từ daily_summary raw key
+    details = raw.get("daily_summary") or raw.get("chi tiết theo ngày") or raw.get("daily_details") or raw.get("days") or []
+    dates = [d.get("date") for d in details if isinstance(d, Mapping) and d.get("date")]
+    return {
+        **_emit_coverage_days(dates),
+        **shape_labeled_dict(raw, TEMP_TREND_KEYS),
+    }
 
 
 _ADVICE_NO_HALLUCINATE = (
@@ -1347,17 +1616,24 @@ def build_comfort_index_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if isinstance(raw.get("breakdown"), Mapping):
         result["phân tích"] = raw["breakdown"]
     result["⚠ KHÔNG suy diễn"] = _ADVICE_NO_HALLUCINATE
-    return result
+    # R11 Contract B: comfort tính tại NOW
+    return {**_emit_snapshot_metadata(None), **result}
 
 
 def build_weather_change_alert_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
-    return shape_labeled_dict(raw, CHANGE_ALERT_KEYS)
+    # R11 Contract B: alert đột biến 6-12h tới nhưng baseline là NOW
+    return {
+        **_emit_snapshot_metadata(None, note="Phát hiện đột biến 6-12h tới. Baseline là NOW."),
+        **shape_labeled_dict(raw, CHANGE_ALERT_KEYS),
+    }
 
 
 def build_clothing_advice_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if _is_error(raw):
         return build_error_output(raw)
+    # R11 Contract B: advice áp dụng tại NOW
     return {
+        **_emit_snapshot_metadata(None, note="Lời khuyên trang phục áp dụng thời điểm hiện tại. User hỏi ngày khác → gọi forecast tool + clothing_advice lại."),
         "trang phục đề xuất": raw.get("clothing_items") or [],
         "ghi chú": raw.get("notes") or [],
         "⚠ KHÔNG suy diễn": _ADVICE_NO_HALLUCINATE,
@@ -1367,7 +1643,9 @@ def build_clothing_advice_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
 def build_activity_advice_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     if _is_error(raw):
         return build_error_output(raw)
+    # R11 Contract B: activity advice áp dụng tại NOW
     return {
+        **_emit_snapshot_metadata(None, note="Khuyến nghị hoạt động áp dụng thời điểm hiện tại. Cuối tuần / ngày xa → gọi weather_period trước."),
         "khuyến nghị": raw.get("advice") or "",
         "lý do": raw.get("reason") or "",
         "gợi ý thêm": raw.get("recommendations") or [],
@@ -1376,11 +1654,19 @@ def build_activity_advice_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
 
 
 def build_district_ranking_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
-    return shape_ranking_output(raw, "quận")
+    # R11 Contract B: xếp hạng quận tại NOW
+    return {
+        **_emit_snapshot_metadata(None, note="Xếp hạng quận tại NOW. KHÔNG dùng làm xếp hạng quá khứ/tương lai."),
+        **shape_ranking_output(raw, "quận"),
+    }
 
 
 def build_ward_ranking_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
-    return shape_ranking_output(raw, "phường/xã")
+    # R11 Contract B: xếp hạng phường tại NOW
+    return {
+        **_emit_snapshot_metadata(None, note="Xếp hạng phường tại NOW. KHÔNG dùng làm xếp hạng quá khứ/tương lai."),
+        **shape_ranking_output(raw, "phường/xã"),
+    }
 
 
 def build_district_multi_compare_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
@@ -1404,12 +1690,15 @@ def build_district_multi_compare_output(raw: Mapping[str, Any]) -> Dict[str, Any
                 if v is not None:
                     entry[vn] = f"{v:.1f}" if isinstance(v, float) else str(v)
             fmt.append(entry)
+        # R11 Contract B: multi-compare tại NOW
         return {
+            **_emit_snapshot_metadata(None, note="So sánh nhiều quận tại NOW."),
             "so sánh": fmt,
             "các chỉ số": raw.get("metrics_analyzed") or [],
             "tổng số quận": len(fmt),
         }
     return {
+        **_emit_snapshot_metadata(None, note="So sánh nhiều quận tại NOW."),
         "so sánh": comparisons,
         "các chỉ số": raw.get("metrics_analyzed") or [],
     }

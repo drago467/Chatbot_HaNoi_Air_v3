@@ -631,6 +631,22 @@ class OpenWeatherAsyncIngestor:
                 else:
                     logger.error(f"Result for key_4: FAILED ({resp.status})")
 
+def run_ingest(include_history: bool = False, history_days: int = 7) -> None:
+    """Sync wrapper để gọi từ FastAPI /jobs/ingest sau R15 (gỡ Celery).
+
+    Block đến khi mọi step xong. Chạy current + forecast luôn, thêm history
+    nếu include_history=True.
+    """
+    async def _main():
+        ingestor = OpenWeatherAsyncIngestor()
+        if include_history and history_days > 0:
+            await ingestor.run_history_backfill(days=history_days)
+        await ingestor.run_nowcast()
+        await ingestor.run_forecast()
+
+    asyncio.run(_main())
+
+
 if __name__ == "__main__":
     import sys
     import argparse

@@ -2907,3 +2907,415 @@ PermissionError: [Errno 13] Permission denied: '/home/appuser'
 2026-04-21 10:36:03 | INFO | __main__ | Aggregated hourly: forecast - district: 28415, city: 985
 2026-04-21 10:36:03 | INFO | __main__ | Aggregated daily: forecast - district: 1800, city: 60
 2026-04-21 10:36:03 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-21 20:13:37 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-21 20:13:37 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-21 20:13:38 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-21 20:13:38 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-21 20:13:38 | INFO | __main__ | Starting aggregation for current data...
+2026-04-21 20:13:39 | INFO | __main__ | Aggregated hourly: current - district: 28445, city: 986
+2026-04-21 20:13:39 | INFO | __main__ | Aggregation completed for current data
+2026-04-21 20:13:39 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-21 20:13:41 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-21 20:13:41 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-21 20:13:41 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-21 20:13:41 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-21 20:13:48 | INFO | __main__ | Aggregated hourly: forecast - district: 28745, city: 996
+2026-04-21 20:13:48 | INFO | __main__ | Aggregated daily: forecast - district: 1800, city: 60
+2026-04-21 20:13:48 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-22 07:16:55 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-22 07:16:55 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-22 07:16:55 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-22 07:16:55 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-22 07:16:59 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-22 07:16:59 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-22 07:16:59 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-22 07:16:59 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-22 07:16:59 | INFO | __main__ | Starting aggregation for history data...
+2026-04-22 07:16:59 | INFO | __main__ | Aggregated hourly: history - district: 28745, city: 996
+2026-04-22 07:16:59 | INFO | __main__ | Aggregated daily: history - district: 1800, city: 60
+2026-04-22 07:16:59 | INFO | __main__ | Aggregation completed for history data
+2026-04-22 07:16:59 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-22 07:17:00 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-22 07:17:00 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-22 07:17:00 | INFO | __main__ | Starting aggregation for current data...
+2026-04-22 07:17:01 | INFO | __main__ | Aggregated hourly: current - district: 28799, city: 998
+2026-04-22 07:17:01 | INFO | __main__ | Aggregation completed for current data
+2026-04-22 07:17:01 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-22 07:17:02 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 54s for rate limit window to reset...
+2026-04-22 07:17:55 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 5s for rate limit window to reset...
+2026-04-22 07:18:01 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-22 07:18:01 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-22 07:18:01 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-22 07:18:01 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-22 07:18:09 | INFO | __main__ | Aggregated hourly: forecast - district: 29129, city: 1009
+2026-04-22 07:18:09 | INFO | __main__ | Aggregated daily: forecast - district: 1830, city: 61
+2026-04-22 07:18:09 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-22 14:58:19 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-22 14:58:19 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-22 14:58:20 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-22 14:58:20 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-22 14:58:20 | INFO | __main__ | Starting aggregation for current data...
+2026-04-22 14:58:21 | INFO | __main__ | Aggregated hourly: current - district: 29159, city: 1010
+2026-04-22 14:58:21 | INFO | __main__ | Aggregation completed for current data
+2026-04-22 14:58:21 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-22 14:58:22 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-22 14:58:22 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-22 14:58:22 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-22 14:58:22 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-22 14:58:30 | INFO | __main__ | Aggregated hourly: forecast - district: 29369, city: 1017
+2026-04-22 14:58:30 | INFO | __main__ | Aggregated daily: forecast - district: 1830, city: 61
+2026-04-22 14:58:30 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-23 19:57:05 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-23 19:57:05 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-23 19:57:05 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-23 19:57:05 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-23 19:57:08 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-23 19:57:08 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-23 19:57:08 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-23 19:57:08 | INFO | __main__ | Aggregated 3132 daily history records
+2026-04-23 19:57:08 | INFO | __main__ | Starting aggregation for history data...
+2026-04-23 19:57:09 | INFO | __main__ | Aggregated hourly: history - district: 29369, city: 1017
+2026-04-23 19:57:09 | INFO | __main__ | Aggregated daily: history - district: 1830, city: 61
+2026-04-23 19:57:09 | INFO | __main__ | Aggregation completed for history data
+2026-04-23 19:57:09 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-23 19:57:10 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-23 19:57:10 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-23 19:57:10 | INFO | __main__ | Starting aggregation for current data...
+2026-04-23 19:57:11 | INFO | __main__ | Aggregated hourly: current - district: 29399, city: 1018
+2026-04-23 19:57:11 | INFO | __main__ | Aggregation completed for current data
+2026-04-23 19:57:11 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-23 19:57:11 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 54s for rate limit window to reset...
+2026-04-23 19:58:06 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-23 19:58:06 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-23 19:58:06 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-23 19:58:06 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-23 19:58:18 | INFO | __main__ | Aggregated hourly: forecast - district: 30269, city: 1047
+2026-04-23 19:58:19 | INFO | __main__ | Aggregated daily: forecast - district: 1860, city: 62
+2026-04-23 19:58:19 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-23 19:58:26 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 19:58:26 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 19:59:05 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 19:59:05 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 20:10:57 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 20:10:57 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 20:14:06 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 20:14:07 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 20:22:25 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 20:22:25 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 20:26:31 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 20:26:31 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 21:34:24 | WARNING | app.ui.components | Could not load conversations from API: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /conversations (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:34:29 | WARNING | app.ui.api_client | get_ready_status failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /ready (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:34:33 | WARNING | app.ui.api_client | get_districts failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /locations/districts (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:34:37 | WARNING | app.ui.api_client | get_districts failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /locations/districts (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:34:57 | WARNING | app.ui.api_client | get_districts failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /locations/districts (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:35:01 | WARNING | app.ui.api_client | get_current_weather failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /weather/current/ID_00364 (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:35:05 | WARNING | app.ui.api_client | get_hourly_forecast failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /weather/forecast/ID_00364?hours=24 (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:36:54 | WARNING | app.ui.components | Could not load conversations from API: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /conversations (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:36:54 | WARNING | app.ui.components | Could not load conversations from API: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /conversations (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:36:58 | WARNING | app.ui.api_client | get_ready_status failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /ready (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:37:02 | WARNING | app.ui.api_client | get_districts failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /locations/districts (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-23 21:37:03 | INFO | app.api.main | FastAPI starting up...
+2026-04-23 21:42:11 | INFO | app.api.main | FastAPI shutting down...
+2026-04-23 21:42:13 | INFO | app.api.main | FastAPI starting up...
+2026-04-23 21:43:00 | INFO | httpx | HTTP Request: GET https://consideration-methods-skilled-proceedings.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-23 21:43:25 | INFO | app.api.routes.chat | chat_stream start (thread_id=a8079061-2378-428f-96a9-aa8a3e892849)
+2026-04-23 21:43:28 | INFO | httpx | HTTP Request: POST https://consideration-methods-skilled-proceedings.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-23 21:43:28 | INFO | app.agent.agent | SLM Router: RouterResult(daily_forecast/ward, conf=0.90, 2567ms)
+2026-04-23 21:43:28 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/ward (conf=0.90), 7 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend', 'get_rain_timeline', 'get_hourly_forecast', 'get_weather_history']
+2026-04-23 21:43:34 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 21:44:05 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 21:44:57 | INFO | app.api.routes.chat | chat_stream start (thread_id=a8079061-2378-428f-96a9-aa8a3e892849)
+2026-04-23 21:45:00 | INFO | httpx | HTTP Request: POST https://consideration-methods-skilled-proceedings.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-23 21:45:00 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/city, conf=0.91, 3010ms, rewrite='Sáng mai từ 6h đến 9h Hà Nội thời tiết r...')
+2026-04-23 21:45:00 | INFO | app.agent.agent | SLM Router rewrote query: 'sáng mai từ 6h đến 9h sáng' → 'Sáng mai từ 6h đến 9h Hà Nội thời tiết ra sao?'
+2026-04-23 21:45:00 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/city (conf=0.91), 3 tools: ['get_hourly_forecast', 'get_sunny_periods', 'get_rain_timeline']
+2026-04-23 21:45:05 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 21:45:15 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 21:51:57 | INFO | httpx | HTTP Request: GET https://consideration-methods-skilled-proceedings.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-23 21:53:11 | INFO | httpx | HTTP Request: GET https://consideration-methods-skilled-proceedings.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-23 21:56:27 | INFO | app.api.main | FastAPI shutting down...
+2026-04-23 21:56:27 | INFO | app.api.main | FastAPI starting up...
+2026-04-23 21:56:28 | INFO | app.api.main | FastAPI starting up...
+2026-04-23 21:57:50 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-23 21:57:50 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-23 21:58:47 | INFO | httpx | HTTP Request: GET https://consideration-methods-skilled-proceedings.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-23 21:59:23 | INFO | app.api.routes.chat | chat_stream start (thread_id=8ed3e9ae-371e-4451-bbb6-441abb0985ad)
+2026-04-23 21:59:25 | INFO | httpx | HTTP Request: POST https://consideration-methods-skilled-proceedings.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-23 21:59:25 | INFO | app.agent.agent | SLM Router: RouterResult(daily_forecast/ward, conf=0.90, 1746ms)
+2026-04-23 21:59:25 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/ward (conf=0.90), 7 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend', 'get_rain_timeline', 'get_hourly_forecast', 'get_weather_history']
+2026-04-23 21:59:33 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 21:59:49 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 22:00:18 | INFO | app.api.routes.chat | chat_stream start (thread_id=8ed3e9ae-371e-4451-bbb6-441abb0985ad)
+2026-04-23 22:00:21 | INFO | httpx | HTTP Request: POST https://consideration-methods-skilled-proceedings.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-23 22:00:21 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/city, conf=0.91, 2735ms, rewrite='Trưa ngày mai Hà Nội thời tiết thế nào?...')
+2026-04-23 22:00:21 | INFO | app.agent.agent | SLM Router rewrote query: 'trưa ngày mai thì sao' → 'Trưa ngày mai Hà Nội thời tiết thế nào?'
+2026-04-23 22:00:21 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/city (conf=0.91), 3 tools: ['get_hourly_forecast', 'get_sunny_periods', 'get_rain_timeline']
+2026-04-23 22:00:26 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 22:00:45 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 22:01:16 | INFO | app.api.routes.chat | chat_stream start (thread_id=3d6c6257-86a5-4d28-bd9d-2309243293d4)
+2026-04-23 22:01:17 | INFO | httpx | HTTP Request: POST https://consideration-methods-skilled-proceedings.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-23 22:01:17 | INFO | app.agent.agent | SLM Router: RouterResult(daily_forecast/ward, conf=0.90, 1416ms)
+2026-04-23 22:01:17 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/ward (conf=0.90), 7 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend', 'get_rain_timeline', 'get_hourly_forecast', 'get_weather_history']
+2026-04-23 22:01:27 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 22:01:56 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 22:02:07 | ERROR | app.api.sse | SSE generator error: <Token var=<ContextVar name='router_scope' default=None at 0x000002020EECC680> at 0x000002020F6E06C0> was created in a different Context
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 32, in sync_gen_to_sse
+    chunk = await loop.run_in_executor(None, _safe_next)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 26, in _safe_next
+    return next(sync_gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\agent\agent.py", line 1085, in stream_agent_routed
+    router_scope_var.reset(scope_token)
+ValueError: <Token var=<ContextVar name='router_scope' default=None at 0x000002020EECC680> at 0x000002020F6E06C0> was created in a different Context
+2026-04-23 22:02:07 | ERROR | __main__ | chat_stream error (trace=25ee4f4a)
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app.py", line 126, in _handle_new_message
+    for chunk in api_client.chat_stream(prompt, conv["thread_id"]):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\ui\api_client.py", line 75, in chat_stream
+    raise RuntimeError(f"Stream error: {payload}")
+RuntimeError: Stream error: <Token var=<ContextVar name='router_scope' default=None at 0x000002020EECC680> at 0x000002020F6E06C0> was created in a different Context
+2026-04-23 22:03:17 | INFO | app.api.routes.chat | chat_stream start (thread_id=3d6c6257-86a5-4d28-bd9d-2309243293d4)
+2026-04-23 22:03:20 | INFO | httpx | HTTP Request: POST https://consideration-methods-skilled-proceedings.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-23 22:03:20 | INFO | app.agent.agent | SLM Router: RouterResult(daily_forecast/ward, conf=0.90, 2514ms)
+2026-04-23 22:03:20 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/ward (conf=0.90), 7 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend', 'get_rain_timeline', 'get_hourly_forecast', 'get_weather_history']
+2026-04-23 22:03:27 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-23 22:03:38 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-24 07:47:26 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-24 07:52:22 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-24 07:52:22 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-24 07:52:22 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-24 07:52:22 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-24 07:52:25 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-24 07:52:25 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-24 07:52:25 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-24 07:52:25 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-24 07:52:25 | INFO | __main__ | Starting aggregation for history data...
+2026-04-24 07:52:26 | INFO | __main__ | Aggregated hourly: history - district: 30269, city: 1047
+2026-04-24 07:52:26 | INFO | __main__ | Aggregated daily: history - district: 1860, city: 62
+2026-04-24 07:52:26 | INFO | __main__ | Aggregation completed for history data
+2026-04-24 07:52:26 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-24 07:52:27 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-24 07:52:27 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-24 07:52:27 | INFO | __main__ | Starting aggregation for current data...
+2026-04-24 07:52:28 | INFO | __main__ | Aggregated hourly: current - district: 30307, city: 1049
+2026-04-24 07:52:28 | INFO | __main__ | Aggregation completed for current data
+2026-04-24 07:52:28 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-24 07:52:28 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 54s for rate limit window to reset...
+2026-04-24 07:53:23 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-24 07:53:24 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-24 07:53:24 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-24 07:53:24 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-24 07:53:31 | INFO | __main__ | Aggregated hourly: forecast - district: 30667, city: 1061
+2026-04-24 07:53:31 | INFO | __main__ | Aggregated daily: forecast - district: 1890, city: 63
+2026-04-24 07:53:31 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-24 07:54:21 | INFO | app.api.main | FastAPI starting up...
+2026-04-24 07:55:16 | INFO | app.api.routes.chat | chat_stream start (thread_id=25ff61f0-d907-42f8-bf47-9eabb39d6396)
+2026-04-24 07:55:16 | WARNING | app.agent.router.slm_router | SLM Router error: [Errno 11001] getaddrinfo failed
+2026-04-24 07:55:16 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: [Errno 11001] getaddrinfo failed, 37ms)
+2026-04-24 07:55:16 | INFO | app.agent.agent | SLM Router → fallback (model_error: [Errno 11001] getaddrinfo failed)
+2026-04-24 07:55:24 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-24 07:55:28 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-24 07:57:01 | INFO | app.api.routes.chat | chat_stream start (thread_id=25ff61f0-d907-42f8-bf47-9eabb39d6396)
+2026-04-24 07:57:01 | WARNING | app.agent.router.slm_router | SLM Router error: [Errno 11001] getaddrinfo failed
+2026-04-24 07:57:01 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: [Errno 11001] getaddrinfo failed, 36ms)
+2026-04-24 07:57:01 | INFO | app.agent.agent | SLM Router → fallback (model_error: [Errno 11001] getaddrinfo failed)
+2026-04-24 07:57:08 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-24 07:57:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-24 08:01:56 | INFO | app.api.main | FastAPI shutting down...
+2026-04-24 16:06:31 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-24 16:06:31 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-24 16:07:00 | INFO | __main__ | Initializing database schema...
+2026-04-24 16:07:01 | INFO | __main__ | Applying migrations (if any)...
+2026-04-24 16:07:01 | INFO | __main__ | Recreating aggregate tables with star schema FK...
+2026-04-24 16:07:01 | INFO | __main__ | Database init/migration completed.
+2026-04-24 16:07:09 | INFO | __main__ | Seeding dim_city with Hà Nội...
+2026-04-24 16:07:09 | INFO | __main__ | city_id = 1
+2026-04-24 16:07:09 | INFO | __main__ | Seeding dim_district từ DISTINCT dim_ward.district_name_vi...
+2026-04-24 16:07:09 | INFO | __main__ | Đã có 30 quận/huyện trong dim_district
+2026-04-24 16:07:09 | INFO | __main__ | Backfilling dim_ward.district_id...
+2026-04-24 16:07:10 | INFO | __main__ | Cập nhật district_id cho 125 ward
+2026-04-24 16:07:10 | WARNING | __main__ | Có 1/126 ward thiếu district_id. Mẫu: [('ID_00498', 'Phường Hồng Hà', None)]
+2026-04-24 16:07:10 | INFO | __main__ | build_dim_district hoàn tất.
+2026-04-24 16:35:51 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-24 16:35:51 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-24 16:35:52 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-24 16:35:52 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-24 16:35:52 | INFO | __main__ | Starting aggregation for current data...
+2026-04-24 16:35:52 | INFO | __main__ | Aggregated hourly: current - district: 30708, city: 1063
+2026-04-24 16:35:52 | INFO | __main__ | Aggregation completed for current data
+2026-04-24 16:35:52 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-24 16:35:53 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-24 16:35:54 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-24 16:35:54 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-24 16:35:54 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-24 16:35:56 | INFO | __main__ | Aggregated hourly: forecast - district: 30978, city: 1072
+2026-04-24 16:35:56 | INFO | __main__ | Aggregated daily: forecast - district: 1890, city: 63
+2026-04-24 16:35:56 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-24 16:36:38 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-24 16:36:38 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-24 16:36:38 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-24 16:36:38 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-24 16:36:41 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-24 16:36:41 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-24 16:36:41 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-24 16:36:41 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-24 16:36:41 | INFO | __main__ | Starting aggregation for history data...
+2026-04-24 16:36:42 | INFO | __main__ | Aggregated hourly: history - district: 30978, city: 1072
+2026-04-24 16:36:42 | INFO | __main__ | Aggregated daily: history - district: 1890, city: 63
+2026-04-24 16:36:42 | INFO | __main__ | Aggregation completed for history data
+2026-04-24 16:36:42 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-24 16:36:42 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-24 16:36:42 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-24 16:36:42 | INFO | __main__ | Starting aggregation for current data...
+2026-04-24 16:36:43 | INFO | __main__ | Aggregated hourly: current - district: 30978, city: 1072
+2026-04-24 16:36:43 | INFO | __main__ | Aggregation completed for current data
+2026-04-24 16:36:43 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-24 16:36:43 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 55s for rate limit window to reset...
+2026-04-24 16:37:39 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-24 16:37:39 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-24 16:37:39 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-24 16:37:39 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-24 16:37:41 | INFO | __main__ | Aggregated hourly: forecast - district: 30978, city: 1072
+2026-04-24 16:37:41 | INFO | __main__ | Aggregated daily: forecast - district: 1890, city: 63
+2026-04-24 16:37:41 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-25 10:49:29 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-25 10:49:29 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-25 10:50:52 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-25 10:50:52 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-25 10:57:32 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-25 10:57:32 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-25 10:57:32 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-25 10:57:32 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-25 10:57:35 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-25 10:57:35 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-25 10:57:35 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-25 10:57:35 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-25 10:57:35 | INFO | __main__ | Starting aggregation for history data...
+2026-04-25 10:57:35 | INFO | __main__ | Aggregated hourly: history - district: 30978, city: 1072
+2026-04-25 10:57:35 | INFO | __main__ | Aggregated daily: history - district: 1890, city: 63
+2026-04-25 10:57:35 | INFO | __main__ | Aggregation completed for history data
+2026-04-25 10:57:35 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-25 10:57:36 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-25 10:57:36 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-25 10:57:36 | INFO | __main__ | Starting aggregation for current data...
+2026-04-25 10:57:36 | INFO | __main__ | Aggregated hourly: current - district: 31026, city: 1074
+2026-04-25 10:57:36 | INFO | __main__ | Aggregation completed for current data
+2026-04-25 10:57:36 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-25 10:57:36 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 55s for rate limit window to reset...
+2026-04-25 10:58:32 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-25 10:58:33 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-25 10:58:33 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-25 10:58:33 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-25 10:58:35 | INFO | __main__ | Aggregated hourly: forecast - district: 31566, city: 1092
+2026-04-25 10:58:35 | INFO | __main__ | Aggregated daily: forecast - district: 1920, city: 64
+2026-04-25 10:58:35 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-25 11:44:16 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-25 11:44:16 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-25 11:44:17 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-25 11:44:17 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-25 11:44:17 | INFO | __main__ | Starting aggregation for current data...
+2026-04-25 11:44:17 | INFO | __main__ | Aggregated hourly: current - district: 31621, city: 1094
+2026-04-25 11:44:17 | INFO | __main__ | Aggregation completed for current data
+2026-04-25 11:44:17 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-25 11:44:18 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-25 11:44:19 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-25 11:44:19 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-25 11:44:19 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-25 11:44:21 | INFO | __main__ | Aggregated hourly: forecast - district: 31651, city: 1095
+2026-04-25 11:44:21 | INFO | __main__ | Aggregated daily: forecast - district: 1920, city: 64
+2026-04-25 11:44:21 | INFO | __main__ | Aggregation completed for forecast data

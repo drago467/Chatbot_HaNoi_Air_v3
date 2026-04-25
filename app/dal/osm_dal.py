@@ -183,23 +183,23 @@ def map_osm_to_ward(district_name: str, ward_name: Optional[str] = None) -> Opti
     norm_district = normalize_name(district_name).replace(" ", "_")
     
     db_district = query_one("""
-        SELECT DISTINCT district_name_vi, district_name_norm
-        FROM dim_ward 
+        SELECT district_id, district_name_vi, district_name_norm
+        FROM dim_district
         WHERE district_name_norm = %s
            OR district_name_norm LIKE CONCAT('%%_', %s)
         LIMIT 1
     """, (norm_district, norm_district))
-    
+
     if db_district:
         if ward_name:
             norm_ward = normalize_name(ward_name).replace(" ", "_")
             db_ward = query_one("""
-                SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
-                FROM dim_ward 
-                WHERE district_name_vi = %s
+                SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
+                FROM dim_ward
+                WHERE district_id = %s
                   AND (ward_name_norm = %s OR ward_name_norm LIKE CONCAT('%%_', %s))
                 LIMIT 1
-            """, (db_district["district_name_vi"], norm_ward, norm_ward))
+            """, (db_district["district_id"], norm_ward, norm_ward))
             
             if db_ward:
                 return {"status": "exact", "level": "ward", "data": db_ward}

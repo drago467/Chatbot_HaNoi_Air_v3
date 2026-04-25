@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import logging
 import time
+import uuid
 
 import streamlit as st
 
@@ -33,6 +34,7 @@ from app.ui.components import (
     render_welcome_message,
     should_show_welcome,
 )
+from app.ui.error_messages import friendly_message
 from app.ui.styles import CUSTOM_CSS
 
 setup_logging()
@@ -122,8 +124,14 @@ def _handle_new_message(conv: dict, prompt: str) -> None:
                 full_response += chunk
                 placeholder.markdown(full_response + "▌")
         except Exception as e:
-            _logger.warning("chat_stream error: %s", e)
-            full_response = full_response or f"Xin lỗi, đã có lỗi xảy ra: {e}"
+            trace_id = str(uuid.uuid4())[:8]
+            _logger.exception("chat_stream error (trace=%s)", trace_id)
+            err_msg = friendly_message(e, trace_id=trace_id)
+            # Nếu stream đã bắt đầu: append err xuống dưới phần đã nhận.
+            # Nếu chưa có gì: err replace placeholder hoàn toàn.
+            full_response = (
+                f"{full_response}\n\n{err_msg}" if full_response else err_msg
+            )
 
         placeholder.markdown(full_response)
         elapsed = time.time() - start_time

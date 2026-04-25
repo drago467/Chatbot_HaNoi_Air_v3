@@ -32,18 +32,21 @@ def get_weather_alerts(ward_id: str = None) -> List[Dict[str, Any]]:
         results = query(sql, (ward_id,))
     else:
         # District-level: get all forecast hours for representative wards
+        # (1 representative ward per district, chọn theo district_id)
         sql = """
-            SELECT w.ward_id, w.ts_utc, w.temp, w.wind_gust, w.pop, 
-                   w.weather_main, w.weather_description, d.district_name_vi
+            SELECT w.ward_id, w.ts_utc, w.temp, w.wind_gust, w.pop,
+                   w.weather_main, w.weather_description,
+                   d.district_id, d.district_name_vi
             FROM fact_weather_hourly w
             INNER JOIN dim_ward d ON w.ward_id = d.ward_id
             WHERE d.ward_id IN (
-                SELECT DISTINCT ON (d.district_name_vi) d.ward_id
+                SELECT DISTINCT ON (d.district_id) d.ward_id
                 FROM dim_ward d
-                ORDER BY d.district_name_vi, d.ward_id
+                WHERE d.district_id IS NOT NULL
+                ORDER BY d.district_id, d.ward_id
             )
               AND w.data_kind = 'forecast'
-              AND w.ts_utc > NOW() 
+              AND w.ts_utc > NOW()
               AND w.ts_utc < NOW() + INTERVAL '24 hours'
         """
         results = query(sql)

@@ -7,6 +7,11 @@ import pytz
 ICT = pytz.timezone('Asia/Ho_Chi_Minh')
 UTC = pytz.UTC
 
+_WEEKDAYS_VI = {
+    0: "Thứ Hai", 1: "Thứ Ba", 2: "Thứ Tư", 3: "Thứ Năm",
+    4: "Thứ Sáu", 5: "Thứ Bảy", 6: "Chủ Nhật",
+}
+
 
 def to_ict(utc_dt: datetime) -> Optional[datetime]:
     """Convert UTC datetime to ICT (UTC+7).
@@ -58,19 +63,23 @@ def now_utc() -> datetime:
     return datetime.now(UTC)
 
 
-def format_ict(utc_dt: datetime, fmt: str = "%H:%M ngày %d/%m/%Y") -> str:
+def format_ict(utc_dt: datetime, fmt: Optional[str] = None) -> str:
     """Format UTC datetime as ICT string.
-    
+
     Args:
         utc_dt: datetime in UTC
-        fmt: format string
-        
+        fmt: format string. Nếu None, trả mặc định
+            "HH:MM Thứ X DD/MM/YYYY" (có weekday để LLM không tự tính sai).
+
     Returns:
         Formatted string in ICT
     """
     if utc_dt is None:
         return ""
     ict_dt = to_ict(utc_dt)
+    if fmt is None:
+        weekday = _WEEKDAYS_VI[ict_dt.weekday()]
+        return f"{ict_dt.strftime('%H:%M')} {weekday} {ict_dt.strftime('%d/%m/%Y')}"
     return ict_dt.strftime(fmt)
 
 

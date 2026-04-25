@@ -18,28 +18,16 @@ class ChatSyncResponse(BaseModel):
     result: dict[str, Any]
 
 
-class ChatAsyncResponse(BaseModel):
-    task_id: str
-    status_url: str
-
-
 class IngestRequest(BaseModel):
     include_history: bool = False
     history_days: int = 7
 
 
-class JobResponse(BaseModel):
-    task_id: str
-    status_url: str
-
-
-class TaskStatusResponse(BaseModel):
-    task_id: str
-    state: str                         # PENDING / STARTED / PROGRESS / SUCCESS / FAILURE
-    progress: float = 0.0              # 0..1, chỉ có giá trị khi state=PROGRESS
-    step: Optional[str] = None
-    result: Optional[Any] = None
-    error: Optional[str] = None
+class IngestResponse(BaseModel):
+    status: str
+    include_history: bool
+    history_days: int
+    message: str
 
 
 class ConversationSummary(BaseModel):
@@ -81,6 +69,5 @@ class HealthResponse(BaseModel):
 
 class ReadyResponse(BaseModel):
     postgres: str
-    redis: str
     router: str
     llm: str

@@ -224,6 +224,12 @@ def get_best_time(activity: str, ward_id: str = None, location_hint: str = None,
 
     DÙNG KHI: "mấy giờ chạy bộ tốt?", "lúc nào đi chơi đẹp nhất?".
 
+    KHÔNG DÙNG KHI:
+        - "Cuối tuần / 2-3 ngày tới đi X" → gọi get_weather_period(start, end) TRƯỚC
+          lấy data nhiều ngày, rồi best_time nếu cần 1 ngày.
+        - "Ngày mai / thứ X đi X" (outside 48h window) → daily_forecast trước.
+        - User chỉ hỏi tổng quan "thời tiết đi chơi thế nào" → get_activity_advice.
+
     Returns: Flat VN dict với `"giờ tốt nhất": [top 5 slots]`, `"giờ kém nhất": [bottom 3]`,
     mỗi slot có `"thời điểm", "điểm" (N/100), "nhiệt độ", "xác suất mưa", "ghi chú"`.
     """

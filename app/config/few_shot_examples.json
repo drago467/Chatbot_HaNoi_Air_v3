@@ -1,253 +1,62 @@
 {
-  "_comment": "Per-intent ReAct few-shot examples for focused agent (Module 6). Injected into get_focused_system_prompt().",
-  "current_weather": {
-    "description": "Thời tiết hiện tại",
-    "examples": [
-      {
-        "user": "Bây giờ quận Cầu Giấy thời tiết thế nào?",
-        "thought": "Người dùng hỏi thời tiết hiện tại ở Cầu Giấy → cần gọi get_current_weather với location_hint='Cầu Giấy'",
-        "action": "get_current_weather(location_hint='Cầu Giấy')",
-        "response_prefix": "Quận Cầu Giấy hiện tại:"
-      }
-    ]
-  },
-  "hourly_forecast": {
-    "description": "Dự báo theo giờ",
-    "examples": [
-      {
-        "user": "Chiều nay Đống Đa có mưa không?",
-        "thought": "Người dùng hỏi mưa chiều nay (13-18h) → get_hourly_forecast hoặc get_rain_timeline. Dùng get_rain_timeline để có timeline mưa chính xác.",
-        "action": "get_rain_timeline(location_hint='Đống Đa')",
-        "response_prefix": "Theo dự báo chiều nay ở quận Đống Đa:"
-      }
-    ]
-  },
-  "daily_forecast": {
-    "description": "Dự báo nhiều ngày",
-    "examples": [
-      {
-        "user": "3 ngày tới Hà Nội thế nào?",
-        "thought": "Người dùng hỏi dự báo 3 ngày tới → get_daily_forecast(days=3) để lấy dự báo theo ngày.",
-        "action": "get_daily_forecast(location_hint='Hà Nội', days=3)",
-        "response_prefix": "Dự báo 3 ngày tới tại Hà Nội:"
-      }
-    ]
-  },
-  "rain_query": {
-    "description": "Hỏi về mưa",
-    "examples": [
-      {
-        "user": "Tây Hồ mưa đến mấy giờ tạnh?",
-        "thought": "Người dùng muốn biết timeline mưa cụ thể → get_rain_timeline sẽ trả về rain_periods với start/end và next_clear.",
-        "action": "get_rain_timeline(location_hint='Tây Hồ')",
-        "response_prefix": "Timeline mưa quận Tây Hồ:"
-      }
-    ]
-  },
-  "temperature_query": {
-    "description": "Hỏi về nhiệt độ",
-    "examples": [
-      {
-        "user": "Hoàn Kiếm bây giờ bao nhiêu độ?",
-        "thought": "Người dùng hỏi nhiệt độ cụ thể hiện tại → get_current_weather. Nếu hỏi xu hướng, dùng thêm get_temperature_trend.",
-        "action": "get_current_weather(location_hint='Hoàn Kiếm')",
-        "response_prefix": "Nhiệt độ quận Hoàn Kiếm hiện tại:"
-      }
-    ]
-  },
-  "wind_query": {
-    "description": "Hỏi về gió",
-    "examples": [
-      {
-        "user": "Hà Nội hôm nay gió mạnh không?",
-        "thought": "Người dùng hỏi gió → get_current_weather có wind_speed/wind_gust. get_pressure_trend giúp dự đoán gió sắp tới.",
-        "action": "get_current_weather(location_hint='Hà Nội')",
-        "response_prefix": "Tình hình gió tại Hà Nội:"
-      }
-    ]
-  },
-  "humidity_fog_query": {
-    "description": "Hỏi về độ ẩm/sương mù",
-    "examples": [
-      {
-        "user": "Sáng nay có sương mù không?",
-        "thought": "Người dùng hỏi sương mù → detect_phenomena phát hiện sương mù/nồm ẩm. get_humidity_timeline cho diễn biến độ ẩm theo giờ.",
-        "action": "detect_phenomena(location_hint='Hà Nội')",
-        "response_prefix": "Tình hình độ ẩm/sương mù:"
-      }
-    ]
-  },
-  "historical_weather": {
-    "description": "Thời tiết quá khứ",
-    "examples": [
-      {
-        "user": "Hôm qua Ba Đình thời tiết thế nào?",
-        "thought": "Người dùng hỏi thời tiết hôm qua → get_weather_history. Tối đa 14 ngày gần nhất.",
-        "action": "get_weather_history(location_hint='Ba Đình')",
-        "response_prefix": "Thời tiết quận Ba Đình hôm qua:"
-      }
-    ]
-  },
-  "location_comparison": {
-    "description": "So sánh địa điểm",
-    "examples": [
-      {
-        "user": "Cầu Giấy và Đống Đa nơi nào nóng hơn?",
-        "thought": "So sánh 2 địa điểm → BẮT BUỘC dùng compare_weather. KHÔNG gọi get_current_weather 2 lần riêng lẻ.",
-        "action": "compare_weather(location_hint1='Cầu Giấy', location_hint2='Đống Đa')",
-        "response_prefix": "So sánh thời tiết:"
-      },
-      {
-        "user": "Quận nào ở Hà Nội nóng nhất?",
-        "thought": "Xếp hạng toàn thành phố → get_district_ranking. Metric mặc định: nhiệt độ.",
-        "action": "get_district_ranking(metric='nhiet_do')",
-        "response_prefix": "Xếp hạng nhiệt độ các quận:"
-      }
-    ]
-  },
-  "activity_weather": {
-    "description": "Thời tiết cho hoạt động",
-    "examples": [
-      {
-        "user": "Sáng mai đi chạy bộ được không?",
-        "thought": "Người dùng muốn biết có nên hoạt động ngoài trời không → get_activity_advice + get_best_time để tìm giờ tốt nhất + get_uv_safe_windows cho UV.",
-        "action": "get_activity_advice(location_hint='Hà Nội', activity='chay_bo')",
-        "response_prefix": "Điều kiện chạy bộ:"
-      }
-    ]
-  },
-  "expert_weather_param": {
-    "description": "Thông số kỹ thuật",
-    "examples": [
-      {
-        "user": "Áp suất Hà Nội đang thay đổi không?",
-        "thought": "Người dùng hỏi thông số chuyên sâu → get_pressure_trend phát hiện front thời tiết và biến đổi áp suất.",
-        "action": "get_pressure_trend(location_hint='Hà Nội')",
-        "response_prefix": "Xu hướng áp suất tại Hà Nội:"
-      }
-    ]
-  },
-  "weather_alert": {
-    "description": "Cảnh báo thời tiết",
-    "examples": [
-      {
-        "user": "Hôm nay có cảnh báo thời tiết gì không?",
-        "thought": "Người dùng hỏi cảnh báo → get_weather_alerts + get_weather_change_alert. get_pressure_trend bổ sung phát hiện front/bão.",
-        "action": "get_weather_alerts(location_hint='Hà Nội')",
-        "response_prefix": "Cảnh báo thời tiết Hà Nội hôm nay:"
-      }
-    ]
-  },
-  "seasonal_context": {
-    "description": "So sánh mùa/xu hướng",
-    "examples": [
-      {
-        "user": "Năm nay nóng hơn bình thường không?",
-        "thought": "Người dùng so sánh với trung bình mùa → get_seasonal_comparison. compare_with_yesterday cho thay đổi gần đây.",
-        "action": "get_seasonal_comparison(location_hint='Hà Nội')",
-        "response_prefix": "So sánh với trung bình mùa:"
-      }
-    ]
-  },
-  "weather_overview": {
-    "description": "Tổng quan thời tiết",
-    "examples": [
-      {
-        "user": "Tổng hợp thời tiết Hà Nội hôm nay?",
-        "thought": "Người dùng muốn tổng quan → get_daily_summary cho min/max/avg + detect_phenomena cho hiện tượng đặc biệt + get_daily_rhythm cho nhịp ngày.",
-        "action": "get_daily_summary(location_hint='Hà Nội')",
-        "response_prefix": "Tổng quan thời tiết Hà Nội hôm nay:"
-      }
-    ]
-  },
-  "smalltalk_weather": {
-    "description": "Chào hỏi/tư vấn",
-    "examples": [
-      {
-        "user": "Hôm nay mặc gì đi làm?",
-        "thought": "Người dùng hỏi tư vấn trang phục → get_clothing_advice + get_current_weather để có đủ dữ liệu nhiệt độ/mưa.",
-        "action": "get_clothing_advice(location_hint='Hà Nội')",
-        "response_prefix": "Gợi ý trang phục hôm nay:"
-      }
-    ]
-  },
-  "anaphoric_ambiguous": {
-    "description": "Câu đại từ thiếu địa điểm — phải hỏi lại, KHÔNG gọi tool",
-    "examples": [
-      {
-        "user": "Trời đẹp không?",
-        "thought": "Câu này không có địa điểm cụ thể và không có context carry-over. Theo POLICY 3.5 anaphoric — phải hỏi lại, KHÔNG mặc định Hà Nội.",
-        "action": "(không gọi tool)",
-        "response_prefix": "Bạn muốn biết thời tiết ở khu vực nào ạ? (Ví dụ: Hà Nội toàn TP, quận Cầu Giấy, phường Dịch Vọng...)"
-      },
-      {
-        "user": "Ở đó có mưa không?",
-        "thought": "Đại từ 'ở đó' không có location trước đó. Phải hỏi lại.",
-        "action": "(không gọi tool)",
-        "response_prefix": "Bạn đang nói tới khu vực nào ạ? Mình cần tên quận/phường cụ thể để tra."
-      }
-    ]
-  },
-  "out_of_scope_location": {
-    "description": "Câu hỏi về thời tiết ngoài Hà Nội — phải refuse, KHÔNG bịa data",
-    "examples": [
-      {
-        "user": "Thời tiết Sài Gòn hôm nay thế nào?",
-        "thought": "Sài Gòn ngoài scope. Theo POLICY 3.1 + 3.6, refuse với scope đúng, KHÔNG bịa số.",
-        "action": "(không gọi tool)",
-        "response_prefix": "Mình chỉ hỗ trợ thời tiết khu vực Hà Nội. Bạn có muốn hỏi một quận/huyện nào ở HN không?"
-      },
-      {
-        "user": "Đà Nẵng có mưa không?",
-        "thought": "Ngoài Hà Nội → refuse.",
-        "action": "(không gọi tool)",
-        "response_prefix": "Mình chỉ tra được thời tiết Hà Nội. Bạn hỏi HN nhé?"
-      }
-    ]
-  },
-  "beyond_forecast_horizon": {
-    "description": "Ngày vượt limit forecast (>8 ngày) hoặc history (>14 ngày) — refuse với limit, KHÔNG bịa",
-    "examples": [
-      {
-        "user": "Hà Nội ngày 15/5 nhiệt độ bao nhiêu?",
-        "thought": "15/5 vượt 8 ngày từ hôm nay (nếu hôm nay là 20/4, ngày 15/5 là ~25 ngày sau). Theo POLICY 3.6 refuse với limit, KHÔNG bịa.",
-        "action": "(không gọi tool hoặc tool sẽ refuse)",
-        "response_prefix": "Hệ thống dự báo tối đa 8 ngày tới. Ngày 15/5 đang vượt giới hạn, mình chưa có data chắc chắn."
-      },
-      {
-        "user": "Thời tiết HN 2 tháng trước như nào?",
-        "thought": "2 tháng trước vượt 14-ngày history. Refuse.",
-        "action": "(không gọi tool)",
-        "response_prefix": "Lịch sử hệ thống chỉ lưu 14 ngày gần nhất. 2 tháng trước đã vượt giới hạn."
-      }
-    ]
-  },
-  "temporal_direction_future": {
-    "description": "So sánh hôm nay vs ngày mai (FUTURE) — KHÔNG compare_with_yesterday (past); gọi 2 tool riêng",
-    "examples": [
-      {
-        "user": "Hôm nay với ngày mai khác nhau thế nào?",
-        "thought": "Direction FUTURE (today vs tomorrow). compare_with_yesterday CHỈ past direction. Theo POLICY 3.4 gọi 2 tool riêng: current + daily_forecast(tomorrow).",
-        "action": "get_current_weather(location_hint='Hà Nội') ; get_daily_forecast(location_hint='Hà Nội', start_date='<tomorrow_iso>', days=1)",
-        "response_prefix": "So sánh hôm nay vs ngày mai:"
-      },
-      {
-        "user": "Ngày mai có ấm hơn hôm nay không?",
-        "thought": "FUTURE direction — không dùng compare_with_yesterday. Gọi 2 tool riêng.",
-        "action": "get_current_weather(location_hint='Hà Nội') ; get_daily_forecast(location_hint='Hà Nội', start_date='<tomorrow_iso>', days=1)",
-        "response_prefix": "So nhiệt độ hôm nay vs ngày mai:"
-      }
-    ]
-  },
-  "no_tool_refuse_when_fail": {
-    "description": "Tool fail hoàn toàn — refuse lịch sự, KHÔNG bịa (POLICY 3.1 + FALLBACK 6.5)",
-    "examples": [
-      {
-        "user": "HN hôm nay nóng quá nhỉ?",
-        "thought": "User hỏi state (nóng không) → cần call tool. Nếu tất cả tool fail (vd network/database), refuse; KHÔNG tự viết 'Trời ấm, dễ chịu'. Policy: no-tool = no-number, không ngoại lệ.",
-        "action": "get_current_weather(location_hint='Hà Nội') (nếu fail) ; (refuse)",
-        "response_prefix": "Mình đang tạm không tra được dữ liệu. Bạn thử lại sau hoặc hỏi khung giờ/khu vực khác nhé."
-      }
-    ]
-  }
+  "_comment": "R12 L3: 7 diverse exemplars SHARED across all intents. R11 dropped từ 17 intent-keyed xuống 4 shared — regression v10 cho thấy missing coverage cho past-frame, superlative, multi-part. R12 add 3 exemplars mới (5, 6, 7) fix F1/F2/F6 failures. Research basis: arxiv 2506.14641 (2025) — 3-7 exemplars safe range cho Qwen3+ thinking. Format I/O pairs (không Thought/Action ReAct vì Qwen3 thinking breaks stopword parse). Inline concrete rules thay 'POLICY 3.X' abstract reference. Covers 7 failure modes: (1) in-horizon single-day baseline, (2) compositional time + ngày cover verify, (3) out-of-horizon refuse, (4) empty success refuse, (5) past-frame refuse/history, (6) superlative → daily_summary, (7) multi-part decomposition.",
+  "examples": [
+    {
+      "title": "In-horizon single-day (pattern cơ bản)",
+      "user": "Ngày mai Cầu Giấy thế nào?",
+      "thought": "'Ngày mai' = tomorrow_iso từ RUNTIME CONTEXT. Gọi get_daily_forecast(start_date=<tomorrow_iso>, days=1) cho Cầu Giấy.",
+      "action": "get_daily_forecast(location_hint='Cầu Giấy', start_date='<tomorrow_iso>', days=1)",
+      "observation": "{'ngày cover': ['22/04/2026 (Thứ Tư)'], 'trong phạm vi': True, 'dự báo': [{'ngày': '22/04/2026 (Thứ Tư)', 'nhiệt độ': 'Thấp 23°C — Cao 32°C', 'xác suất mưa': 'Trung bình 55%'}]}",
+      "response_prefix": "Ngày mai (Thứ Tư 22/04/2026) tại Cầu Giấy nhiệt dao động 23-32°C, xác suất mưa trung bình (55%). [COPY tiếp các field từ output, giữ nguyên tên weekday]"
+    },
+    {
+      "title": "Compositional time — compute từ RUNTIME CONTEXT + verify ngày cover",
+      "user": "Chiều Thứ Bảy đi chụp ảnh Hồ Tây được không?",
+      "thought": "RUNTIME CONTEXT: this_saturday=2026-04-25 (Thứ Bảy). 'Chiều' = 13-18h. Gọi hourly_forecast(start_date=2026-04-25, hours=5). Sau khi call, VERIFY 'ngày cover' từ output phải match '25/04/2026 (Thứ Bảy)' — nếu output trả ngày khác (vd 22/04 Thứ Tư), mismatch → disclaim 'Data chưa cover Thứ Bảy'.",
+      "action": "get_hourly_forecast(location_hint='Hồ Tây', start_date='2026-04-25', hours=5)",
+      "observation": "{'ngày cover': ['25/04/2026 (Thứ Bảy)'], 'trong phạm vi': True, 'dự báo': [{'thời điểm': '13:00 Thứ Bảy 25/04', 'nhiệt độ': '30°C'}]}",
+      "response_prefix": "Chiều Thứ Bảy 25/04/2026 tại Hồ Tây: [COPY NGUYÊN ngày từ 'ngày cover' key, KHÔNG tự format lại weekday]"
+    },
+    {
+      "title": "Out-of-horizon refuse (ngày > 8 ngày forecast limit)",
+      "user": "15/05 Hà Nội nhiệt bao nhiêu?",
+      "thought": "NOW=21/04. 15/05 = 24 ngày tới > 8-ngày forecast limit. Gọi tool sẽ trả 'trong phạm vi': False hoặc 'không có dữ liệu'. KHÔNG bịa nhiệt độ.",
+      "action": "get_daily_forecast(location_hint='Hà Nội', start_date='2026-05-15', days=1)",
+      "observation": "{'trong phạm vi': False, 'không có dữ liệu': 'vượt 8-ngày forecast limit'}",
+      "response_prefix": "Mình chỉ dự báo tối đa 8 ngày tới (đến khoảng 29/04). Ngày 15/05 còn xa, chưa có data. Bạn muốn xem dự báo ngày gần hơn không?"
+    },
+    {
+      "title": "Empty success — tool trả rỗng nhưng không phải error, refuse lịch sự",
+      "user": "Hà Nội có cảnh báo gì không?",
+      "thought": "Gọi get_weather_alerts. Nếu output 'cảnh báo': [] (empty list nhưng tool success) → nói rõ 'không có cảnh báo', KHÔNG bịa cảnh báo không có trong output. Không dùng số liệu nhiệt/mưa từ lượt trước để 'tạo cảnh báo'.",
+      "action": "get_weather_alerts(location_hint='Hà Nội')",
+      "observation": "{'áp dụng cho': '11:00 Thứ Ba 21/04/2026', '⚠ snapshot': True, 'cảnh báo': [], 'số lượng': 0}",
+      "response_prefix": "Hiện tại Hà Nội không có cảnh báo thời tiết nguy hiểm (bão, rét hại, nắng nóng, giông, lũ). Nếu bạn muốn xem chi tiết thời tiết hay dự báo, mình có thể tra giúp."
+    },
+    {
+      "title": "Past-frame — khung đã qua hôm nay (NOW tối, R12 L3 fix F1)",
+      "user": "Chiều nay ở Hai Bà Trưng có mưa không?",
+      "thought": "NOW=21:00 Thứ Ba 21/04. 'Chiều nay' = 13-18h → ĐÃ QUA lúc NOW. Nếu gọi get_hourly_forecast → output sẽ trả data 21:00→08:00 ngày mai (tương lai), KHÔNG phải chiều nay. Phải CHỌN 1 trong 2: (A) báo user khung đã qua; (B) gọi get_weather_history(date=today) để lấy data past-frame hôm nay. Ưu tiên (B) nếu user thực sự quan tâm số cụ thể.",
+      "action": "get_weather_history(date='2026-04-21', location_hint='Hai Bà Trưng')",
+      "observation": "{'loại dữ liệu': 'quá khứ', '⚠ không phải hiện tại': True, 'dự báo': [{'thời điểm': '13:00 Thứ Ba 21/04', 'mưa': '0 mm/h'}, {'thời điểm': '15:00 Thứ Ba 21/04', 'mưa': '0.2 mm/h'}, {'thời điểm': '17:00 Thứ Ba 21/04', 'mưa': '0 mm/h'}]}",
+      "response_prefix": "Chiều nay (13-18h Thứ Ba 21/04) đã qua — tra lịch sử: chiều có mưa rất nhẹ 0.2 mm/h lúc 15h, còn lại khô. Nếu bạn muốn xem tối nay hoặc ngày mai, mình có thể tra giúp."
+    },
+    {
+      "title": "Superlative 'trung bình/mạnh nhất cả ngày' → daily_summary, không snapshot (R12 L3 fix F2)",
+      "user": "Tốc độ gió trung bình hôm nay ở Hà Nội là bao nhiêu?",
+      "thought": "User hỏi 'trung bình cả ngày' — đây là superlative. Nếu gọi get_current_weather → output có `⚠ snapshot: True`, chỉ gió tại 21:00 (không phải trung bình). POLICY 3.8: BẮT BUỘC gọi get_daily_summary(date=today) để lấy aggregate. Dùng key 'tổng hợp' / 'gió trung bình' từ output daily.",
+      "action": "get_daily_summary(date='2026-04-21', location_hint='Hà Nội')",
+      "observation": "{'loại dữ liệu': 'tổng hợp cả ngày', '⚠ không phải hiện tại': True, 'tổng hợp': {'gió trung bình': '4.2 m/s', 'gió mạnh nhất': '8.9 m/s lúc 14:00', 'gió giật cực đại': '12.1 m/s lúc 14:30'}}",
+      "response_prefix": "Gió trung bình cả ngày hôm nay (Thứ Ba 21/04) tại Hà Nội là 4.2 m/s, mạnh nhất 8.9 m/s lúc 14:00 [COPY NGUYÊN từ 'tổng hợp', KHÔNG dùng snapshot]"
+    },
+    {
+      "title": "Multi-part — user hỏi 2 aspects, gọi 2 tools trong 1 turn (R12 L3 fix F6)",
+      "user": "Hà Nội mấy ngày tới có rét đậm không và nhiệt độ bao nhiêu?",
+      "thought": "2 aspects: (1) cảnh báo rét đậm = get_weather_alerts, (2) nhiệt độ mấy ngày tới = get_daily_forecast. POLICY 3.11: gọi TẤT CẢ tools cần thiết trong 1 turn, trả lời ĐẦY ĐỦ cả 2 phần (đánh số). KHÔNG skip aspect.",
+      "action": "get_weather_alerts(location_hint='Hà Nội') + get_daily_forecast(start_date='2026-04-22', days=5, location_hint='Hà Nội')",
+      "observation": "{alerts: {'áp dụng cho': '21:00 21/04', 'cảnh báo': [], 'số lượng': 0}, forecast: {'ngày cover': ['22/04 (Thứ Tư)', '23/04 (Thứ Năm)', '24/04 (Thứ Sáu)', '25/04 (Thứ Bảy)', '26/04 (Chủ Nhật)'], 'dự báo': [{'ngày': '22/04', 'nhiệt độ': '23-32°C'}, ...]}}",
+      "response_prefix": "(1) Cảnh báo rét đậm: Hiện không có cảnh báo rét đậm 5 ngày tới. (2) Nhiệt độ 5 ngày tới: Thứ Tư 22/04: 23-32°C, Thứ Năm 23/04: ..., [COPY đủ 5 ngày từ daily_forecast]"
+    }
+  ],
+  "_deprecated_intent_keys_note": "Các intent-keyed exemplars cũ (17 keys) đã drop ở R11 L3. R12 restore 3 exemplars (past-frame, superlative, multi-part) thành 7 shared front-load trong prompt."
 }

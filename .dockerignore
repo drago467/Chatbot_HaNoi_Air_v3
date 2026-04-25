@@ -1,6 +1,8 @@
 # Git
 .git
 .gitignore
+.gitattributes
+.github/
 
 # Environment files
 .env
@@ -13,33 +15,47 @@ __pycache__/
 *$py.class
 *.egg-info/
 .pytest_cache/
+.mypy_cache/
 .eggs/
 
 # IDE
 .idea/
 .vscode/
+.cursor/
 *.swp
 *.swo
 
-# Data (should be mounted, not copied)
+# Data (should be mounted volume, not baked in image)
 data/
 logs/
 
-# Docker
+# Docker meta
 Dockerfile
 docker-compose.yml
 .dockerignore
 
-# Documentation
+# Documentation + thesis (not needed in production image)
 docs/
-*.md
-!README.md
+thesis/
+notebooks/
 
-# OS
-.DS_Store
-Thumbs.db
+# Training artifacts (too big, not needed at runtime)
+training/
+model/router/*.gguf
+_archived/
 
 # Virtual environments
 venv/
 env/
 .venv/
+.virtualenvs/
+
+# Claude + plan files
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tests (optional — có thể giữ để smoke test trong container)
+# tests/

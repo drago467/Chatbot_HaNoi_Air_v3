@@ -272,23 +272,26 @@ def get_city_weather_history(date: str) -> Dict[str, Any]:
     return row
 
 
-def get_district_weather_history(district_name: str, date: str) -> Dict[str, Any]:
+def get_district_weather_history(district_id: int, date: str) -> Dict[str, Any]:
     """Get historical weather from fact_weather_district_daily."""
     row = query_one("""
-        SELECT district_name_vi, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
-               weather_main, avg_dew_point, avg_pressure, avg_clouds,
-               max_uvi, avg_wind_deg, max_wind_gust, ward_count
-        FROM fact_weather_district_daily
-        WHERE district_name_vi = %s AND date = %s::date
-    """, (district_name, date))
+        SELECT fwd.district_id, dd.district_name_vi,
+               fwd.avg_temp, fwd.temp_min, fwd.temp_max, fwd.avg_humidity,
+               fwd.avg_pop, fwd.total_rain,
+               fwd.weather_main, fwd.avg_dew_point, fwd.avg_pressure, fwd.avg_clouds,
+               fwd.max_uvi, fwd.avg_wind_deg, fwd.max_wind_gust, fwd.ward_count
+        FROM fact_weather_district_daily fwd
+        JOIN dim_district dd ON fwd.district_id = dd.district_id
+        WHERE fwd.district_id = %s AND fwd.date = %s::date
+    """, (district_id, date))
     if not row:
         return {"error": "no_data",
-                "message": f"Không có dữ liệu lịch sử quận {district_name} ngày {date}",
+                "message": f"Không có dữ liệu lịch sử quận (district_id={district_id}) ngày {date}",
                 "note": "Dữ liệu lịch sử chỉ lưu trữ 14 ngày gần nhất",
                 "suggestion": "Thử hỏi ngày gần hơn hoặc dùng dự báo cho ngày tới"}
     row["level"] = "district"
     row["date"] = date
-    row["data_coverage"] = f"Dữ liệu ngày {date} (quận/huyện {district_name})"
+    row["data_coverage"] = f"Dữ liệu ngày {date} (quận/huyện {row.get('district_name_vi')})"
     row["wind_direction_vi"] = wind_deg_to_vietnamese(row.get("avg_wind_deg"))
     return row
 

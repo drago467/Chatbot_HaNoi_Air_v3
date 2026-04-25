@@ -1,7 +1,7 @@
 """Health & readiness endpoints.
 
 - GET /health: liveness (process còn sống)
-- GET /ready: readiness (các dependency còn hoạt động — Postgres/Redis/Ollama/LLM)
+- GET /ready: readiness (các dependency còn hoạt động — Postgres/Ollama/LLM)
 """
 
 import os
@@ -11,24 +11,36 @@ from fastapi import APIRouter
 
 from app.api.schemas import HealthResponse, ReadyResponse
 from app.core.logging_config import get_logger
-from app.core.redis_client import ping as redis_ping
 
 logger = get_logger(__name__)
 router = APIRouter()
 
 
-@router.get("/health", response_model=HealthResponse)
+@router.get(
+    "/health",
+    response_model=HealthResponse,
+    summary="Liveness probe",
+    description="Trả 200 nếu FastAPI process đang chạy. Không check dependency.",
+)
 def health():
-    """Liveness probe. Không check dependency, chỉ trả 200 nếu process chạy."""
+    """Liveness probe."""
     return HealthResponse(status="ok")
 
 
-@router.get("/ready", response_model=ReadyResponse)
+@router.get(
+    "/ready",
+    response_model=ReadyResponse,
+    summary="Readiness probe",
+    description=(
+        "Check các dependency: Postgres (SELECT 1), Ollama (GET /api/tags) "
+        "nếu router bật, LLM API (env var AGENT_API_KEY set). Mỗi field "
+        "trả 'ok' / 'error' / 'disabled' / 'missing'."
+    ),
+)
 def ready():
-    """Readiness probe. Check tất cả dependency."""
+    """Readiness probe — check tất cả dependency."""
     return ReadyResponse(
         postgres=_check_postgres(),
-        redis=_check_redis(),
         router=_check_ollama(),
         llm=_check_llm_config(),
     )
@@ -49,10 +61,6 @@ def _check_postgres() -> str:
     except Exception as e:
         logger.warning("Postgres check failed: %s", e)
         return "error"
-
-
-def _check_redis() -> str:
-    return "ok" if redis_ping() else "error"
 
 
 def _check_ollama() -> str:

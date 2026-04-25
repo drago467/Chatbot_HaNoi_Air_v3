@@ -17,19 +17,6 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis:7-alpine
-    container_name: hanoiweather_redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-
   api:
     build: .
     container_name: hanoiweather_api
@@ -38,9 +25,6 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-hanoiair2024}@postgres:5432/chatbothanoiair
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/2
       API_BASE: ${API_BASE}
       API_KEY: ${API_KEY}
       MODEL: ${MODEL:-gpt-4o-2024-11-20}
@@ -55,6 +39,11 @@ services:
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-hanoi-weather-router}
       USE_SLM_ROUTER: ${USE_SLM_ROUTER:-false}
+      # LangSmith observability (optional)
+      LANGCHAIN_TRACING_V2: ${LANGCHAIN_TRACING_V2:-false}
+      LANGCHAIN_API_KEY: ${LANGCHAIN_API_KEY:-}
+      LANGCHAIN_PROJECT: ${LANGCHAIN_PROJECT:-hanoi-weather-chatbot}
+      LANGCHAIN_ENDPOINT: ${LANGCHAIN_ENDPOINT:-https://api.smith.langchain.com}
       PYTHONUNBUFFERED: "1"
     volumes:
       - ./app:/app/app
@@ -64,60 +53,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      redis:
-        condition: service_healthy
-    restart: unless-stopped
-
-  worker:
-    build: .
-    container_name: hanoiweather_worker
-    command: ./entrypoint_worker.sh
-    environment:
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-hanoiair2024}@postgres:5432/chatbothanoiair
-      REDIS_URL: redis://redis:6379/0
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/2
-      CELERY_WORKER_CONCURRENCY: ${CELERY_WORKER_CONCURRENCY:-4}
-      API_BASE: ${API_BASE}
-      API_KEY: ${API_KEY}
-      MODEL: ${MODEL:-gpt-4o-2024-11-20}
-      AGENT_API_BASE: ${AGENT_API_BASE:-}
-      AGENT_API_KEY: ${AGENT_API_KEY:-}
-      AGENT_MODEL: ${AGENT_MODEL:-}
-      OPENWEATHER_API_KEY_0: ${OPENWEATHER_API_KEY_0:-}
-      OPENWEATHER_API_KEY_1: ${OPENWEATHER_API_KEY_1:-}
-      OPENWEATHER_API_KEY_2: ${OPENWEATHER_API_KEY_2:-}
-      OPENWEATHER_API_KEY_3: ${OPENWEATHER_API_KEY_3:-}
-      OPENWEATHER_API_KEY_4: ${OPENWEATHER_API_KEY_4:-}
-      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-hanoi-weather-router}
-      USE_SLM_ROUTER: ${USE_SLM_ROUTER:-false}
-      PYTHONUNBUFFERED: "1"
-    volumes:
-      - ./app:/app/app
-      - ./logs:/app/logs
-      - ./data:/app/data
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    restart: unless-stopped
-
-  beat:
-    build: .
-    container_name: hanoiweather_beat
-    command: ./entrypoint_beat.sh
-    environment:
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CELERY_RESULT_BACKEND: redis://redis:6379/2
-      PYTHONUNBUFFERED: "1"
-    volumes:
-      - ./app:/app/app
-      - ./logs:/app/logs
-    depends_on:
-      redis:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
     restart: unless-stopped
 
   streamlit:
@@ -136,9 +77,9 @@ services:
       - ./app.py:/app/app.py
       - ./logs:/app/logs
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   postgres_data:
-  redis_data:

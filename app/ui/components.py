@@ -1,12 +1,8 @@
 """Streamlit UI components — sidebar, right info panel, weather, data refresh.
 
-Đã refactor để gọi FastAPI backend (app/ui/api_client.py) thay vì truy vấn DB
-hoặc chạy agent trực tiếp. Các vấn đề UX chính đã xử lý:
-- Stream không bị huỷ khi user tương tác (chat area trong @st.fragment).
-- Data refresh không block UI (enqueue Celery task + poll).
-- Không còn block 15s chờ Ollama khi load page (chuyển sang /ready endpoint).
-- Toggle info panel dời về sidebar (checkbox), bỏ nút ▶/◀ nổi.
-- Welcome screen ẩn ngay khi user gõ / click suggestion đầu tiên.
+Gọi FastAPI backend (app/ui/api_client.py). Sau R15 gỡ Celery/Redis: data
+refresh chạy sync với st.spinner (block UI 30s-5 phút tùy include_history),
+không poll task nữa.
 """
 
 from __future__ import annotations
@@ -54,9 +50,6 @@ def init_session_state() -> None:
 
     if "is_streaming" not in st.session_state:
         st.session_state.is_streaming = False
-
-    if "active_job_id" not in st.session_state:
-        st.session_state.active_job_id = None
 
 
 def _load_conversations_from_api() -> dict:
@@ -267,7 +260,13 @@ def _render_conversation_list() -> None:
 
 
 def _render_data_refresh_section() -> None:
-    """Nút cập nhật dữ liệu — enqueue Celery task, poll trạng thái."""
+    """Nút cập nhật dữ liệu — chạy sync qua /jobs/ingest (block UI).
+
+    Sau R15 gỡ Celery, ingest chạy đồng bộ. UI hiện `st.spinner` trong lúc
+    chờ (~30s-60s cho current/forecast, 2-5 phút cho include_history=True).
+    Alternative cho ingest định kỳ: cron external chạy
+    `python -m app.scripts.ingest_openweather_async`.
+    """
     st.markdown("##### 🔄 Cập nhật dữ liệu")
 
     include_history = st.checkbox("Bao gồm dữ liệu lịch sử", value=False)
@@ -280,51 +279,22 @@ def _render_data_refresh_section() -> None:
             value=7,
         )
 
-    disabled = st.session_state.active_job_id is not None
+    spinner_msg = (
+        f"Đang ingest current + forecast + history {history_days} ngày... (~2-5 phút)"
+        if include_history
+        else "Đang ingest current + forecast... (~30-60 giây)"
+    )
 
-    if st.button("Cập nhật ngay", use_container_width=True, disabled=disabled):
-        try:
-            task_id = api_client.enqueue_ingest(
-                include_history=include_history,
-                history_days=history_days,
-            )
-            st.session_state.active_job_id = task_id
-            st.rerun(scope="fragment")
-        except Exception as e:
-            st.error(f"Không enqueue được job: {e}")
-
-    # Hiển thị trạng thái khi có job đang chạy — fragment riêng tự refresh 2s
-    if st.session_state.active_job_id:
-        _job_status_fragment()
-
-
-@st.fragment(run_every=2)
-def _job_status_fragment() -> None:
-    """Poll trạng thái Celery task mỗi 2s đến khi SUCCESS/FAILURE."""
-    task_id = st.session_state.active_job_id
-    if not task_id:
-        return
-
-    try:
-        status = api_client.poll_task(task_id)
-    except Exception as e:
-        st.error(f"Lỗi poll task: {e}")
-        st.session_state.active_job_id = None
-        return
-
-    state = status.get("state", "PENDING")
-    progress = float(status.get("progress", 0))
-    step = status.get("step") or state
-
-    st.progress(progress)
-    st.caption(f"⏳ {step}")
-
-    if state == "SUCCESS":
-        st.success("Cập nhật dữ liệu thành công!")
-        st.session_state.active_job_id = None
-    elif state == "FAILURE":
-        st.error(f"Cập nhật thất bại: {status.get('error') or 'unknown'}")
-        st.session_state.active_job_id = None
+    if st.button("Cập nhật ngay", use_container_width=True):
+        with st.spinner(spinner_msg):
+            try:
+                api_client.run_ingest(
+                    include_history=include_history,
+                    history_days=history_days,
+                )
+                st.success("Cập nhật dữ liệu thành công!")
+            except Exception as e:
+                st.error(f"Cập nhật thất bại: {e}")
 
 
 # ── Options section (toggle info panel — thay cho nút floating ▶/◀) ───
@@ -359,7 +329,7 @@ def _render_options_section() -> None:
 
 
 def _render_backend_status_badge() -> None:
-    """Badge nhỏ hiển thị trạng thái backend (Postgres/Redis/Router/LLM)."""
+    """Badge nhỏ hiển thị trạng thái backend (Postgres/Router/LLM)."""
     if "backend_status" not in st.session_state:
         st.session_state.backend_status = api_client.get_ready_status()
 

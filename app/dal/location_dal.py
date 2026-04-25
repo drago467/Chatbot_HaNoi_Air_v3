@@ -54,16 +54,16 @@ def _search_district_only(norm: str) -> Dict[str, Any]:
     district_prefixes = ['quan', 'huyen']
     if any(norm.startswith(p + ' ') for p in district_prefixes):
         result = query_one("""
-            SELECT DISTINCT district_name_vi, district_name_norm
-            FROM dim_ward WHERE district_name_norm = %s LIMIT 1
+            SELECT district_id, district_name_vi, district_name_norm
+            FROM dim_district WHERE district_name_norm = %s LIMIT 1
         """, (norm,))
         if result:
             return {"status": "exact", "level": "district", "data": result}
 
     # 2. Exact match không prefix
     result = query_one("""
-        SELECT DISTINCT district_name_vi, district_name_norm
-        FROM dim_ward
+        SELECT district_id, district_name_vi, district_name_norm
+        FROM dim_district
         WHERE district_name_norm = %s OR district_name_norm LIKE CONCAT('%% ', %s)
         LIMIT 1
     """, (norm, norm))
@@ -72,9 +72,9 @@ def _search_district_only(norm: str) -> Dict[str, Any]:
 
     # 3. Fuzzy match district only
     fuzzy = query("""
-        SELECT DISTINCT district_name_vi, district_name_norm,
+        SELECT district_id, district_name_vi, district_name_norm,
                similarity(district_name_norm, %s) as score
-        FROM dim_ward WHERE district_name_norm %% %s
+        FROM dim_district WHERE district_name_norm %% %s
         ORDER BY score DESC LIMIT 3
     """, (norm, norm))
     if fuzzy:
@@ -112,7 +112,7 @@ def _search_ward_only(norm: str) -> Dict[str, Any]:
             for wp in (ward_part, f"phuong {ward_part}", f"xa {ward_part}"):
                 for dp in (district_part, f"quan {district_part}", f"huyen {district_part}"):
                     result = query_one("""
-                        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+                        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
                         FROM dim_ward
                         WHERE ward_name_norm = %s AND district_name_norm = %s
                         LIMIT 1
@@ -121,7 +121,7 @@ def _search_ward_only(norm: str) -> Dict[str, Any]:
                         return {"status": "exact", "level": "ward", "data": result}
             # Fuzzy ward WITHIN the district (nếu district tồn tại)
             fuzzy_in_district = query("""
-                SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
+                SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon,
                        similarity(ward_name_norm, %s) as score
                 FROM dim_ward
                 WHERE district_name_norm IN (%s, %s, %s)
@@ -143,7 +143,7 @@ def _search_ward_only(norm: str) -> Dict[str, Any]:
 
     # 1. Exact match (norm có thể đã có prefix hoặc chưa)
     result = query_one("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
         FROM dim_ward WHERE ward_name_norm = %s LIMIT 1
     """, (norm,))
     if result:
@@ -154,7 +154,7 @@ def _search_ward_only(norm: str) -> Dict[str, Any]:
     if not any(norm.startswith(p + ' ') for p in ward_prefixes):
         for prefix in ward_prefixes:
             result = query_one("""
-                SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+                SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
                 FROM dim_ward WHERE ward_name_norm = %s LIMIT 1
             """, (f"{prefix} {norm}",))
             if result:
@@ -168,7 +168,7 @@ def _search_ward_only(norm: str) -> Dict[str, Any]:
     fuzzy = []
     for term in search_terms:
         results = query("""
-            SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
+            SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon,
                    similarity(ward_name_norm, %s) as score
             FROM dim_ward WHERE ward_name_norm %% %s
             ORDER BY score DESC LIMIT 5
@@ -296,7 +296,7 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
     ward_prefixes = ['phuong', 'xa']
     if any(norm.lower().startswith(p + ' ') for p in ward_prefixes):
         ward_result = query_one("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
             FROM dim_ward WHERE ward_name_norm = %s LIMIT 1
         """, (norm,))
         if ward_result:
@@ -306,16 +306,16 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
     district_prefixes = ['quan', 'huyen']
     if any(norm.lower().startswith(p + ' ') for p in district_prefixes):
         district_result = query_one("""
-            SELECT DISTINCT district_name_vi, district_name_norm
-            FROM dim_ward WHERE district_name_norm = %s LIMIT 1
+            SELECT district_id, district_name_vi, district_name_norm
+            FROM dim_district WHERE district_name_norm = %s LIMIT 1
         """, (norm,))
         if district_result:
             return {"status": "exact", "level": "district", "data": district_result}
 
     # STEP 3: NO PREFIX - Check DISTRICT FIRST
     district_result = query_one("""
-        SELECT DISTINCT district_name_vi, district_name_norm
-        FROM dim_ward
+        SELECT district_id, district_name_vi, district_name_norm
+        FROM dim_district
         WHERE district_name_norm = %s
            OR district_name_norm LIKE CONCAT('%% ', %s)
         LIMIT 1
@@ -326,7 +326,7 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
 
     # STEP 4: Check WARD
     ward_result = query_one("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
         FROM dim_ward WHERE ward_name_norm = %s LIMIT 1
     """, (norm,))
 
@@ -336,8 +336,8 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
 
         if norm == district_norm:
             district_result = query_one("""
-                SELECT DISTINCT district_name_vi, district_name_norm
-                FROM dim_ward WHERE district_name_norm = %s LIMIT 1
+                SELECT district_id, district_name_vi, district_name_norm
+                FROM dim_district WHERE district_name_norm = %s LIMIT 1
             """, (district_norm,))
             if district_result:
                 return {"status": "exact", "level": "district", "data": district_result}
@@ -346,7 +346,7 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
 
     # STEP 5: Contains match for WARD
     ward_result = query_one("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
         FROM dim_ward WHERE ward_name_norm LIKE %s LIMIT 1
     """, (f"%{norm}%",))
 
@@ -355,8 +355,8 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
 
     # STEP 6: Fuzzy match DISTRICT
     fuzzy_district_results = query("""
-        SELECT DISTINCT district_name_vi, district_name_norm
-        FROM dim_ward WHERE district_name_norm %% %s LIMIT 5
+        SELECT district_id, district_name_vi, district_name_norm
+        FROM dim_district WHERE district_name_norm %% %s LIMIT 5
     """, (norm,))
 
     if fuzzy_district_results:
@@ -364,7 +364,7 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
 
     # STEP 7: Fuzzy match WARD
     fuzzy_ward_results = query("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon,
                similarity(ward_name_norm, %s) as score
         FROM dim_ward WHERE ward_name_norm %% %s ORDER BY score DESC LIMIT 5
     """, (norm, norm))
@@ -380,29 +380,29 @@ def _resolve_from_database(location_hint: str) -> Dict[str, Any]:
 
 def get_ward_by_id(ward_id: str) -> Optional[Dict[str, Any]]:
     return query_one("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
         FROM dim_ward WHERE ward_id = %s
     """, (ward_id,))
 
 
 def get_all_wards() -> List[Dict[str, Any]]:
     return query("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
         FROM dim_ward ORDER BY district_name_vi, ward_name_vi
     """)
 
 
 def get_districts() -> List[Dict[str, Any]]:
     return query("""
-        SELECT DISTINCT district_name_vi, district_name_norm
-        FROM dim_ward ORDER BY district_name_vi
+        SELECT district_id, district_name_vi, district_name_norm
+        FROM dim_district ORDER BY district_name_vi
     """)
 
 
 def get_wards_in_district(district_name: str) -> List[Dict[str, Any]]:
     """Get all wards in a district."""
     return query("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon
         FROM dim_ward
         WHERE district_name_vi = %s
         ORDER BY ward_name_vi
@@ -412,7 +412,7 @@ def get_wards_in_district(district_name: str) -> List[Dict[str, Any]]:
 def search_wards(keyword: str, limit: int = 10) -> List[Dict[str, Any]]:
     norm = normalize_name(keyword)
     return query("""
-        SELECT ward_id, ward_name_vi, district_name_vi, lat, lon,
+        SELECT ward_id, ward_name_vi, district_id, district_name_vi, lat, lon,
                similarity(ward_name_norm, %s) as score
         FROM dim_ward
         WHERE ward_name_norm %% %s OR district_name_norm %% %s

@@ -123,7 +123,7 @@ def resolve_and_dispatch(
         district_fn: DAL function cho district level
         city_fn: DAL function cho city level
         ward_args: Extra kwargs cho ward_fn (ngoài ward_id)
-        district_args: Extra kwargs cho district_fn (ngoài district_name)
+        district_args: Extra kwargs cho district_fn (ngoài district_id)
         city_args: Extra kwargs cho city_fn
         enrich_fn: Optional function để enrich result (VD: enrich_weather_response)
         normalize: True để chuẩn hóa aggregate keys
@@ -177,10 +177,10 @@ def resolve_and_dispatch(
                     "message": "Tool này chưa hỗ trợ cấp thành phố. Thử hỏi theo quận/huyện hoặc phường/xã."}
 
     elif level == "district":
-        district_name = _extract_district_name(resolved_data)
-        if district_fn and district_name:
+        district_id = _extract_district_id(resolved_data)
+        if district_fn and district_id:
             d_args = dict(district_args or {})
-            d_args["district_name"] = district_name
+            d_args["district_id"] = district_id
             result = district_fn(**d_args)
             source = "district_aggregated"
         elif fallback_to_ward:
@@ -242,6 +242,17 @@ def _extract_district_name(resolved_data: dict) -> Optional[str]:
         or resolved_data.get("district_name")
         or resolved_data.get("district")
     )
+
+
+def _extract_district_id(resolved_data: dict) -> Optional[int]:
+    """Extract district_id (integer FK) từ resolved data."""
+    did = resolved_data.get("district_id")
+    if did is None:
+        return None
+    try:
+        return int(did)
+    except (TypeError, ValueError):
+        return None
 
 
 def _extract_ward_id(resolved_data: dict) -> Optional[str]:
@@ -407,11 +418,11 @@ def dispatch_forecast(
         forecasts = city_fn(**(city_args or {}))
         source = "city_aggregated"
     elif level == "district":
-        district_name = _extract_district_name(resolved_data)
-        if not district_name:
+        district_id = _extract_district_id(resolved_data)
+        if not district_id:
             return {"error": "no_district", "message": "Không xác định được quận/huyện"}
         d_args = dict(district_args or {})
-        d_args["district_name"] = district_name
+        d_args["district_id"] = district_id
         forecasts = district_fn(**d_args)
         source = "district_aggregated"
     else:

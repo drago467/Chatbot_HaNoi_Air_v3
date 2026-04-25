@@ -75,7 +75,7 @@ def get_current_weather(ward_id: str = None, location_hint: str = None) -> dict:
         location_hint=location_hint,
         default_scope="city",
         ward_fn=dal_ward,
-        district_fn=lambda district_name: enrich_district_response(dal_district(district_name)),
+        district_fn=lambda district_id: enrich_district_response(dal_district(district_id)),
         city_fn=lambda: enrich_city_response(dal_city()),
         enrich_fn=enrich_weather_response,  # Only applied to ward result
         label="thời tiết hiện tại",

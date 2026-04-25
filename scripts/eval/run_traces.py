@@ -178,6 +178,8 @@ def main():
     ap.add_argument("--limit", type=int, default=None, help="Only process first N rows (for testing)")
     ap.add_argument("--offset", type=int, default=0, help="Skip first N rows")
     ap.add_argument("--append", action="store_true", help="Append to output file (default: overwrite)")
+    ap.add_argument("--ids", type=str, default=None,
+                    help="Comma-separated question IDs to filter (e.g., '12,35,37'). Overrides offset/limit.")
     args = ap.parse_args()
 
     # Lazy import để .env load trước
@@ -191,10 +193,17 @@ def main():
 
     # Đọc CSV (utf-8-sig strip BOM)
     rows = list(csv.DictReader(args.input.open(encoding="utf-8-sig")))
-    if args.offset:
-        rows = rows[args.offset:]
-    if args.limit:
-        rows = rows[:args.limit]
+    if args.ids:
+        wanted = {s.strip() for s in args.ids.split(",") if s.strip()}
+        rows = [r for r in rows if r.get("id", "") in wanted]
+        if not rows:
+            print(f"No rows matched --ids={args.ids}. Check CSV has matching id column.")
+            sys.exit(1)
+    else:
+        if args.offset:
+            rows = rows[args.offset:]
+        if args.limit:
+            rows = rows[:args.limit]
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     mode = "a" if args.append else "w"

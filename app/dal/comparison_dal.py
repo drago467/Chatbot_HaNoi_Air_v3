@@ -176,20 +176,24 @@ def compare_city_with_previous_day() -> Dict[str, Any]:
     return _build_comparison(results[0], results[1], level="city", location_name="Hà Nội")
 
 
-def compare_district_with_previous_day(district_name: str) -> Dict[str, Any]:
+def compare_district_with_previous_day(district_id: int) -> Dict[str, Any]:
     """Compare today vs yesterday from fact_weather_district_daily."""
     results = query("""
-        SELECT date, district_name_vi, avg_temp, temp_min, temp_max, avg_humidity, avg_pop, total_rain,
-               weather_main, ward_count
-        FROM fact_weather_district_daily
-        WHERE district_name_vi = %s
-          AND date <= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
-        ORDER BY date DESC LIMIT 2
-    """, (district_name,))
+        SELECT fwd.date, fwd.district_id, dd.district_name_vi,
+               fwd.avg_temp, fwd.temp_min, fwd.temp_max, fwd.avg_humidity,
+               fwd.avg_pop, fwd.total_rain,
+               fwd.weather_main, fwd.ward_count
+        FROM fact_weather_district_daily fwd
+        JOIN dim_district dd ON fwd.district_id = dd.district_id
+        WHERE fwd.district_id = %s
+          AND fwd.date <= (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::date
+        ORDER BY fwd.date DESC LIMIT 2
+    """, (district_id,))
     if len(results) < 2:
         return {"error": "not_enough_data",
-                "message": f"Cần dữ liệu ít nhất 2 ngày cho quận {district_name}",
+                "message": f"Cần dữ liệu ít nhất 2 ngày cho quận (district_id={district_id})",
                 "suggestion": "Thử hỏi thời tiết hiện tại"}
+    district_name = results[0].get("district_name_vi", f"district_id={district_id}")
     return _build_comparison(results[0], results[1], level="district", location_name=district_name)
 
 

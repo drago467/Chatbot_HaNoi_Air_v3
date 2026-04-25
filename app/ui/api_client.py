@@ -2,6 +2,9 @@
 
 Wrapper đơn giản quanh requests. Tất cả network call từ Streamlit UI đi qua
 module này, giúp dễ mock khi test và đổi URL bằng env var API_URL.
+
+Sau R15 gỡ Celery/Redis: chat_async + task polling bị xóa; ingest chạy sync
+qua /jobs/ingest (chấp nhận timeout dài).
 """
 
 import os
@@ -19,6 +22,8 @@ API_URL = os.getenv("API_URL", "http://localhost:8000")
 _DEFAULT_TIMEOUT = (5, 30)
 # Timeout cho stream: connect 5s, read 5 phút (câu dài + thinking mode)
 _STREAM_TIMEOUT = (5, 300)
+# Timeout cho ingest sync (có thể 2-5 phút khi include_history=True)
+_INGEST_TIMEOUT = (5, 600)
 
 
 # ── Chat ──────────────────────────────────────────────────────────────
@@ -96,35 +101,19 @@ def chat_sync(message: str, thread_id: str) -> dict:
     return r.json()
 
 
-def chat_async(message: str, thread_id: str) -> str:
-    """Enqueue chat task. Trả task_id."""
-    r = requests.post(
-        f"{API_URL}/chat/async",
-        json={"message": message},
-        headers={"X-Thread-Id": thread_id, "Content-Type": "application/json"},
-        timeout=_DEFAULT_TIMEOUT,
-    )
-    r.raise_for_status()
-    return r.json()["task_id"]
+# ── Ingest job ────────────────────────────────────────────────────────
 
 
-# ── Jobs & task polling ───────────────────────────────────────────────
+def run_ingest(include_history: bool = False, history_days: int = 7) -> dict:
+    """Chạy ingest đồng bộ qua /jobs/ingest. Block đến khi xong.
 
-
-def enqueue_ingest(include_history: bool = False, history_days: int = 7) -> str:
-    """Enqueue data refresh job. Trả task_id."""
+    Trả dict response. Timeout 10 phút (include_history=True có thể mất 2-5 phút).
+    """
     r = requests.post(
         f"{API_URL}/jobs/ingest",
         json={"include_history": include_history, "history_days": history_days},
-        timeout=_DEFAULT_TIMEOUT,
+        timeout=_INGEST_TIMEOUT,
     )
-    r.raise_for_status()
-    return r.json()["task_id"]
-
-
-def poll_task(task_id: str) -> dict:
-    """Poll trạng thái task."""
-    r = requests.get(f"{API_URL}/tasks/{task_id}", timeout=_DEFAULT_TIMEOUT)
     r.raise_for_status()
     return r.json()
 
@@ -189,4 +178,4 @@ def get_ready_status() -> dict:
         return r.json()
     except Exception as e:
         logger.warning("get_ready_status failed: %s", e)
-        return {"postgres": "error", "redis": "error", "router": "error", "llm": "error"}
+        return {"postgres": "error", "router": "error", "llm": "error"}

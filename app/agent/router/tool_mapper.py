@@ -1,14 +1,52 @@
-"""Tool Mapper R9 — map (intent, scope) → focused tool list.
+"""Tool Mapper R9 → R14 — map (intent, scope) → focused tool list.
 
-## R9 redesign (2026-04-21)
+## R14 E.1 (2026-04-23) — activity_weather future-frame widening
+
+v12 eval (58.8% Đạt) cho thấy 4+ rows (ID 114, 118, 160, 161) fail vì intent
+`activity_weather` focused tools thiếu `get_daily_forecast` / `get_weather_period`.
+LLM buộc áp `get_activity_advice` (snapshot NOW) cho "sáng mai/ngày mai/cuối tuần".
+R14 fix: drop `get_uv_safe_windows` (ít primary, best_time cover giờ tốt), add
+`get_daily_forecast` + `get_weather_period` → tool count 6→7 (cap).
+
+## R13 widening (2026-04-22) — defensive safety net layer
+
+### Lý do widen
+Audit v11 (data/evaluation/audit_report_v11.md Part C) cho thấy 34/199 (~17%)
+queries bị LLM gọi tool ngoài focused_tools → LangGraph reject với error "is not
+a valid tool, try one of [...]" → wasted call + fallback `get_current_weather`
+→ dán snapshot 08:00 làm "chiều/tối/mai/cuối tuần" (15+ failure IDs).
+
+Root cause: PRIMARY_TOOL_MAP ở R9 optimize cho confusion pair count ≥ 2, nhưng
+thiếu baseline coverage cho future-frame queries khi router đưa câu hỏi vào
+intent không có forecast tool. Vd `rain_query` focused=[rain_timeline, hourly,
+daily, alerts] — thiếu `current_weather` cho "đang mưa không" snapshot check.
+
+### R13 widening rule
+- **Baseline future-frame trio**: Mọi intent có khả năng carry time slot
+  ("chiều/tối/mai/cuối tuần") phải include {current, hourly, daily}.
+- **focused_tools = DEFENSIVE SAFETY NET** (preserve R9 philosophy): wider hơn
+  strict intent semantics để cover router misclassification. Không cần
+  tool_map == intent definition trong design docs.
+- **Avg tools/intent**: 3.7 → ~5.0 (cap 7 giữ nguyên, test_tool_count_reasonable).
+
+### Per-intent widening
+| Intent | +Added | Reason |
+|---|---|---|
+| rain_query | +current_weather | "đang mưa không" snapshot |
+| wind_query | +daily_forecast | "mai gió mạnh không" |
+| humidity_fog_query | +hourly, +daily | "sáng mai sương mù" |
+| weather_overview | +current, +hourly | overview + snapshot + giờ slot |
+| weather_alert | +current, +daily | snapshot alert + mấy ngày tới |
+| seasonal_context | +current, +hourly | "dạo này so hiện tại" |
+| daily_forecast | +weather_history | recover "7 ngày qua" misrouted |
+
+## R9 legacy context (preserved)
 
 ### Bỏ EXPANDED_TOOL_MAP
 - Lý do: confidence hardcode 0.9 ở 53% training samples → confidence không
   reliable để phân biệt high/medium confidence. EXPANDED chỉ kích hoạt ở
   medium zone, nhưng thực tế model predict với confidence ~0.9 cho đa số
   query → EXPANDED gần như không được dùng.
-- Hậu quả cũ: khi router nhầm với high confidence → dùng PRIMARY (narrow
-  tool set) → bot không có tool để trả lời đúng.
 
 ### Defensive tool coverage trong PRIMARY
 - Phân tích confusion pairs của Qwen3-4B (training/notebooks/run_02/outputs/
@@ -22,7 +60,7 @@
   + smalltalk_weather → rain_query (2)
   + activity_weather → smalltalk_weather (2)
 - Rule: với confusion pair X→Y count ≥ 2, tool map của X PHẢI chứa tool
-  chính của Y. → Defensive coverage.
+  chính của Y. R13 bổ sung baseline trio theo future-frame.
 
 ### Confidence < threshold → fallback full agent (None)
 - Nếu router trả confidence thấp, get_focused_tools trả None.
@@ -105,6 +143,7 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
 
     # "Ngày mai / thứ X / 3 ngày tới / tuần" — 1-8 ngày
     # Acc 87.1%. Confusion: →rain (2), →hourly (2).
+    # R13: +history cho recover "7 ngày qua" misrouted (IDs 147, 166).
     "daily_forecast": _flat([
         get_daily_forecast,        # primary
         get_daily_summary,         # sister tool: 1 ngày chi tiết 4 buổi
@@ -112,26 +151,32 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
         get_temperature_trend,     # xu hướng
         get_rain_timeline,         # DEFENSIVE: →rain_query
         get_hourly_forecast,       # DEFENSIVE: →hourly_forecast
+        get_weather_history,       # R13: "7 ngày qua" misrouted recovery
     ]),
 
     # "Tổng hợp hôm nay / overview"
     # Acc 82.6%. Confusion: →daily_forecast (2).
+    # R13: +current, +hourly cho overview có time slot ("trưa nay/chiều nay").
     "weather_overview": _flat([
         get_daily_summary,         # primary: 4 buổi chi tiết
         detect_phenomena,
         get_daily_rhythm,          # nhịp nhiệt trong ngày
         get_daily_forecast,        # DEFENSIVE: →daily_forecast
+        get_current_weather,       # R13: "hôm nay thế nào" + snapshot
+        get_hourly_forecast,       # R13: "trưa/chiều nay" time slot
     ]),
 
     # ══════ FOCUS BY METRIC ══════
 
     # "Lúc nào mưa / mấy giờ tạnh / có mưa không"
     # Acc 100% nhưng user thường hỏi combo ("mưa tuần này" → cần daily).
+    # R13: +current cho "đang mưa không / lúc này mưa" snapshot check (ID 3).
     "rain_query": _flat([
         get_rain_timeline,         # primary: đợt mưa 48h
         get_hourly_forecast,       # giờ-by-giờ chi tiết
         get_daily_forecast,        # "mưa tuần này / ngày mai"
         get_weather_alerts,        # "có cảnh báo mưa to"
+        get_current_weather,       # R13: "đang mưa / lúc này mưa" snapshot
     ]),
 
     # "Nhiệt độ bao nhiêu / nóng không / lạnh"
@@ -145,19 +190,24 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
 
     # "Gió mạnh không / tốc độ gió"
     # Acc 100%. Thêm alerts vì gió giật mạnh = cảnh báo.
+    # R13: +daily cho "mai/cuối tuần gió mạnh không" future-frame.
     "wind_query": _flat([
         get_current_weather,       # primary: có wind_speed + wind_gust
         get_pressure_trend,        # front → gió
         get_hourly_forecast,       # "chiều nay gió bao nhiêu"
         get_weather_alerts,        # "gió giật → cảnh báo"
+        get_daily_forecast,        # R13: "ngày mai / cuối tuần gió"
     ]),
 
     # "Độ ẩm / sương mù / nồm ẩm"
-    # Acc 100%. Giữ nguyên, đã đủ.
+    # Acc 100%. R13: +hourly, +daily cho "sáng mai sương mù" future-frame
+    # (ID 19 thất bại vì không có hourly/daily để lấy data tương lai).
     "humidity_fog_query": _flat([
         get_current_weather,       # primary
         get_humidity_timeline,     # timeline ẩm + dew
         detect_phenomena,          # nồm/sương mù đặc trưng HN
+        get_hourly_forecast,       # R13: "sáng mai / chiều nay sương mù"
+        get_daily_forecast,        # R13: "ngày mai / tuần này ẩm thế nào"
     ]),
 
     # ══════ TIME: PAST ══════
@@ -184,10 +234,15 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
     # "Đi chơi / chạy bộ / mấy giờ tốt"
     # Acc 94.3%. Confusion: →smalltalk (2).
     # activity_advice generic → cần combo với rain/UV/current.
+    # R14 E.1: +daily_forecast + weather_period cho "sáng mai/ngày mai/cuối tuần đi X"
+    # (v12 IDs 114, 118, 160, 161: LLM áp activity_advice NOW cho future-frame vì
+    # focused tools thiếu forecast). Drop get_uv_safe_windows: best_time đã cover giờ tốt,
+    # UV thường là info phụ + full agent vẫn có cho query chuyên UV.
     "activity_weather": _flat([
         get_activity_advice,       # primary: advise chung
-        get_best_time,             # giờ tốt nhất
-        get_uv_safe_windows,       # UV window
+        get_best_time,             # giờ tốt nhất (48h)
+        get_daily_forecast,        # R14 E.1: "ngày mai/sáng mai tập X"
+        get_weather_period,        # R14 E.1: "cuối tuần đi cắm trại"
         get_clothing_advice,       # trang phục — overlap với smalltalk
         get_rain_timeline,         # DEFENSIVE: "chiều đi chơi có mưa không"
         get_current_weather,       # DEFENSIVE: base data + cover →smalltalk
@@ -208,23 +263,29 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
 
     # "Cảnh báo / bão / ngập / rét hại / giông"
     # Acc 93.3%. Rule an toàn: cover cả rain + hourly.
+    # R13: +current cho snapshot alert check, +daily cho "mấy ngày tới rét hại".
     "weather_alert": _flat([
         get_weather_alerts,        # primary
         get_weather_change_alert,  # đột biến 6-12h
         get_pressure_trend,        # front = cảnh báo
         get_rain_timeline,         # giông/mưa to cụ thể
         get_hourly_forecast,       # "bão khi nào đến"
+        get_current_weather,       # R13: snapshot "đang có cảnh báo gì"
+        get_daily_forecast,        # R13: "mấy ngày tới có rét đậm không"
     ]),
 
     # ══════ CLIMATOLOGY ══════
 
     # "Dạo này nóng hơn bình thường / so mùa này"
     # Acc 92.9%. Confusion: →historical_weather (2).
+    # R13: +current, +hourly cho "hiện tại vs bình thường / hôm nay vs mùa này".
     "seasonal_context": _flat([
         get_seasonal_comparison,   # primary: climatology
         compare_with_yesterday,    # short-term delta
         get_weather_history,       # DEFENSIVE: →historical
         get_temperature_trend,     # xu hướng hỗ trợ "dạo này"
+        get_current_weather,       # R13: "hiện tại so bình thường"
+        get_hourly_forecast,       # R13: "hôm nay vs mùa này"
     ]),
 
     # ══════ SMALLTALK (User Option A: defensive coverage) ══════

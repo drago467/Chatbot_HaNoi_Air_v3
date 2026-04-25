@@ -2,6 +2,11 @@
 Aggregation functions for pre-aggregated weather tables.
 Creates district-level and city-level aggregates from ward-level data.
 
+Schema mới (sau refactor star schema):
+    - fact_weather_district_hourly / _daily dùng district_id FK (dim_district).
+    - fact_weather_city_hourly / _daily dùng city_id FK (dim_city).
+    - Aggregation JOIN dim_ward → dim_district → dim_city để lấy key chuẩn.
+
 Note on wind_deg: Uses circular mean (atan2 of sin/cos averages)
 because simple AVG() gives wrong results for circular data.
 Example: AVG(350, 10) = 180 (WRONG), circular mean = 0 (CORRECT).
@@ -29,7 +34,7 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
             with conn.cursor() as cur:
                 sql = f"""
                     INSERT INTO fact_weather_district_hourly (
-                        district_name_vi, ts_utc,
+                        district_id, ts_utc,
                         avg_temp, min_temp, max_temp,
                         avg_humidity, avg_wind_speed,
                         weather_main, ward_count,
@@ -38,7 +43,7 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
                         avg_wind_deg, max_wind_gust, max_uvi
                     )
                     SELECT
-                        d.district_name_vi,
+                        dw.district_id,
                         w.ts_utc,
                         ROUND(AVG(w.temp)::numeric, 2),
                         MIN(w.temp),
@@ -47,8 +52,8 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
                         ROUND(AVG(w.wind_speed)::numeric, 2),
                         -- MODE: most frequent weather condition across wards
                         (SELECT weather_main FROM fact_weather_hourly w2
-                         INNER JOIN dim_ward d2 ON w2.ward_id = d2.ward_id
-                         WHERE d2.district_name_vi = d.district_name_vi
+                         INNER JOIN dim_ward dw2 ON w2.ward_id = dw2.ward_id
+                         WHERE dw2.district_id = dw.district_id
                            AND w2.ts_utc = w.ts_utc
                          GROUP BY weather_main ORDER BY COUNT(*) DESC LIMIT 1),
                         COUNT(DISTINCT w.ward_id),
@@ -63,11 +68,11 @@ def aggregate_district_hourly(data_kind: str = 'current') -> dict:
                         MAX(w.wind_gust),
                         MAX(w.uvi)
                     FROM fact_weather_hourly w
-                    INNER JOIN dim_ward d ON w.ward_id = d.ward_id
+                    INNER JOIN dim_ward dw ON w.ward_id = dw.ward_id
                     WHERE w.data_kind = %s
-                      AND d.district_name_vi IS NOT NULL
-                    GROUP BY d.district_name_vi, w.ts_utc
-                    ON CONFLICT (district_name_vi, ts_utc) DO UPDATE SET
+                      AND dw.district_id IS NOT NULL
+                    GROUP BY dw.district_id, w.ts_utc
+                    ON CONFLICT (district_id, ts_utc) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
                         min_temp = EXCLUDED.min_temp,
                         max_temp = EXCLUDED.max_temp,
@@ -105,7 +110,7 @@ def aggregate_city_hourly(data_kind: str = 'current') -> dict:
             with conn.cursor() as cur:
                 sql = f"""
                     INSERT INTO fact_weather_city_hourly (
-                        ts_utc,
+                        city_id, ts_utc,
                         avg_temp, min_temp, max_temp,
                         avg_humidity, avg_wind_speed,
                         weather_main, ward_count,
@@ -114,15 +119,19 @@ def aggregate_city_hourly(data_kind: str = 'current') -> dict:
                         avg_wind_deg, max_wind_gust, max_uvi
                     )
                     SELECT
+                        dd.city_id,
                         w.ts_utc,
                         ROUND(AVG(w.temp)::numeric, 2),
                         MIN(w.temp),
                         MAX(w.temp),
                         ROUND(AVG(w.humidity)::numeric, 1),
                         ROUND(AVG(w.wind_speed)::numeric, 2),
-                        -- MODE: most frequent weather condition across all wards
+                        -- MODE: most frequent weather condition across all wards of the city
                         (SELECT weather_main FROM fact_weather_hourly w2
-                         WHERE w2.ts_utc = w.ts_utc
+                         INNER JOIN dim_ward dw2 ON w2.ward_id = dw2.ward_id
+                         INNER JOIN dim_district dd2 ON dw2.district_id = dd2.district_id
+                         WHERE dd2.city_id = dd.city_id
+                           AND w2.ts_utc = w.ts_utc
                          GROUP BY weather_main ORDER BY COUNT(*) DESC LIMIT 1),
                         COUNT(DISTINCT w.ward_id),
                         ROUND(AVG(w.dew_point)::numeric, 2),
@@ -136,9 +145,11 @@ def aggregate_city_hourly(data_kind: str = 'current') -> dict:
                         MAX(w.wind_gust),
                         MAX(w.uvi)
                     FROM fact_weather_hourly w
+                    INNER JOIN dim_ward dw ON w.ward_id = dw.ward_id
+                    INNER JOIN dim_district dd ON dw.district_id = dd.district_id
                     WHERE w.data_kind = %s
-                    GROUP BY w.ts_utc
-                    ON CONFLICT (ts_utc) DO UPDATE SET
+                    GROUP BY dd.city_id, w.ts_utc
+                    ON CONFLICT (city_id, ts_utc) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
                         min_temp = EXCLUDED.min_temp,
                         max_temp = EXCLUDED.max_temp,
@@ -176,7 +187,7 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
             with conn.cursor() as cur:
                 sql = f"""
                     INSERT INTO fact_weather_district_daily (
-                        district_name_vi, date,
+                        district_id, date,
                         avg_temp, temp_min, temp_max,
                         avg_humidity, avg_pop, total_rain,
                         weather_main, ward_count,
@@ -185,7 +196,7 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         avg_wind_speed
                     )
                     SELECT
-                        d.district_name_vi,
+                        dw.district_id,
                         w.date,
                         ROUND(AVG(w.temp_avg)::numeric, 2),
                         MIN(w.temp_min),
@@ -196,8 +207,8 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         ROUND(AVG(w.rain_total)::numeric, 2),
                         -- MODE: most frequent weather condition across wards
                         (SELECT weather_main FROM fact_weather_daily w2
-                         INNER JOIN dim_ward d2 ON w2.ward_id = d2.ward_id
-                         WHERE d2.district_name_vi = d.district_name_vi
+                         INNER JOIN dim_ward dw2 ON w2.ward_id = dw2.ward_id
+                         WHERE dw2.district_id = dw.district_id
                            AND w2.date = w.date
                          GROUP BY weather_main ORDER BY COUNT(*) DESC LIMIT 1),
                         COUNT(DISTINCT w.ward_id),
@@ -209,11 +220,11 @@ def aggregate_district_daily(data_kind: str = 'forecast') -> dict:
                         MAX(w.wind_gust),
                         ROUND(AVG(w.wind_speed)::numeric, 2)
                     FROM fact_weather_daily w
-                    INNER JOIN dim_ward d ON w.ward_id = d.ward_id
+                    INNER JOIN dim_ward dw ON w.ward_id = dw.ward_id
                     WHERE w.data_kind = %s
-                      AND d.district_name_vi IS NOT NULL
-                    GROUP BY d.district_name_vi, w.date
-                    ON CONFLICT (district_name_vi, date) DO UPDATE SET
+                      AND dw.district_id IS NOT NULL
+                    GROUP BY dw.district_id, w.date
+                    ON CONFLICT (district_id, date) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
                         temp_min = EXCLUDED.temp_min,
                         temp_max = EXCLUDED.temp_max,
@@ -249,7 +260,7 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
             with conn.cursor() as cur:
                 sql = f"""
                     INSERT INTO fact_weather_city_daily (
-                        date,
+                        city_id, date,
                         avg_temp, temp_min, temp_max,
                         avg_humidity, avg_pop, total_rain,
                         weather_main, ward_count,
@@ -258,6 +269,7 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         avg_wind_speed
                     )
                     SELECT
+                        dd.city_id,
                         w.date,
                         ROUND(AVG(w.temp_avg)::numeric, 2),
                         MIN(w.temp_min),
@@ -266,9 +278,12 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         ROUND(AVG(w.pop)::numeric, 2),
                         -- total_rain = AVG of ward-level rain_total (representative city rainfall)
                         ROUND(AVG(w.rain_total)::numeric, 2),
-                        -- MODE: most frequent weather condition across all wards
+                        -- MODE: most frequent weather condition across all wards of the city
                         (SELECT weather_main FROM fact_weather_daily w2
-                         WHERE w2.date = w.date
+                         INNER JOIN dim_ward dw2 ON w2.ward_id = dw2.ward_id
+                         INNER JOIN dim_district dd2 ON dw2.district_id = dd2.district_id
+                         WHERE dd2.city_id = dd.city_id
+                           AND w2.date = w.date
                          GROUP BY weather_main ORDER BY COUNT(*) DESC LIMIT 1),
                         COUNT(DISTINCT w.ward_id),
                         ROUND(AVG(w.dew_point)::numeric, 2),
@@ -279,9 +294,11 @@ def aggregate_city_daily(data_kind: str = 'forecast') -> dict:
                         MAX(w.wind_gust),
                         ROUND(AVG(w.wind_speed)::numeric, 2)
                     FROM fact_weather_daily w
+                    INNER JOIN dim_ward dw ON w.ward_id = dw.ward_id
+                    INNER JOIN dim_district dd ON dw.district_id = dd.district_id
                     WHERE w.data_kind = %s
-                    GROUP BY w.date
-                    ON CONFLICT (date) DO UPDATE SET
+                    GROUP BY dd.city_id, w.date
+                    ON CONFLICT (city_id, date) DO UPDATE SET
                         avg_temp = EXCLUDED.avg_temp,
                         temp_min = EXCLUDED.temp_min,
                         temp_max = EXCLUDED.temp_max,
