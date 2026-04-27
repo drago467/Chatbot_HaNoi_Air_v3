@@ -5,6 +5,7 @@ FastAPI event loop, chạy mỗi lần next() trong threadpool.
 """
 
 import asyncio
+import contextvars
 from typing import AsyncIterator, Iterator
 
 from app.core.logging_config import get_logger
@@ -19,11 +20,16 @@ async def sync_gen_to_sse(sync_gen: Iterator[str]) -> AsyncIterator[dict]:
     Nếu có exception, gửi event "error" và kết thúc.
     """
     loop = asyncio.get_event_loop()
+    # Capture a single context so every next() call resumes the generator in
+    # the same context. Without this, run_in_executor copies the caller context
+    # per submission, so ContextVar tokens set in one next() can't be reset in
+    # a later one (ValueError: Token was created in a different Context).
+    ctx = contextvars.copy_context()
 
     def _safe_next():
         """Gọi next() trong thread, trả None khi StopIteration."""
         try:
-            return next(sync_gen)
+            return ctx.run(next, sync_gen)
         except StopIteration:
             return None
 

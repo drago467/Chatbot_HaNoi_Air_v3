@@ -613,6 +613,7 @@ def get_district_multi_compare(metrics: str = "nhiet_do,do_am,uvi", limit: int =
                 "message": "Không có chỉ số hợp lệ. Chọn từ: nhiet_do, do_am, gio, mua, uvi, ap_suat, diem_suong, may"})
 
     result = {}
+    units_by_metric: Dict[str, str] = {}
     for metric in metric_list:
         top = get_district_rankings(metric, "cao_nhat", limit)
         bottom = get_district_rankings(metric, "thap_nhat", limit)
@@ -621,23 +622,26 @@ def get_district_multi_compare(metrics: str = "nhiet_do,do_am,uvi", limit: int =
             "bottom": bottom.get("rankings", []),
             "unit": top.get("unit", ""),
         }
+        units_by_metric[metric] = top.get("unit", "") or ""
 
-    # Rebuild thành flat VN per-district structure (mỗi district 1 entry với các metric)
+    # R15 T1.1: store value PER metric — DAL row dùng key "value" cho mỗi ranking,
+    # nên merge cũ chỉ giữ giá trị metric đầu tiên. Lưu entry[metric] = value để
+    # build function lookup đúng.
     by_district: Dict[str, Dict[str, Any]] = {}
     for metric, data in result.items():
         for r in data.get("top", []) + data.get("bottom", []):
-            dname = r.get("district_name_vi") or r.get("district") or r.get("name") or ""
+            dname = r.get("district") or r.get("district_name_vi") or r.get("name") or ""
             if not dname:
                 continue
             entry = by_district.setdefault(dname, {"district_name_vi": dname})
-            # Merge metric-specific value with sane key (avg_* already in r)
-            for k, v in r.items():
-                if k not in entry:
-                    entry[k] = v
+            v = r.get("value")
+            if v is not None and metric not in entry:
+                entry[metric] = v
 
     from app.agent.tools.output_builder import build_district_multi_compare_output
     return build_district_multi_compare_output({
         "comparisons": list(by_district.values()),
         "metrics_analyzed": metric_list,
+        "units_by_metric": units_by_metric,
         "districts_per_metric": limit,
     })

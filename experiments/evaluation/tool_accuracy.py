@@ -51,10 +51,11 @@ INTENT_TO_TOOLS = {
     },
     # rain_query: "Luc nao mua?", "Co mua khong?"
     # R13: + get_current_weather ("dang mua khong" snapshot)
+    # R15 T2.3: + get_clothing_advice ("mua khong va nen mac gi" compositional)
     "rain_query": {
-        "city":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary", "get_current_weather"],
-        "district": ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary", "get_current_weather"],
-        "ward":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary", "get_current_weather"],
+        "city":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary", "get_current_weather", "get_clothing_advice"],
+        "district": ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary", "get_current_weather", "get_clothing_advice"],
+        "ward":     ["get_rain_timeline", "get_hourly_forecast", "get_daily_forecast", "get_weather_alerts", "get_daily_summary", "get_current_weather", "get_clothing_advice"],
     },
     # temperature_query: "Nhiet do?", "Nong khong?"
     "temperature_query": {
@@ -94,16 +95,17 @@ INTENT_TO_TOOLS = {
     # activity_weather: "Di choi duoc khong?", "May gio chay bo tot?"
     # R9: + rain_timeline + clothing_advice (activity_advice can combo voi chi tiet)
     # R14 E.1: + daily_forecast + weather_period (future-frame: "ngay mai/cuoi tuan")
+    # R15 T2.2: + get_hourly_forecast ("sang CN/chieu mai di bo" granular)
     "activity_weather": {
         "city":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather",
                      "get_comfort_index", "get_clothing_advice", "get_rain_timeline",
-                     "get_daily_forecast", "get_weather_period"],
+                     "get_daily_forecast", "get_weather_period", "get_hourly_forecast"],
         "district": ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather",
                      "get_comfort_index", "get_clothing_advice", "get_rain_timeline",
-                     "get_daily_forecast", "get_weather_period"],
+                     "get_daily_forecast", "get_weather_period", "get_hourly_forecast"],
         "ward":     ["get_activity_advice", "get_best_time", "get_uv_safe_windows", "get_current_weather",
                      "get_comfort_index", "get_clothing_advice", "get_rain_timeline",
-                     "get_daily_forecast", "get_weather_period"],
+                     "get_daily_forecast", "get_weather_period", "get_hourly_forecast"],
     },
     # expert_weather_param: "Diem suong?", "Ap suat?", "UV index?"
     # R9: + humidity_timeline (dew/am expert)
@@ -125,10 +127,11 @@ INTENT_TO_TOOLS = {
     },
     # seasonal_context: "Nong hon binh thuong khong?"
     # R13: + get_current_weather, + get_hourly_forecast ("hien tai vs binh thuong").
+    # R15 T2.1: + get_daily_forecast ("hom nay vs ngay mai" cross-frame compositional)
     "seasonal_context": {
-        "city":     ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary", "get_current_weather", "get_hourly_forecast"],
-        "district": ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary", "get_current_weather", "get_hourly_forecast"],
-        "ward":     ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary", "get_current_weather", "get_hourly_forecast"],
+        "city":     ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary", "get_current_weather", "get_hourly_forecast", "get_daily_forecast"],
+        "district": ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary", "get_current_weather", "get_hourly_forecast", "get_daily_forecast"],
+        "ward":     ["get_seasonal_comparison", "compare_with_yesterday", "get_temperature_trend", "get_weather_history", "get_daily_summary", "get_current_weather", "get_hourly_forecast", "get_daily_forecast"],
     },
     # smalltalk_weather: "Xin chao", "Mac gi hom nay?"
     # no-tools-called cung chap nhan duoc (greetings).

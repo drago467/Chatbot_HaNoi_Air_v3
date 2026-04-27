@@ -36,7 +36,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — thesis scope cho phép tất cả, production thì tighten
+# CORS — scope cho phép tất cả, production thì tighten
 _cors_origins = os.getenv("API_CORS_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,

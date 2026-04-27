@@ -3319,3 +3319,243 @@ RuntimeError: Stream error: <Token var=<ContextVar name='router_scope' default=N
 2026-04-25 11:44:21 | INFO | __main__ | Aggregated hourly: forecast - district: 31651, city: 1095
 2026-04-25 11:44:21 | INFO | __main__ | Aggregated daily: forecast - district: 1920, city: 64
 2026-04-25 11:44:21 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-25 20:31:21 | INFO | app.api.routes.chat | chat_sync start (thread_id=test-sync-1)
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: POST http://testserver/chat "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | app.api.routes.chat | chat_stream start (thread_id=test-stream-1)
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: POST http://testserver/chat/stream "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: GET http://testserver/locations/districts "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: GET http://testserver/locations/wards/C%E1%BA%A7u%20Gi%E1%BA%A5y "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_00001 "HTTP/1.1 200 OK"
+2026-04-25 20:31:21 | INFO | httpx | HTTP Request: GET http://testserver/weather/current/ID_NOT_EXIST "HTTP/1.1 404 Not Found"
+2026-04-25 20:36:59 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-25 20:36:59 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-25 20:37:00 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-25 20:37:00 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-25 20:37:00 | INFO | __main__ | Starting aggregation for current data...
+2026-04-25 20:37:01 | INFO | __main__ | Aggregated hourly: current - district: 31681, city: 1096
+2026-04-25 20:37:01 | INFO | __main__ | Aggregation completed for current data
+2026-04-25 20:37:01 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-25 20:37:02 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-25 20:37:02 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-25 20:37:02 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-25 20:37:02 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-25 20:37:04 | INFO | __main__ | Aggregated hourly: forecast - district: 31951, city: 1105
+2026-04-25 20:37:04 | INFO | __main__ | Aggregated daily: forecast - district: 1920, city: 64
+2026-04-25 20:37:04 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-26 15:18:03 | INFO | app.core.key_manager | Loaded 5 API keys into unified pool
+2026-04-26 15:18:03 | INFO | __main__ | Starting History Backfill for 126 wards, last 1 days...
+2026-04-26 15:18:03 | INFO | __main__ | Starting Weather History Backfill for 126 wards, last 1 days...
+2026-04-26 15:18:03 | INFO | __main__ | History: 126 API calls (126 wards x 1 days)
+2026-04-26 15:18:06 | INFO | __main__ | Weather History Backfill: 126/126 calls OK, 126 records collected
+2026-04-26 15:18:06 | INFO | __main__ | Bulk upserted 126 weather hourly records (history)
+2026-04-26 15:18:06 | INFO | __main__ | Starting aggregation of hourly history to daily...
+2026-04-26 15:18:06 | INFO | __main__ | Aggregated 3258 daily history records
+2026-04-26 15:18:06 | INFO | __main__ | Starting aggregation for history data...
+2026-04-26 15:18:06 | INFO | __main__ | Aggregated hourly: history - district: 31951, city: 1105
+2026-04-26 15:18:06 | INFO | __main__ | Aggregated daily: history - district: 1920, city: 64
+2026-04-26 15:18:06 | INFO | __main__ | Aggregation completed for history data
+2026-04-26 15:18:06 | INFO | __main__ | Starting Nowcast job for 126 wards...
+2026-04-26 15:18:07 | INFO | __main__ | Nowcast complete: 126/126 wards OK
+2026-04-26 15:18:07 | INFO | __main__ | Bulk upserted 126 weather hourly records (current)
+2026-04-26 15:18:07 | INFO | __main__ | Starting aggregation for current data...
+2026-04-26 15:18:07 | INFO | __main__ | Aggregated hourly: current - district: 31981, city: 1106
+2026-04-26 15:18:07 | INFO | __main__ | Aggregation completed for current data
+2026-04-26 15:18:07 | INFO | __main__ | Starting Forecast job for 126 wards...
+2026-04-26 15:18:08 | WARNING | __main__ | All keys exhausted for 'onecall'. Waiting 55s for rate limit window to reset...
+2026-04-26 15:19:03 | INFO | __main__ | Forecast complete: 126/126 wards OK
+2026-04-26 15:19:04 | INFO | __main__ | Bulk upserted 6048 weather hourly records (forecast)
+2026-04-26 15:19:04 | INFO | __main__ | Bulk upserted 1008 weather daily records (priority=forecast)
+2026-04-26 15:19:04 | INFO | __main__ | Starting aggregation for forecast data...
+2026-04-26 15:19:06 | INFO | __main__ | Aggregated hourly: forecast - district: 32551, city: 1125
+2026-04-26 15:19:06 | INFO | __main__ | Aggregated daily: forecast - district: 1950, city: 65
+2026-04-26 15:19:06 | INFO | __main__ | Aggregation completed for forecast data
+2026-04-26 15:20:40 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 15:20:46 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 15:23:24 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 15:24:01 | INFO | httpx | HTTP Request: GET https://morris-dealt-situations-creative.trycloudflare.com/api/tags "HTTP/1.1 530 <none>"
+2026-04-26 15:24:26 | INFO | app.api.routes.chat | chat_stream start (thread_id=e852d563-7307-4012-b7ed-92e15a6dcfe8)
+2026-04-26 15:24:27 | INFO | httpx | HTTP Request: POST https://morris-dealt-situations-creative.trycloudflare.com/api/chat "HTTP/1.1 530 <none>"
+2026-04-26 15:24:27 | WARNING | app.agent.router.slm_router | SLM Router error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530
+2026-04-26 15:24:27 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530, 552ms)
+2026-04-26 15:24:27 | INFO | app.agent.agent | SLM Router → fallback (model_error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530)
+2026-04-26 15:24:37 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:24:47 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:25:38 | INFO | app.api.routes.chat | chat_stream start (thread_id=e852d563-7307-4012-b7ed-92e15a6dcfe8)
+2026-04-26 15:25:39 | INFO | httpx | HTTP Request: POST https://morris-dealt-situations-creative.trycloudflare.com/api/chat "HTTP/1.1 530 <none>"
+2026-04-26 15:25:39 | WARNING | app.agent.router.slm_router | SLM Router error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530
+2026-04-26 15:25:39 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530, 737ms)
+2026-04-26 15:25:39 | INFO | app.agent.agent | SLM Router → fallback (model_error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530)
+2026-04-26 15:25:40 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 500 Internal Server Error"
+2026-04-26 15:25:40 | INFO | openai._base_client | Retrying request to /chat/completions in 0.411075 seconds
+2026-04-26 15:25:49 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:26:00 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:27:01 | INFO | app.api.routes.chat | chat_stream start (thread_id=e852d563-7307-4012-b7ed-92e15a6dcfe8)
+2026-04-26 15:27:02 | INFO | httpx | HTTP Request: POST https://morris-dealt-situations-creative.trycloudflare.com/api/chat "HTTP/1.1 530 <none>"
+2026-04-26 15:27:02 | WARNING | app.agent.router.slm_router | SLM Router error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530
+2026-04-26 15:27:02 | INFO | app.agent.agent | SLM Router: RouterResult(FALLBACK: model_error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530, 571ms)
+2026-04-26 15:27:02 | INFO | app.agent.agent | SLM Router → fallback (model_error: Server error '530 <none>' for url 'https://morris-dealt-situations-creative.trycloudflare.com/api/chat'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/530)
+2026-04-26 15:27:10 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:27:26 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:29:45 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 15:33:28 | WARNING | app.ui.components | Could not load conversations from API: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /conversations (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-26 15:33:31 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 15:33:33 | INFO | httpx | HTTP Request: GET https://morris-dealt-situations-creative.trycloudflare.com/api/tags "HTTP/1.1 530 <none>"
+2026-04-26 15:33:40 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 15:33:43 | WARNING | app.ui.api_client | get_hourly_forecast failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /weather/forecast/ID_00035?hours=24 (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-26 15:37:37 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 15:37:53 | INFO | httpx | HTTP Request: GET https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-26 15:37:53 | INFO | httpx | HTTP Request: GET https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-26 15:38:18 | INFO | app.api.routes.chat | chat_stream start (thread_id=0d1301c1-3be9-45dc-bbf2-ec79b500779e)
+2026-04-26 15:38:20 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 15:38:20 | INFO | app.agent.agent | SLM Router: RouterResult(current_weather/ward, conf=0.90, 2000ms)
+2026-04-26 15:38:20 | INFO | app.agent.agent | SLM Router → fast path: current_weather/ward (conf=0.90), 4 tools: ['get_current_weather', 'detect_phenomena', 'get_rain_timeline', 'get_hourly_forecast']
+2026-04-26 15:38:27 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:38:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:38:45 | ERROR | app.api.sse | SSE generator error: <Token var=<ContextVar name='router_scope' default=None at 0x00000234A2CB0A40> at 0x00000234A18FA0C0> was created in a different Context
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 32, in sync_gen_to_sse
+    chunk = await loop.run_in_executor(None, _safe_next)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 26, in _safe_next
+    return next(sync_gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\agent\agent.py", line 1089, in stream_agent_routed
+    router_scope_var.reset(scope_token)
+ValueError: <Token var=<ContextVar name='router_scope' default=None at 0x00000234A2CB0A40> at 0x00000234A18FA0C0> was created in a different Context
+2026-04-26 15:38:45 | ERROR | __main__ | chat_stream error (trace=f1058f8d)
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app.py", line 123, in _handle_new_message
+    for chunk in api_client.chat_stream(prompt, conv["thread_id"]):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\ui\api_client.py", line 75, in chat_stream
+    raise RuntimeError(f"Stream error: {payload}")
+RuntimeError: Stream error: <Token var=<ContextVar name='router_scope' default=None at 0x00000234A2CB0A40> at 0x00000234A18FA0C0> was created in a different Context
+2026-04-26 15:39:11 | INFO | app.api.routes.chat | chat_stream start (thread_id=0d1301c1-3be9-45dc-bbf2-ec79b500779e)
+2026-04-26 15:39:13 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 15:39:13 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/city, conf=0.91, 2354ms, rewrite='Chiều tối nay ở Hà Nội thời tiết ra sao?...')
+2026-04-26 15:39:13 | INFO | app.agent.agent | SLM Router rewrote query: 'chiều tối nay thì sao' → 'Chiều tối nay ở Hà Nội thời tiết ra sao?'
+2026-04-26 15:39:13 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/city (conf=0.91), 3 tools: ['get_hourly_forecast', 'get_sunny_periods', 'get_rain_timeline']
+2026-04-26 15:39:18 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:39:41 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:40:55 | INFO | app.api.routes.chat | chat_stream start (thread_id=d2b49dfd-2993-4b1a-ac51-9d03463b7bce)
+2026-04-26 15:40:57 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 15:40:57 | INFO | app.agent.agent | SLM Router: RouterResult(current_weather/ward, conf=0.90, 2154ms)
+2026-04-26 15:40:57 | INFO | app.agent.agent | SLM Router → fast path: current_weather/ward (conf=0.90), 4 tools: ['get_current_weather', 'detect_phenomena', 'get_rain_timeline', 'get_hourly_forecast']
+2026-04-26 15:41:03 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:41:10 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:41:16 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:41:24 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:41:33 | ERROR | app.api.sse | SSE generator error: <Token var=<ContextVar name='router_scope' default=None at 0x00000234A2CB0A40> at 0x00000234A342FC40> was created in a different Context
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 32, in sync_gen_to_sse
+    chunk = await loop.run_in_executor(None, _safe_next)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 26, in _safe_next
+    return next(sync_gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\agent\agent.py", line 1089, in stream_agent_routed
+    router_scope_var.reset(scope_token)
+ValueError: <Token var=<ContextVar name='router_scope' default=None at 0x00000234A2CB0A40> at 0x00000234A342FC40> was created in a different Context
+2026-04-26 15:41:33 | ERROR | __main__ | chat_stream error (trace=76e22563)
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app.py", line 123, in _handle_new_message
+    for chunk in api_client.chat_stream(prompt, conv["thread_id"]):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\ui\api_client.py", line 75, in chat_stream
+    raise RuntimeError(f"Stream error: {payload}")
+RuntimeError: Stream error: <Token var=<ContextVar name='router_scope' default=None at 0x00000234A2CB0A40> at 0x00000234A342FC40> was created in a different Context
+2026-04-26 15:43:07 | INFO | app.api.routes.chat | chat_stream start (thread_id=d2b49dfd-2993-4b1a-ac51-9d03463b7bce)
+2026-04-26 15:43:09 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 15:43:09 | INFO | app.agent.agent | SLM Router: RouterResult(daily_forecast/city, conf=0.91, 2822ms, rewrite='Thời tiết ngày mai ở Hà Nội ra sao?...')
+2026-04-26 15:43:09 | INFO | app.agent.agent | SLM Router rewrote query: 'vậy thời tiết ngày mai thì ra sao' → 'Thời tiết ngày mai ở Hà Nội ra sao?'
+2026-04-26 15:43:09 | INFO | app.agent.agent | SLM Router → fast path: daily_forecast/city (conf=0.91), 7 tools: ['get_daily_forecast', 'get_daily_summary', 'get_weather_period', 'get_temperature_trend', 'get_rain_timeline', 'get_hourly_forecast', 'get_weather_history']
+2026-04-26 15:43:16 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:43:36 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 15:43:56 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 16:04:52 | WARNING | app.ui.components | Could not load conversations from API: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /conversations (Caused by NewConnectionError("HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it"))
+2026-04-26 16:04:55 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:04:57 | INFO | httpx | HTTP Request: GET https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-26 16:05:34 | INFO | app.api.routes.chat | chat_stream start (thread_id=48fd5c5b-c3ca-49aa-9075-93a4ac1612f1)
+2026-04-26 16:05:40 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 16:05:40 | INFO | app.agent.agent | SLM Router: RouterResult(current_weather/ward, conf=0.90, 6085ms)
+2026-04-26 16:05:40 | INFO | app.agent.agent | SLM Router → fast path: current_weather/ward (conf=0.90), 4 tools: ['get_current_weather', 'detect_phenomena', 'get_rain_timeline', 'get_hourly_forecast']
+2026-04-26 16:05:47 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:05:53 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:06:34 | INFO | app.api.routes.chat | chat_stream start (thread_id=48fd5c5b-c3ca-49aa-9075-93a4ac1612f1)
+2026-04-26 16:06:37 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 16:06:37 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/city, conf=0.91, 2881ms, rewrite='Thời tiết tối nay ở Hà Nội như thế nào?...')
+2026-04-26 16:06:37 | INFO | app.agent.agent | SLM Router rewrote query: 'thế thời tiết tối nay thì như nào' → 'Thời tiết tối nay ở Hà Nội như thế nào?'
+2026-04-26 16:06:37 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/city (conf=0.91), 3 tools: ['get_hourly_forecast', 'get_sunny_periods', 'get_rain_timeline']
+2026-04-26 16:06:42 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:07:00 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:07:12 | ERROR | app.api.sse | SSE generator error: <Token var=<ContextVar name='router_scope' default=None at 0x000001BF0A07C3B0> at 0x000001BF18C7FD00> was created in a different Context
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 32, in sync_gen_to_sse
+    chunk = await loop.run_in_executor(None, _safe_next)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\AppData\Local\Programs\Python\Python311\Lib\concurrent\futures\thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\api\sse.py", line 26, in _safe_next
+    return next(sync_gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\agent\agent.py", line 1089, in stream_agent_routed
+    router_scope_var.reset(scope_token)
+ValueError: <Token var=<ContextVar name='router_scope' default=None at 0x000001BF0A07C3B0> at 0x000001BF18C7FD00> was created in a different Context
+2026-04-26 16:07:12 | ERROR | __main__ | chat_stream error (trace=fa6f371d)
+Traceback (most recent call last):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app.py", line 123, in _handle_new_message
+    for chunk in api_client.chat_stream(prompt, conv["thread_id"]):
+  File "C:\Users\X1 gen 9\Downloads\Chatbot_HanoiAir\app\ui\api_client.py", line 75, in chat_stream
+    raise RuntimeError(f"Stream error: {payload}")
+RuntimeError: Stream error: <Token var=<ContextVar name='router_scope' default=None at 0x000001BF0A07C3B0> at 0x000001BF18C7FD00> was created in a different Context
+2026-04-26 16:09:53 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 16:09:55 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:09:55 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:10:03 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 16:10:06 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:11:23 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 16:11:23 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:11:24 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:11:26 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 16:11:28 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:12:02 | INFO | httpx | HTTP Request: GET https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/tags "HTTP/1.1 200 OK"
+2026-04-26 16:12:34 | INFO | app.api.routes.chat | chat_stream start (thread_id=1284be8f-11a0-439a-9801-b7d25b64850c)
+2026-04-26 16:12:36 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 16:12:36 | INFO | app.agent.agent | SLM Router: RouterResult(current_weather/ward, conf=0.90, 1439ms)
+2026-04-26 16:12:36 | INFO | app.agent.agent | SLM Router → fast path: current_weather/ward (conf=0.90), 4 tools: ['get_current_weather', 'detect_phenomena', 'get_rain_timeline', 'get_hourly_forecast']
+2026-04-26 16:12:43 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:12:51 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:13:11 | INFO | app.api.routes.chat | chat_stream start (thread_id=1284be8f-11a0-439a-9801-b7d25b64850c)
+2026-04-26 16:13:14 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 16:13:14 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/district, conf=0.91, 3018ms, rewrite='Tối nay ở quận Cầu Giấy thời tiết ra sao...')
+2026-04-26 16:13:14 | INFO | app.agent.agent | SLM Router rewrote query: 'còn tối nay thời tiết như thế nào' → 'Tối nay ở quận Cầu Giấy thời tiết ra sao?'
+2026-04-26 16:13:14 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/district (conf=0.91), 3 tools: ['get_hourly_forecast', 'get_sunny_periods', 'get_rain_timeline']
+2026-04-26 16:13:19 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:13:35 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:14:42 | INFO | app.api.routes.chat | chat_stream start (thread_id=1284be8f-11a0-439a-9801-b7d25b64850c)
+2026-04-26 16:14:45 | INFO | httpx | HTTP Request: POST https://fragrance-downloading-tsunami-productions.trycloudflare.com/api/chat "HTTP/1.1 200 OK"
+2026-04-26 16:14:45 | INFO | app.agent.agent | SLM Router: RouterResult(hourly_forecast/district, conf=0.91, 2838ms, rewrite='Thời tiết ngày mai ở quận Cầu Giấy?...')
+2026-04-26 16:14:45 | INFO | app.agent.agent | SLM Router rewrote query: 'thế còn thời tiết ngày mai' → 'Thời tiết ngày mai ở quận Cầu Giấy?'
+2026-04-26 16:14:45 | INFO | app.agent.agent | SLM Router → fast path: hourly_forecast/district (conf=0.91), 3 tools: ['get_hourly_forecast', 'get_sunny_periods', 'get_rain_timeline']
+2026-04-26 16:14:51 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:15:02 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:15:13 | INFO | httpx | HTTP Request: POST https://sv1.shupremium.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-26 16:21:28 | INFO | app.api.main | FastAPI shutting down...
+2026-04-26 16:21:29 | INFO | app.api.main | FastAPI starting up...
+2026-04-26 16:21:29 | INFO | app.api.main | FastAPI starting up...

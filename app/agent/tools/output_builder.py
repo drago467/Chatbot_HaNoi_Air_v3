@@ -1435,7 +1435,16 @@ def build_humidity_timeline_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
             ts = e.get("ts_utc")
             if isinstance(ts, (int, float)):
                 timeline_dates.append(datetime.fromtimestamp(float(ts), tz=_ICT).date())
-    metadata = _emit_coverage_days(timeline_dates) if timeline_dates else _emit_snapshot_metadata(None, note="Timeline độ ẩm 24h từ NOW.")
+    # R15 T1.3: cảnh báo past-frame — tool scan từ NOW forward only,
+    # không cover khung đã qua trong ngày (sáng nếu hỏi sau trưa, chiều nếu sau tối).
+    metadata = _emit_coverage_days(timeline_dates) if timeline_dates else _emit_snapshot_metadata(
+        None,
+        note=(
+            "Timeline độ ẩm từ NOW trở đi (forward 24h). KHÔNG cover khung đã "
+            "qua trong ngày (sáng/trưa nếu hỏi sau giờ đó). User hỏi past → gọi "
+            "get_weather_history. KHÔNG dán nhãn 'sáng nay' cho data từ chiều/tối."
+        ),
+    )
     # R13 Contract D: humidity_timeline không emit sương mù dày / băng giá → LLM dễ suy diễn
     missing_emit = _emit_missing_fields(raw, [
         ("sương mù dày đặc (phân loại cụ thể)", "fog_density"),
@@ -1591,6 +1600,14 @@ def build_temperature_trend_output(raw: Mapping[str, Any]) -> Dict[str, Any]:
     dates = [d.get("date") for d in details if isinstance(d, Mapping) and d.get("date")]
     return {
         **_emit_coverage_days(dates),
+        # R15 T1.2: tool DAL chỉ SELECT date >= today → forward-only.
+        # User dùng từ "tuần qua / mấy hôm trước" → output này KHÔNG cover.
+        "⚠ scope": (
+            "Phân tích này CHỈ cover ngày từ HÔM NAY trở đi (forecast forward-only). "
+            "User hỏi 'tuần qua / mấy hôm trước / ngày qua / dạo trước' → KHÔNG dùng "
+            "output này, PHẢI gọi get_weather_history thay. TUYỆT ĐỐI KHÔNG dán nhãn "
+            "'X ngày qua' cho output này."
+        ),
         **shape_labeled_dict(raw, TEMP_TREND_KEYS),
     }
 
@@ -1673,23 +1690,39 @@ def build_district_multi_compare_output(raw: Mapping[str, Any]) -> Dict[str, Any
     if _is_error(raw):
         return build_error_output(raw)
     comparisons = raw.get("comparisons") or []
+    units = raw.get("units_by_metric") or {}
     # comparisons có thể là dict (do merge by district) hoặc list raw
     if isinstance(comparisons, list):
         fmt: List[Dict[str, Any]] = []
         for c in comparisons:
             if not isinstance(c, Mapping):
                 continue
-            name = (c.get("district") or c.get("district_name_vi")
+            name = (c.get("district_name_vi") or c.get("district")
                     or c.get("name") or "")
             if not name:
                 continue
             entry: Dict[str, Any] = {"quận": name}
-            # Copy các field giá trị nếu có
+            # R15 T1.1: lookup theo metric name (k) — tool đã store entry[metric] = value
             for k, vn in _METRIC_VN_LABEL.items():
                 v = c.get(k)
-                if v is not None:
-                    entry[vn] = f"{v:.1f}" if isinstance(v, float) else str(v)
-            fmt.append(entry)
+                if v is None:
+                    continue
+                unit_disp = _UNIT_DISPLAY.get(units.get(k, ""), "")
+                entry[vn] = f"{v:.1f}{unit_disp}" if isinstance(v, (int, float)) else str(v)
+            if len(entry) > 1:  # giữ entry chỉ khi có ít nhất 1 metric value
+                fmt.append(entry)
+        if not fmt:
+            # Defensive: tool gọi nhưng không lấy được metric nào → emit error rõ
+            return {
+                **_emit_snapshot_metadata(None, note="So sánh nhiều quận tại NOW."),
+                "error": "no_metric_data",
+                "⚠ ghi chú": (
+                    "Tool không lấy được giá trị metric nào (DAL có thể empty hoặc "
+                    "metrics không hợp lệ). TUYỆT ĐỐI KHÔNG bịa số liệu — refuse "
+                    "với user hoặc gọi tool khác (compare_weather / get_district_ranking)."
+                ),
+                "metrics_attempted": list(units.keys()) or (raw.get("metrics_analyzed") or []),
+            }
         # R11 Contract B: multi-compare tại NOW
         return {
             **_emit_snapshot_metadata(None, note="So sánh nhiều quận tại NOW."),

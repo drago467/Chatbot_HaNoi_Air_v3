@@ -177,6 +177,7 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
         get_daily_forecast,        # "mưa tuần này / ngày mai"
         get_weather_alerts,        # "có cảnh báo mưa to"
         get_current_weather,       # R13: "đang mưa / lúc này mưa" snapshot
+        get_clothing_advice,       # R15 T2.3: "mưa không và nên mặc gì" (ID 196 fix)
     ]),
 
     # "Nhiệt độ bao nhiêu / nóng không / lạnh"
@@ -243,7 +244,7 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
         get_best_time,             # giờ tốt nhất (48h)
         get_daily_forecast,        # R14 E.1: "ngày mai/sáng mai tập X"
         get_weather_period,        # R14 E.1: "cuối tuần đi cắm trại"
-        get_clothing_advice,       # trang phục — overlap với smalltalk
+        get_hourly_forecast,       # R15 T2.2: "sáng CN/chiều mai đi bộ" granular (ID 119 fix)
         get_rain_timeline,         # DEFENSIVE: "chiều đi chơi có mưa không"
         get_current_weather,       # DEFENSIVE: base data + cover →smalltalk
     ]),
@@ -286,6 +287,7 @@ PRIMARY_TOOL_MAP: dict[str, dict[str, list]] = {
         get_temperature_trend,     # xu hướng hỗ trợ "dạo này"
         get_current_weather,       # R13: "hiện tại so bình thường"
         get_hourly_forecast,       # R13: "hôm nay vs mùa này"
+        get_daily_forecast,        # R15 T2.1: "hôm nay vs ngày mai" (ID 195 fix)
     ]),
 
     # ══════ SMALLTALK (User Option A: defensive coverage) ══════

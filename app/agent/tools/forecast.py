@@ -157,6 +157,11 @@ class GetRainTimelineInput(BaseModel):
 def get_rain_timeline(ward_id: str = None, location_hint: str = None, hours: int = 24) -> dict:
     """TIMELINE MƯA: đợt mưa bắt đầu/kết thúc/cường độ đỉnh trong 1-48h. MAX `hours` = 48.
 
+    SCOPE: Tool LUÔN scan từ NOW + `hours` giờ tới. KHÔNG có param `start_date` —
+    nếu agent pass `start_date` sẽ bị silently ignore. Muốn check khung thời gian
+    bắt đầu KHÔNG phải NOW (e.g. "sáng CN" trong khi NOW là chiều T7) → tăng `hours`
+    đủ lớn để cover khung user hỏi (vd: NOW=13:00 T7, user hỏi 7h CN → `hours=42`).
+
     DÙNG KHI: user hỏi MỐC mưa trong 48h:
         "lúc nào mưa?", "mưa đến bao giờ?", "trời tạnh lúc nào?", "chiều có mưa không?".
         Phải đọc timestamp start/end trong output — gán vào đúng NGÀY user hỏi.
